@@ -1,0 +1,28 @@
+{
+  "name": "citizens-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "tsc && node build/server.js",
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts",
+    "tslint": "tslint -c tslint.json src/**/*.ts tests/**/*.spec.ts"
+  },
+  "author": "lasalle",
+  "license": "ISC",
+  "dependencies": {
+    "tslint-config-airbnb": "^5.3.0",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.34",
+    "@types/uuid": "^3.4.2",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
+  }
+}
