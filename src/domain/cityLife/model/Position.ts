@@ -16,7 +16,7 @@ class Position {
 
     toJSON() {
         return {
-            latitude: this.lat,
+            latitude: this.latitude,
             longitude: this.longitude,
         };
     }

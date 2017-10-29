@@ -1,7 +1,5 @@
+import Position from '../../../../src/domain/cityLife/model/Position';
 import { expect } from 'chai';
-
-import Position from '../../../src/domain/cityLife/Position';
-import PositionSample from '../../../src/domain/cityLife/PositionSample';
 
 describe('Position value object', () => {
     it('Should have correct properties set by constructor', () => {

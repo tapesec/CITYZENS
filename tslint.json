@@ -9,7 +9,8 @@
             true,
             4,
             { "SwitchCase": 2 }
-        ]
+        ],
+        "variable-name": false
     },
     "rulesDirectory": []
 }

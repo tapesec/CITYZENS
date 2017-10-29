@@ -4,15 +4,22 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "tsc && node build/server.js",
+    "start": "tsc && node build/api/server.js",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts",
     "tslint": "tslint -c tslint.json src/**/*.ts tests/**/*.spec.ts"
   },
   "author": "lasalle",
   "license": "ISC",
   "dependencies": {
+    "@types/restify": "^5.0.5",
+    "@types/sinon": "^2.3.6",
+    "restify": "^6.2.3",
+    "restify-logger": "^2.0.1",
+    "sinon": "^4.0.1",
     "tslint-config-airbnb": "^5.3.0",
-    "uuid": "^3.1.0"
+    "typemoq": "^2.0.1",
+    "uuid": "^3.1.0",
+    "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
