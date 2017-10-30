@@ -9,7 +9,7 @@ module.exports = {
     script      : "npm",
     args: "start",
     watch       : true,
-    ignore_watch: './build',
+    ignore_watch: ['./build', '.git'],
     env
   }]
 }
