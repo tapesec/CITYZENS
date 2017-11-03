@@ -2,13 +2,56 @@ import Hotspot from '../../domain/cityLife/model/Hotspot';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import * as restify from 'restify';
 import { HOTSPOT_ENDPOINT } from './constants';
+import JwtParser from './../services/auth/JwtParser';
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
+
+const checkJwt = jwt({
+  // Dynamically provide a signing key
+  // based on the kid in the header and
+  // the singing keys provided by the JWKS endpoint.
+    secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://cityzens.eu.auth0.com/.well-known/jwks.json`,
+    }),
+
+  // Validate the audience and the issuer.
+    audience: 'https://cityzens.eu.auth0.com/api/v2/',
+    issuer: `https://cityzens.eu.auth0.com/`,
+    algorithms: ['RS256'],
+});
+// const jwksRsa = require('jwks-rsa');
+
+// Authentication middleware. When used, the
+// access token must exist and be verified against
+// the Auth0 JSON Web Key Set
+/* const checkJwt = jwt({
+    // Dynamically provide a signing key
+    // based on the kid in the header and
+    // the singing keys provided by the JWKS endpoint.
+    secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://cityzens.eu.auth0.com/.well-known/jwks.json`,
+    }),
+
+    // Validate the audience and the issuer.
+    audience: 'https://cityzens.eu.auth0.com/api/v2/',
+    issuer: `https://cityzens.eu.auth0.com/`,
+    algorithms: ['RS256'],
+}); */
 
 class HotspotRouter {
 
     private ctrl : HotspotCtrl;
+    private jwt : JwtParser;
 
-    constructor(controller: HotspotCtrl) {
+    constructor(jwtService : JwtParser, controller: HotspotCtrl) {
         this.ctrl = controller;
+        this.jwt = jwtService;
     }
 
     bind(server : restify.Server) {
@@ -89,7 +132,22 @@ class HotspotRouter {
          *           updatedAt:
          *             type: date
          */
-        server.get(HOTSPOT_ENDPOINT, this.ctrl.hotspots);
+        server.get(
+            HOTSPOT_ENDPOINT,
+            /* (req : restify.Request, res : restify.Response, next : restify.Next) => {
+                const token = req.header('authorisation').slice(7);
+                console.log(token);
+                this.jwt.verify(token)
+                .then((decoded) => {
+                    console.log(decoded);
+                    next();
+                })
+                .catch((err) => {
+                    next(err);
+                });
+            } */
+            checkJwt,
+            this.ctrl.hotspots);
     }
 }
 

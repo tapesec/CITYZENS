@@ -10,7 +10,8 @@
             4,
             { "SwitchCase": 2 }
         ],
-        "variable-name": false
+        "variable-name": false,
+        "import-name": false
     },
     "rulesDirectory": []
 }

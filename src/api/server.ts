@@ -15,6 +15,7 @@ server.use(logger('standard-format'));
 
 server.use(restify.plugins.queryParser());
 
+
 routers.init(server);
 
 server.listen(config.server.httpPort || 3000, () => {
