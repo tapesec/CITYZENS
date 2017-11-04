@@ -1,19 +1,23 @@
+import RootCtrl from './RootCtrl';
+import { Response } from '_debugger';
 import * as querystring from 'querystring';
 import HotspotSample from '../../domain/cityLife/model/HotspotSample';
 // tslint:disable-next-line:import-name
-import { HotspotRepositoryInMemory }
-from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
+import hotspotRepositoryInMemory, {
+    HotspotRepositoryInMemory,
+} from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import * as rest from 'restify';
 import * as helpers from '../helpers/';
 const logs = require('./../../logs/');
 const httpResponseDataLogger = logs.get('http-response-data');
 const restifyErrors = require('restify-errors');
 
-class HotspotCtrl {
+class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
 
     public constructor (hotspotRepositoryInMemory : HotspotRepositoryInMemory) {
+        super();
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotRepository.store(HotspotSample.TOWNHALL);
         this.hotspotRepository.store(HotspotSample.CHURCH);

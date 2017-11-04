@@ -11,25 +11,21 @@ import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 import * as request from 'request';
 import config from './../config/';
-const jwt = require('jsonwebtoken');
 
 const loginService = new Login(
     {
         url: config.auth.auth0url,
         clientId: config.auth.auth0ClientId,
         clientSecret: config.auth.auth0ClientSecret,
-        audience: config.auth.auth0Audience,
     },
     request,
 );
-
-const jwtService = new JwtParser(jwt);
 
 
 export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
-    routers.push(new HotspotRouter(jwtService, new HotspotCtrl(hotspotRepositoryInMemory)));
+    routers.push(new HotspotRouter(new HotspotCtrl(hotspotRepositoryInMemory)));
     routers.forEach(r => r.bind(server));
 };

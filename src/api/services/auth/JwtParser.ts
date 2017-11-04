@@ -15,7 +15,6 @@ class JwtParser​​ {
                 config.auth.auth0ClientSecret,
                 {
                     algorithms: ['HS256'],
-                    audience: config.auth.auth0Audience,
                 },
                 (err : any, decoded :any) => {
                     if (err) reject(err);

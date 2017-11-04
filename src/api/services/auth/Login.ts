@@ -1,6 +1,5 @@
 interface LoginOptions {
     url : string;
-    audience : string;
     clientId : string;
     clientSecret : string;
 }
@@ -21,17 +20,17 @@ class Login {
         return new Promise((resolve, reject) => {
             this.request(
                 { method: 'POST',
-                    url: this.opts.url,
+                    url: this.opts.url + '/oauth/token',
                     headers: { 'content-type': 'application/json' },
                     body:
                     {
                         username,
                         password,
                         grant_type: 'password',
-                        audience: this.opts.audience,
-                        // scope: 'read:sample',
+                        scope: 'openid',
                         client_id: this.opts.clientId,
                         client_secret: this.opts.clientSecret,
+                        connection: 'Cityzens',
                     },
                     json: true,
                 },
@@ -41,9 +40,9 @@ class Login {
                     } else {
                         resolve(body);
                     }
-                });
+                },
+            );
         });
-
     }
 }
 export default Login;

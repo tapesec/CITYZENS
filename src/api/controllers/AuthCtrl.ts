@@ -1,13 +1,16 @@
+import RootCtrl from './RootCtrl';
+import { Response } from '_debugger';
 import * as rest from 'restify';
 import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 const restifyErrors = require('restify-errors');
 
-class AuthCtrl {
+class AuthCtrl extends RootCtrl {
 
     private loginService : Login;
 
     constructor(loginService : Login) {
+        super();
         this.loginService = loginService;
     }
 
