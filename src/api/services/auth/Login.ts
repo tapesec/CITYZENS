@@ -1,4 +1,4 @@
-interface LoginOptions {
+export interface LoginOptions {
     url : string;
     clientId : string;
     clientSecret : string;
