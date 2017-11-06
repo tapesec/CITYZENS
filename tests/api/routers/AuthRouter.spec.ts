@@ -1,5 +1,7 @@
 // tslint:disable-next-line:import-name
-import JwtParser from '../../../src/api/services/auth/JwtParser';
+import AuthRouter from '../../../src/api/routers/AuthRouter';
+import Login from '../../../src/api/services/auth/Login';
+import AuthCtrl from '../../../src/api/controllers/AuthCtrl';
 import hotspotRepositoryInMemory
 from '../../../src/domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from '../../../src/api/routers/HotspotRouter';
@@ -7,32 +9,29 @@ import * as TypeMoq from 'typemoq';
 import * as restify from 'restify';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
-import HotspotCtrl from '../../../src/api/controllers/HotspotCtrl';
 import * as c from '../../../src/api/routers/constants';
 
-describe('hotspots router', () => {
+describe('Auth router', () => {
 
-    it('should register routes related to hotspots', () => {
+    it('should register routes related to authentification', () => {
         // Arrange
         const serverMock : TypeMoq.IMock<restify.Server> = TypeMoq.Mock.ofType<restify.Server>();
-        const jwtParser : TypeMoq.IMock<JwtParser> = TypeMoq.Mock.ofType<JwtParser>();
-        const hotspotCtrl : TypeMoq.IMock<HotspotCtrl> =
+        const loginServiceMoq : TypeMoq.IMock<Login> = TypeMoq.Mock.ofType<Login>();
+        const authCtrl : TypeMoq.IMock<AuthCtrl> =
         TypeMoq.Mock.ofType(
-            HotspotCtrl,
+            AuthCtrl,
             TypeMoq.MockBehavior.Loose,
             true,
-            jwtParser, 
-            hotspotRepositoryInMemory,
+            loginServiceMoq,
         );
-        const hotspotRouter = new HotspotRouter(hotspotCtrl.object);
+        const authRouter = new AuthRouter(authCtrl.object);
         // Act
-        hotspotRouter.bind(serverMock.object);
+        authRouter.bind(serverMock.object);
         // Assert
         serverMock.verify(
             x => x.get(
-                c.HOTSPOT_ENDPOINT,
-                hotspotCtrl.object.loadAuthenticatedUser,
-                hotspotCtrl.object.hotspots),
+                c.AUTH_LOGIN,
+                authCtrl.object.login),
             TypeMoq.Times.once(),
         );
     });

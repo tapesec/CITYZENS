@@ -1,3 +1,4 @@
+import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import { Response } from '_debugger';
 import * as querystring from 'querystring';
@@ -16,8 +17,8 @@ class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
 
-    public constructor (hotspotRepositoryInMemory : HotspotRepositoryInMemory) {
-        super();
+    constructor (jwtParser : JwtParser, hotspotRepositoryInMemory : HotspotRepositoryInMemory) {
+        super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotRepository.store(HotspotSample.TOWNHALL);
         this.hotspotRepository.store(HotspotSample.CHURCH);

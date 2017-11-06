@@ -14,18 +14,17 @@ class AuthCtrl extends RootCtrl {
         this.loginService = loginService;
     }
 
-    public login = (req : rest.Request, res : rest.Response, next : rest.Next) => {
-        this.loginService.try(req.query.username, req.query.password)
-        .then((body : any) => {
+    public login = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
+        try {
+            const body : any = await this.loginService.try(req.query.username, req.query.password);
             if (body.error) {
                 next(new restifyErrors.InvalidCredentialsError(body.error_description));
             } else {
                 res.json(body);
             }
-        })
-        .catch((err : any) => {
+        } catch (err) {
             next(new restifyErrors.InvalidCredentialsError(err.message));
-        });
+        }
     }
 }
 export default AuthCtrl;

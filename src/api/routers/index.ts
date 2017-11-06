@@ -3,7 +3,8 @@ import AuthCtrl from '../controllers/AuthCtrl';
 import * as restify from 'restify';
 // tslint:disable-next-line:max-line-length
 // tslint:disable-next-line:import-name
-import hotspotRepositoryInMemory from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
+import hotspotRepositoryInMemory 
+from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from './HotspotRouter';
 import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';
@@ -11,6 +12,7 @@ import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 import * as request from 'request';
 import config from './../config/';
+const jwt = require('jsonwebtoken');
 
 const loginService = new Login(
     {
@@ -21,11 +23,13 @@ const loginService = new Login(
     request,
 );
 
+const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
+
 
 export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
-    routers.push(new HotspotRouter(new HotspotCtrl(hotspotRepositoryInMemory)));
+    routers.push(new HotspotRouter(new HotspotCtrl(jwtParser, hotspotRepositoryInMemory)));
     routers.forEach(r => r.bind(server));
 };

@@ -1,4 +1,6 @@
 // tslint:disable-next-line:import-name
+import { Response } from '_debugger';
+import JwtParser from '../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
 import HotspotSample from '../../../src/domain/cityLife/model/HotspotSample';
 // tslint:disable-next-line:import-name
@@ -15,6 +17,7 @@ describe('HotspotCtrl', () => {
     let resMoq : TypeMoq.IMock<rest.Response>;
     let nextMoq : TypeMoq.IMock<rest.Next>;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
+    let jwtParser : TypeMoq.IMock<JwtParser>;
     let north : number;
     let south : number;
     let west : number;
@@ -41,6 +44,7 @@ describe('HotspotCtrl', () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
+        jwtParser = TypeMoq.Mock.ofType<JwtParser>();
     });
 
     describe('hotspots', () => {
@@ -58,7 +62,7 @@ describe('HotspotCtrl', () => {
             .returns(() => repositoryResult);
 
              // Act
-            new HotspotCtrl(hotspotRepositoryMoq.object).hotspots(
+            new HotspotCtrl(jwtParser.object, hotspotRepositoryMoq.object).hotspots(
                 reqMoq.object,
                 resMoq.object,
                 nextMoq.object,
@@ -84,7 +88,7 @@ describe('HotspotCtrl', () => {
             .returns(() => []);
 
              // Act
-            new HotspotCtrl(hotspotRepositoryMoq.object).hotspots(
+            new HotspotCtrl(jwtParser.object, hotspotRepositoryMoq.object).hotspots(
                 reqMoq.object,
                 resMoq.object,
                 nextMoq.object,

@@ -1,10 +1,11 @@
-// tslint:disable-next-line:import-name
+require('dotenv').config();
 import hotspotRepositoryInMemory from '../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotCtrl from './controllers/HotspotCtrl';
 import * as routers from './routers/';
 import * as console from 'console';
 import * as restify from 'restify';
 import config from './config';
+console.log(config);
 const logger = require('restify-logger');
 const swaggerJsDoc = require('swagger-jsdoc');
 
