@@ -18,7 +18,7 @@ class AuthCtrl extends RootCtrl {
         try {
             const body : any = await this.loginService.try(req.query.username, req.query.password);
             if (body.error) {
-                next(new restifyErrors.InvalidCredentialsError(body.error_description));
+                return next(new restifyErrors.InvalidCredentialsError(body.error_description));
             } else {
                 res.json(body);
             }

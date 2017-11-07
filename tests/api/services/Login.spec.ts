@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import Login, { LoginOptions } from '../../../src/api/services/auth/Login';
 describe('Login service', () => {
 
-    it.only('Should call auth0 oauth/token endpoint to retrieve a jwt correct token', async () => {
+    it('Should call auth0 oauth/token endpoint to retrieve a jwt correct token', async () => {
         // Arrange
         const loginOptions : LoginOptions = {
             url: 'fake.authO.url',

@@ -2,6 +2,7 @@ import Login from '../../../src/api/services/auth/Login';
 import AuthCtrl from '../../../src/api/controllers/AuthCtrl';
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
+const restifyErrors = require('restify-errors');
 
 describe('AuthCtrl', () => {
     describe('login', () => {
@@ -28,28 +29,49 @@ describe('AuthCtrl', () => {
             resMoq = TypeMoq.Mock.ofType<rest.Response>();
             nextMoq = TypeMoq.Mock.ofType<rest.Next>();
             loginServiceMoq = TypeMoq.Mock.ofType<Login>();
+            reqMoq
+            .setup((x : rest.Request) => x.query)
+            .returns(() => queryStrings);
         });
 
         it(
             `Should try to log user and return a 200 http response with authorization token`,
             async () => {
                 // Arrange
-                reqMoq
-                .setup((x : rest.Request) => x.query)
-                .returns(() => queryStrings);
-
-                /* const loginService = new Login(
-                    {
-                        url: config.auth.auth0url,
-                        clientId: config.auth.auth0ClientId,
-                        clientSecret: config.auth.auth0ClientSecret,
-                    },
-                    request,
-                ); */
+                const body = {
+                    token: 'a.jwt.token',
+                };
+                loginServiceMoq
+                .setup(x => x.try(username, password))
+                .returns(() => Promise.resolve(body));
                 // Act
                 const authCtrl = new AuthCtrl(loginServiceMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
+                resMoq.verify(x => x.json(body), TypeMoq.Times.once());
+            },
+        );
+
+        it(
+            `Should try to log user and return a 401 http response with error description`,
+            async () => {
+                // Arrange
+                const fakeError = { 
+                    error: 'an error occured', 
+                    error_description: 'error description',
+                };
+                loginServiceMoq
+                .setup(x => x.try(username, password))
+                .returns(() => Promise.resolve(fakeError));
+                // Act
+                const authCtrl = new AuthCtrl(loginServiceMoq.object);
+                await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
+                // Assert
+                nextMoq
+                .verify(
+                    x => x(new restifyErrors.InvalidCredentialsError(fakeError.error_description)), 
+                    TypeMoq.Times.once(),
+                );
             },
         );
     });
