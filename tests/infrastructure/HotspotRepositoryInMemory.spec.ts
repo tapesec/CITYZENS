@@ -1,9 +1,9 @@
-import PositionSample from '../../../../src/domain/cityLife/model/PositionSample';
-import Hotspot from '../../../../src/domain/cityLife/model/Hotspot';
-import
-{ HotspotRepositoryInMemory }
-from '../../../../src/domain/cityLife/infrastructure/HotspotRepositoryInMemory';
-import HotspotSample from '../../../../src/domain/cityLife/model/HotspotSample';
+import HotspotSample from '../../src/domain/cityLife/model/HotspotSample';
+import Hotspot from '../../src/domain/cityLife/model/Hotspot';
+import PositionSample from '../../src/domain/cityLife/model/PositionSample';
+import {
+    HotspotRepositoryInMemory,
+} from '../../src/infrastructure/HotspotRepositoryInMemory';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 

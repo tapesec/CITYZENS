@@ -1,10 +1,9 @@
+import hotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import AuthRouter from './AuthRouter';
 import AuthCtrl from '../controllers/AuthCtrl';
 import * as restify from 'restify';
 // tslint:disable-next-line:max-line-length
 // tslint:disable-next-line:import-name
-import hotspotRepositoryInMemory 
-from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from './HotspotRouter';
 import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';

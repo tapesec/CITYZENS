@@ -1,12 +1,12 @@
+import hotspotRepositoryInMemory, { 
+    HotspotRepositoryInMemory,
+} from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import { Response } from '_debugger';
 import * as querystring from 'querystring';
 import HotspotSample from '../../domain/cityLife/model/HotspotSample';
 // tslint:disable-next-line:import-name
-import hotspotRepositoryInMemory, {
-    HotspotRepositoryInMemory,
-} from '../../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import * as rest from 'restify';
 import * as helpers from '../helpers/';
 const logs = require('./../../logs/');

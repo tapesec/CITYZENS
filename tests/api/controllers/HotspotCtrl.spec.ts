@@ -4,8 +4,7 @@ import JwtParser from '../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
 import HotspotSample from '../../../src/domain/cityLife/model/HotspotSample';
 // tslint:disable-next-line:import-name
-import hotspotRepositoryInMemory, { HotspotRepositoryInMemory }
-from '../../../src/domain/cityLife/infrastructure/HotspotRepositoryInMemory';
+import { HotspotRepositoryInMemory } from './../../../src/infrastructure/HotspotRepositoryInMemory';
 import HotspotCtrl from '../../../src/api/controllers/HotspotCtrl';
 const restifyErrors = require('restify-errors');
 import * as TypeMoq from 'typemoq';

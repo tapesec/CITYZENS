@@ -1,7 +1,7 @@
 // tslint:disable-next-line:import-name
 import JwtParser from '../../../src/api/services/auth/JwtParser';
 import hotspotRepositoryInMemory
-from '../../../src/domain/cityLife/infrastructure/HotspotRepositoryInMemory';
+from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from '../../../src/api/routers/HotspotRouter';
 import * as TypeMoq from 'typemoq';
 import * as restify from 'restify';

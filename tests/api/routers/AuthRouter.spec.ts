@@ -2,8 +2,6 @@
 import AuthRouter from '../../../src/api/routers/AuthRouter';
 import Login from '../../../src/api/services/auth/Login';
 import AuthCtrl from '../../../src/api/controllers/AuthCtrl';
-import hotspotRepositoryInMemory
-from '../../../src/domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from '../../../src/api/routers/HotspotRouter';
 import * as TypeMoq from 'typemoq';
 import * as restify from 'restify';

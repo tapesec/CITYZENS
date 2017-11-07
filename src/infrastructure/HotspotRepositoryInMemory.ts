@@ -1,6 +1,7 @@
-import Hotspot from '../model/Hotspot';
-import Position from '../model/Position';
-import IHotspotRepository from '../model/IHotspotRepository';
+import Hotspot from '../domain/cityLife/model/Hotspot';
+import Position from '../domain/cityLife/model/Position';
+import IHotspotRepository from '../domain/cityLife/model/IHotspotRepository';
+
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
 
