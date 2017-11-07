@@ -1,4 +1,6 @@
 import * as restify from 'restify';
+import * as path from 'path';
+
 const swaggerJsDoc = require('swagger-jsdoc');
 
 class SwaggerRouter {
@@ -21,15 +23,16 @@ class SwaggerRouter {
             // Import swaggerDefinitions
             swaggerDefinition: this.swaggerDefinition,
             // Path to the API docs
-            apis: ['./build/api/routers/HotspotRouter.js'],
+            apis: [
+                `./src/api/routers/documentation/**/*.yaml`,
+            ],
         };
     }
 
     bind(server : restify.Server) {
         const swaggerSpec = swaggerJsDoc(this.options);
-
         server.get(/\/api-docs\/?.*/, restify.plugins.serveStatic({
-            directory: __dirname + '../../../../',
+            directory: path.win32.normalize(__dirname + '/../../../'),
             default: 'index.html',
         }));
 

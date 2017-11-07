@@ -5,13 +5,14 @@ import { AUTH_LOGIN } from './constants';
 
 class AuthRouter {
 
-    private ctrl : AuthCtrl;
+    private ctrl: AuthCtrl;
 
-    constructor(controller : AuthCtrl) {
+    constructor(controller: AuthCtrl) {
         this.ctrl = controller;
     }
 
-    bind(server : restify.Server) {
+    bind(server: restify.Server) {
+
         server.get(
             AUTH_LOGIN, this.ctrl.login,
         );

@@ -5,7 +5,7 @@ import * as routers from './routers/';
 import * as console from 'console';
 import * as restify from 'restify';
 import config from './config';
-console.log(config);
+
 const logger = require('restify-logger');
 const swaggerJsDoc = require('swagger-jsdoc');
 
@@ -15,7 +15,6 @@ logger.format('standard-format', ':method :url :response-time');
 server.use(logger('standard-format'));
 
 server.use(restify.plugins.queryParser());
-
 
 routers.init(server);
 

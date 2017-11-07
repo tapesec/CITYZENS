@@ -1,0 +1,42 @@
+/hotspots:
+  get:
+    tags:
+      - Hotspots
+    parameters:
+    - name: north
+      in: query
+      description: the latitude north of the area
+      required: false
+      schema:
+          type: float
+    - name: west
+      in: query
+      description: the longitude west of the area
+      required: false
+      schema:
+          type: float
+    - name: south
+      in: query
+      description: the latitude south of the area
+      required: false
+      schema:
+          type: float
+    - name: east
+      in: query
+      description: the longitude east of the area
+      required: false
+      schema:
+          type: float
+    description: Returns all hotspots
+    produces:
+      - application/json
+    responses:
+      200:
+        description: An array of cityzens's hotspots
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Hotspots'
+

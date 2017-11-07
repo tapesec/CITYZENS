@@ -1,0 +1,49 @@
+/auth/token:
+  # This is a HTTP operation
+  get:
+    tags:
+      - Auth
+    # Describe this verb here. Note: you can use markdown
+    description: |
+      submit credentials and get valid jwt token
+    consumes:
+    - application/json
+    produces:
+    - application/json
+    # This is array of GET operation parameters:
+    parameters:
+      # An example parameter that is in query and is required
+      -
+        name: username
+        in: query
+        description: username credential
+        required: true
+        type: string
+      -
+        name: password
+        in: query
+        description: password credential
+        required: true
+        type: string
+    # Expected responses for this operation:
+    responses:
+      # Response code
+      200:
+        description: User authorized
+        # A schema describing your response object.
+        # Use JSON Schema format
+        schema:
+          title: accessObject
+          type: object
+          properties:
+            access_token:
+              type: string
+            id_token:
+              type: string
+            scope:
+              type: string
+            expires_in:
+              type: integer
+              format: timestamp
+            token_type:
+              type: string

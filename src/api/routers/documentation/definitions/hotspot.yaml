@@ -1,0 +1,29 @@
+definition:
+  Hotspots:
+    properties:
+      id:
+        type: string
+        format: uuid
+      title:
+        type: string
+      position:
+        type: object
+        properties:
+          latitude:
+            type: double
+          longitude:
+            type: double
+      author:
+        type: object
+        properties:
+          pseudo:
+            type: string
+      content:
+        type: object
+        properties:
+          message:
+            type: string
+          createdAt:
+            type: date
+          updatedAt:
+            type: date
