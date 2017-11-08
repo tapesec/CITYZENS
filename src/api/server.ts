@@ -1,5 +1,4 @@
 require('dotenv').config();
-import hotspotRepositoryInMemory from '../domain/cityLife/infrastructure/HotspotRepositoryInMemory';
 import HotspotCtrl from './controllers/HotspotCtrl';
 import * as routers from './routers/';
 import * as console from 'console';
