@@ -1,3 +1,6 @@
+import CityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
+import CityCtrl from '../controllers/CityCtrl';
+import CityRouter from './CityRouter';
 import hotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import AuthRouter from './AuthRouter';
 import AuthCtrl from '../controllers/AuthCtrl';
@@ -29,6 +32,7 @@ export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
+    routers.push(new CityRouter(new CityCtrl(jwtParser, CityRepositoryInMemory)));
     routers.push(new HotspotRouter(new HotspotCtrl(jwtParser, hotspotRepositoryInMemory)));
     routers.forEach(r => r.bind(server));
 };
