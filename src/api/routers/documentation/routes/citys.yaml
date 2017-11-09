@@ -1,0 +1,25 @@
+/citys/{inseeCode}:
+  get:
+    tags:
+      - City
+    parameters:
+    - name: inseeCode
+      in: path
+      description: a city by insee code
+      required: true
+      type: string
+    description: Return a city
+    produces:
+      - application/json
+    responses:
+      200:
+        description: A french city
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                $ref: '#/definitions/Citys'
+      404:
+        description: invalid insee code
+

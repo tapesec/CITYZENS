@@ -11,19 +11,18 @@ class CityCtrl extends RootCtrl {
 
     private cityRepository : CityRepositoryInMemory;
 
+    public static INSEE_NOT_FOUND = 'invalid insee code';
+
     constructor(jwtParser : JwtParser, cityRepositoryInMemory : CityRepositoryInMemory) {
         super(jwtParser);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }
 
-    public city = (req : rest.Request, res : rest.Response, next : rest.Next) => {
-        if (!req.params || !req.params.insee) {
-            return next(new restifyErrors.BadRequestError('insee must be provided'));
-        }
+    public city = (req : rest.Request, res : rest.Response, next : rest.Next) => { 
         const askedCity : City = this.cityRepository.findByInsee(req.params.insee);
         if (askedCity) res.json(200, askedCity);
-        else next(new restifyErrors.NotFoundError('invalid insee code'));
+        else next(new restifyErrors.NotFoundError(CityCtrl.INSEE_NOT_FOUND));
     }
 }
 

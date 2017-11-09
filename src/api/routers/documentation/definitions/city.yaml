@@ -1,0 +1,14 @@
+definition:
+  Citys:
+    properties:
+      name:
+        type: string
+      insee:
+        type: string
+      position2D:
+        type: object
+        properties:
+          latitude:
+            type: double
+          longitude:
+            type: double
