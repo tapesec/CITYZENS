@@ -22,7 +22,8 @@ class CityCtrl extends RootCtrl {
             return next(new restifyErrors.BadRequestError('insee must be provided'));
         }
         const askedCity : City = this.cityRepository.findByInsee(req.params.insee);
-        res.json(askedCity);
+        if (askedCity) res.json(200, askedCity);
+        else next(new restifyErrors.NotFoundError('invalid insee code'));
     }
 }
 
