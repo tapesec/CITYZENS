@@ -19,6 +19,7 @@ describe('Hotspot entity', () => {
             PositionSample.MARTIGNAS_NORTH_OUEST,
             ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
             AuthorSample.LOUISE,
+            '33273',
         );
         // Assert
         expect(hotspot.id).to.be.equal(id);
@@ -38,6 +39,7 @@ describe('Hotspot entity', () => {
             PositionSample.MARTIGNAS_NORTH_OUEST,
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
+            '33273',
         );
         // Act
         hotspot.moveTo(
@@ -58,6 +60,7 @@ describe('Hotspot entity', () => {
             PositionSample.MARTIGNAS_NORTH_OUEST,
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
+            '33273',
         );
         // Act
         hotspot.editMessage(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE.message);
@@ -77,11 +80,11 @@ describe('Hotspot entity', () => {
             PositionSample.MARTIGNAS_NORTH_OUEST,
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
+            '33273',
         );
         // Act
         hotspot.changeTitle(newTitle);
         // assert
-        expect(hotspot.title)
-        .to.be.equal(newTitle);
+        expect(hotspot.title).to.be.equal(newTitle);
     });
 });

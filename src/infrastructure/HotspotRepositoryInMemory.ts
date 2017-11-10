@@ -4,8 +4,12 @@ import IHotspotRepository from '../domain/cityLife/model/IHotspotRepository';
 
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
-
+    
     protected hotspots : Map<string, Hotspot> = new Map();
+    
+    public findByCodeCommune(insee: string): Hotspot[] {
+        return Array.from(this.hotspots.values()).filter(value => value.idCity === insee);
+    }
 
     public findById(id: string): Hotspot {
         return this.hotspots.get(id);

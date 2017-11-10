@@ -9,6 +9,7 @@ class Hotspot {
     protected _title : string;
     protected _content : Content;
     protected _author : Author;
+    protected _idCity : string;
 
     constructor(
         id : string,
@@ -16,8 +17,10 @@ class Hotspot {
         position : Position,
         content : Content,
         author : Author,
+        idCity : string,
     ) {
         this._uid = id;
+        this._idCity = idCity;
         this._title = title;
         this._position = position;
         this._content = content;
@@ -43,6 +46,10 @@ class Hotspot {
         return this._author;
     }
 
+    get idCity() : string {
+        return this._idCity;
+    }
+
     moveTo(newLat : number, newLng : number) : void {
         this._position = new Position(newLat, newLng);
     }
@@ -58,6 +65,7 @@ class Hotspot {
     toJSON() {
         return {
             id: this.id,
+            idCity: this.idCity,
             title: this.title,
             position: this.position,
             content: this.content,

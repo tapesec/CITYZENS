@@ -7,6 +7,8 @@ interface IHotspotRepository​​ {
 
     findInArea(north : number, west : number, south : number, east : number) : Hotspot[];
 
+    findByCodeCommune(insee : string) : Hotspot[];
+
     store(hotspot : Hotspot) : void;
 
     remove(hotspot : Hotspot) : void;

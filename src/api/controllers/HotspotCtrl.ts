@@ -1,12 +1,13 @@
+import hotspotsByArea from '../services/hotspot/hotspotsByArea';
+import Hotspot from '../../domain/cityLife/model/Hotspot';
+import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import hotspotRepositoryInMemory, { 
     HotspotRepositoryInMemory,
 } from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
-import { Response } from '_debugger';
 import * as querystring from 'querystring';
 import HotspotSample from '../../domain/cityLife/model/HotspotSample';
-// tslint:disable-next-line:import-name
 import * as rest from 'restify';
 import * as helpers from '../helpers/';
 const logs = require('./../../logs/');
@@ -26,25 +27,20 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     public hotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+        
         const queryStrings : any = req.query;
         let badRequestMessage : string;
+        let hotspotsResult : Hotspot[];
+
         if (this.queryByArea(queryStrings)) {
-            if (helpers.latitudeLongitude(queryStrings)) {
-                const hotspotsInArea = this.hotspotRepository.findInArea(
-                    queryStrings.north,
-                    queryStrings.west,
-                    queryStrings.south,
-                    queryStrings.east,
-                );
-                httpResponseDataLogger.info('Hotspots retrieved', hotspotsInArea);
-                return res.send(JSON.stringify(hotspotsInArea));
-            } else {
-                badRequestMessage = 'Invalid latitude/longitude format';
-            }
+            hotspotsResult = hotspotsByArea(queryStrings, this.hotspotRepository);
+        } else if (req.query.insee) {
+            hotspotsResult = hotspotsByCodeCommune(req.query.insee, this.hotspotRepository);
         } else {
             badRequestMessage = 'Invalid query strings';
+            return next(new restifyErrors.BadRequestError(badRequestMessage));
         }
-        return next(new restifyErrors.BadRequestError(badRequestMessage));
+        res.json(200, hotspotsResult);
     }
 
     private queryByArea(queryStrings : any) : boolean {

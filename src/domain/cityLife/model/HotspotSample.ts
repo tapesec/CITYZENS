@@ -13,6 +13,7 @@ class HotspotSample {
         PositionSample.TOWNHALL,
         ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
         AuthorSample.ELODIE,
+        '33273',
     );
 
     public static SCHOOL : Hotspot = new Hotspot(
@@ -21,6 +22,7 @@ class HotspotSample {
         PositionSample.SCHOOL,
         ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
         AuthorSample.LOUISE,
+        '33273',
     );
 
     public static CHURCH : Hotspot = new Hotspot(
@@ -29,14 +31,16 @@ class HotspotSample {
         PositionSample.CHURCH,
         ContentSample.CHURCH_MESSAGE,
         AuthorSample.MARTIN,
+        '33273',
     );
 
     public static MERIGNAC : Hotspot = new Hotspot(
-            v4(),
-            'Merignac centre',
-            PositionSample.MERIGNAC,
-            ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
-            AuthorSample.ELODIE,
+        v4(),
+        'Merignac centre',
+        PositionSample.MERIGNAC,
+        ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
+        AuthorSample.ELODIE,
+        '33281',
     );
 }
 

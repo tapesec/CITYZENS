@@ -69,18 +69,16 @@ describe('HotspotCtrl', () => {
             // Assert
             resMoq
             .verify(
-                x => x.send(JSON.stringify(repositoryResult)),
+                x => x.json(200, repositoryResult),
                 TypeMoq.Times.once());
         });
 
-        it('should next bad request error if invalid coords query strings', () => {
+        it('should returns an empty list if invalid coords query strings', () => {
             // Arrange
             queryStrings.north = 'bad format';
             reqMoq
             .setup((x : rest.Request) => x.query)
             .returns(() => queryStrings);
-            const errorMessage : string = 'Invalid latitude/longitude format';
-            const badFormatError = new restifyErrors.BadRequestError(errorMessage);
 
             hotspotRepositoryMoq
             .setup(x => x.findInArea(north, west, south, east))
@@ -94,9 +92,9 @@ describe('HotspotCtrl', () => {
             );
 
             // Assert
-            nextMoq
+            resMoq
             .verify(
-                x => x(badFormatError),
+                x => x.json(200, []),
                 TypeMoq.Times.once());
         });
     });

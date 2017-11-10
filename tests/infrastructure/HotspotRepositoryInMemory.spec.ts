@@ -1,3 +1,4 @@
+import CitySample from '../../src/domain/cityLife/model/CitySample';
 import HotspotSample from '../../src/domain/cityLife/model/HotspotSample';
 import Hotspot from '../../src/domain/cityLife/model/Hotspot';
 import PositionSample from '../../src/domain/cityLife/model/PositionSample';
@@ -64,7 +65,7 @@ describe('HotspotRepositoryInMemory', () => {
             PositionSample.MARTIGNAS_SOUTH_EST.latitude,
             PositionSample.MARTIGNAS_SOUTH_EST.longitude,
         );
-        // Expect
+        // Assert
         expect(hotspots).to.have.lengthOf(2);
     });
 
@@ -79,8 +80,17 @@ describe('HotspotRepositoryInMemory', () => {
             PositionSample.MARTIGNAS_SOUTH_EST.latitude,
             PositionSample.MARTIGNAS_SOUTH_EST.longitude,
         );
-        // Expect
+        // Assert
         expect(hotspots).to.have.lengthOf(0);
         expect(hotspots).to.be.eql([]);
+    });
+
+    it('should retrieve hotspot by given city insee code', () => {
+        // Arrange
+        const insee = CitySample.MARTIGNAS.insee;
+        // Act
+        const hotspots : Hotspot[] = hotspotRepository.findByCodeCommune(insee);
+        // Assert
+        expect(hotspots).to.have.lengthOf(2);
     });
 });
