@@ -3,6 +3,12 @@
     tags:
       - Hotspots
     parameters:
+    - name: insee
+      in: query
+      description: the code insee commune
+      required: false
+      schema:
+          type: string
     - name: north
       in: query
       description: the latitude north of the area
@@ -39,4 +45,6 @@
               type: array
               items:
                 $ref: '#/definitions/Hotspots'
+      401:
+        description: Invalid query strings
 
