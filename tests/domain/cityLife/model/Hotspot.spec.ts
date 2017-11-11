@@ -1,3 +1,4 @@
+import AddressSample from '../../../../src/domain/cityLife/model/AddressSample';
 import Hotspot from '../../../../src/domain/cityLife/model/Hotspot';
 import PositionSample from '../../../../src/domain/cityLife/model/PositionSample';
 import ContentSample from '../../../../src/domain/cityLife/model/ContentSample';
@@ -20,6 +21,7 @@ describe('Hotspot entity', () => {
             ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
             AuthorSample.LOUISE,
             '33273',
+            AddressSample.TOWNHALL_ADDRESS,
         );
         // Assert
         expect(hotspot.id).to.be.equal(id);
@@ -40,6 +42,7 @@ describe('Hotspot entity', () => {
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
             '33273',
+            AddressSample.SCHOOL_ADDRESS,
         );
         // Act
         hotspot.moveTo(
@@ -61,6 +64,7 @@ describe('Hotspot entity', () => {
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
             '33273',
+            AddressSample.SCHOOL_ADDRESS,
         );
         // Act
         hotspot.editMessage(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE.message);
@@ -81,10 +85,32 @@ describe('Hotspot entity', () => {
             ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
             AuthorSample.LOUISE,
             '33273',
+            AddressSample.SCHOOL_ADDRESS,
         );
         // Act
         hotspot.changeTitle(newTitle);
         // assert
         expect(hotspot.title).to.be.equal(newTitle);
+    });
+
+    it('should change address', () => {
+        
+        // Arrange
+        const id : string = v4();
+        const title : string = 'Mairie';
+        const newAddress : string = '2 rue Gustave Dubourg';
+        const hotspot : Hotspot = new Hotspot(
+            id,
+            title,
+            PositionSample.MARTIGNAS_NORTH_OUEST,
+            ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
+            AuthorSample.LOUISE,
+            '33273',
+            AddressSample.SCHOOL_ADDRESS,
+        );
+        // Act
+        hotspot.changeAddress(newAddress);
+        // assert
+        expect(hotspot.address.name).to.be.equal(newAddress);
     });
 });

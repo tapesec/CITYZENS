@@ -1,3 +1,4 @@
+import Address from './Address';
 import Position from './Position';
 import Content from './Content';
 import Author from './Author';
@@ -10,6 +11,7 @@ class Hotspot {
     protected _content : Content;
     protected _author : Author;
     protected _idCity : string;
+    protected _address : Address;
 
     constructor(
         id : string,
@@ -18,6 +20,7 @@ class Hotspot {
         content : Content,
         author : Author,
         idCity : string,
+        address : Address,
     ) {
         this._uid = id;
         this._idCity = idCity;
@@ -25,6 +28,7 @@ class Hotspot {
         this._position = position;
         this._content = content;
         this._author = author;
+        this._address = address;
     }
     get id() : string {
         return this._uid;
@@ -50,8 +54,16 @@ class Hotspot {
         return this._idCity;
     }
 
+    get address() : Address {
+        return this._address;
+    }
+
     moveTo(newLat : number, newLng : number) : void {
         this._position = new Position(newLat, newLng);
+    }
+
+    changeAddress(newAddress : string) : void {
+        this._address = new Address(newAddress, this._address.city);
     }
 
     editMessage(message : string) : void {
@@ -70,6 +82,7 @@ class Hotspot {
             position: this.position,
             content: this.content,
             author: this.author,
+            address: this.address,
         };
     }
 }
