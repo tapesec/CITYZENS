@@ -1,8 +1,8 @@
-import AddressSample from '../../../../src/domain/cityLife/model/AddressSample';
-import Hotspot, { HotspotScope } from '../../../../src/domain/cityLife/model/Hotspot';
-import PositionSample from '../../../../src/domain/cityLife/model/PositionSample';
-import ContentSample from '../../../../src/domain/cityLife/model/ContentSample';
-import AuthorSample from '../../../../src/domain/cityLife/model/AuthorSample';
+import Hotspot, { HotspotScope } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import AddressSample from '../../../../src/domain/cityLife/model/sample/AddressSample';
+import PositionSample from '../../../../src/domain/cityLife/model/sample/PositionSample';
+import ContentSample from '../../../../src/domain/cityLife/model/sample/ContentSample';
+import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 
 import { expect } from 'chai';
 import { v4 } from 'uuid';

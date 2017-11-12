@@ -1,5 +1,5 @@
-import CityzenSample from '../../cityzens/model/CityzenSample';
-import Author from './Author';
+import CityzenSample from '../../../cityzens/model/CityzenSample';
+import Author from '../hotspot/Author';
 
 
 class AuthorSample {

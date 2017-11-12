@@ -1,4 +1,4 @@
-import Content from '../../../../src/domain/cityLife/model/Content';
+import Content from '../../../../src/domain/cityLife/model/hotspot/Content';
 import { expect } from 'chai';
 
 describe('Content value object', () => {

@@ -1,5 +1,5 @@
 import CitySample from './CitySample';
-import Address from './Address';
+import Address from '../hotspot/Address';
 
 class AddressSample {
     public static TOWNHALL_ADDRESS : Address = 

@@ -1,7 +1,7 @@
-import City from '../../../../src/domain/cityLife/model/City';
+import City from '../../../../src/domain/cityLife/model/city/City';
 import { expect } from 'chai';
-import Position from '../../../../src/domain/cityLife/model/Position';
-import PositionSample from '../../../../src/domain/cityLife/model/PositionSample';
+import Position from '../../../../src/domain/cityLife/model/hotspot/Position';
+import PositionSample from '../../../../src/domain/cityLife/model/sample/PositionSample';
 
 describe('City entity', () => {
     it ('should have correct properties', () => {

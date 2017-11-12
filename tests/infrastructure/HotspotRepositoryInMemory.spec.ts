@@ -1,7 +1,7 @@
-import CitySample from '../../src/domain/cityLife/model/CitySample';
-import HotspotSample from '../../src/domain/cityLife/model/HotspotSample';
-import Hotspot from '../../src/domain/cityLife/model/Hotspot';
-import PositionSample from '../../src/domain/cityLife/model/PositionSample';
+import CitySample from '../../src/domain/cityLife/model/sample/CitySample';
+import HotspotSample from '../../src/domain/cityLife/model/sample/HotspotSample';
+import Hotspot from '../../src/domain/cityLife/model/hotspot/Hotspot';
+import PositionSample from '../../src/domain/cityLife/model/sample/PositionSample';
 import {
     HotspotRepositoryInMemory,
 } from '../../src/infrastructure/HotspotRepositoryInMemory';

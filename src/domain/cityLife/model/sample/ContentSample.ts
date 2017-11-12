@@ -1,4 +1,4 @@
-import Content from './Content';
+import Content from '../hotspot/Content';
 
 class ContentSample {
     public static MARTIGNAS_TOWNHALL_MESSAGE = new Content('Horraires d\'ouverture', new Date());

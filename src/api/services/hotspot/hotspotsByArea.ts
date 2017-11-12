@@ -1,5 +1,5 @@
 import { HotspotRepositoryInMemory } from '../../../infrastructure/HotspotRepositoryInMemory';
-import Hotspot from '../../../domain/cityLife/model/Hotspot';
+import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import * as helpers from './../../helpers';
 
 const hotspotsByArea = (

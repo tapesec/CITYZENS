@@ -2,7 +2,7 @@
 import { Response } from '_debugger';
 import JwtParser from '../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
-import HotspotSample from '../../../src/domain/cityLife/model/HotspotSample';
+import HotspotSample from '../../../src/domain/cityLife/model/sample/HotspotSample';
 // tslint:disable-next-line:import-name
 import { HotspotRepositoryInMemory } from './../../../src/infrastructure/HotspotRepositoryInMemory';
 import HotspotCtrl from '../../../src/api/controllers/HotspotCtrl';

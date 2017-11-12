@@ -1,5 +1,5 @@
+import Hotspot, { HotspotScope } from '../hotspot/Hotspot';
 import AddressSample from './AddressSample';
-import Hotspot, { HotspotScope } from './Hotspot';
 import PositionSample from './PositionSample';
 import ContentSample from './ContentSample';
 import AuthorSample from './AuthorSample';

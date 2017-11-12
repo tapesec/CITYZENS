@@ -1,5 +1,5 @@
-import CitySample from '../../../../src/domain/cityLife/model/CitySample';
-import Address from '../../../../src/domain/cityLife/model/Address';
+import CitySample from '../../../../src/domain/cityLife/model/sample/CitySample';
+import Address from '../../../../src/domain/cityLife/model/hotspot/Address';
 import { expect } from 'chai';
 
 

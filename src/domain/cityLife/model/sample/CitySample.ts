@@ -1,5 +1,5 @@
 import PositionSample from './PositionSample';
-import City from './City';
+import City from '../city/City';
 
 class CitySample {
     public static MARTIGNAS = new City('Martignas sur jalles', '33273', PositionSample.CHURCH);

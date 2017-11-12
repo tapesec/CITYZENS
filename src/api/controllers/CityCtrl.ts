@@ -1,5 +1,5 @@
-import City from '../../domain/cityLife/model/City';
-import CitySample from '../../domain/cityLife/model/CitySample';
+import City from '../../domain/cityLife/model/city/City';
+import CitySample from '../../domain/cityLife/model/sample/CitySample';
 import cityRepositoryInMemory, { CityRepositoryInMemory }
 from '../../infrastructure/CityRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';

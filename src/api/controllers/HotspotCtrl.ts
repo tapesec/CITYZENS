@@ -1,5 +1,5 @@
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
-import Hotspot from '../../domain/cityLife/model/Hotspot';
+import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import hotspotRepositoryInMemory, { 
     HotspotRepositoryInMemory,
@@ -7,7 +7,7 @@ import hotspotRepositoryInMemory, {
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as querystring from 'querystring';
-import HotspotSample from '../../domain/cityLife/model/HotspotSample';
+import HotspotSample from '../../domain/cityLife/model/sample/HotspotSample';
 import * as rest from 'restify';
 import * as helpers from '../helpers/';
 const logs = require('./../../logs/');

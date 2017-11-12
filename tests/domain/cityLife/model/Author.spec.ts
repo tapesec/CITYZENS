@@ -1,5 +1,5 @@
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
-import Author from '../../../../src/domain/cityLife/model/Author';
+import Author from '../../../../src/domain/cityLife/model/hotspot/Author';
 
 import { expect } from 'chai';
 
