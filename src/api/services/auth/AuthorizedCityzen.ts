@@ -8,7 +8,7 @@ class AuthorizedCityzen {
     }
 
     public load = () : Cityzen => {
-        return new Cityzen(this.payload.email, this.payload.nickname);
+        return new Cityzen(this.payload.email, this.payload.nickname, this.payload.description);
     }
 }
 
