@@ -1,5 +1,5 @@
 import AddressSample from './AddressSample';
-import Hotspot from './Hotspot';
+import Hotspot, { HotspotScope } from './Hotspot';
 import PositionSample from './PositionSample';
 import ContentSample from './ContentSample';
 import AuthorSample from './AuthorSample';
@@ -16,6 +16,7 @@ class HotspotSample {
         AuthorSample.ELODIE,
         '33273',
         AddressSample.TOWNHALL_ADDRESS,
+        HotspotScope.Public,
     );
 
     public static SCHOOL : Hotspot = new Hotspot(
@@ -26,6 +27,7 @@ class HotspotSample {
         AuthorSample.LOUISE,
         '33273',
         AddressSample.SCHOOL_ADDRESS,
+        HotspotScope.Public,
     );
 
     public static CHURCH : Hotspot = new Hotspot(
@@ -36,6 +38,7 @@ class HotspotSample {
         AuthorSample.MARTIN,
         '33273',
         AddressSample.CHURCH_ADDRESS,
+        HotspotScope.Public,
     );
 
     public static MERIGNAC : Hotspot = new Hotspot(
@@ -46,6 +49,7 @@ class HotspotSample {
         AuthorSample.ELODIE,
         '33281',
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
+        HotspotScope.Public,
     );
 }
 

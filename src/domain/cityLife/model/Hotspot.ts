@@ -3,6 +3,11 @@ import Position from './Position';
 import Content from './Content';
 import Author from './Author';
 
+export enum HotspotScope {
+    Public = 'public',
+    Private = 'private',
+}
+
 class Hotspot {
 
     protected _uid : string;
@@ -12,6 +17,7 @@ class Hotspot {
     protected _author : Author;
     protected _idCity : string;
     protected _address : Address;
+    protected _scope : HotspotScope;
 
     constructor(
         id : string,
@@ -21,6 +27,7 @@ class Hotspot {
         author : Author,
         idCity : string,
         address : Address,
+        scope : HotspotScope,
     ) {
         this._uid = id;
         this._idCity = idCity;
@@ -29,6 +36,7 @@ class Hotspot {
         this._content = content;
         this._author = author;
         this._address = address;
+        this._scope = scope;
     }
     get id() : string {
         return this._uid;
@@ -58,6 +66,10 @@ class Hotspot {
         return this._address;
     }
 
+    get scope() : HotspotScope {
+        return this._scope;
+    }
+
     moveTo(newLat : number, newLng : number) : void {
         this._position = new Position(newLat, newLng);
     }
@@ -74,6 +86,10 @@ class Hotspot {
         this._title = title;
     }
 
+    changeScope(status : HotspotScope) : void {
+        this._scope = status;
+    }
+
     toJSON() {
         return {
             id: this.id,
@@ -83,6 +99,7 @@ class Hotspot {
             content: this.content,
             author: this.author,
             address: this.address,
+            scope: this.scope,
         };
     }
 }

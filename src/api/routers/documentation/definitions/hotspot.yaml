@@ -6,6 +6,11 @@ definition:
         format: uuid
       title:
         type: string
+      scope:
+        type: string
+        enum:
+          - public
+          - private
       position:
         type: object
         properties:
