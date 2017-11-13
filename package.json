@@ -17,6 +17,7 @@
     "auth0": "^2.8.0",
     "dotenv": "^4.0.0",
     "jsonwebtoken": "^8.1.0",
+    "lokijs": "^1.5.1",
     "restify": "^6.2.3",
     "restify-logger": "^2.0.1",
     "sinon": "^4.0.1",
