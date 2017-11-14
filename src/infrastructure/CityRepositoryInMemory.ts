@@ -1,5 +1,4 @@
 import City from '../domain/cityLife/model/city/City';
-import { Error } from 'tslint/lib/error';
 import ICityRepository from '../domain/cityLife/model/city/ICityRepository';
 
 class CityRepositoryInMemory implements ICityRepository {

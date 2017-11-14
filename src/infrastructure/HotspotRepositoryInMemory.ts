@@ -1,6 +1,9 @@
+import { hasCommentAfterPosition } from 'tslint/lib';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
+const hotspotCollection = require('./dbInMemory').hotspotCollection;
+const cityzenCollection = require('./dbInMemory').cityzenCollection;
 
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
@@ -8,7 +11,9 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     protected hotspots : Map<string, Hotspot> = new Map();
     
     public findByCodeCommune(insee: string): Hotspot[] {
-        return Array.from(this.hotspots.values()).filter(value => value.idCity === insee);
+        const hotspotsResults : any = hotspotCollection.find({ idCity: insee });
+        const authorIds = hotspotsResults.map((hotspot : any) => hotspot.id);
+        const cityzensList = cityzenCollection.find({ insee: { $in : authorIds } });
     }
 
     public findById(id: string): Hotspot {

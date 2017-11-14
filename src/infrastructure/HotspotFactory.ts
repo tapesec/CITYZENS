@@ -1,16 +1,36 @@
-import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
-class HotspotFactory {
+import Author from '../domain/cityLife/model/hotspot/Author';
+import Content from '../domain/cityLife/model/hotspot/Content';
+import Position from '../domain/cityLife/model/hotspot/Position';
+import Hotspot, { HotspotScope } from '../domain/cityLife/model/hotspot/Hotspot';
+import Address from '../domain/cityLife/model/hotspot/Address';
 
-    protected data : any;
+export const createHotspot = (data : any) : Hotspot => {
+    let position : Position;
+    let content : Content;
+    let address : Address;
+    let author : Author;
+    let hotspot : Hotspot;
+    let scope : HotspotScope;
 
-    constructor(data : any) {
-        this.data = data;
+    if (data.position) {
+        position = new Position(data.position.latitude, data.position.longitude);
     }
-
-    public createHotspot = () => {
-        if (this.data.position) {
-            const
-        }
+    if (data.message) {
+        content = new Content(data.content.message, data.content.createdAt, data.content.updatedAt);
     }
-}
-export default HotspotFactory;
+    if (data.address) {
+        address = new Address(data.address.name, data.address.city);
+    }
+    if (data.cityzen) {
+        author = new Author(data.cityzen.nickname);
+    }
+    if (data.scope) {
+        scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;
+    }
+    hotspot = new Hotspot(
+        data.id, data.title, position, content, author, '3332733', address, scope);
+
+    return hotspot;
+
+};
+
