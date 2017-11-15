@@ -2,7 +2,11 @@ const hotspotCollection = require('./dbInMemory').hotspotCollection;
 const cityzenCollection = require('./dbInMemory').cityzenCollection;
 
 const hotspotFind = (requestParams : any) => {
-    const hotspotsResults : any = hotspotCollection.find(requestParams);
+    let hotspotsResults : any;
+    if (typeof requestParams === 'function')
+        hotspotsResults = hotspotCollection.where(requestParams);
+    else
+        hotspotsResults = hotspotCollection.find(requestParams);
     const authorIds = hotspotsResults.map((hotspot : any) => hotspot.authorId);
     const cityzensList = cityzenCollection.find({ email: { $in : authorIds } });
     const cityzenObject : any = {};

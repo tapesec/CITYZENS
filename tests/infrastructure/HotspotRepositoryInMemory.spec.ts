@@ -7,19 +7,34 @@ import {
 } from '../../src/infrastructure/HotspotRepositoryInMemory';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
+import orm from './../../src/infrastructure/orm';
+import * as TypeMoq from 'typemoq';
+import {
+    HOTSPOT_MARTIGNAS_TOWNHALL,
+    HOTSPOT_MARTIGNAS_CHURCH,
+    HOTSPOT_MARTIGNAS_SCHOOL,
+} from './../../src/infrastructure/dbInMemory';
 
 describe('HotspotRepositoryInMemory', () => {
 
     let hotspotRepository : HotspotRepositoryInMemory;
+    let orm : TypeMoq.IMock<any>;
 
     beforeEach(() => {
-        hotspotRepository = new HotspotRepositoryInMemory();
+        orm = TypeMoq.Mock.ofType();
+        orm
+        .setup(x => x.hotspot.findAll())
+        .returns(
+            () => [HOTSPOT_MARTIGNAS_TOWNHALL, HOTSPOT_MARTIGNAS_CHURCH, HOTSPOT_MARTIGNAS_SCHOOL],
+        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         hotspotRepository.store(HotspotSample.SCHOOL);
         hotspotRepository.store(HotspotSample.TOWNHALL);
         hotspotRepository.store(HotspotSample.MERIGNAC);
     });
 
     afterEach(() => {
+        orm = undefined;
         hotspotRepository = null;
     });
 
@@ -39,7 +54,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should store a new hotspot in memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory​​();
+        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
         hotspotRepository.store(HotspotSample.CHURCH);
         // Arrange

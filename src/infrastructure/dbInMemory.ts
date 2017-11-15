@@ -1,3 +1,4 @@
+import { HOTSPOT_ENDPOINT } from '../api/routers/constants';
 import HotspotSample from '../domain/cityLife/model/sample/HotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
 import ContentSample from '../domain/cityLife/model/sample/ContentSample';
@@ -9,9 +10,9 @@ import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { v4 } from 'uuid';
 
-const hotspot = db.addCollection('hotspots');
+const hotspotCollection = db.addCollection('hotspots');
 
-hotspot.insert({
+export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     id: v4(),
     title: HotspotSample.TOWNHALL.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
@@ -20,9 +21,8 @@ hotspot.insert({
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
     scope: HotspotScope.Public,
-});
-
-hotspot.insert({
+};
+export const HOTSPOT_MARTIGNAS_CHURCH = {
     id: v4(),
     title: HotspotSample.CHURCH.title,
     position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
@@ -31,9 +31,8 @@ hotspot.insert({
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
     scope: HotspotScope.Public,
-});
-
-hotspot.insert({
+};
+export const HOTSPOT_MARTIGNAS_SCHOOL = {
     id: v4(),
     title: HotspotSample.SCHOOL.title,
     position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
@@ -42,9 +41,8 @@ hotspot.insert({
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
     scope: HotspotScope.Public,
-});
-
-hotspot.insert({
+};
+export const HOTSPOT_MERIGNAC_CENTER = {
     id: v4(),
     title: HotspotSample.MERIGNAC.title,
     position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
@@ -53,18 +51,21 @@ hotspot.insert({
     idCity: CitySample.MERIGNAC.insee,
     address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
     scope: HotspotScope.Public,
-});
+};
 
+hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
+hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
+hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
+hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
 
-const cityzen = db.addCollection('cityzens');
+const cityzenCollection = db.addCollection('cityzens');
+export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
+export const CITYZEN_LOUISE = JSON.parse(JSON.stringify(CityzenSample.LOUISE));
+export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
 
-cityzen.insert(JSON.parse(JSON.stringify(CityzenSample.ELODIE)));
-cityzen.insert(JSON.parse(JSON.stringify(CityzenSample.LOUISE)));
-cityzen.insert(JSON.parse(JSON.stringify(CityzenSample.MARTIN)));
+cityzenCollection.insert(CITYZEN_ELODIE);
+cityzenCollection.insert(CITYZEN_LOUISE);
+cityzenCollection.insert(CITYZEN_MARTIN);const city = db.addCollection('city');
 
-
-const city = db.addCollection('city');
-
-module.exports.hotspotCollection = hotspot;
-module.exports.cityzenCollection = cityzen;
-module.exports.cityCollection = city;
+export { cityzenCollection };
+export { hotspotCollection };
