@@ -25,6 +25,8 @@ class Content {
     toJSON() {
         return {
             message: this.message,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
         };
     }
 }

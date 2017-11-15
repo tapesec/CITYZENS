@@ -26,9 +26,14 @@ const hotspotFindOne = (requestParams : any) => {
     return hotspotsResult;
 };
 
+const hotspotSave = (data : any) => {
+    hotspotCollection.insert(data);
+};
+
 export default {
     hotspot: {
         findAll: hotspotFind,
         findOne: hotspotFindOne,
+        save: hotspotSave,
     },
 };

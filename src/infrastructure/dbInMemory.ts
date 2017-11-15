@@ -13,7 +13,7 @@ import { v4 } from 'uuid';
 const hotspotCollection = db.addCollection('hotspots');
 
 export const HOTSPOT_MARTIGNAS_TOWNHALL = {
-    id: v4(),
+    id: HotspotSample.TOWNHALL.id,
     title: HotspotSample.TOWNHALL.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
     content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE)),
@@ -23,7 +23,7 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     scope: HotspotScope.Public,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {
-    id: v4(),
+    id: HotspotSample.CHURCH.id,
     title: HotspotSample.CHURCH.title,
     position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
     content: JSON.parse(JSON.stringify(ContentSample.CHURCH_MESSAGE)),
@@ -33,7 +33,7 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     scope: HotspotScope.Public,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
-    id: v4(),
+    id: HotspotSample.SCHOOL.id,
     title: HotspotSample.SCHOOL.title,
     position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
     content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_SCHOOL_MESSAGE)),
@@ -43,7 +43,7 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     scope: HotspotScope.Public,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
-    id: v4(),
+    id: HotspotSample.MERIGNAC.id,
     title: HotspotSample.MERIGNAC.title,
     position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
     content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE)),

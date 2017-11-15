@@ -23,8 +23,12 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public findById = (id: string): Hotspot => {
+        let hotspot : Hotspot;
         const data = this.orm.hotspot.findOne({ id });
-        return hotspotFactory.createHotspot(data);
+        if (data) {
+            hotspot = hotspotFactory.createHotspot(data);
+        }
+        return hotspot;
     }
 
     public findInArea = (north : number, west : number, south : number, east : number)

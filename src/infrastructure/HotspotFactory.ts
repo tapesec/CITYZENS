@@ -15,7 +15,7 @@ export const createHotspot = (data : any) : Hotspot => {
     if (data.position) {
         position = new Position(data.position.latitude, data.position.longitude);
     }
-    if (data.message) {
+    if (data.content) {
         content = new Content(data.content.message, data.content.createdAt, data.content.updatedAt);
     }
     if (data.address) {
