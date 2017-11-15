@@ -22,15 +22,14 @@ export const createHotspot = (data : any) : Hotspot => {
         address = new Address(data.address.name, data.address.city);
     }
     if (data.cityzen) {
-        author = new Author(data.cityzen.nickname);
+        author = new Author(data.cityzen.pseudo);
     }
     if (data.scope) {
         scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;
     }
     hotspot = new Hotspot(
-        data.id, data.title, position, content, author, '3332733', address, scope);
+        data.id, data.title, position, content, author, data.idCity, address, scope);
 
     return hotspot;
 
 };
-

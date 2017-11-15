@@ -1,39 +1,72 @@
 import { hasCommentAfterPosition } from 'tslint/lib';
+import * as hotspotFactory from './HotspotFactory';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
-const hotspotCollection = require('./dbInMemory').hotspotCollection;
-const cityzenCollection = require('./dbInMemory').cityzenCollection;
-
+import orm from './orm';
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
     
     protected hotspots : Map<string, Hotspot> = new Map();
+    protected orm : any;
+
+    constructor(orm : any) {
+        this.orm = orm;
+    }
     
-    public findByCodeCommune(insee: string): Hotspot[] {
-        const hotspotsResults : any = hotspotCollection.find({ idCity: insee });
-        const authorIds = hotspotsResults.map((hotspot : any) => hotspot.id);
-        const cityzensList = cityzenCollection.find({ insee: { $in : authorIds } });
+    public findByCodeCommune = (insee: string): Hotspot[] => {
+        const data = this.orm.hotspot.findAll({ idCity: insee });
+        const hotspotsArray : Hotspot[] = [];
+        data.forEach((entry : any) => {
+            hotspotsArray.push(hotspotFactory.createHotspot(entry));
+        });
+        return hotspotsArray;
     }
 
-    public findById(id: string): Hotspot {
-        return this.hotspots.get(id);
+    public findById = (id: string): Hotspot => {
+        const data = this.orm.hotspot.findOne({ id });
+        return hotspotFactory.createHotspot(data);
     }
-    public findInArea(north : number, west : number, south : number, east : number): Hotspot[] {
+
+    public findInArea = (
+        north : number, west : number, south : number, east : number): Hotspot[] => {
         const topLeft : Position = new Position(north, west);
         const bottomRight : Position = new Position(south, east);
-        return Array
-        .from(this.hotspots)
-        .map((tuple) => {
-            return tuple[1];
-        })
-        .filter((hotspot) => {
-            return hotspot.position.latitude <= topLeft.latitude &&
-            hotspot.position.latitude >= bottomRight.latitude &&
-            hotspot.position.longitude >= topLeft.longitude &&
-            hotspot.position.longitude <= bottomRight.longitude;
+        console.log(topLeft, bottomRight);
+        const data = this.orm.hotspot.findAll({
+            'position.latitude': {
+                $lte: topLeft.latitude,
+            },
+            'position.latitude': {
+                $gte: bottomRight.latitude,
+            },
+            'position.longitude': {
+                $gte: topLeft.longitude,
+            },
+            'position.longitude': {
+                
+                $lte: bottomRight.longitude,
+            },
         });
+        /*
+        var tyrfing = items.where(function(obj) {
+  	return (
+      obj.position.latitude < 44.84966239 && 
+      obj.position.latitude > 44.83216522 && 
+      obj.position.longitude < -0.75003147 &&
+      obj.position.longitude > -0.79135895 
+      
+    );
+})
+        */
+        console.log(data);
+        const hotspotsArray : Hotspot[] = [];
+        data.forEach((entry : any) => {
+            hotspotsArray.push(hotspotFactory.createHotspot(entry));
+        });
+        return hotspotsArray;
     }
+
     public store(hotspot: Hotspot): void {
         this.hotspots.set(hotspot.id, hotspot);
     }
@@ -42,7 +75,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
 }
-const hotspotRepositoryInMemory : HotspotRepositoryInMemory = new HotspotRepositoryInMemory();
+const hotspotRepositoryInMemory : HotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
 
 export { HotspotRepositoryInMemory };
 export default hotspotRepositoryInMemory;
