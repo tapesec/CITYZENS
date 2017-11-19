@@ -1,4 +1,4 @@
-import AuthorizedCityzen from '../services/auth/AuthorizedCityzen';
+import DecodedJwtPayload from '../services/auth/DecodedJwtPayload';
 import Cityzen from './../../domain/cityzens/model/Cityzen';
 import JwtParser from './../services/auth/JwtParser';
 import * as r from 'restify';
@@ -7,7 +7,7 @@ const restifyErrors = require('restify-errors');
 
 class RootCtrl {
 
-    protected _authorizedCityzen : Cityzen;
+    protected _decodedJwtPayload : DecodedJwtPayload;
     protected jwtParser : JwtParser;
 
     constructor(jwtParser? : JwtParser) {
@@ -22,15 +22,16 @@ class RootCtrl {
         const token = req.header('Authorization').slice(7);
         try {
             const decodedToken : any = await this.jwtParser.verify(token);
-            this._authorizedCityzen = new AuthorizedCityzen(decodedToken).load();
+            const namespace = config.auth.auth0JwtPayloadNamespace;
+            this._decodedJwtPayload = new DecodedJwtPayload(decodedToken, namespace);
             next(); 
         } catch (err) {
             next(new restifyErrors.UnauthorizedError(err.message));
         }
     }
 
-    get authorizedCityzen() : Cityzen {
-        return this._authorizedCityzen;
+    get decodeJwtPayload() : DecodedJwtPayload {
+        return this._decodedJwtPayload;
     }
 }
 export default RootCtrl;

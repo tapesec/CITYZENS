@@ -1,7 +1,7 @@
 import Address from './Address';
 import Position from './Position';
 import Content from './Content';
-import Author from './Author';
+import Author from '../author/Author';
 
 export enum HotspotScope {
     Public = 'public',

@@ -1,15 +1,22 @@
 class Cityzen {
 
+    protected _id : string;
     protected _email : string;
     protected _pseudo : string;
     protected _description : string;
+    protected _favoritesHotspots : string[];
 
-    constructor(email : string, pseudo : string, description? : string) {
+    constructor(id : string, email : string, pseudo : string, description? : string) {
+        this._id = id;
         this._email = email;
         this._pseudo = pseudo;
         if (description) {
             this._description = description;
         }
+    }
+
+    get id() : string {
+        return this._id;
     }
 
     get email() : string {
@@ -24,15 +31,28 @@ class Cityzen {
         return this._description;
     }
 
+    get favoritesHotspots() : string[] {
+        return this._favoritesHotspots;
+    }
+
     editDescription(newDescription : string) : void {
         this._description = newDescription;
     }
 
+    addHotspotAsFavorit(hotspotId : string) : void {
+        if (!this._favoritesHotspots) {
+            this._favoritesHotspots = [];
+        }
+        this._favoritesHotspots.push(hotspotId);
+    }
+
     toJSON() {
         return {
-            email: this._email,
-            pseudo: this._pseudo,
-            description: this._description,
+            id: this.id,
+            email: this.email,
+            pseudo: this.pseudo,
+            description: this.description,
+            favoritesHotspots: this.favoritesHotspots,
         };
     }
 }

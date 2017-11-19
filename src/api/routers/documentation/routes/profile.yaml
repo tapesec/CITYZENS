@@ -1,0 +1,27 @@
+/profile/favorites/{favoritHotspotId}:
+  post:
+    tags:
+      - Favorites
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+    - name: favoritHotspotId
+      in: path
+      description: hotspot id
+      required: true
+      schema:
+          type: string
+    description: add an hotspot as favorit
+    produces:
+      - application/json
+    responses:
+      204:
+        description: no content
+      500:
+        description: Internal servor error
+      404:
+        description: hotspot not foud
+

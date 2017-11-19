@@ -3,6 +3,11 @@
     tags:
       - Hotspots
     parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
     - name: insee
       in: query
       description: the code insee commune

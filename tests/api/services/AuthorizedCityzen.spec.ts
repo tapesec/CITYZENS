@@ -1,20 +1,22 @@
 import Cityzen from '../../../src/domain/cityzens/model/Cityzen';
-import AuthorizedCityzen from '../../../src/api/services/auth/AuthorizedCityzen';
+import DecodedJwtPayload from '../../../src/api/services/auth/DecodedJwtPayload';
 import { expect } from 'chai';
 describe('AuthorizedCityzen service', () => {
 
     it('should instanciate a cityzen according a given description', () => {
         // Arrange
         const payload = {
+            sub: 'auth0|fake-id',
             email: 'test@domain.com',
             nickname: 'toto',
             description: 'dummy description',
         };
+        const fakeNamespace = 'http://www.fake.namespace.com';
         // Act
-        const grantedCityzen : Cityzen = new AuthorizedCityzen(payload).load();
+        const decodedJwtPayload : DecodedJwtPayload = new DecodedJwtPayload(payload, fakeNamespace);
         // Act
-        expect(grantedCityzen.description).to.be.equal(payload.description);
-        expect(grantedCityzen.email).to.be.equal(payload.email);
-        expect(grantedCityzen.pseudo).to.be.equal(payload.nickname);
+        expect(decodedJwtPayload.sub).to.be.equal(payload.sub);
+        expect(decodedJwtPayload.email).to.be.equal(payload.email);
+        expect(decodedJwtPayload.nickname).to.be.equal(payload.nickname);
     });
 });

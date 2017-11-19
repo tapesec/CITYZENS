@@ -35,7 +35,7 @@ describe('RootCtrl', () => {
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.once());
             nextMoq.verify(x => x(), TypeMoq.Times.once());
-            expect(JSON.stringify(rootCtrl.authorizedCityzen))
+            expect(JSON.stringify(rootCtrl.decodeJwtPayload))
             .to.be.eql('{"email":"test@domain.com","pseudo":"test"}');
         },
     );

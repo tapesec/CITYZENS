@@ -8,62 +8,66 @@ import {
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 import orm from './../../src/infrastructure/orm';
-import * as TypeMoq from 'typemoq';
+import * as sinon from 'sinon';
 import {
-    HOTSPOT_MARTIGNAS_TOWNHALL,
-    HOTSPOT_MARTIGNAS_CHURCH,
-    HOTSPOT_MARTIGNAS_SCHOOL,
     CITYZEN_ELODIE,
     CITYZEN_LOUISE,
+    CITYZEN_MARTIN,
+    HOTSPOT_MARTIGNAS_CHURCH,
+    HOTSPOT_MARTIGNAS_SCHOOL,
+    HOTSPOT_MARTIGNAS_TOWNHALL,
 } from './../../src/infrastructure/dbInMemory';
 
 describe('HotspotRepositoryInMemory', () => {
 
     let hotspotRepository : HotspotRepositoryInMemory;
-    let orm : TypeMoq.IMock<any>;
     let fakeTownHall : any;
     let fakeChurch : any;
     let fakeSchool : any;
+    let orm : any = {};
+    let findStub : any; 
+    let findOneStub : any;
+    let removeStub : any;
+    let saveStub : any; 
 
     beforeEach(() => {
         fakeTownHall = HOTSPOT_MARTIGNAS_TOWNHALL;
         fakeTownHall.cityzen = CITYZEN_ELODIE;
         fakeChurch = HOTSPOT_MARTIGNAS_CHURCH;
-        fakeChurch.cityzen = CITYZEN_ELODIE;
+        fakeChurch.cityzen = CITYZEN_MARTIN;
         fakeSchool = HOTSPOT_MARTIGNAS_SCHOOL;
         fakeSchool.cityzen = CITYZEN_LOUISE;
-        orm = TypeMoq.Mock.ofType();
+        findStub = sinon.stub();
+        findOneStub = sinon.stub();
+        removeStub = sinon.stub();
+        saveStub = sinon.stub();
+        orm.hotspot = {
+            findAll: findStub,
+            findOne: findOneStub,
+            save: saveStub,
+            remove: removeStub,
+        };
     });
 
     afterEach(() => {
-        orm = undefined;
+        orm = {};
         hotspotRepository = null;
     });
 
     it('should find an hostpsot by id', () => {
         // Arrange
-        const fakeHotspotOrm = {
-            findOne: () => fakeSchool,
-        };
-        orm
-        .setup((x : any) => x.hotspot)
-        .returns(() => fakeHotspotOrm);
-        hotspotRepository = new HotspotRepositoryInMemory(orm.object);
+        findOneStub.returns(fakeSchool);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
         const school = hotspotRepository.findById(HotspotSample.SCHOOL.id);
         // Expect
-        expect(school).to.be.equal(HotspotSample.SCHOOL);
+        expect(school).to.be.eql(HotspotSample.SCHOOL);
     });
 
     it('should return undefined if no hotspot found', () => {
         // Arrange
-        const fakeHotspotOrm = {
-            findOne: () : any => undefined,
-        };
-        orm
-        .setup((x : any) => x.hotspot)
-        .returns(() => fakeHotspotOrm);
-        hotspotRepository = new HotspotRepositoryInMemory(orm.object);
+        findOneStub.returns(undefined);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
         const nomatch = hotspotRepository.findById(v4());
         // Expect
@@ -75,51 +79,39 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
         hotspotRepository.store(HotspotSample.CHURCH);
-        // Arrange
-        const church = hotspotRepository.findById(HotspotSample.CHURCH.id);
         // Expect
-        expect(church).to.be.equal(HotspotSample.CHURCH);
+        expect(saveStub.calledWith(JSON.parse(JSON.stringify(HotspotSample.CHURCH)))).to.be.true;
     });
-
+    
     it('should remove an hotspot from memory', () => {
+        // Arrange
+        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
         hotspotRepository.remove(HotspotSample.SCHOOL);
-        // Arrange
-        const nomatch = hotspotRepository.findById(HotspotSample.SCHOOL.id);
         // Expect
-        expect(nomatch).to.be.undefined;
+        expect(removeStub.calledWith(HotspotSample.SCHOOL.id)).to.be.true;
     });
-
+    
     it('should retrieve hotspots spoted in the provided area', () => {
         // Arrange
-        const fakeHotspotOrm = {
-            findAll: () => [fakeTownHall, fakeChurch, fakeSchool],
-        };
-        orm
-        .setup((x : any) => x.hotspot)
-        .returns(() => fakeHotspotOrm);
-        hotspotRepository = new HotspotRepositoryInMemory(orm.object);
+        findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        const north : number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
+        const west : number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
+        const south : number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
+        const east : number = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
         // Act
-        const hotspots : Hotspot[] = hotspotRepository.findInArea(
-            PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
-            PositionSample.MARTIGNAS_NORTH_OUEST.longitude,
-            PositionSample.MARTIGNAS_SOUTH_EST.latitude,
-            PositionSample.MARTIGNAS_SOUTH_EST.longitude,
-        );
+        const hotspots : Hotspot[] = hotspotRepository.findInArea(north, west, south, east);
         // Assert
+        expect(findStub.calledWith({ byArea: [north, west, south, east] })).to.be.true;
+        expect(findStub.calledOnce).to.be.true;
         expect(hotspots).to.have.lengthOf(3);
     });
-
+    
     it('should\'nt match hotspot in the specified area', () => {
         // Arrange
-        const emptyArray : any = [];
-        const mockedFindAll = {
-            findAll: () => emptyArray,
-        };
-        orm
-        .setup((x : any) => x.hotspot)
-        .returns(() =>  mockedFindAll);
-        hotspotRepository = new HotspotRepositoryInMemory(orm.object);
+        findStub.returns([]);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
         const hotspots : Hotspot[] = hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
@@ -131,16 +123,11 @@ describe('HotspotRepositoryInMemory', () => {
         expect(hotspots).to.have.lengthOf(0);
         expect(hotspots).to.be.eql([]);
     });
-
-    it('should retrieve hotspot by given city insee code', () => {
+    
+    it ('should retrieve hotspot by given city insee code', () => {
         // Arrange
-        const fakeHotspotOrm = {
-            findAll: () => [fakeTownHall, fakeChurch, fakeSchool],
-        };
-        orm
-        .setup((x : any) => x.hotspot)
-        .returns(() => fakeHotspotOrm);
-        hotspotRepository = new HotspotRepositoryInMemory(orm.object);
+        findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
         const hotspots : Hotspot[] = hotspotRepository.findByCodeCommune(insee);

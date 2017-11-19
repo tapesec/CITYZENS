@@ -33,16 +33,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
 
     public findInArea = (north : number, west : number, south : number, east : number)
     : Hotspot[] => {
-        const topLeft : Position = new Position(north, west);
-        const bottomRight : Position = new Position(south, east);
-        const data = this.orm.hotspot.findAll((obj : any) => {
-            return (
-                obj.position.latitude < topLeft.latitude &&
-                obj.position.latitude > bottomRight.latitude &&
-                obj.position.longitude > topLeft.longitude &&
-                obj.position.longitude < bottomRight.longitude
-            );
-        });
+        const data = this.orm.hotspot.findAll({ byArea: [north, west, south, east] });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
             hotspotsArray.push(hotspotFactory.createHotspot(entry));
@@ -51,14 +42,15 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public store(hotspot: Hotspot): void {
-        this.hotspots.set(hotspot.id, hotspot);
+        this.orm.hotspot.save(JSON.parse(JSON.stringify(hotspot)));
     }
     public remove(hotspot: Hotspot): void {
-        this.hotspots.delete(hotspot.id);
+        this.orm.hotspot.remove(hotspot.id);
     }
 
 }
-const hotspotRepositoryInMemory : HotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
+const hotspotRepositoryInMemory : HotspotRepositoryInMemory = 
+new HotspotRepositoryInMemory(orm);
 
 export { HotspotRepositoryInMemory };
 export default hotspotRepositoryInMemory;

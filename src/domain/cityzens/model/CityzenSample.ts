@@ -2,12 +2,11 @@ import Cityzen from './Cityzen';
 
 class CityzenSample {
     public static MARTIN : Cityzen = 
-    new Cityzen('martin@cityzen.com', 'Martinus', 'Jeune enfant');
+    new Cityzen('auth0|fake-id1','martin@cityzen.com', 'Martinus', 'Jeune enfant');
     public static LOUISE : Cityzen = 
-    new Cityzen('louise@cityzen.com', 'Louisounette', 'Jeune écolière');
+    new Cityzen('auth0|fake-id2','louise@cityzen.com', 'Louisounette', 'Jeune écolière');
     public static ELODIE : Cityzen = 
-    new Cityzen('elodie@cityzen.com', 'Princesse', 'Infirmière libérale');
+    new Cityzen('auth0|fake-id3','elodie@cityzen.com', 'Princesse', 'Infirmière libérale');
 }
 
 export default CityzenSample;
-

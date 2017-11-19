@@ -27,7 +27,8 @@ class Login {
                         username,
                         password,
                         grant_type: 'password',
-                        scope: 'openid',
+                        // offline_access enable refresh_token in the response
+                        scope: 'openid offline_access',
                         client_id: this.opts.clientId,
                         client_secret: this.opts.clientSecret,
                         connection: 'Cityzens',

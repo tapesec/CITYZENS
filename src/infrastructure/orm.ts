@@ -3,10 +3,22 @@ const cityzenCollection = require('./dbInMemory').cityzenCollection;
 
 const hotspotFind = (requestParams : any) => {
     let hotspotsResults : any;
-    if (typeof requestParams === 'function')
-        hotspotsResults = hotspotCollection.where(requestParams);
-    else
+    if (requestParams.byArea) {
+        const north = requestParams.byArea[0];
+        const south = requestParams.byArea[1];
+        const west = requestParams.byArea[2];
+        const east = requestParams.byArea[3];
+        hotspotsResults = hotspotCollection.where((obj : any) => {
+            return (
+                obj.position.latitude < north &&
+                obj.position.latitude > south &&
+                obj.position.longitude > west &&
+                obj.position.longitude < east
+            );
+        });
+    } else {
         hotspotsResults = hotspotCollection.find(requestParams);
+    }
     const authorIds = hotspotsResults.map((hotspot : any) => hotspot.authorId);
     const cityzensList = cityzenCollection.find({ email: { $in : authorIds } });
     const cityzenObject : any = {};
@@ -27,7 +39,13 @@ const hotspotFindOne = (requestParams : any) => {
 };
 
 const hotspotSave = (data : any) => {
+    data.authorId = data.author.email;
+    delete data.author.email;
     hotspotCollection.insert(data);
+};
+
+const hotspotRemove = (id : string) => {
+    hotspotCollection.remove({ id });
 };
 
 export default {
@@ -35,5 +53,6 @@ export default {
         findAll: hotspotFind,
         findOne: hotspotFindOne,
         save: hotspotSave,
+        remove: hotspotRemove,
     },
 };

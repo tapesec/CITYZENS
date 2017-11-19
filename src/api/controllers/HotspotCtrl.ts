@@ -21,9 +21,6 @@ class HotspotCtrl extends RootCtrl​​ {
     constructor (jwtParser : JwtParser, hotspotRepositoryInMemory : HotspotRepositoryInMemory) {
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
-        this.hotspotRepository.store(HotspotSample.TOWNHALL);
-        this.hotspotRepository.store(HotspotSample.CHURCH);
-        this.hotspotRepository.store(HotspotSample.SCHOOL);
     }
 
     public hotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {

@@ -1,4 +1,4 @@
-import Author from '../domain/cityLife/model/hotspot/Author';
+import Author from '../domain/cityLife/model/author/Author';
 import Content from '../domain/cityLife/model/hotspot/Content';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import Hotspot, { HotspotScope } from '../domain/cityLife/model/hotspot/Hotspot';
@@ -16,13 +16,17 @@ export const createHotspot = (data : any) : Hotspot => {
         position = new Position(data.position.latitude, data.position.longitude);
     }
     if (data.content) {
-        content = new Content(data.content.message, data.content.createdAt, data.content.updatedAt);
+        content = new Content(
+            data.content.message, 
+            new Date(data.content.createdAt), 
+            data.content.updatedAt ? new Date(data.content.updatedAt) : undefined, 
+        );
     }
     if (data.address) {
         address = new Address(data.address.name, data.address.city);
     }
     if (data.cityzen) {
-        author = new Author(data.cityzen.pseudo);
+        author = new Author(data.cityzen.pseudo, data.cityzen.email);
     }
     if (data.scope) {
         scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;

@@ -1,14 +1,17 @@
+import HotspotSample from '../../../../src/domain/cityLife/model/sample/HotspotSample';
+import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import { expect } from 'chai';
 
 describe('Cityzens entity', () => {
     it('Should have correct properties set by constructor', () => {
         // Arrange
+        const id = 'auth0|fake-id1';
         const email : string = 'mail@mailbox.com';
         const pseudo : string = 'kenny';
         const description : string = 'fake description';
         // Act
-        const kenny : Cityzen = new Cityzen(email, pseudo, description);
+        const kenny : Cityzen = new Cityzen(id, email, pseudo, description);
         // Arrange
         expect(kenny.email).to.be.equal(email);
         expect(kenny.pseudo).to.be.equal(pseudo);
@@ -17,14 +20,22 @@ describe('Cityzens entity', () => {
 
     it('Should edit his description', () => {
         // Arrange
-        const email : string = 'mail@mailbox.com';
-        const pseudo : string = 'kenny';
-        const description : string = 'fake description';
+        const elodie : Cityzen = CityzenSample.ELODIE;
         const newDescription : string = 'new fake description';
         // Act
-        const kenny : Cityzen = new Cityzen(email, pseudo, description);
-        kenny.editDescription(newDescription);
+        elodie.editDescription(newDescription);
         // Assert
-        expect(kenny.description).to.be.equal(newDescription);
+        expect(elodie.description).to.be.equal(newDescription);
+    });
+
+    it('Should add an hotspot as favorit', () => {
+        // Arrange
+        const elodie : Cityzen = CityzenSample.ELODIE;
+        const favoritHotspotId : string = HotspotSample.SCHOOL.id;
+        // Act
+        elodie.addHotspotAsFavorit(favoritHotspotId);
+        // Assert
+        expect(elodie.favoritesHotspots).to.be.lengthOf(1);
+        expect(elodie.favoritesHotspots[0]).to.be.equal(favoritHotspotId);
     });
 });
