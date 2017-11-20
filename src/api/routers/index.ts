@@ -15,6 +15,7 @@ import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 import * as request from 'request';
 import config from './../config/';
+import auth0Sdk from './../services/Auth0';
 
 const jwt = require('jsonwebtoken');
 
@@ -34,7 +35,7 @@ export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
-    routers.push(new ProfileRouter(new ProfileCtrl(jwtParser, cityzenAuth0Repository)));
+    routers.push(new ProfileRouter(new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk)));
     routers.push(new CityRouter(new CityCtrl(jwtParser, CityRepositoryInMemory)));
     routers.push(new HotspotRouter(new HotspotCtrl(jwtParser, hotspotRepositoryInMemory)));
     routers.forEach(r => r.bind(server));
