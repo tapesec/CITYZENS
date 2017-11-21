@@ -1,3 +1,5 @@
+import { Response } from '_debugger';
+import DecodedJwtPayload from '../../../src/api/services/auth/DecodedJwtPayload';
 import * as rest from 'restify';
 import JwtParser from '../../../src/api/services/auth/JwtParser';
 import RootCtrl from '../../../src/api/controllers/RootCtrl';
@@ -21,13 +23,22 @@ describe('RootCtrl', () => {
         token = 'javascript.web.token';
     });
 
-    it(
-        'should load an authorized cityzen according to given token passed by http header', 
+    it.only(
+        'should load an authorized cityzen according to given token passed by http header',
         async () => {
             // Arrange
             reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
+            const fakeJwtPayload = {
+                sub: 'auth0|fake-id',
+                email: 'test@domain.com',
+                nickname: 'test',
+                user_metadata: {
+                    foo: 'bar',
+                },
+            };
+            const decodedJwtPayload = new DecodedJwtPayload(fakeJwtPayload, undefined);
             jwtParser.setup(x => x.verify(token))
-            .returns(() => Promise.resolve({ email: 'test@domain.com', nickname: 'test' }));
+            .returns(() => Promise.resolve(fakeJwtPayload));
             // Act
             const rootCtrl = new RootCtrl(jwtParser.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -35,13 +46,13 @@ describe('RootCtrl', () => {
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.once());
             nextMoq.verify(x => x(), TypeMoq.Times.once());
-            expect(JSON.stringify(rootCtrl.decodeJwtPayload))
-            .to.be.eql('{"email":"test@domain.com","pseudo":"test"}');
+            expect(rootCtrl.decodeJwtPayload)
+            .to.be.eql(decodedJwtPayload);
         },
     );
 
     it(
-        'should return unauthorized error if no http Authorization header provider', 
+        'should return unauthorized error if no http Authorization header provider',
         async () => {
             // Arrange
             reqMoq.setup(x => x.header('Authorization')).returns(() => undefined);
@@ -54,14 +65,14 @@ describe('RootCtrl', () => {
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.exactly(0));
             nextMoq.verify(
-                x => x(new restifyErrors.UnauthorizedError('Token must be provided')), 
+                x => x(new restifyErrors.UnauthorizedError('Token must be provided')),
                 TypeMoq.Times.once(),
             );
         },
     );
 
     it(
-        'should return unauthorized error if access token is invalid', 
+        'should return unauthorized error if access token is invalid',
         async () => {
             // Arrange
             const decodeError = { message: 'Invalid token' };
@@ -75,7 +86,7 @@ describe('RootCtrl', () => {
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(
-                x => x(new restifyErrors.UnauthorizedError(decodeError.message)), 
+                x => x(new restifyErrors.UnauthorizedError(decodeError.message)),
                 TypeMoq.Times.once(),
             );
         },
