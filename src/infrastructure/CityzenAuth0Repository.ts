@@ -1,12 +1,12 @@
 import Cityzen from '../domain/cityzens/model/Cityzen';
 import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
-import auth0, { Auth0ManagementclientApi } from '../api/services/Auth0';
+import auth0, { Auth0 } from '../api/libs/Auth0';
 
 class CityzenAuth0Repository implements ICityzenRepository {
     
-    protected auth0Service : Auth0ManagementclientApi;
+    protected auth0Service : Auth0;
 
-    constructor(auth0 : Auth0ManagementclientApi) {
+    constructor(auth0 : Auth0) {
         this.auth0Service = auth0;
     }
 

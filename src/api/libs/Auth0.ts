@@ -3,29 +3,29 @@ import { OK } from 'http-status-codes';
 const request = require('request');
 
 
-interface ApiManagementCredentials {
+export interface ApiManagementCredentials {
     url : string;
     token : string;
     clientId : string;
     clientSecret : string;
 }
 
-class Auth0ManagementclientApi {
+class Auth0 {
 
     protected opts : ApiManagementCredentials;
     protected request : any;
-    protected apiUrlSuffix : string; 
+    protected apiUrlSuffix : string;
+    protected apiManagementUrlSuffix : string = '/api/v2';
 
     constructor(options : ApiManagementCredentials, request : any) {
         this.opts = options;
         this.request = request;
-        this.apiUrlSuffix = config.auth.auth0ManagementUrlSuffix;
     }
 
     public updateUserMetadataById = async (userId : string, data : any) => {
         const options = {
             method: 'PATCH',
-            url: this.opts.url + this.apiUrlSuffix + `/users/${userId}`,
+            url: this.opts.url + this.apiManagementUrlSuffix + `/users/${userId}`,
             headers: { 
                 'content-type': 'application/json',
                 // tslint:disable-next-line:object-literal-key-quotes
@@ -75,6 +75,6 @@ const auth0ManagementclientApi = {
     clientSecret : config.auth.auth0ClientSecret,
 };
 
-const auth0 = new Auth0ManagementclientApi(auth0ManagementclientApi, request);
-export { Auth0ManagementclientApi };
+const auth0 = new Auth0(auth0ManagementclientApi, request);
+export { Auth0 };
 export default auth0;

@@ -2,7 +2,6 @@ const env = {
     "NODE_ENV": "development",
     "HTTP_PORT": 3000,
     "AUTH_0_URL": "https://cityzens.eu.auth0.com",
-    "AUTH_0_API_MANAGEMENT_PREFIX_URL": '/api/v2',
     "AUTH_0_CLIENT_ID": "d6Q0N2GkFv6UbXT46ZHxAfFIUMDtdFTT",
     "AUTH_0_CLIENT_SECRET": "jGzkCi4qh9Km-4RBj0OvSz8nJjweBwyUrnjR0F1E8jQdqeg-K9sqPACSMu97UqGw",
     "AUTH_0_AUDIENCE": "https://cityzens.eu.auth0.com/api/v2/",

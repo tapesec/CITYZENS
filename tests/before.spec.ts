@@ -1,4 +1,4 @@
 before(() => {
-    //require('dotenv').config();
-    console.log('oko')
+    console.log('oko');
+    process.env.AUTH_0_JWT_PAYLOAD_NAMESPACE = 'fake-namespace';
 });

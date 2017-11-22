@@ -23,7 +23,7 @@ describe('RootCtrl', () => {
         token = 'javascript.web.token';
     });
 
-    it.only(
+    it(
         'should load an authorized cityzen according to given token passed by http header',
         async () => {
             // Arrange
@@ -36,7 +36,8 @@ describe('RootCtrl', () => {
                     foo: 'bar',
                 },
             };
-            const decodedJwtPayload = new DecodedJwtPayload(fakeJwtPayload, undefined);
+            const namespace = 'https://www.cityzen.fr';
+            const decodedJwtPayload = new DecodedJwtPayload(fakeJwtPayload, namespace);
             jwtParser.setup(x => x.verify(token))
             .returns(() => Promise.resolve(fakeJwtPayload));
             // Act

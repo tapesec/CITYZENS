@@ -21,7 +21,7 @@ describe('Login service', () => {
                 username: fakeEmail,
                 password: fakePassword,
                 grant_type: 'password',
-                scope: 'openid',
+                scope: 'openid offline_access',
                 client_id: loginOptions.clientId,
                 client_secret: loginOptions.clientSecret,
                 connection: 'Cityzens',

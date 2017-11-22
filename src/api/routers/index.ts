@@ -15,7 +15,7 @@ import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 import * as request from 'request';
 import config from './../config/';
-import auth0Sdk from './../services/Auth0';
+import auth0Sdk from '../libs/Auth0';
 
 const jwt = require('jsonwebtoken');
 

@@ -1,3 +1,5 @@
+import { Auth0 } from './../libs/Auth0';
+
 import Cityzen from '../../domain/cityzens/model/Cityzen';
 import { CityzenAuth0Repository } from '../../infrastructure/CityzenAuth0Repository';
 import JwtParser from '../services/auth/JwtParser';
@@ -5,19 +7,19 @@ import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import * as restifyErrors from 'restify-errors';
 import { getStatusText, OK } from 'http-status-codes';
-import { Auth0ManagementclientApi } from 'src/api/services/Auth0';
+
 
 class ProfileCtrl extends RootCtrl {
 
     protected cityzenRepository : CityzenAuth0Repository;
-    protected auth0Sdk : Auth0ManagementclientApi;
+    protected auth0Sdk : Auth0;
     public static UPDATE_PROFILE_ERROR = 'Failed to update profile';
     public static REFRESH_TOKEN_REQUIRED_ERROR = 'refresh token required';
 
     constructor(
         jwtParser : JwtParser,
         cityzenRepository: CityzenAuth0Repository,
-        auth0Sdk : Auth0ManagementclientApi,
+        auth0Sdk : Auth0,
     ) {
         super(jwtParser);
         this.cityzenRepository = cityzenRepository;
