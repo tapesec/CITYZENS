@@ -43,7 +43,7 @@ class ProfileCtrl extends RootCtrl {
         try {
             await this.cityzenRepository.updateFavoritsHotspots(currentCityzen);
             const token = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
-            res.json(OK, { refreshToken: token });
+            res.json(OK, { newToken: token });
         } catch (err) {
             return next(new restifyErrors.InternalServerError(ProfileCtrl.UPDATE_PROFILE_ERROR));
         }
