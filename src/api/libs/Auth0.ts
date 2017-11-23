@@ -26,10 +26,10 @@ class Auth0 {
         const options = {
             method: 'PATCH',
             url: this.opts.url + this.apiManagementUrlSuffix + `/users/${userId}`,
-            headers: { 
+            headers: {
                 'content-type': 'application/json',
                 // tslint:disable-next-line:object-literal-key-quotes
-                'Authorization': `Bearer ${this.opts.token}`, 
+                'Authorization': `Bearer ${this.opts.token}`,
             },
             body: { user_metadata: data },
             json: true,
@@ -37,11 +37,11 @@ class Auth0 {
         return this.apiCall(options);
     }
 
-    public getAuthenticationRefreshToken = async (refreshToken : string) : Promise<any> => {
+    public getAuthenticationRefreshToken = (refreshToken : string) : Promise<any> => {
         const options = {
             method: 'POST',
             url: this.opts.url + '/oauth/token',
-            headers: { 
+            headers: {
                 'content-type': 'application/json',
             },
             body: {
@@ -68,8 +68,8 @@ class Auth0 {
     }
 }
 
-const auth0ManagementclientApi = { 
-    url: config.auth.auth0url, 
+const auth0ManagementclientApi = {
+    url: config.auth.auth0url,
     token: config.auth.auth0ManagementApiToken,
     clientId : config.auth.auth0ClientId,
     clientSecret : config.auth.auth0ClientSecret,

@@ -6,7 +6,7 @@ import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import * as restifyErrors from 'restify-errors';
-import { getStatusText, OK } from 'http-status-codes';
+import { OK } from 'http-status-codes';
 
 
 class ProfileCtrl extends RootCtrl {
