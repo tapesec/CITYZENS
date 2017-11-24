@@ -8,6 +8,8 @@ import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
 import cityzenFromJwt from '../../api/services/cityzen/cityzenFromJwt';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
+const logs = require('./../../logs/');
+const httpResponseDataLogger = logs.get('http-response-data');
 
 
 class ProfileCtrl extends RootCtrl {
@@ -33,9 +35,9 @@ class ProfileCtrl extends RootCtrl {
     }
 
     public postFavorit = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
-        const refreshToken = req.query.refresh_token;
         const favoritId = req.params.favoritHotspotId;
-        
+        const refreshToken = req.query.refresh_token;
+
         if (!refreshToken) {
             return next(
                 new restifyErrors.BadRequestError(ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR),
@@ -51,12 +53,13 @@ class ProfileCtrl extends RootCtrl {
             return next(new restifyErrors.InternalServerError(ProfileCtrl.FIND_HOTSPOT_ERROR));
         }
         try {
-            const currentCityzen = cityzenFromJwt(this.decodeJwtPayload);
+            const currentCityzen : Cityzen = cityzenFromJwt(this.decodeJwtPayload);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
+            httpResponseDataLogger.info('Error when add a favorit hotspot', err);
             return next(new restifyErrors.InternalServerError(ProfileCtrl.UPDATE_PROFILE_ERROR));
         }
     }

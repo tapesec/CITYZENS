@@ -3,7 +3,7 @@ import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import * as helpers from './../../helpers';
 
 const hotspotsByArea = (
-    queryStrings : any, 
+    queryStrings : any,
     hotspotRepository : HotspotRepositoryInMemory,
 ) : Hotspot[] => {
 
@@ -14,9 +14,8 @@ const hotspotsByArea = (
             queryStrings.south,
             queryStrings.east,
         );
-    } else {
-        return [];
     }
+    return [];
 };
 
 export default hotspotsByArea;

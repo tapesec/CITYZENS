@@ -1,7 +1,7 @@
 import HotspotSample from '../../../src/domain/cityLife/model/sample/HotspotSample';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-import 
-hotspotRepositoryInMemory, 
+import
+hotspotRepositoryInMemory,
 { HotspotRepositoryInMemory } from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import Cityzen from '../../../src/domain/cityzens/model/Cityzen';
 import ProfileCtrl from '../../../src/api/controllers/ProfileCtrl';
@@ -55,10 +55,10 @@ describe('ProfileCtrl', () => {
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
         cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-        
+
         // instanciation du ProfilCtrl
         profileCtrl = new ProfileCtrl(
-            jwtParser.object, 
+            jwtParser.object,
             cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object);
 
         // appel du middleware de control d'acces de l'utilsateur
@@ -87,7 +87,7 @@ describe('ProfileCtrl', () => {
 
         });
 
-        it.only ('should add a favorit hotspot and return a new jwt token', async () => {
+        it ('should add a favorit hotspot and return a new jwt token', async () => {
             // Arrange
             const renewedCredentials : any = {
                 refresh_token: 'fake.new.token',

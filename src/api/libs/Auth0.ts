@@ -58,8 +58,10 @@ class Auth0 {
     private apiCall = (options : any) : any => {
         return new Promise((resolve, reject) => {
             this.request(options, (error : any, response : any, body : any) => {
-                if (error || response.statusCode !== OK) {
+                if (error) {
                     reject(new Error(error));
+                } else if (response.statusCode !== OK) {
+                    reject(body);
                 } else {
                     resolve(body);
                 }
