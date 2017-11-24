@@ -35,7 +35,8 @@ export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
-    routers.push(new ProfileRouter(new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk)));
+    routers.push(new ProfileRouter(
+        new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory)));
     routers.push(new CityRouter(new CityCtrl(jwtParser, CityRepositoryInMemory)));
     routers.push(new HotspotRouter(new HotspotCtrl(jwtParser, hotspotRepositoryInMemory)));
     routers.forEach(r => r.bind(server));

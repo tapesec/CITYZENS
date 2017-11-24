@@ -34,7 +34,9 @@ const hotspotFind = (requestParams : any) => {
 
 const hotspotFindOne = (requestParams : any) => {
     const hotspotsResult : any = hotspotCollection.findOne(requestParams);
-    hotspotsResult.cityzen = cityzenCollection.findOne({ email: hotspotsResult.authorId });
+    if (hotspotsResult) {
+        hotspotsResult.cityzen = cityzenCollection.findOne({ email: hotspotsResult.authorId });
+    }
     return hotspotsResult;
 };
 

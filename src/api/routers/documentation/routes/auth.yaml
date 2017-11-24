@@ -30,20 +30,7 @@
       # Response code
       200:
         description: User authorized
-        # A schema describing your response object.
-        # Use JSON Schema format
+        content:
         schema:
-          title: accessObject
           type: object
-          properties:
-            access_token:
-              type: string
-            id_token:
-              type: string
-            scope:
-              type: string
-            expires_in:
-              type: integer
-              format: timestamp
-            token_type:
-              type: string
+          $ref: '#/definitions/initialCredentials'

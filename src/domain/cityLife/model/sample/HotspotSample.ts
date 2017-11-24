@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 class HotspotSample {
 
     public static TOWNHALL : Hotspot = new Hotspot(
-        v4(),
+        'townhall-static-id',
         'Mairie',
         PositionSample.TOWNHALL,
         ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
@@ -20,7 +20,7 @@ class HotspotSample {
     );
 
     public static SCHOOL : Hotspot = new Hotspot(
-        v4(),
+        'school-static-id',
         'Ecole Flora Tristan',
         PositionSample.SCHOOL,
         ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
@@ -31,7 +31,7 @@ class HotspotSample {
     );
 
     public static CHURCH : Hotspot = new Hotspot(
-        v4(),
+        'church-static-id',
         'Eglise de Martignas',
         PositionSample.CHURCH,
         ContentSample.CHURCH_MESSAGE,
@@ -42,7 +42,7 @@ class HotspotSample {
     );
 
     public static MERIGNAC : Hotspot = new Hotspot(
-        v4(),
+        'merignac-static-id',
         'Merignac centre',
         PositionSample.MERIGNAC,
         ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,

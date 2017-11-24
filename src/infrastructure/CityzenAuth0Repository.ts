@@ -10,7 +10,7 @@ class CityzenAuth0Repository implements ICityzenRepository {
         this.auth0Service = auth0;
     }
 
-    updateFavoritsHotspots = (cityzen : Cityzen) => {
+    updateFavoritesHotspots = (cityzen : Cityzen) => {
         const favoritesHotspots = cityzen.favoritesHotspots;
         return this.auth0Service.updateUserMetadataById(cityzen.id, { favoritesHotspots });
     }

@@ -1,3 +1,8 @@
+import HotspotSample from '../../../src/domain/cityLife/model/sample/HotspotSample';
+import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import 
+hotspotRepositoryInMemory, 
+{ HotspotRepositoryInMemory } from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import Cityzen from '../../../src/domain/cityzens/model/Cityzen';
 import ProfileCtrl from '../../../src/api/controllers/ProfileCtrl';
 import JwtParser from '../../../src/api/services/auth/JwtParser';
@@ -20,6 +25,7 @@ describe('ProfileCtrl', () => {
     let fakeDecodedToken : any;
     let jwtParser : TypeMoq.IMock<JwtParser>;
     let profileCtrl : ProfileCtrl;
+    let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
 
     // simule la vérification et decode le token d'authentification
     before(async () => {
@@ -48,10 +54,12 @@ describe('ProfileCtrl', () => {
 
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
         cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
-
+        hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
+        
         // instanciation du ProfilCtrl
         profileCtrl = new ProfileCtrl(
-            jwtParser.object, cityzenRepositoryMoq.object, auth0SdkMoq.object);
+            jwtParser.object, 
+            cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object);
 
         // appel du middleware de control d'acces de l'utilsateur
         await profileCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -62,6 +70,7 @@ describe('ProfileCtrl', () => {
         let querystring : any;
         let params : any;
         let cityzenMoq : TypeMoq.IMock<Cityzen>;
+        let hotspotMoq : TypeMoq.IMock<Hotspot>;
 
         before(() => {
             querystring = {
@@ -71,15 +80,19 @@ describe('ProfileCtrl', () => {
                 favoritHotspotId: 'fake-hotspot-id',
             };
             cityzenMoq = TypeMoq.Mock.ofType<Cityzen>();
+            hotspotMoq = TypeMoq.Mock.ofType<Hotspot>();
         });
 
         beforeEach(() => {
 
         });
 
-        it ('should add a favorit hotspot and return a new jwt token', async () => {
+        it.only ('should add a favorit hotspot and return a new jwt token', async () => {
             // Arrange
-            const newToken : string = 'fake.new.token';
+            const renewedCredentials : any = {
+                refresh_token: 'fake.new.token',
+                access_token: 'fake-access-token',
+            };
 
             reqMoq
             .setup((x : rest.Request) => x.query)
@@ -91,12 +104,19 @@ describe('ProfileCtrl', () => {
 
             auth0SdkMoq
             .setup(x => x.getAuthenticationRefreshToken(querystring.refresh_token))
-            .returns(() => Promise.resolve(newToken));
+            .returns(() => Promise.resolve(renewedCredentials));
 
+            // simule l'existance du hotspot à ajouter en favoris
+            hotspotRepositoryMoq
+            .setup(x => x.findById(params.favoritHotspotId))
+            .returns(() => HotspotSample.CHURCH);
+
+            const userMetadataKey = `${config.auth.auth0JwtPayloadNamespace}/user_metadata`;
             const cityzen = new Cityzen(
                 fakeDecodedToken.sub,
                 fakeDecodedToken.email,
                 fakeDecodedToken.nickname,
+                fakeDecodedToken[userMetadataKey].favoritesHotspots,
             );
             cityzen.addHotspotAsFavorit(params.favoritHotspotId);
 
@@ -108,7 +128,7 @@ describe('ProfileCtrl', () => {
             );
             // Assert
             cityzenRepositoryMoq
-            .verify(x => x.updateFavoritsHotspots(cityzen), TypeMoq.Times.once());
+            .verify(x => x.updateFavoritesHotspots(cityzen), TypeMoq.Times.once());
 
             auth0SdkMoq
             .verify(
@@ -117,7 +137,7 @@ describe('ProfileCtrl', () => {
 
             resMoq
             .verify(
-                x => x.json(OK, { newToken }),
+                x => x.json(OK, renewedCredentials),
                 TypeMoq.Times.once(),
             );
         });

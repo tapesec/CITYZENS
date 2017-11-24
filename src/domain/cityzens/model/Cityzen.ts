@@ -6,10 +6,19 @@ class Cityzen {
     protected _description : string;
     protected _favoritesHotspots : string[];
 
-    constructor(id : string, email : string, pseudo : string, description? : string) {
+    constructor(
+        id : string, 
+        email : string, 
+        pseudo : string,
+        favoritesHotspots? : string[],
+        description? : string,
+    ) {
         this._id = id;
         this._email = email;
         this._pseudo = pseudo;
+        if (favoritesHotspots) {
+            this._favoritesHotspots = favoritesHotspots;
+        }
         if (description) {
             this._description = description;
         }

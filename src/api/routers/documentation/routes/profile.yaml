@@ -13,15 +13,25 @@
       description: hotspot id
       required: true
       schema:
-          type: string
+        type: string
+    - name: refresh_token
+      in: query
+      description: un token de rafraichissement
+      required: true
+      schema:
+        type: string
     description: add an hotspot as favorit
     produces:
       - application/json
     responses:
-      204:
-        description: no content
+      200:
+        description: renewed credentials for further request
+        content:
+        schema:
+          type: object
+          $ref: '#/definitions/renewedCredentials'
       500:
-        description: Internal servor error
+        description: Failed to update profile
       404:
         description: hotspot not foud
 

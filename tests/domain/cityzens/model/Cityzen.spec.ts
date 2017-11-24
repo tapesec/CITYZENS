@@ -9,12 +9,14 @@ describe('Cityzens entity', () => {
         const id = 'auth0|fake-id1';
         const email : string = 'mail@mailbox.com';
         const pseudo : string = 'kenny';
+        const favoritsHotspots : string[] = ['fake-id', 'fake-id-2'];
         const description : string = 'fake description';
         // Act
-        const kenny : Cityzen = new Cityzen(id, email, pseudo, description);
+        const kenny : Cityzen = new Cityzen(id, email, pseudo, favoritsHotspots, description);
         // Arrange
         expect(kenny.email).to.be.equal(email);
         expect(kenny.pseudo).to.be.equal(pseudo);
+        expect(kenny.favoritesHotspots).to.be.eql(['fake-id', 'fake-id-2']);
         expect(kenny.description).to.be.equal(description);
     });
 
