@@ -1,0 +1,37 @@
+{
+    "title": "POST /hotspot body validation",
+    "type": "object",
+    "required": ["coords", "title", "message"],
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "message": {
+            "type": "string"
+        },
+        "coords": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                }
+            },
+            "required": ["lat", "lng"]
+        },
+        "address": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                }
+            },
+            "required": ["name", "city"]
+        }
+    }
+}

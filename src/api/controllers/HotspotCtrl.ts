@@ -1,3 +1,4 @@
+import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
@@ -12,7 +13,10 @@ import * as rest from 'restify';
 import * as helpers from '../helpers/';
 const logs = require('./../../logs/');
 const httpResponseDataLogger = logs.get('http-response-data');
-const restifyErrors = require('restify-errors');
+import { OK, CREATED } from 'http-status-codes';
+import * as restifyErrors from 'restify-errors';
+import { createHotspot } from '../../infrastructure/HotspotFactory';
+const createHospotSchema = require('../requestValidation/createHotspotValidation.json');
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -23,6 +27,7 @@ class HotspotCtrl extends RootCtrl​​ {
         this.hotspotRepository = hotspotRepositoryInMemory;
     }
 
+    // method=GET url=/hotspots
     public hotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         
         const queryStrings : any = req.query;
@@ -37,7 +42,28 @@ class HotspotCtrl extends RootCtrl​​ {
             badRequestMessage = 'Invalid query strings';
             return next(new restifyErrors.BadRequestError(badRequestMessage));
         }
-        res.json(200, hotspotsResult);
+        res.json(OK, hotspotsResult);
+    }
+
+    // method=POST url=/hotspots
+    public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+        
+        if (!this.schemaValidator.validate(createHospotSchema, req.body))
+            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+        
+        try {
+            req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            const newHotspot = createHotspot(req.body);
+            this.hotspotRepository.store(newHotspot);
+            res.json(CREATED, newHotspot);
+        } catch (err) {
+            return next(new restifyErrors.InternalServerError(err));
+        }
+    }
+
+    private validCreateHotspotBody(requestBody : object) : boolean {
+        
+        return true;
     }
 
     private queryByArea(queryStrings : any) : boolean {

@@ -47,7 +47,7 @@ describe('RootCtrl', () => {
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.once());
             nextMoq.verify(x => x(), TypeMoq.Times.once());
-            expect(rootCtrl.decodeJwtPayload)
+            expect(rootCtrl.decodedJwtPayload)
             .to.be.eql(decodedJwtPayload);
         },
     );

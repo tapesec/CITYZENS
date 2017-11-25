@@ -10,7 +10,7 @@ Liste des plugins
 * TSlint
 
 ### .vscode
-````json
+```json
 {
     "version": "0.2.0",
     "configurations": [
@@ -59,3 +59,9 @@ Liste des plugins
     ]
 }
 ```
+
+### remarque
+
+La validation par jsonSchema me semble lente (57ms) pour valider moins d'une dizaine d'attribut  
+à méditer un jour ou les perfs seront à optimiser
+

@@ -35,5 +35,12 @@ describe('hotspots router', () => {
                 hotspotCtrl.object.hotspots),
             TypeMoq.Times.once(),
         );
+        serverMock.verify(
+            x => x.post(
+                c.HOTSPOT_ENDPOINT,
+                hotspotCtrl.object.loadAuthenticatedUser,
+                hotspotCtrl.object.hotspots),
+            TypeMoq.Times.once(),
+        );
     });
 });

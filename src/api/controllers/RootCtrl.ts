@@ -4,11 +4,13 @@ import JwtParser from './../services/auth/JwtParser';
 import * as r from 'restify';
 import config from './../config/index';
 const restifyErrors = require('restify-errors');
+import * as ajv from 'ajv';
 
 class RootCtrl {
 
     protected _decodedJwtPayload : DecodedJwtPayload;
     protected jwtParser : JwtParser;
+    protected schemaValidator : ajv.Ajv = new ajv();
 
     constructor(jwtParser? : JwtParser) {
         if (jwtParser) this.jwtParser = jwtParser;
@@ -30,7 +32,7 @@ class RootCtrl {
         }
     }
 
-    get decodeJwtPayload() : DecodedJwtPayload {
+    get decodedJwtPayload() : DecodedJwtPayload {
         return this._decodedJwtPayload;
     }
 }

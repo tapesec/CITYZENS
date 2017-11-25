@@ -16,6 +16,7 @@
     "include": [
         "./src/api/server.ts",
         "./src/**/*.ts",
-        "./src/**/*.js"
+        "./src/**/*.js",
+        "./src/**/*.json"
     ]
 }

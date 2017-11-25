@@ -53,7 +53,7 @@ class ProfileCtrl extends RootCtrl {
             return next(new restifyErrors.InternalServerError(ProfileCtrl.FIND_HOTSPOT_ERROR));
         }
         try {
-            const currentCityzen : Cityzen = cityzenFromJwt(this.decodeJwtPayload);
+            const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);

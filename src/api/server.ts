@@ -14,6 +14,7 @@ logger.format('standard-format', ':method :url :response-time');
 server.use(logger('standard-format'));
 
 server.use(restify.plugins.queryParser());
+server.use(restify.plugins.bodyParser());
 
 routers.init(server);
 

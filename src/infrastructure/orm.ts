@@ -41,8 +41,8 @@ const hotspotFindOne = (requestParams : any) => {
 };
 
 const hotspotSave = (data : any) => {
-    data.authorId = data.author.email;
-    delete data.author.email;
+    data.authorId = data.author.id;
+    delete data.author;
     hotspotCollection.insert(data);
 };
 
