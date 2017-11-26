@@ -3,7 +3,7 @@
  */
 import * as ajv from 'ajv';
 import { expect } from 'chai';
-const hotspotSchema = require('../../../src/api/requestValidation/createHotspotValidation.json');
+import { createHospotSchema } from './../../../src/api/requestValidation/createHotspotValidation';
 
 describe('JschemaValidator', () => {
 
@@ -16,15 +16,17 @@ describe('JschemaValidator', () => {
     it ('should validate a basic schema', () => {
         const body = {
             title: 'my new hotspot',
-            coords: {
-                lat: 12.23323,
-                lng: 22.1112221,
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
             },
+            id_city: '33273',
             message: 'a classic message',
             newAttr: 'random value',
+            scope: 'private',
         };
 
-        const isValid = validator.validate(hotspotSchema, body);
+        const isValid = validator.validate(createHospotSchema, body);
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });

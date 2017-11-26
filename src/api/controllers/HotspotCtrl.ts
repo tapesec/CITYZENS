@@ -2,7 +2,7 @@ import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
-import hotspotRepositoryInMemory, { 
+import hotspotRepositoryInMemory, {
     HotspotRepositoryInMemory,
 } from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
@@ -16,7 +16,7 @@ const httpResponseDataLogger = logs.get('http-response-data');
 import { OK, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import { createHotspot } from '../../infrastructure/HotspotFactory';
-const createHospotSchema = require('../requestValidation/createHotspotValidation.json');
+import { createHospotSchema } from '../requestValidation/createHotspotValidation';
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -29,7 +29,7 @@ class HotspotCtrl extends RootCtrl​​ {
 
     // method=GET url=/hotspots
     public hotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
-        
+
         const queryStrings : any = req.query;
         let badRequestMessage : string;
         let hotspotsResult : Hotspot[];
@@ -47,10 +47,10 @@ class HotspotCtrl extends RootCtrl​​ {
 
     // method=POST url=/hotspots
     public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
-        
+
         if (!this.schemaValidator.validate(createHospotSchema, req.body))
             return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
-        
+
         try {
             req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
             const newHotspot = createHotspot(req.body);
@@ -59,11 +59,6 @@ class HotspotCtrl extends RootCtrl​​ {
         } catch (err) {
             return next(new restifyErrors.InternalServerError(err));
         }
-    }
-
-    private validCreateHotspotBody(requestBody : object) : boolean {
-        
-        return true;
     }
 
     private queryByArea(queryStrings : any) : boolean {

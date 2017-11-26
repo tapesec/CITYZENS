@@ -4,8 +4,6 @@ import PositionSample from './PositionSample';
 import ContentSample from './ContentSample';
 import AuthorSample from './AuthorSample';
 
-import { v4 } from 'uuid';
-
 class HotspotSample {
 
     public static TOWNHALL : Hotspot = new Hotspot(

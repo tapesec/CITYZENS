@@ -1,25 +1,31 @@
-{
+export const createHospotSchema = {
+    // tslint:disable:object-literal-key-quotes
+    // tslint:disable:quotemark
+    // tslint:disable:trailing-comma
     "title": "POST /hotspot body validation",
     "type": "object",
-    "required": ["coords", "title", "message"],
+    "required": ["position", "title", "message", "scope", "id_city"],
     "properties": {
         "title": {
+            "type": "string"
+        },
+        "id_city": {
             "type": "string"
         },
         "message": {
             "type": "string"
         },
-        "coords": {
+        "position": {
             "type": "object",
             "properties": {
-                "lat": {
+                "latitude": {
                     "type": "number"
                 },
-                "lng": {
+                "longitude": {
                     "type": "number"
                 }
             },
-            "required": ["lat", "lng"]
+            "required": ["latitude", "longitude"]
         },
         "address": {
             "type": "object",
@@ -32,6 +38,10 @@
                 }
             },
             "required": ["name", "city"]
+        },
+        "scope": {
+            "type": "string",
+            "enum": ["public", "private"]
         }
     }
-}
+};

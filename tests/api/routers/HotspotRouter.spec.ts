@@ -39,7 +39,7 @@ describe('hotspots router', () => {
             x => x.post(
                 c.HOTSPOT_ENDPOINT,
                 hotspotCtrl.object.loadAuthenticatedUser,
-                hotspotCtrl.object.hotspots),
+                hotspotCtrl.object.postHotspots),
             TypeMoq.Times.once(),
         );
     });

@@ -6,6 +6,8 @@ definition:
         format: uuid
       title:
         type: string
+      idCity:
+        type: string
       scope:
         type: string
         enum:

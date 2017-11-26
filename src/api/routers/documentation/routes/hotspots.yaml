@@ -52,4 +52,63 @@
                 $ref: '#/definitions/Hotspots'
       401:
         description: Invalid query strings
+  post:
+    tags:
+      - Hotspots
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - in: body
+        name: hotspot
+        description: The hotspot to create.
+        schema:
+          type: object
+          required:
+            - position
+            - title
+            - message
+          properties:
+            title:
+              type: string
+            id_city:
+              type: string
+            message:
+              type: string
+            position:
+              type: object
+              properties:
+                latitude:
+                  type: number
+                  format: float
+                longitude:
+                  type: number
+                  format: float
+            address:
+              type: object
+              properties:
+                city:
+                  type: string
+                name:
+                  type: string
+            scope:
+              type: string
+              enum: [public, private]
+    description: Create an hotspot and return the new one
+    produces:
+      - application/json
+    responses:
+      201:
+        description: The new created hotspot
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Hotspots'
+      401:
+        description: Invalid body
+      500:
+        description: something went wrong
 

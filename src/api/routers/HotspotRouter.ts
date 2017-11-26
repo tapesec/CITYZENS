@@ -22,7 +22,7 @@ class HotspotRouter {
         server.post(
             HOTSPOT_ENDPOINT,
             this.ctrl.loadAuthenticatedUser,
-            this.ctrl.hotspots,
+            this.ctrl.postHotspots,
         );
     }
 }
