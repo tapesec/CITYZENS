@@ -2,9 +2,39 @@
 
 let's the party begin !
 
+### Installation
+
+```sh
+npm install
+```
+
+### Démarrage serveur
+
+Créer un fichier .env avec les variables nécessaires (voir src/api/config/index)
+
+
+```sh
+npm start
+```
+
+### Lancer les tests unitaires
+
+```sh
+npm test
+```
+
+### Vérifier la style du code
+
+```sh
+npm run tslint
+```
+### Consulter la doc API
+
+Après le lancement du serveur se rendre sur [la page de doc swagger](localhost:3000/api-docs/#/)
+
 ### Visual studio code :
 
-Liste des plugins  
+Liste des plugins
 * Typescript hero
 * Move Ts
 * TSlint
@@ -62,6 +92,6 @@ Liste des plugins
 
 ### remarque
 
-La validation par jsonSchema me semble lente (57ms) pour valider moins d'une dizaine d'attribut  
+La validation par jsonSchema me semble lente (57ms) pour valider moins d'une dizaine d'attribut
 à méditer un jour ou les perfs seront à optimiser
 
