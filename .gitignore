@@ -4,3 +4,4 @@ build
 *.log
 .DS_Store
 .env
+pm2.dev.config.js
