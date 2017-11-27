@@ -70,10 +70,6 @@ describe('ProfileCtrl', () => {
             hotspotMoq = TypeMoq.Mock.ofType<Hotspot>();
         });
 
-        beforeEach(() => {
-
-        });
-
         it ('should add a favorit hotspot and return a new jwt token', async () => {
             // Arrange
             const renewedCredentials : any = {

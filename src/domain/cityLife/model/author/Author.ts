@@ -12,6 +12,10 @@ class Author {
         return this._pseudo;
     }
 
+    get email() : string {
+        return this._email;
+    }
+
     toJSON() {
         return {
             pseudo: this._pseudo,

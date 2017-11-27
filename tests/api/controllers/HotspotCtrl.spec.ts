@@ -1,6 +1,7 @@
 // tslint:disable-next-line:import-name
 import { createHotspot } from '../../../src/infrastructure/HotspotFactory';
 import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
+import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
 import { Response } from '_debugger';
 import JwtParser from '../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
@@ -11,6 +12,7 @@ import HotspotCtrl from '../../../src/api/controllers/HotspotCtrl';
 const restifyErrors = require('restify-errors');
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
+import * as sample from './sample';
 
 describe('HotspotCtrl', () => {
 
@@ -18,14 +20,22 @@ describe('HotspotCtrl', () => {
     let resMoq : TypeMoq.IMock<rest.Response>;
     let nextMoq : TypeMoq.IMock<rest.Next>;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
-    let jwtParser : TypeMoq.IMock<JwtParser>;
+    let jwtParserMoq : TypeMoq.IMock<JwtParser>;
+    let hotspotCtrl : HotspotCtrl;
 
-    beforeEach(() => {
-        reqMoq = TypeMoq.Mock.ofType<rest.Request>();
+    before(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
+        // mock la lecture du header http contenant le jwt
+        // simule la validation du jwt token
+        reqMoq = TypeMoq.Mock.ofType<rest.Request>();
+        jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
+        sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
+
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-        jwtParser = TypeMoq.Mock.ofType<JwtParser>();
+        hotspotCtrl = new HotspotCtrl(jwtParserMoq.object, hotspotRepositoryMoq.object);
+        // appel du middleware de control d'acces de l'utilsateur
+        await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
     });
 
     describe('hotspots', () => {
@@ -65,11 +75,7 @@ describe('HotspotCtrl', () => {
             .returns(() => repositoryResult);
 
              // Act
-            new HotspotCtrl(jwtParser.object, hotspotRepositoryMoq.object).hotspots(
-                reqMoq.object,
-                resMoq.object,
-                nextMoq.object,
-            );
+            hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             resMoq
             .verify(
@@ -88,12 +94,8 @@ describe('HotspotCtrl', () => {
             .setup(x => x.findInArea(north, west, south, east))
             .returns(() => []);
 
-             // Act
-            new HotspotCtrl(jwtParser.object, hotspotRepositoryMoq.object).hotspots(
-                reqMoq.object,
-                resMoq.object,
-                nextMoq.object,
-            );
+            // Act
+            hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
             resMoq
@@ -121,20 +123,17 @@ describe('HotspotCtrl', () => {
             };
         });
 
-        it.skip ('should create a new hotspot and return it with 200 OK', () => {
+        it.only ('should create a new hotspot and return it with 200 OK', () => {
             // Arrange
             reqMoq
             .setup((x : rest.Request) => x.body)
             .returns(() => jsonBody);
 
+            jsonBody.cityzen = cityzenFromJwt(hotspotCtrl.decodedJwtPayload);
             const fakeCityzenToSave = createHotspot(jsonBody);
 
             // Act
-            new HotspotCtrl(jwtParser.object, hotspotRepositoryMoq.object).postHotspots(
-                reqMoq.object,
-                resMoq.object,
-                nextMoq.object,
-            );
+            hotspotCtrl.postHotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
             hotspotRepositoryMoq.verify(x => x.store(fakeCityzenToSave), TypeMoq.Times.once());
