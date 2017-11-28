@@ -50,7 +50,7 @@ export const createHotspot = (data : any) : Hotspot => {
         scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;
     }
 
-    generateHotspotId(data);
+    if (!data.id) data.id = v4();
 
     if (data.idCity) {
         idCity = data.idCity;
@@ -63,9 +63,4 @@ export const createHotspot = (data : any) : Hotspot => {
 
     return hotspot;
 
-};
-
-const generateHotspotId = (data : any) : void => {
-    if (config.server.env === 'test') data.id = HOTSPOT_ID_FOR_TEST;
-    if (!data.id) data.id = v4();
 };

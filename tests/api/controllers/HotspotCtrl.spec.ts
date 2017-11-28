@@ -13,6 +13,8 @@ const restifyErrors = require('restify-errors');
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
+import * as v4 from 'uuid';
+import * as sinon from 'sinon';
 
 describe('HotspotCtrl', () => {
 
@@ -108,6 +110,7 @@ describe('HotspotCtrl', () => {
     describe('postHotspots', () => {
 
         let jsonBody : any;
+        let v4Stub : any;
 
         before(() => {
             jsonBody = {
@@ -121,6 +124,14 @@ describe('HotspotCtrl', () => {
                 newAttr: 'random value',
                 scope: 'private',
             };
+        });
+
+        beforeEach(() => {
+            v4Stub = sinon.stub(v4, 'v4').returns('fake-id');
+        });
+
+        afterEach(() => {
+            v4Stub = null;
         });
 
         it.only ('should create a new hotspot and return it with 200 OK', () => {

@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "tsc && node build/api/server.js",
-    "test": "cross-env NODE_ENV=test mocha -r ts-node/register tests/**/*.spec.ts",
+    "test": "set NODE_ENV=test && mocha -r ts-node/register tests/**/*.spec.ts",
     "tslint": "tslint -c tslint.json src/**/*.ts tests/**/*.spec.ts"
   },
   "author": "lasalle",
