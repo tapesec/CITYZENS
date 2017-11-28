@@ -15,16 +15,23 @@ const logs = require('./../../logs/');
 const httpResponseDataLogger = logs.get('http-response-data');
 import { OK, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
-import { createHotspot } from '../../infrastructure/HotspotFactory';
+import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { createHospotSchema } from '../requestValidation/createHotspotValidation';
 
 class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
+    private hotspotFactory : HotspotFactory;
 
-    constructor (jwtParser : JwtParser, hotspotRepositoryInMemory : HotspotRepositoryInMemory) {
+    constructor (
+        jwtParser : JwtParser,
+        hotspotRepositoryInMemory : HotspotRepositoryInMemory,
+        hotspotFactory : HotspotFactory,
+    ) {
+
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
+        this.hotspotFactory = hotspotFactory;
     }
 
     // method=GET url=/hotspots
@@ -53,7 +60,7 @@ class HotspotCtrl extends RootCtrl​​ {
 
         try {
             req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
-            const newHotspot = createHotspot(req.body);
+            const newHotspot = this.hotspotFactory.createHotspot(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
         } catch (err) {

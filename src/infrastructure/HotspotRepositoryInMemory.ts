@@ -1,4 +1,4 @@
-import * as hotspotFactory from './HotspotFactory';
+import HotspotFactory from './HotspotFactory';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
@@ -17,7 +17,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         const data = this.orm.hotspot.findAll({ idCity: insee });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
-            hotspotsArray.push(hotspotFactory.createHotspot(entry));
+            hotspotsArray.push(new HotspotFactory().createHotspot(entry));
         });
         return hotspotsArray;
     }
@@ -26,7 +26,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         let hotspot : Hotspot;
         const data = this.orm.hotspot.findOne({ id });
         if (data) {
-            hotspot = hotspotFactory.createHotspot(data);
+            hotspot = new HotspotFactory().createHotspot(data);
         }
         return hotspot;
     }
@@ -36,7 +36,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         const data = this.orm.hotspot.findAll({ byArea: [north, west, south, east] });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
-            hotspotsArray.push(hotspotFactory.createHotspot(entry));
+            hotspotsArray.push(new HotspotFactory().createHotspot(entry));
         });
         return hotspotsArray;
     }
@@ -49,7 +49,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
 }
-const hotspotRepositoryInMemory : HotspotRepositoryInMemory = 
+const hotspotRepositoryInMemory : HotspotRepositoryInMemory =
 new HotspotRepositoryInMemory(orm);
 
 export { HotspotRepositoryInMemory };
