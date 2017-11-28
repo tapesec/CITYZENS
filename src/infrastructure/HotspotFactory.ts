@@ -3,7 +3,10 @@ import Content from '../domain/cityLife/model/hotspot/Content';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import Hotspot, { HotspotScope } from '../domain/cityLife/model/hotspot/Hotspot';
 import Address from '../domain/cityLife/model/hotspot/Address';
+import config from './../../src/api/config/';
 import { v4 } from 'uuid';
+
+export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 export const createHotspot = (data : any) : Hotspot => {
     let position : Position;
@@ -46,9 +49,9 @@ export const createHotspot = (data : any) : Hotspot => {
     if (data.scope) {
         scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;
     }
-    if (!data.id) {
-        data.id = v4();
-    }
+
+    generateHotspotId(data);
+
     if (data.idCity) {
         idCity = data.idCity;
     } else if (data.id_city) {
@@ -60,4 +63,9 @@ export const createHotspot = (data : any) : Hotspot => {
 
     return hotspot;
 
+};
+
+const generateHotspotId = (data : any) : void => {
+    if (config.server.env === 'test') data.id = HOTSPOT_ID_FOR_TEST;
+    if (!data.id) data.id = v4();
 };
