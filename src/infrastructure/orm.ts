@@ -5,8 +5,8 @@ const hotspotFind = (requestParams : any) => {
     let hotspotsResults : any;
     if (requestParams.byArea) {
         const north = requestParams.byArea[0];
-        const south = requestParams.byArea[1];
-        const west = requestParams.byArea[2];
+        const south = requestParams.byArea[2];
+        const west = requestParams.byArea[1];
         const east = requestParams.byArea[3];
         hotspotsResults = hotspotCollection.where((obj : any) => {
             return (
