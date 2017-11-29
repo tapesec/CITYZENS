@@ -1,12 +1,14 @@
 import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
+import hotspotEndpointsTests from './hotspot.spec';
 
 
 describe('/auth endpoint', () => {
 
-    describe('GET /auth/token', () => {
+    const state : any = {};
 
+    describe('GET /auth/token', () => {
         it ('should return jwt token after received credentials', async () => {
             // Act
             const response = await request(server)
@@ -16,8 +18,13 @@ describe('/auth endpoint', () => {
             .expect(200);
             // Assert
             expect(response.body).to.have.property('access_token');
+            expect(response.body).to.have.property('id_token');
+            expect(response.body).to.have.property('refresh_token');
+            // Finaly
+            state.id_token = response.body.id_token;
+            state.refresh_token = response.body.refresh_token;
         });
     });
+    // /hotspots tests suite
+    hotspotEndpointsTests(state);
 });
-
-
