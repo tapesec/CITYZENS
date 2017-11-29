@@ -1,25 +1,25 @@
 class Author {
 
     protected _pseudo : string;
-    protected _email : string;
+    protected _id : string;
 
-    constructor(pseudo : string, email : string) {
+    constructor(pseudo : string, id : string) {
         this._pseudo = pseudo;
-        this._email = email;
+        this._id = id;
     }
 
     get pseudo() : string {
         return this._pseudo;
     }
 
-    get email() : string {
-        return this._email;
+    get id() : string {
+        return this._id;
     }
 
     toJSON() {
         return {
             pseudo: this._pseudo,
-            email: this._email,
+            id: this._id,
         };
     }
 }

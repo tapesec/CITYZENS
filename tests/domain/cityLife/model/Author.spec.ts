@@ -8,10 +8,11 @@ describe('Author entity', () => {
     it('Should have correct properties set by constructor', () => {
         // Arrange
         const pseudo : string = CityzenSample.LOUISE.pseudo;
-        const email : string = CityzenSample.LOUISE.email;
+        const id : string = CityzenSample.LOUISE.email;
         // Act
-        const louise : Author = new Author(pseudo, email);
+        const louise : Author = new Author(pseudo, id);
         // Assert
         expect(louise.pseudo).to.be.equal(pseudo);
+        expect(louise.id).to.be.equal(id);
     });
 });

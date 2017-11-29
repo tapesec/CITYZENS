@@ -14,8 +14,8 @@ describe('HotspotFactory', () => {
             },
             message: 'fake message',
             author: {
-                pseudo: 'Princesse',
-                email: 'elodie@cityzen.com',
+                pseudo: CityzenSample.ELODIE.pseudo,
+                id: CityzenSample.ELODIE.id,
             },
             scope: 'private',
             address: {
@@ -50,8 +50,8 @@ describe('HotspotFactory', () => {
                 updatedAt: new Date().toISOString(),
             },
             author: {
-                pseudo: 'Princesse',
-                email: 'elodie@cityzen.com',
+                pseudo: CityzenSample.ELODIE.pseudo,
+                id: CityzenSample.ELODIE.id,
             },
             scope: 'private',
             address: {
@@ -83,8 +83,8 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot : any) : void => {
     .to.be.equal(47.12345);
     expect(fakeNewHotspot).to.have.property('author').to.have.property('pseudo')
     .to.be.equal('Princesse');
-    expect(fakeNewHotspot).to.have.property('author').to.have.property('email')
-    .to.be.equal('elodie@cityzen.com');
+    expect(fakeNewHotspot).to.have.property('author').to.have.property('id')
+    .to.be.equal(CityzenSample.ELODIE.id);
     expect(fakeNewHotspot).to.have.property('content').to.have.property('message')
     .to.be.equal('fake message');
     expect(fakeNewHotspot).to.have.property('position').to.have.property('longitude')

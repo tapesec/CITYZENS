@@ -46,7 +46,7 @@ class HotspotFactory {
         }
         // data from both database or user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo, data.cityzen.email);
+            author = new Author(data.cityzen.pseudo, data.cityzen.id);
         }
         if (data.scope) {
             scope = data.scope === 'public' ? HotspotScope.Public : HotspotScope.Private;

@@ -20,10 +20,10 @@ const hotspotFind = (requestParams : any) => {
         hotspotsResults = hotspotCollection.find(requestParams);
     }
     const authorIds = hotspotsResults.map((hotspot : any) => hotspot.authorId);
-    const cityzensList = cityzenCollection.find({ email: { $in : authorIds } });
+    const cityzensList = cityzenCollection.find({ id: { $in : authorIds } });
     const cityzenObject : any = {};
     cityzensList.forEach((cityzen : any) => {
-        cityzenObject[cityzen.email] = cityzen;
+        cityzenObject[cityzen.id] = cityzen;
     });
     const structuredData = hotspotsResults.map((hotspot : any) => {
         hotspot.cityzen = cityzenObject[hotspot.authorId];
@@ -35,7 +35,7 @@ const hotspotFind = (requestParams : any) => {
 const hotspotFindOne = (requestParams : any) => {
     const hotspotsResult : any = hotspotCollection.findOne(requestParams);
     if (hotspotsResult) {
-        hotspotsResult.cityzen = cityzenCollection.findOne({ email: hotspotsResult.authorId });
+        hotspotsResult.cityzen = cityzenCollection.findOne({ id: hotspotsResult.authorId });
     }
     return hotspotsResult;
 };
