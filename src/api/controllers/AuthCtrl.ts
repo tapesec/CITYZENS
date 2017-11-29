@@ -3,7 +3,7 @@ import { Response } from '_debugger';
 import * as rest from 'restify';
 import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
-const restifyErrors = require('restify-errors');
+import * as restifyErrors from 'restify-errors';
 
 class AuthCtrl extends RootCtrl {
 
@@ -22,7 +22,7 @@ class AuthCtrl extends RootCtrl {
             }
             res.json(body);
         } catch (err) {
-            next(new restifyErrors.InvalidCredentialsError(err.message));
+            next(new restifyErrors.InternalServerError(err.message));
         }
     }
 }
