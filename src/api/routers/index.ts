@@ -2,7 +2,7 @@ import HotspotFactory from '../../infrastructure/HotspotFactory';
 import ProfileRouter from './ProfileRouter';
 import ProfileCtrl from '../controllers/ProfileCtrl';
 import cityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository';
-import CityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
+import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityCtrl from '../controllers/CityCtrl';
 import CityRouter from './CityRouter';
 import hotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
@@ -38,7 +38,7 @@ export const init = (server : restify.Server) => {
     routers.push(new AuthRouter(new AuthCtrl(loginService)));
     routers.push(new ProfileRouter(
         new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory)));
-    routers.push(new CityRouter(new CityCtrl(jwtParser, CityRepositoryInMemory)));
+    routers.push(new CityRouter(new CityCtrl(jwtParser, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(
         new HotspotCtrl(jwtParser, hotspotRepositoryInMemory, new HotspotFactory())));
     routers.forEach(r => r.bind(server));

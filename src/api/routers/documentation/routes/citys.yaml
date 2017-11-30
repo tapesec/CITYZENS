@@ -3,6 +3,11 @@
     tags:
       - City
     parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
     - name: inseeCode
       in: path
       description: a city by insee code

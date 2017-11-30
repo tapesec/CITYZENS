@@ -19,7 +19,7 @@ class CityCtrl extends RootCtrl {
         this.cityRepository.store(CitySample.MARTIGNAS);
     }
 
-    public city = (req : rest.Request, res : rest.Response, next : rest.Next) => { 
+    public city = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         const askedCity : City = this.cityRepository.findByInsee(req.params.insee);
         if (askedCity) res.json(200, askedCity);
         else next(new restifyErrors.NotFoundError(CityCtrl.INSEE_NOT_FOUND));

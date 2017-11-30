@@ -1,7 +1,8 @@
 import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import hotspotEndpointsTests from './hotspot.spec';
+import hotspotsEndpointsTests from './hotspots.spec';
+import citysEndpointTests from './citys.spec';
 
 
 describe('/auth endpoint', () => {
@@ -26,5 +27,7 @@ describe('/auth endpoint', () => {
         });
     });
     // /hotspots tests suite
-    hotspotEndpointsTests(state);
+    hotspotsEndpointsTests(state);
+    // /citys tests suite
+    citysEndpointTests(state);
 });
