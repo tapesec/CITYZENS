@@ -1,0 +1,24 @@
+definition:
+  Messages:
+    properties:
+      id:
+        type: string
+      hotspotId:
+        type: string
+      title:
+        type: string
+      body:
+        type: string
+      author:
+        type: object
+        properties:
+          pseudo:
+            type: string
+          id:
+            type: string
+      pinned:
+        type: boolean
+      createdAt:
+        type: date
+      updatedAt:
+        type: date

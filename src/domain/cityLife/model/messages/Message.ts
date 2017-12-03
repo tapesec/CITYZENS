@@ -1,16 +1,38 @@
+import HotspotId from '../hotspot/HotspotId';
 import Author from '../author/Author';
+
 class Message {
 
     constructor(
         private _id : string,
         private _title : string,
+        private _body : string,
         private _author : Author,
         private _pinned : boolean,
+        private _hotspotId : HotspotId,
         private _createdAt : Date,
         private _updatedAt? : Date) {}
 
+    public changeTitle = (title: string): void => {
+        this._title = title;
+        this._updatedAt = new Date();
+    }
+
+    public editBody = (body: string): void => {
+        this._body = body;
+        this._updatedAt = new Date();
+    }
+
+    public togglePinMode = (): void => {
+        this._pinned = !this.pinned;
+    }
+
     get id() : string {
         return this._id;
+    }
+
+    get hotspotId() : HotspotId {
+        return this._hotspotId;
     }
 
     get title() : string {
@@ -18,6 +40,9 @@ class Message {
     }
 
 
+    get body() : string {
+        return this._body;
+    }
 
     get author() : Author {
         return this._author;
@@ -39,7 +64,9 @@ class Message {
         return {
             id: this.id,
             title: this.title,
+            body: this.body,
             author: this.author,
+            hotspotId: this.hotspotId.id,
             pinned: this.pinned,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,

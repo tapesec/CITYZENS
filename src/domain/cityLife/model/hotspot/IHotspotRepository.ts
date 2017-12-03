@@ -9,6 +9,8 @@ interface IHotspotRepository​​ {
 
     findByCodeCommune(insee : string) : Hotspot[];
 
+    isSet(id : string) : boolean;
+
     store(hotspot : Hotspot) : void;
 
     remove(hotspot : Hotspot) : void;

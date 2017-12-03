@@ -1,5 +1,4 @@
-const hotspotCollection = require('./dbInMemory').hotspotCollection;
-const cityzenCollection = require('./dbInMemory').cityzenCollection;
+import { hotspotCollection, cityzenCollection, messageCollection } from './dbInMemory';
 
 const hotspotFind = (requestParams : any) => {
     let hotspotsResults : any;
@@ -40,14 +39,44 @@ const hotspotFindOne = (requestParams : any) => {
     return hotspotsResult;
 };
 
-const hotspotSave = (data : any) => {
+const hotspotSave = (data: any) => {
     data.authorId = data.author.id;
     delete data.author;
     hotspotCollection.insert(data);
 };
 
-const hotspotRemove = (id : string) => {
+const hotspotRemove = (id: string) => {
     hotspotCollection.remove({ id });
+};
+
+const messageFind = (requestParams: any) => {
+    requestParams.removed = false;
+    return messageCollection.find(requestParams);
+};
+
+const messageFindOne = (requestParams: any) => {
+    requestParams.removed = false;
+    return messageCollection.findOne(requestParams);
+};
+
+const messageSave = (data: any) => {
+    data.removed = false;
+    messageCollection.insert(data);
+};
+
+const messageUpdate = (data: any) => {
+    const message = messageCollection.findOne({ id: data.id, removed: false });
+    message.body = data.body;
+    message.title = data.title;
+    message.pinned = data.pinned;
+    message.updatedAt = data.updatedAt;
+    messageCollection.update(message);
+};
+
+const messageDelete = (id: string) => {
+    const message = messageCollection.findOne({ id });
+    message.removed = true;
+    messageCollection.update(message);
 };
 
 export default {
@@ -56,5 +85,12 @@ export default {
         findOne: hotspotFindOne,
         save: hotspotSave,
         remove: hotspotRemove,
+    },
+    message: {
+        findAll: messageFind,
+        findOne: messageFindOne,
+        save: messageSave,
+        update: messageUpdate,
+        delete: messageDelete,
     },
 };

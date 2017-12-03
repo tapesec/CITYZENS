@@ -16,7 +16,7 @@ const httpResponseDataLogger = logs.get('http-response-data');
 import { OK, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { createHospotSchema } from '../requestValidation/createHotspotValidation';
+import { createHospotSchema } from '../requestValidation/schema';
 
 class HotspotCtrl extends RootCtrl​​ {
 

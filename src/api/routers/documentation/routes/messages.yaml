@@ -1,0 +1,170 @@
+/hotspots/{hotspotId}/messages:
+  get:
+    tags:
+      - Message
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+    - name: hotspotId
+      in: path
+      description: an hotspot identification (uuid)
+      required: true
+      type: string
+    description: Return a list of messages related to hotspot
+    produces:
+      - application/json
+    responses:
+      200:
+        description: A collection of messages
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                $ref: '#/definitions/Messages'
+      404:
+        description: invalid insee code
+      401:
+        description: Invalid token
+      500:
+        description: Internal server error
+  post:
+    tags:
+      - Message
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: an hotspot identification (uuid)
+        required: true
+        type: string
+      - in: body
+        name: message
+        description: The message to create.
+        schema:
+          type: object
+          required:
+            - title
+            - body
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            pinned:
+              type: boolean
+    description: Create and return a message
+    produces:
+      - application/json
+    responses:
+      201:
+        description: The new created message
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Messages'
+      400:
+        description: Invalid request body
+      401:
+        description: Invalid token
+      404:
+        description: invalid insee code
+      500:
+        description: something went wrong
+/hotspots/{hotspotId}/messages/{messageId}:
+  patch:
+    tags:
+      - Message
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: an hotspot identification (uuid)
+        required: true
+        type: string
+      - name: messageId
+        in: path
+        description: a message identification (uuid)
+        required: true
+        type: string
+      - in: body
+        name: message
+        description: The message to update.
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            pinned:
+              type: boolean
+    description: Patch a message and return it
+    produces:
+      - application/json
+    responses:
+      200:
+        description: The updated message
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Messages'
+      400:
+        description: Invalid request body
+      401:
+        description: Invalid token
+      404:
+        description: invalid hotspotId or messageId
+      500:
+        description: something went wrong
+  delete:
+    tags:
+      - Message
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: an hotspot identification (uuid)
+        required: true
+        type: string
+      - name: messageId
+        in: path
+        description: a message identification (uuid)
+        required: true
+        type: string
+    description: delete a message
+    produces:
+      - application/json
+    responses:
+      200:
+        description: ok, message was successfuly removed
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Messages'
+      404:
+        description: invalid hotspotId or messageId
+      401:
+        description: Invalid token
+      500:
+        description: something went wrong
+
+

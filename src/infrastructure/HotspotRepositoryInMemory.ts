@@ -31,6 +31,11 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         return hotspot;
     }
 
+    public isSet(id: string): boolean {
+        const data = this.orm.hotspot.findOne({ id });
+        return !!data;
+    }
+
     public findInArea = (north : number, west : number, south : number, east : number)
     : Hotspot[] => {
         const data = this.orm.hotspot.findAll({ byArea: [north, west, south, east] });

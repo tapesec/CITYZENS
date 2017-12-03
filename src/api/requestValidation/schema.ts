@@ -1,13 +1,15 @@
+import * as validation from './constant';
+// tslint:disable:object-literal-key-quotes
+// tslint:disable:quotemark
+// tslint:disable:trailing-comma
 export const createHospotSchema = {
-    // tslint:disable:object-literal-key-quotes
-    // tslint:disable:quotemark
-    // tslint:disable:trailing-comma
-    "title": "POST /hotspot body validation",
+    "title": "POST /hotspots body validation",
     "type": "object",
     "required": ["position", "title", "message", "scope", "id_city"],
     "properties": {
         "title": {
-            "type": "string"
+            "type": "string",
+            "maxLength": validation.TITLE_MAX_LENGTH
         },
         "id_city": {
             "type": "string"
@@ -42,6 +44,25 @@ export const createHospotSchema = {
         "scope": {
             "type": "string",
             "enum": ["public", "private"]
+        }
+    }
+};
+
+export const createMessageSchema = {
+    "title": "POST /hotspots/{hotspotId}/messages body validation",
+    "type": "object",
+    // "required": ["title", "body"],
+    "properties": {
+        "title": {
+            "type": "string",
+            "maxLength": validation.TITLE_MAX_LENGTH
+        },
+        "body": {
+            "type": "string",
+            "maxLength": validation.MESSAGE_BODY_MAX_LENGTH
+        },
+        "pinned": {
+            "type": "boolean"
         }
     }
 };

@@ -1,3 +1,6 @@
+import messageRepositoryInMemory from '../../infrastructure/MessageRepositoryInMemory';
+import MessageCtrl from '../controllers/MessageCtrl';
+import MessageRouter from './MessageRouter';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import ProfileRouter from './ProfileRouter';
 import ProfileCtrl from '../controllers/ProfileCtrl';
@@ -41,5 +44,8 @@ export const init = (server : restify.Server) => {
     routers.push(new CityRouter(new CityCtrl(jwtParser, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(
         new HotspotCtrl(jwtParser, hotspotRepositoryInMemory, new HotspotFactory())));
+    routers.push(new MessageRouter(
+        new MessageCtrl(jwtParser, hotspotRepositoryInMemory, messageRepositoryInMemory)));
+
     routers.forEach(r => r.bind(server));
 };

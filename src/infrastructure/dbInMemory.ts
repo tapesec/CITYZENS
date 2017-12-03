@@ -1,3 +1,4 @@
+import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import { HOTSPOT_ENDPOINT } from '../api/routers/constants';
 import HotspotSample from '../domain/cityLife/model/sample/HotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
@@ -67,5 +68,16 @@ cityzenCollection.insert(CITYZEN_ELODIE);
 cityzenCollection.insert(CITYZEN_LOUISE);
 cityzenCollection.insert(CITYZEN_MARTIN);const city = db.addCollection('city');
 
-export { cityzenCollection };
-export { hotspotCollection };
+const messageCollection = db.addCollection('messages');
+
+const message1 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_CHURCH_MESSAGE));
+message1.removed = false;
+messageCollection.insert(message1);
+const message2 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_SCHOOL_MESSAGE));
+message2.removed = false;
+messageCollection.insert(message2);
+const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
+message3.removed = false;
+messageCollection.insert(message3);
+
+export { cityzenCollection, hotspotCollection, messageCollection };

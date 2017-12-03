@@ -9,7 +9,6 @@ class CityRepositoryInMemory implements ICityRepository {
         return this.citys.get(insee);
     }
     public store(city: City): void {
-        console.log('seting city');
         this.citys.set(city.insee, city);
     }
     public remove(insee: string): void {

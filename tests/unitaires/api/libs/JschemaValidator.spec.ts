@@ -3,7 +3,7 @@
  */
 import * as ajv from 'ajv';
 import { expect } from 'chai';
-import { createHospotSchema } from '../../../../src/api/requestValidation/createHotspotValidation';
+import { createHospotSchema } from '../../../../src/api/requestValidation/schema';
 
 describe('JschemaValidator', () => {
 
