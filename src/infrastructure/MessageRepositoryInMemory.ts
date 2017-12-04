@@ -7,21 +7,23 @@ import IMessageRepository from 'src/domain/cityLife/model/messages/IMessageRepos
 class MessageRepositoryInMemory implements IMessageRepository{
 
     protected orm : any;
+    protected messageFactory: MessageFactory;
 
-    constructor(orm : any) {
+    constructor(orm : any, messageFactory: MessageFactory) {
         this.orm = orm;
+        this.messageFactory = messageFactory;
     }
 
     public findByHotspotId(id: string): Message[] {
         const hotspotId = new HotspotId(id);
         const data = this.orm.message.findAll({ hotspotId: hotspotId.id });
-        return data.map((messageEntry : any) => new MessageFactory().createMessage(messageEntry));
+        return data.map((messageEntry : any) => this.messageFactory.createMessage(messageEntry));
     }
 
     public findById(id: string): Message {
         const entry = this.orm.message.findOne({ id, removed: false });
         if (!entry) return;
-        const message = new MessageFactory().createMessage(entry);
+        const message = this.messageFactory.createMessage(entry);
         return message;
     }
 
@@ -43,7 +45,7 @@ class MessageRepositoryInMemory implements IMessageRepository{
     }
 }
 const messageRepositoryInMemory: MessageRepositoryInMemory =
-new MessageRepositoryInMemory(orm);
+new MessageRepositoryInMemory(orm, new MessageFactory());
 
 export { MessageRepositoryInMemory };
 export default messageRepositoryInMemory;
