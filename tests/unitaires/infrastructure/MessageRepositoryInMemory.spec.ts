@@ -16,8 +16,9 @@ describe('MessageRepository', () => {
     let saveStub: any;
     let updateStub: any;
     let deleteStub: any;
-    let messageRepository: MessageRepositoryInMemory;
+    let repository: MessageRepositoryInMemory;
     let messageFactoryMock: TypeMoq.IMock<MessageFactory>;
+    let fakeMessageId: string;
 
     beforeEach('should mock orm before test MessageRepository', () => {
         findAllStub = sinon.stub();
@@ -33,11 +34,13 @@ describe('MessageRepository', () => {
             delete: deleteStub,
         };
         messageFactoryMock = TypeMoq.Mock.ofType<MessageFactory>();
+        fakeMessageId = 'fake-message-id';
+        repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
     });
 
     afterEach(() => {
         ormStub = {};
-        messageRepository = null;
+        repository = null;
     });
 
     describe('findByHotspotId', () => {
@@ -51,7 +54,6 @@ describe('MessageRepository', () => {
                 { foo: 'bar' },
             ];
             findAllStub.returns(fakeDatafromDb);
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             repository.findByHotspotId(fakeHotspotId);
             // Assert
@@ -70,10 +72,8 @@ describe('MessageRepository', () => {
 
         it ('should call orm findOne method and return a new Message', () => {
             // Arrange
-            const fakeMessageId = 'fake-id';
             const fakeDatafromDb = { foo: 'bar' };
             findOneStub.returns(fakeDatafromDb);
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             repository.findById(fakeMessageId);
             // Assert
@@ -89,10 +89,8 @@ describe('MessageRepository', () => {
 
         it ('should call orm findOne method and return undefined if no entry from database', () => {
             // Arrange
-            const fakeMessageId = 'fake-id';
             const emptyDatafromDb: any = undefined;
             findOneStub.returns(emptyDatafromDb);
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             repository.findById(fakeMessageId);
             // Assert
@@ -110,10 +108,8 @@ describe('MessageRepository', () => {
     describe('isSet', () => {
         it ('should call orm findOne and return true when there is a message', () => {
             // Arrange
-            const fakeMessageId = 'fake-id';
             const fakeDatafromDb = { foo: 'bar' };
             findOneStub.returns(fakeDatafromDb);
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             const isSet: boolean = repository.isSet(fakeMessageId);
             // Assert
@@ -125,10 +121,8 @@ describe('MessageRepository', () => {
 
         it ('should call orm findOne and return false when there is not a message', () => {
             // Arrange
-            const fakeMessageId = 'fake-id';
             const fakeDatafromDb: any = undefined;
             findOneStub.returns(fakeDatafromDb);
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             const isSet: boolean = repository.isSet(fakeMessageId);
             // Assert
@@ -142,8 +136,7 @@ describe('MessageRepository', () => {
     describe('store', () => {
         it ('should call orm save methode after stringify then parse a message object', () => {
             // Arrange
-            const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
+            const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;;
             // Act
             repository.store(aMessage);
             // Assert
@@ -155,7 +148,6 @@ describe('MessageRepository', () => {
         it ('should call orm update methode after stringify then parse a message object', () => {
             // Arrange
             const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
             repository.update(aMessage);
             // Assert
@@ -165,13 +157,10 @@ describe('MessageRepository', () => {
 
     describe('delete', () => {
         it ('should call orm delete methode with message id parameter', () => {
-            // Arrange
-            const messageId = 'fake-message-id';
-            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
             // Act
-            repository.delete(messageId);
+            repository.delete(fakeMessageId);
             // Assert
-            expect(deleteStub.calledWith(messageId)).to.be.true;
+            expect(deleteStub.calledWith(fakeMessageId)).to.be.true;
         });
     });
 });
