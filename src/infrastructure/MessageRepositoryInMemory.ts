@@ -28,7 +28,7 @@ class MessageRepositoryInMemory implements IMessageRepository{
     }
 
     public isSet(id: string): boolean {
-        const data = this.orm.message.findOne({ id });
+        const data = this.orm.message.findOne({ id, removed: false });
         return !!data;
     }
 

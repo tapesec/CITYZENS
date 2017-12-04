@@ -54,7 +54,6 @@ const messageFind = (requestParams: any) => {
 };
 
 const messageFindOne = (requestParams: any) => {
-    requestParams.removed = false;
     return messageCollection.findOne(requestParams);
 };
 
