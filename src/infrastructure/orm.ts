@@ -50,7 +50,6 @@ const hotspotRemove = (id: string) => {
 };
 
 const messageFind = (requestParams: any) => {
-    requestParams.removed = false;
     return messageCollection.find(requestParams);
 };
 

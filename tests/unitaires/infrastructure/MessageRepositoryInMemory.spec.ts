@@ -54,11 +54,51 @@ describe('MessageRepository', () => {
             // Act
             repository.findByHotspotId(fakeHotspotId);
             // Assert
-            expect(findAllStub.calledWith({ hotspotId: new HotspotId('fake-id').id })).to.be.true;
+            expect(
+                findAllStub.calledWith({ hotspotId: new HotspotId('fake-id').id, removed: false }),
+            ).to.be.true;
             messageFactoryMock
             .verify(
                 x => x.createMessage(TypeMoq.It.isAny()),
                 TypeMoq.Times.exactly(3),
+            );
+        });
+
+        it ('should call orm findOne method and return a message', () => {
+            // Arrange
+            const fakeMessageId = 'fake-id';
+            const fakeDatafromDb = { foo: 'bar' };
+            findOneStub.returns(fakeDatafromDb);
+            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
+            // Act
+            repository.findById(fakeMessageId);
+            // Assert
+            expect(
+                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
+            ).to.be.true;
+            messageFactoryMock
+            .verify(
+                x => x.createMessage(TypeMoq.It.isAny()),
+                TypeMoq.Times.once(),
+            );
+        });
+
+        it ('should call orm findOne method and return undefined if no entry from database', () => {
+            // Arrange
+            const fakeMessageId = 'fake-id';
+            const emptyDatafromDb: any = undefined;
+            findOneStub.returns(emptyDatafromDb);
+            const repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
+            // Act
+            repository.findById(fakeMessageId);
+            // Assert
+            expect(
+                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
+            ).to.be.true;
+            messageFactoryMock
+            .verify(
+                x => x.createMessage(TypeMoq.It.isAny()),
+                TypeMoq.Times.never(),
             );
         });
     });

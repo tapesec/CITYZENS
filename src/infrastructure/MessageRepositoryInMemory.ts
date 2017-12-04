@@ -16,7 +16,7 @@ class MessageRepositoryInMemory implements IMessageRepository{
 
     public findByHotspotId(id: string): Message[] {
         const hotspotId = new HotspotId(id);
-        const data = this.orm.message.findAll({ hotspotId: hotspotId.id });
+        const data = this.orm.message.findAll({ hotspotId: hotspotId.id, removed: false });
         return data.map((messageEntry : any) => this.messageFactory.createMessage(messageEntry));
     }
 
