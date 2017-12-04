@@ -4,7 +4,7 @@ import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
 import { expect } from 'chai';
 describe('HotspotFactory', () => {
 
-    it ('createFactory method should return a new hotspot', () => {
+    it ('createHotspot method with data from post request should return a new hotspot', () => {
         // Arrange
         const fakeDataFromRequestPost : any = {
             title: 'new title',
@@ -34,7 +34,7 @@ describe('HotspotFactory', () => {
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 
-    it ('createFactory method should return a new hotspot', () => {
+    it ('createHotspot method  with data from database should return a new hotspot', () => {
         // Arrange
         const fakeDataFromDatabase : any = {
             id: 'fake-id',

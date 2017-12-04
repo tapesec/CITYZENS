@@ -45,7 +45,7 @@ describe('MessageFactory', () => {
 });
 
 const commonMessagePropertiesAssertion = (fakeNewMessage : any) : void => {
-    expect(fakeNewMessage).to.have.property('title').and.to.be.equal(fakeNewMessage.title);
-    expect(fakeNewMessage).to.have.property('pinned').and.to.be.equal(fakeNewMessage.pinned);
-    expect(fakeNewMessage).to.have.property('body').and.to.be.equal(fakeNewMessage.body);
+    expect(fakeNewMessage).to.have.property('title').and.to.be.equal('new title');
+    expect(fakeNewMessage).to.have.property('pinned').and.to.be.equal(true);
+    expect(fakeNewMessage).to.have.property('body').and.to.be.equal('fake message body');
 };
