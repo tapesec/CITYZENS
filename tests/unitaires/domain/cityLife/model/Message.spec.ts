@@ -35,7 +35,7 @@ describe('Message entity', () => {
         const message = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
         const newTitle = 'now changing title';
         // Act
-        MessageSample.MARTIGNAS_CHURCH_MESSAGE.editBody(newTitle);
+        message.changeTitle(newTitle);
         // Assert
         expect(message.title).to.be.equal(newTitle);
     });
@@ -45,7 +45,7 @@ describe('Message entity', () => {
         const message = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
         const newBody = 'now updating text';
         // Act
-        MessageSample.MARTIGNAS_CHURCH_MESSAGE.editBody(newBody);
+        message.editBody(newBody);
         // Assert
         expect(message.body).to.be.equal(newBody);
     });
@@ -55,7 +55,7 @@ describe('Message entity', () => {
         const message = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
         const isPinned = MessageSample.MARTIGNAS_CHURCH_MESSAGE.pinned;
         // Act
-        MessageSample.MARTIGNAS_CHURCH_MESSAGE.togglePinMode();
+        message.togglePinMode();
         // Assert
         expect(MessageSample.MARTIGNAS_CHURCH_MESSAGE.pinned).to.be.equal(!isPinned);
     });
