@@ -2,7 +2,6 @@
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
-import { Response } from '_debugger';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
 import HotspotSample from '../../../../src/domain/cityLife/model/sample/HotspotSample';
