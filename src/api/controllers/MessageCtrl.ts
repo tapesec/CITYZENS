@@ -8,7 +8,7 @@ messageRepositoryInMemory,
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
-import { createMessageSchema } from '../requestValidation/schema';
+import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
 import * as rest from 'restify';
 const logs = require('./../../logs/');
 const httpResponseDataLogger = logs.get('http-response-data');
@@ -76,7 +76,7 @@ class MessageCtrl extends RootCtrl​​ {
     public patchMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
         let message: Message;
 
-        if (!this.schemaValidator.validate(createMessageSchema, req.body))
+        if (!this.schemaValidator.validate(patchMessageSchema, req.body))
             return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
         try {
             message = this.messageRepository.findById(req.params.messageId);
@@ -91,7 +91,7 @@ class MessageCtrl extends RootCtrl​​ {
             if (req.body.title) {
                 message.changeTitle(req.body.title);
             }
-            if (req.body.messageBody) {
+            if (req.body.body) {
                 message.editBody(req.body.messageBody);
             }
             if (req.body.pinned !== undefined) {

@@ -13,7 +13,13 @@ const decodedToken = {
 export const DECODED_PAYLOAD =
 new DecodedJwtPayload(decodedToken, config.auth.auth0JwtPayloadNamespace);
 
-delete decodedToken.sub;
+const malformedDecodedToken = {
+    email: 'fake@email.com',
+    nickname: 'Alice',
+    [`${config.auth.auth0JwtPayloadNamespace}/user_metadata`]: {
+        favoritesHotspots: ['an-hotspot-id'],
+    },
+};
 
 export const MALFORMED_DECODED_PAYLOAD =
-new DecodedJwtPayload(decodedToken, config.auth.auth0JwtPayloadNamespace);
+new DecodedJwtPayload(malformedDecodedToken, config.auth.auth0JwtPayloadNamespace);

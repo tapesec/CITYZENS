@@ -30,9 +30,10 @@ const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
     return cityzen;
 };
 
-class InvalidPayloadError extends Error {
+export class InvalidPayloadError extends Error {
     constructor(message: string) {
         super(message);
+        Object.setPrototypeOf(this, InvalidPayloadError.prototype);
     }
 }
 

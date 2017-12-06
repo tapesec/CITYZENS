@@ -66,3 +66,22 @@ export const createMessageSchema = {
         }
     }
 };
+
+export const patchMessageSchema = {
+    "title": "POST /hotspots/{hotspotId}/messages body validation",
+    "type": "object",
+    // "required": ["title", "body"],
+    "properties": {
+        "title": {
+            "type": "string",
+            "maxLength": validation.TITLE_MAX_LENGTH
+        },
+        "body": {
+            "type": "string",
+            "maxLength": validation.MESSAGE_BODY_MAX_LENGTH
+        },
+        "pinned": {
+            "type": "boolean"
+        }
+    }
+};

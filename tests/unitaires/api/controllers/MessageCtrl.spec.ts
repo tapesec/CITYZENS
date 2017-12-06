@@ -10,7 +10,7 @@ hotspotRepositoryInMemory,
 { HotspotRepositoryInMemory } from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import { OK, CREATED } from 'http-status-codes';
+import { OK, CREATED, getStatusText } from 'http-status-codes';
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
@@ -63,6 +63,7 @@ describe('MessageCtrl', () => {
         afterEach(() => {
             hotspotRepositoryMoq.reset();
             messageRepositoryMoq.reset();
+            reqMoq.reset();
         });
 
         it ('should return a collection of messages related to a given hotspot', async () => {
@@ -91,7 +92,7 @@ describe('MessageCtrl', () => {
         });
     });
 
-    describe('postMessage', () => {
+    describe('postMessage action', () => {
 
         beforeEach(() => {
             reqMoq.setup(x => x.params).returns(() => {
@@ -104,6 +105,8 @@ describe('MessageCtrl', () => {
         afterEach(() => {
             hotspotRepositoryMoq.reset();
             messageRepositoryMoq.reset();
+            reqMoq.reset();
+            resMoq.reset();
         });
 
         it ('create a new message and store it in repository then respond created', async () => {
@@ -115,6 +118,7 @@ describe('MessageCtrl', () => {
                 pinned: true,
             };
             reqMoq.setup(x => x.body).returns(() => reqBody);
+            reqBody.hotspotId = hotspotId;
             reqBody.cityzen = cityzenFromJwt(messageCtrl.decodedJwtPayload);
             messageFactoryMoq.setup(x => x.createMessage(reqBody))
             .returns(() => MessageSample.MARTIGNAS_SCHOOL_MESSAGE);
@@ -127,6 +131,79 @@ describe('MessageCtrl', () => {
             resMoq
             .verify(
                 x => x.json(CREATED, MessageSample.MARTIGNAS_SCHOOL_MESSAGE), TypeMoq.Times.once());
+        });
+    });
+
+    describe('patchMessage action', () => {
+
+        let messageId: string;
+
+        beforeEach(() => {
+            messageId = 'fake-message-id';
+            reqMoq.setup(x => x.params).returns(() => {
+                return {
+                    hotspotId,
+                    messageId,
+                };
+            });
+        });
+
+        afterEach(() => {
+            messageRepositoryMoq.reset();
+            reqMoq.reset();
+            resMoq.reset();
+        });
+
+        it ('should change title message if title passed in request body', async () => {
+            // Arrange
+            const reqBody: any = {
+                title: 'fake-title',
+                body: 'lorem ipsum',
+                pinned: true,
+            };
+            const message = MessageSample.MARTIGNAS_SCHOOL_MESSAGE;
+            reqMoq.setup(x => x.body).returns(() => reqBody);
+            messageRepositoryMoq
+            .setup(x => x.findById(messageId))
+            .returns(() => message);
+            message.changeTitle('fake-title');
+            message.editBody('lorem ipsum');
+            message.togglePinMode();
+            // Act
+            await messageCtrl.patchMessage(reqMoq.object, resMoq.object, nextMoq.object);
+            // Assert
+            messageRepositoryMoq.verify(x => x.update(message), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(OK, message), TypeMoq.Times.once());
+        });
+    });
+
+    describe('deleteMessage action', () => {
+        let messageId: string;
+
+        beforeEach(() => {
+            messageId = 'fake-message-id';
+            reqMoq.setup(x => x.params).returns(() => {
+                return {
+                    hotspotId,
+                    messageId,
+                };
+            });
+        });
+
+        afterEach(() => {
+            messageRepositoryMoq.reset();
+            reqMoq.reset();
+            resMoq.reset();
+        });
+
+        it ('should remove a message', async () => {
+            // Arrange
+            messageRepositoryMoq.setup(x => x.isSet(messageId)).returns(() => true);
+            // Act
+            await messageCtrl.removeMessage(reqMoq.object, resMoq.object, nextMoq.object);
+            // Assert
+            messageRepositoryMoq.verify(x => x.delete(messageId), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(OK, getStatusText(OK)), TypeMoq.Times.once());
         });
     });
 });
