@@ -17,19 +17,22 @@ import * as restifyErrors from 'restify-errors';
 
 class MessageCtrl extends RootCtrl​​ {
 
-    private hotspotRepository : HotspotRepositoryInMemory;
-    private messageRepository : MessageRepositoryInMemory;
+    private hotspotRepository: HotspotRepositoryInMemory;
+    private messageRepository: MessageRepositoryInMemory;
+    private messageFactory: MessageFactory;
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
 
     constructor (
         jwtParser : JwtParser,
-        hotspotRepositoryInMemory : HotspotRepositoryInMemory,
-        messageRepositoryInMemory : MessageRepositoryInMemory,
+        hotspotRepositoryInMemory: HotspotRepositoryInMemory,
+        messageRepositoryInMemory: MessageRepositoryInMemory,
+        messageFactory: MessageFactory,
     ) {
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
+        this.messageFactory = messageFactory;
     }
 
     // method=GET url=/hotspots/{hotspotId}/messages
@@ -59,7 +62,7 @@ class MessageCtrl extends RootCtrl​​ {
         req.body.hotspotId = req.params.hotspotId;
         try {
             req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
-            const newMessage = new MessageFactory().createMessage(req.body);
+            const newMessage = this.messageFactory.createMessage(req.body);
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {

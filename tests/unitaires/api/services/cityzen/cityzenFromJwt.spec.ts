@@ -18,7 +18,7 @@ describe('CityzenFromJwt', () => {
         expect(cityzen).to.have.property('pseudo');
     });
 
-    it.only ('should throw an error if payload is malformed', () => {
+    it ('should throw an error if payload is malformed', () => {
         // Arrange
         const malformedPayload: DecodedJwtPayload = MALFORMED_DECODED_PAYLOAD;
         // Act
