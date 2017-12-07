@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import * as request from 'supertest';
 import hotspotsEndpointsTests from './hotspots.spec';
 import citysEndpointTests from './citys.spec';
+import messagesEndpointsTests from './messages.spec';
 
 
 describe('/auth endpoint', () => {
@@ -30,4 +31,6 @@ describe('/auth endpoint', () => {
     hotspotsEndpointsTests(state);
     // /citys tests suite
     citysEndpointTests(state);
+    // /hotspots/id/messages suite
+    messagesEndpointsTests(state);
 });
