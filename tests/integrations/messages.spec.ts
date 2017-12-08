@@ -1,9 +1,15 @@
+import HotspotSample from '../../src/domain/cityLife/model/sample/HotspotSample';
 import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
-import { createMessageBody, newMessageResponse } from './sample/requests-responses';
+import {
+    createMessageBody,
+    newMessageResponse,
+    patchMessageBody,
+    editedMessageResponse,
+} from './sample/requests-responses';
 import { username } from './sample/granted-cityzen';
 
 const messagesEndpointsTests = (state : any) => {
@@ -87,16 +93,56 @@ const messagesEndpointsTests = (state : any) => {
 
         describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', () => {
 
+            let messageId: string;
+            let hotspotId: string;
+
+            before(() => {
+                messageId = MessageSample.SIMCITY_TOEDIT_MESSAGE.id;
+                hotspotId = HotspotSample.TOEDIT.id;
+            });
+
             it ('should patch a message and respond 200', async () => {
                 // Arrange
-                const body = createMessageBody;
+                const body = patchMessageBody;
                 // Act
                 const response = await request(server)
-                .post(`/hotspots/${hotspotId}/messages`)
+                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                 .send(body)
                 .set('Authorization', `Bearer ${state.id_token}`)
                 .set('Accept', 'application/json')
-                .expect(201);
+                .expect(200);
+
+                expect(response.body.title).to.eql(editedMessageResponse().title);
+                expect(response.body.body).to.eql(editedMessageResponse().body);
+                expect(response.body.pinned).to.eql(editedMessageResponse().pinned);
+            });
+
+            it ('should return 404 if invalid messageId is provided', async () => {
+                // Arrange
+                const body = patchMessageBody;
+                messageId = 'fake-message-id';
+                // Act
+                const response = await request(server)
+                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                .send(body)
+                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Accept', 'application/json')
+                .expect(404);
+            });
+
+            it ('should return 400 if patch request body is incorrect', async () => {
+                // Arrange
+                const body = {
+                    foo: 'bar',
+                };
+                messageId = 'fake-message-id';
+                // Act
+                const response = await request(server)
+                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                .send(body)
+                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Accept', 'application/json')
+                .expect(400);
             });
         });
     });

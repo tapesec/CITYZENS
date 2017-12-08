@@ -7,6 +7,7 @@ class PositionSample {
     public static CHURCH = new Position(44.84020316, -0.77552855);
     public static SCHOOL = new Position(44.84665782, -0.76560438);
     public static MERIGNAC = new Position(44.84181, -0.64759);
+    public static TOEDIT = new Position(44.84181, -0.64759);
 }
 
 export default PositionSample;

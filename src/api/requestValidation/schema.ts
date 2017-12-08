@@ -70,7 +70,11 @@ export const createMessageSchema = {
 export const patchMessageSchema = {
     "title": "POST /hotspots/{hotspotId}/messages body validation",
     "type": "object",
-    // "required": ["title", "body"],
+    "anyOf": [
+        { "required": ["title"] },
+        { "required": ["body"] },
+        { "required": ["pinned"] },
+    ],
     "properties": {
         "title": {
             "type": "string",

@@ -92,7 +92,7 @@ class MessageCtrl extends RootCtrl​​ {
                 message.changeTitle(req.body.title);
             }
             if (req.body.body) {
-                message.editBody(req.body.messageBody);
+                message.editBody(req.body.body);
             }
             if (req.body.pinned !== undefined) {
                 if (message.pinned !== req.body.pinned) message.togglePinMode();

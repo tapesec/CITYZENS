@@ -31,7 +31,11 @@ export const patchMessageBody = {
 
 // response
 export const editedMessageResponse = () => {
-  const message = MessageSample.MARTIGNAS_TOWNHALL_MESSAGE;
+  const message = MessageSample.SIMCITY_TOEDIT_MESSAGE;
+  message.changeTitle(patchMessageBody.title);
+  message.editBody(patchMessageBody.body);
+  message.togglePinMode();
+  return JSON.parse(JSON.stringify(message));
 }
 
 // POST /hotspots

@@ -10,6 +10,7 @@ class ContentSample {
         'Messe tous les dimanches',
         new Date(),
     );
+    public static MARTIGNAS_TOEDIT_MESSAGE = new Content('Horraires d\'ouverture', new Date());
 }
 
 export default ContentSample;

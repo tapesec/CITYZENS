@@ -54,10 +54,22 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     scope: HotspotScope.Public,
 };
 
+export const HOTSPOT_SIMCITY_TOEDIT = {
+    id: HotspotSample.TOEDIT.id,
+    title: HotspotSample.TOEDIT.title,
+    position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
+    content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOEDIT_MESSAGE)),
+    authorId: CityzenSample.MARTIN.id,
+    idCity: CitySample.SIMCITY.insee,
+    address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
+    scope: HotspotScope.Private,
+};
+
 hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
 hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
 hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
 hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
+hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
 
 const cityzenCollection = db.addCollection('cityzens');
 export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
@@ -79,5 +91,8 @@ messageCollection.insert(message2);
 const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
 message3.removed = false;
 messageCollection.insert(message3);
+const message4 = JSON.parse(JSON.stringify(MessageSample.SIMCITY_TOEDIT_MESSAGE));
+message4.removed = false;
+messageCollection.insert(message4);
 
 export { cityzenCollection, hotspotCollection, messageCollection };

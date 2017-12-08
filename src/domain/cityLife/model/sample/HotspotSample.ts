@@ -49,6 +49,17 @@ class HotspotSample {
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
         HotspotScope.Public,
     );
+
+    public static TOEDIT : Hotspot = new Hotspot(
+        'toedit-static-id',
+        'ToEdit',
+        PositionSample.TOEDIT,
+        ContentSample.MARTIGNAS_TOEDIT_MESSAGE,
+        AuthorSample.ELODIE,
+        '33273',
+        AddressSample.TOEDIT_ADDRESS,
+        HotspotScope.Public,
+    );
 }
 
 export default HotspotSample;
