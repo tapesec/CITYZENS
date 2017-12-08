@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 
 class MessageFactory {
 
-    public createMessage = (data : any) : Message => {
+    public createMessage = (data: any) : Message => {
 
         let author : Author;
         let pinned : boolean;

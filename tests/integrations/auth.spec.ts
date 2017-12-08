@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import hotspotsEndpointsTests from './hotspots.spec';
 import citysEndpointTests from './citys.spec';
 import messagesEndpointsTests from './messages.spec';
+import { loginBody } from './sample/requests-responses';
 
 
 describe('/auth endpoint', () => {
@@ -15,7 +16,7 @@ describe('/auth endpoint', () => {
             // Act
             const response = await request(server)
             .get('/auth/token')
-            .query({ username: 'lionel.dupouy@gmail.com', password: 'MW6DPzxspBdb' })
+            .query(loginBody)
             .set('Accept', 'application/json')
             .expect(200);
             // Assert
