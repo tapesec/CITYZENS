@@ -1,12 +1,32 @@
+import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
+import AddressSample from '../../../src/domain/cityLife/model/sample/AddressSample';
+import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
+import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
 import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
 import { username, password } from './granted-cityzen';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import MessageFactory from '../../../src/infrastructure/MessageFactory';
+import { HotspotScope } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 
 export const loginBody = {
   username: `${username}@gmail.com`,
   password: password
 };
+
+// POST /hotspots
+export const createHotspotBody = {
+  title: 'a testing new hotspot',
+  id_city: CitySample.SIMCITY.insee,
+  position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
+  address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
+  scope: HotspotScope.Private,
+};
+
+export const newHotspotResponse = () => {
+  const body = createHotspotBody;
+  const newHotspot = new HotspotFactory().createHotspot(body);
+  return JSON.parse(JSON.stringify(newHotspot));
+}
 
 // POST /hotspots/{hotspotId}/messages
 export const createMessageBody = {
