@@ -12,7 +12,6 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            message: 'fake message',
             author: {
                 pseudo: CityzenSample.ELODIE.pseudo,
                 id: CityzenSample.ELODIE.id,
@@ -44,11 +43,6 @@ describe('HotspotFactory', () => {
                 longitude: 47.12345,
             },
             cityzen: CityzenSample.ELODIE,
-            content: {
-                message: 'fake message',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            },
             author: {
                 pseudo: CityzenSample.ELODIE.pseudo,
                 id: CityzenSample.ELODIE.id,
@@ -65,10 +59,6 @@ describe('HotspotFactory', () => {
         const fakeNewHotspot = hotspotFactory.createHotspot(fakeDataFromDatabase);
         // Assert
         expect(fakeNewHotspot).to.have.property('id').and.to.be.equal('fake-id');
-        expect(fakeNewHotspot).to.have.property('content').to.have.property('createdAt')
-        .to.be.eql(new Date(fakeDataFromDatabase.content.createdAt));
-        expect(fakeNewHotspot).to.have.property('content').to.have.property('updatedAt')
-        .to.be.eql(new Date(fakeDataFromDatabase.content.updatedAt));
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 });
@@ -85,8 +75,6 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot : any) : void => {
     .to.be.equal('Princesse');
     expect(fakeNewHotspot).to.have.property('author').to.have.property('id')
     .to.be.equal(CityzenSample.ELODIE.id);
-    expect(fakeNewHotspot).to.have.property('content').to.have.property('message')
-    .to.be.equal('fake message');
     expect(fakeNewHotspot).to.have.property('position').to.have.property('longitude')
     .to.be.equal(47.12345);
     expect(fakeNewHotspot).to.have.property('address').to.have.property('name')

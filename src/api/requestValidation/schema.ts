@@ -5,16 +5,13 @@ import * as validation from './constant';
 export const createHospotSchema = {
     "title": "POST /hotspots body validation",
     "type": "object",
-    "required": ["position", "title", "message", "scope", "id_city"],
+    "required": ["position", "title", "scope", "id_city"],
     "properties": {
         "title": {
             "type": "string",
             "maxLength": validation.TITLE_MAX_LENGTH
         },
         "id_city": {
-            "type": "string"
-        },
-        "message": {
             "type": "string"
         },
         "position": {

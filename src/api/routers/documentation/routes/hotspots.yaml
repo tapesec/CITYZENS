@@ -69,13 +69,10 @@
           required:
             - position
             - title
-            - message
           properties:
             title:
               type: string
             id_city:
-              type: string
-            message:
               type: string
             position:
               type: object

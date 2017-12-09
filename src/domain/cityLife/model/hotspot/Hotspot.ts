@@ -13,7 +13,6 @@ class Hotspot {
     protected _uid : string;
     protected _position : Position;
     protected _title : string;
-    protected _content : Content;
     protected _author : Author;
     protected _idCity : string;
     protected _address : Address;
@@ -23,7 +22,6 @@ class Hotspot {
         id : string,
         title : string,
         position : Position,
-        content : Content,
         author : Author,
         idCity : string,
         address : Address,
@@ -33,7 +31,6 @@ class Hotspot {
         this._idCity = idCity;
         this._title = title;
         this._position = position;
-        this._content = content;
         this._author = author;
         this._address = address;
         this._scope = scope;
@@ -48,10 +45,6 @@ class Hotspot {
 
     get title() : string {
         return this._title;
-    }
-
-    get content() : Content {
-        return this._content;
     }
 
     get author() : Author {
@@ -78,10 +71,6 @@ class Hotspot {
         this._address = new Address(newAddress, this._address.city);
     }
 
-    editMessage(message : string) : void {
-        this._content = new Content(message, this._content.createdAt, new Date());
-    }
-
     changeTitle(title : string) : void {
         this._title = title;
     }
@@ -96,7 +85,6 @@ class Hotspot {
             idCity: this.idCity,
             title: this.title,
             position: this.position,
-            content: this.content,
             author: this.author,
             address: this.address,
             scope: this.scope,

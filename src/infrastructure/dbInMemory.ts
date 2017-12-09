@@ -2,7 +2,6 @@ import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import { HOTSPOT_ENDPOINT } from '../api/routers/constants';
 import HotspotSample from '../domain/cityLife/model/sample/HotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
-import ContentSample from '../domain/cityLife/model/sample/ContentSample';
 import AddressSample from '../domain/cityLife/model/sample/AddressSample';
 import { HotspotScope } from '../domain/cityLife/model/hotspot/Hotspot';
 const loki = require('lokijs');
@@ -17,7 +16,6 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     id: HotspotSample.TOWNHALL.id,
     title: HotspotSample.TOWNHALL.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
-    content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE)),
     authorId: CityzenSample.ELODIE.id,
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
@@ -27,7 +25,6 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     id: HotspotSample.CHURCH.id,
     title: HotspotSample.CHURCH.title,
     position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
-    content: JSON.parse(JSON.stringify(ContentSample.CHURCH_MESSAGE)),
     authorId: CityzenSample.LOUISE.id,
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
@@ -37,7 +34,6 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     id: HotspotSample.SCHOOL.id,
     title: HotspotSample.SCHOOL.title,
     position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
-    content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_SCHOOL_MESSAGE)),
     authorId: CityzenSample.ELODIE.id,
     idCity: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
@@ -47,7 +43,6 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     id: HotspotSample.MERIGNAC.id,
     title: HotspotSample.MERIGNAC.title,
     position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
-    content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOWNHALL_MESSAGE)),
     authorId: CityzenSample.MARTIN.id,
     idCity: CitySample.MERIGNAC.insee,
     address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
@@ -58,7 +53,6 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     id: HotspotSample.TOEDIT.id,
     title: HotspotSample.TOEDIT.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
-    content: JSON.parse(JSON.stringify(ContentSample.MARTIGNAS_TOEDIT_MESSAGE)),
     authorId: CityzenSample.MARTIN.id,
     idCity: CitySample.SIMCITY.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),

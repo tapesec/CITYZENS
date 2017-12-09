@@ -32,12 +32,3 @@ definition:
         properties:
           pseudo:
             type: string
-      content:
-        type: object
-        properties:
-          message:
-            type: string
-          createdAt:
-            type: date
-          updatedAt:
-            type: date

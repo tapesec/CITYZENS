@@ -1,7 +1,6 @@
 import Hotspot, { HotspotScope } from '../hotspot/Hotspot';
 import AddressSample from './AddressSample';
 import PositionSample from './PositionSample';
-import ContentSample from './ContentSample';
 import AuthorSample from './AuthorSample';
 
 class HotspotSample {
@@ -10,7 +9,6 @@ class HotspotSample {
         'townhall-static-id',
         'Mairie',
         PositionSample.TOWNHALL,
-        ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
         AuthorSample.ELODIE,
         '33273',
         AddressSample.TOWNHALL_ADDRESS,
@@ -21,7 +19,6 @@ class HotspotSample {
         'school-static-id',
         'Ecole Flora Tristan',
         PositionSample.SCHOOL,
-        ContentSample.MARTIGNAS_SCHOOL_MESSAGE,
         AuthorSample.LOUISE,
         '33273',
         AddressSample.SCHOOL_ADDRESS,
@@ -32,7 +29,6 @@ class HotspotSample {
         'church-static-id',
         'Eglise de Martignas',
         PositionSample.CHURCH,
-        ContentSample.CHURCH_MESSAGE,
         AuthorSample.MARTIN,
         '33273',
         AddressSample.CHURCH_ADDRESS,
@@ -43,7 +39,6 @@ class HotspotSample {
         'merignac-static-id',
         'Merignac centre',
         PositionSample.MERIGNAC,
-        ContentSample.MARTIGNAS_TOWNHALL_MESSAGE,
         AuthorSample.ELODIE,
         '33281',
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
@@ -54,7 +49,6 @@ class HotspotSample {
         'toedit-static-id',
         'ToEdit',
         PositionSample.TOEDIT,
-        ContentSample.MARTIGNAS_TOEDIT_MESSAGE,
         AuthorSample.ELODIE,
         '33273',
         AddressSample.TOEDIT_ADDRESS,
