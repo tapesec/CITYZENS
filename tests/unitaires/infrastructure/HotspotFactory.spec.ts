@@ -21,7 +21,7 @@ describe('HotspotFactory', () => {
                 name: '4 rue Blanc',
                 city: 'Martignas sur Jalles',
             },
-            city_id: '34345',
+            cityId: '34345',
         };
 
         fakeDataFromRequestPost.cityzen = CityzenSample.ELODIE;

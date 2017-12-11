@@ -72,7 +72,7 @@
           properties:
             title:
               type: string
-            city_id:
+            cityId:
               type: string
             position:
               type: object
@@ -96,7 +96,7 @@
             type:
               type: string
               enum: [WallMessage, Event, Accident, Deterioration]
-            icon_type:
+            iconType:
               type: string
               enum: [WallIcon, EventIcon, AccidentIcon, DeteriorationIcon]
 

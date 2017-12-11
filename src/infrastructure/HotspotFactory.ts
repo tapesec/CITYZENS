@@ -16,6 +16,7 @@ import Address from '../domain/cityLife/model/hotspot/Address';
 import config from './../../src/api/config/';
 import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
+import { createHospotSchemaRequiredProperties } from '../api/requestValidation/schema';
 
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
@@ -68,8 +69,6 @@ class HotspotFactory {
         }
         if (data.cityId) {
             cityId = new CityId(data.cityId);
-        } else if (data.city_id) {
-            cityId = new CityId(data.city_id);
         }
 
         const hotspotBuilder = new HotspotBuilder(
@@ -89,9 +88,10 @@ class HotspotFactory {
 
     private throwErrorIfRequiredAndUndefined = (data: any) => {
 
-        const errorMessage = '%s msut be provided to HotspotFactory';
+        const errorMessage = '%s must be provided to HotspotFactory';
 
-        ['position', 'title', 'scope', 'city_id', 'type', 'icon_type', 'cityzen'].forEach((prop) => {
+        if (!data) throw new InvalidArgumentError(format(errorMessage, 'data'));
+        createHospotSchemaRequiredProperties.forEach((prop) => {
             if (!data[prop]) {
                 throw new InvalidArgumentError(format(errorMessage, prop));
             }

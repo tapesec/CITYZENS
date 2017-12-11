@@ -20,12 +20,12 @@ export const loginBody = {
 // POST /hotspots
 export const createHotspotBody = {
     title: 'a testing new hotspot',
-    city_id: CitySample.SIMCITY.insee,
+    cityId: CitySample.SIMCITY.insee,
     position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
     address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
     scope: HotspotScope.Private,
     type: HotspotType.WallMessage,
-    icon_type: HotspotIconType.Wall,
+    iconType: HotspotIconType.Wall,
 };
 
 export const newHotspotResponse = () => {

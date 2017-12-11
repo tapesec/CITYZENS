@@ -3,16 +3,19 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
+export const createHospotSchemaRequiredProperties = [
+    "position", "title", "scope", "cityId", "type", "iconType"];
+
 export const createHospotSchema = {
     "title": "POST /hotspots body validation",
     "type": "object",
-    "required": ["position", "title", "scope", "city_id", "type", "icon_type"],
+    "required": createHospotSchemaRequiredProperties,
     "properties": {
         "title": {
             "type": "string",
             "maxLength": validation.TITLE_MAX_LENGTH
         },
-        "city_id": {
+        "cityId": {
             "type": "string"
         },
         "position": {
@@ -47,7 +50,7 @@ export const createHospotSchema = {
             "type": "string",
             "enum": [`${HotspotType.WallMessage}`]
         },
-        "icon_type": {
+        "iconType": {
             "type": "string",
             "enum": [`${HotspotIconType.Wall}`]
         }
