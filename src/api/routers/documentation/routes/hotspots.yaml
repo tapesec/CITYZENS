@@ -72,7 +72,7 @@
           properties:
             title:
               type: string
-            id_city:
+            city_id:
               type: string
             position:
               type: object
@@ -93,6 +93,13 @@
             scope:
               type: string
               enum: [public, private]
+            type:
+              type: string
+              enum: [WallMessage, Event, Accident, Deterioration]
+            icon_type:
+              type: string
+              enum: [WallIcon, EventIcon, AccidentIcon, DeteriorationIcon]
+
     description: Create an hotspot and return the new one
     produces:
       - application/json
