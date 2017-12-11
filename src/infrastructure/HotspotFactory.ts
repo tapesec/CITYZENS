@@ -1,3 +1,4 @@
+import { format } from 'util';
 import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
 import CityId from '../domain/cityLife/model/city/CityId';
@@ -20,19 +21,17 @@ export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
 
-    constructor(private data: any) {
-        if (!data || !data.type) {
-            throw new InvalidArgumentError('args provided to HotspotFactory are not complete');
+    public build = (data: any): Hotspot => {
+
+        this.throwErrorIfRequiredAndUndefined(data);
+
+        if (data.type === HotspotType.WallMessage) {
+            return this.createWallHotspot(data);
         }
+
     }
 
-    public build = (): Hotspot => {
-        if (this.data.type === HotspotType.WallMessage) {
-            return this.createWallHotspot();
-        }
-    }
-
-    public createWallHotspot = () : WallHotspot => {
+    private createWallHotspot = (data: any) : WallHotspot => {
         let hotspotId: HotspotId;
         let hotspotTitle: HotspotTitle;
         let position: Position;
@@ -42,35 +41,35 @@ class HotspotFactory {
         let scope: HotspotScope;
         let cityId: CityId;
 
-        if (this.data.title) {
-            hotspotTitle = new HotspotTitle(this.data.title);
+        if (data.title) {
+            hotspotTitle = new HotspotTitle(data.title);
         }
 
-        // data from boththis.database or user
-        if (this.data.position) {
-            position = new Position(this.data.position.latitude,this.data.position.longitude);
+        // data from both database or user
+        if (data.position) {
+            position = new Position(data.position.latitude,data.position.longitude);
         }
-        // data from boththis.database or user
-        if (this.data.address) {
-            address = new Address(this.data.address.name,this.data.address.city);
+        // data from both database or user
+        if (data.address) {
+            address = new Address(data.address.name,data.address.city);
         }
-        // data from boththis.database or user
-        if (this.data.cityzen) {
-            author = new Author(this.data.cityzen.pseudo,this.data.cityzen.id);
+        // data from both database or user
+        if (data.cityzen) {
+            author = new Author(data.cityzen.pseudo,data.cityzen.id);
         }
-        if (this.data.scope) {
-            scope = this.data.scope === HotspotScope.Public ?
+        if (data.scope) {
+            scope = data.scope === HotspotScope.Public ?
             HotspotScope.Public : HotspotScope.Private;
         }
-        if (!this.data.id) {
+        if (!data.id) {
             hotspotId = new HotspotId(v4());
         } else {
-            hotspotId = new HotspotId(this.data.id);
+            hotspotId = new HotspotId(data.id);
         }
-        if (this.data.cityId) {
-            cityId = new CityId(this.data.cityId);
-        } else if (this.data.city_id) {
-            cityId = new CityId(this.data.city_id);
+        if (data.cityId) {
+            cityId = new CityId(data.cityId);
+        } else if (data.city_id) {
+            cityId = new CityId(data.city_id);
         }
 
         const hotspotBuilder = new HotspotBuilder(
@@ -86,6 +85,17 @@ class HotspotFactory {
 
         wallHotspot = new WallHotspot(hotspotBuilder, mediaBuilder);
         return wallHotspot;
+    }
+
+    private throwErrorIfRequiredAndUndefined = (data: any) => {
+
+        const errorMessage = '%s msut be provided to HotspotFactory';
+
+        ['position', 'title', 'scope', 'city_id', 'type', 'icon_type', 'cityzen'].forEach((prop) => {
+            if (!data[prop]) {
+                throw new InvalidArgumentError(format(errorMessage, prop));
+            }
+        });
     }
 }
 export default HotspotFactory;

@@ -6,7 +6,11 @@ import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSamp
 import { username, password } from './granted-cityzen';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import MessageFactory from '../../../src/infrastructure/MessageFactory';
-import { HotspotIconType, HotspotScope, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import {
+    HotspotIconType,
+    HotspotScope,
+    HotspotType,
+} from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 
 export const loginBody = {
     password,
@@ -26,7 +30,7 @@ export const createHotspotBody = {
 
 export const newHotspotResponse = () => {
     const body = createHotspotBody;
-    const newHotspot = new HotspotFactory(body).build();
+    const newHotspot = new HotspotFactory().build(body);
     return JSON.parse(JSON.stringify(newHotspot));
 };
 

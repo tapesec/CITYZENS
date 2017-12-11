@@ -1,4 +1,4 @@
-import HotspotSample from '../../../../src/domain/cityLife/model/sample/HotspotSample';
+import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import Hotspot from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import
 hotspotRepositoryInMemory,
@@ -92,7 +92,7 @@ describe('ProfileCtrl', () => {
             // simule l'existance du hotspot à ajouter en favoris
             hotspotRepositoryMoq
             .setup(x => x.findById(params.favoritHotspotId))
-            .returns(() => HotspotSample.CHURCH);
+            .returns(() => WallHotspotSample.CHURCH);
 
             const cityzen = new Cityzen(
                 profileCtrl.decodedJwtPayload.sub,

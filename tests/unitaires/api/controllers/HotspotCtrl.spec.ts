@@ -1,10 +1,14 @@
 // tslint:disable-next-line:import-name
+import {
+    HotspotIconType,
+    HotspotType,
+} from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import * as querystring from 'querystring';
-import HotspotSample from '../../../../src/domain/cityLife/model/sample/HotspotSample';
 // tslint:disable-next-line:import-name
 import { HotspotRepositoryInMemory }
 from '../../../../src/infrastructure/HotspotRepositoryInMemory';
@@ -55,7 +59,7 @@ describe('HotspotCtrl', () => {
             south = -2.434;
             west = 9.23322;
             east = -2.1111;
-            repositoryResult = [HotspotSample.CHURCH, HotspotSample.SCHOOL];
+            repositoryResult = [WallHotspotSample.CHURCH, WallHotspotSample.SCHOOL];
             queryStrings = { north, south, east, west };
         });
 
@@ -114,10 +118,12 @@ describe('HotspotCtrl', () => {
                     latitude: 12.23323,
                     longitude: 22.1112221,
                 },
-                id_city: '33273',
+                city_id: '33273',
                 message: 'a classic message',
                 newAttr: 'random value',
                 scope: 'private',
+                type: HotspotType.WallMessage,
+                icon_type: HotspotIconType.Wall,
             };
         });
 
@@ -128,17 +134,17 @@ describe('HotspotCtrl', () => {
             .returns(() => jsonBody);
 
             jsonBody.cityzen = cityzenFromJwt(hotspotCtrl.decodedJwtPayload);
-            const fakeNewHotspot = new HotspotFactory().createHotspot(jsonBody);
+            const fakeNewHotspot = new HotspotFactory().build(jsonBody);
 
             hotspotFactoryMoq
-            .setup(x => x.createHotspot(jsonBody))
+            .setup(x => x.build(jsonBody))
             .returns(() => fakeNewHotspot);
 
             // Act
             hotspotCtrl.postHotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
-            hotspotFactoryMoq.verify(x => x.createHotspot(jsonBody), TypeMoq.Times.once());
+            hotspotFactoryMoq.verify(x => x.build(jsonBody), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.store(fakeNewHotspot), TypeMoq.Times.once());
             resMoq.verify(x => x.json(201, fakeNewHotspot), TypeMoq.Times.once());
         });

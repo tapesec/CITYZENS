@@ -1,4 +1,4 @@
-import HotspotSample from '../../../../../src/domain/cityLife/model/sample/HotspotSample';
+import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../../../src/domain/cityzens/model/Cityzen';
 import { expect } from 'chai';
@@ -33,7 +33,7 @@ describe('Cityzens entity', () => {
     it('Should add an hotspot as favorit', () => {
         // Arrange
         const elodie : Cityzen = CityzenSample.ELODIE;
-        const favoritHotspotId : string = HotspotSample.SCHOOL.id;
+        const favoritHotspotId : string = WallHotspotSample.SCHOOL.id;
         // Act
         elodie.addHotspotAsFavorit(favoritHotspotId);
         // Assert

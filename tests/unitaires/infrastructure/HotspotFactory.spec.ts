@@ -21,13 +21,13 @@ describe('HotspotFactory', () => {
                 name: '4 rue Blanc',
                 city: 'Martignas sur Jalles',
             },
-            id_city: '34345',
+            city_id: '34345',
         };
 
         fakeDataFromRequestPost.cityzen = CityzenSample.ELODIE;
         const hotspotFactory = new HotspotFactory();
         // Act
-        const fakeNewHotspot = hotspotFactory.createHotspot(fakeDataFromRequestPost);
+        const fakeNewHotspot = hotspotFactory.build(fakeDataFromRequestPost);
         // Assert
         expect(fakeNewHotspot).to.have.property('id');
         commonHotspotPropertiesAssertion(fakeNewHotspot);
@@ -56,7 +56,7 @@ describe('HotspotFactory', () => {
         };
         const hotspotFactory = new HotspotFactory();
         // Act
-        const fakeNewHotspot = hotspotFactory.createHotspot(fakeDataFromDatabase);
+        const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
         // Assert
         expect(fakeNewHotspot).to.have.property('id').and.to.be.equal('fake-id');
         commonHotspotPropertiesAssertion(fakeNewHotspot);

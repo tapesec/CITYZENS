@@ -26,10 +26,12 @@ class HotspotCtrl extends RootCtrl​​ {
     constructor (
         jwtParser : JwtParser,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
+        hotspotFactory: HotspotFactory,
     ) {
 
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
+        this.hotspotFactory = hotspotFactory;
     }
 
     // method=GET url=/hotspots
@@ -63,7 +65,7 @@ class HotspotCtrl extends RootCtrl​​ {
 
         try {
             req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
-            const newHotspot: Hotspot = new HotspotFactory(req.body).build();
+            const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
         } catch (err) {

@@ -17,7 +17,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         const data = this.orm.hotspot.findAll({ cityId: insee });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
-            hotspotsArray.push(new HotspotFactory(entry).build());
+            hotspotsArray.push(new HotspotFactory().build(entry));
         });
         return hotspotsArray;
     }
@@ -26,7 +26,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         let hotspot : Hotspot;
         const data = this.orm.hotspot.findOne({ id });
         if (data) {
-            hotspot = new HotspotFactory(data).build();
+            hotspot = new HotspotFactory().build(data);
         }
         return hotspot;
     }
@@ -41,12 +41,12 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         const data = this.orm.hotspot.findAll({ byArea: [north, west, south, east] });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
-            hotspotsArray.push(new HotspotFactory(entry).build());
+            hotspotsArray.push(new HotspotFactory().build(entry));
         });
         return hotspotsArray;
     }
 
-    public store<T>(hotspot: T): void {
+    public store<T extends Hotspot>(hotspot: T): void {
         this.orm.hotspot.save(JSON.parse(JSON.stringify(hotspot)));
     }
     public remove<T extends Hotspot>(hotspot: T): void {

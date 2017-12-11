@@ -1,4 +1,7 @@
-import Hotspot, { HotspotScope, HotspotType } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
+/* import Hotspot, {
+    HotspotScope,
+    HotspotType,
+} from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
@@ -6,9 +9,9 @@ import AuthorSample from '../../../../../src/domain/cityLife/model/sample/Author
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 
-describe('Hotspot entity', () => {
+describe.skip('Hotspot entity', () => {
 
-    it.only('Should have correct properties set by constructor', () => {
+    it('Should have correct properties set by constructor', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
@@ -114,3 +117,4 @@ describe('Hotspot entity', () => {
         expect(hotspot.scope).to.be.equal(newScope);
     });
 });
+ */
