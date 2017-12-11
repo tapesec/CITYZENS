@@ -1,4 +1,4 @@
-import Hotspot, { HotspotScope } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import Hotspot, { HotspotScope, HotspotType } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 
 describe('Hotspot entity', () => {
 
-    it('Should have correct properties set by constructor', () => {
+    it.only('Should have correct properties set by constructor', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
@@ -20,14 +20,14 @@ describe('Hotspot entity', () => {
             AuthorSample.LOUISE,
             '33273',
             AddressSample.TOWNHALL_ADDRESS,
-            HotspotScope.Public,
+            HotspotType.Accident,
         );
         // Assert
         expect(hotspot.id).to.be.equal(id);
         expect(hotspot.position).to.be.equal(PositionSample.MARTIGNAS_NORTH_OUEST);
         expect(hotspot.title).to.be.equal(title);
         expect(hotspot.author).to.be.equal(AuthorSample.LOUISE);
-        expect(hotspot.scope).to.be.equal('public');
+        expect(hotspot.type).to.be.equal('Accident');
     });
 
     it('Should move to new position', () => {

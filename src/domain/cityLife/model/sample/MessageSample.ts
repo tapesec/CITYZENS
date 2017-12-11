@@ -1,4 +1,4 @@
-import HotspotSample from './HotspotSample';
+import WallHotspotSample from './WallHotspotSample';
 import HotspotId from '../hotspot/HotspotId';
 import AuthorSample from './AuthorSample';
 import Message from '../messages/Message';
@@ -17,7 +17,7 @@ class MessageSample {
         Why don't they know? If they don't know, that means we never told anyone.
         And if we never told anyone it means we never made it back. Hence we die down here.
         Just as a matter of deductive logic.`,
-        AuthorSample.LOUISE, true, new HotspotId(HotspotSample.CHURCH.id), new Date());
+        AuthorSample.LOUISE, true, new HotspotId(WallHotspotSample.CHURCH.id), new Date());
 
     public static MARTIGNAS_SCHOOL_MESSAGE = new Message(
         v4(), 'Recherche volontaires pour la kermess',
@@ -28,7 +28,8 @@ class MessageSample {
         strike down upon thee with great vengeance and furious anger those who would attempt
         to poison and destroy My brothers.
         And you will know My name is the Lord when I lay My vengeance upon thee.`,
-        AuthorSample.MARTIN, false, new HotspotId(HotspotSample.SCHOOL.id), new Date(), new Date());
+        AuthorSample.MARTIN, false, new HotspotId(WallHotspotSample.SCHOOL.id),
+        new Date(), new Date());
 
     public static MARTIGNAS_TOWNHALL_MESSAGE = new Message(
         v4(), 'Horraires d\'ouverture',
@@ -40,7 +41,7 @@ class MessageSample {
         However unreal it may seem, we are connected, you and I.
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
-        false, new HotspotId(HotspotSample.TOWNHALL.id), new Date(), new Date());
+        false, new HotspotId(WallHotspotSample.TOWNHALL.id), new Date(), new Date());
 
     public static SIMCITY_TOEDIT_MESSAGE = new Message(
         v4(), 'A title that will be edit',
@@ -52,7 +53,7 @@ class MessageSample {
         However unreal it may seem, we are connected, you and I.
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
-        false, new HotspotId(HotspotSample.TOEDIT.id), new Date(), new Date());
+        false, new HotspotId(WallHotspotSample.TOEDIT.id), new Date(), new Date());
 }
 
 export default MessageSample;

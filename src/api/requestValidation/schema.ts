@@ -1,17 +1,18 @@
 import * as validation from './constant';
+import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hotspot/Hotspot';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
 export const createHospotSchema = {
     "title": "POST /hotspots body validation",
     "type": "object",
-    "required": ["position", "title", "scope", "id_city"],
+    "required": ["position", "title", "scope", "city_id", "type", "icon_type"],
     "properties": {
         "title": {
             "type": "string",
             "maxLength": validation.TITLE_MAX_LENGTH
         },
-        "id_city": {
+        "city_id": {
             "type": "string"
         },
         "position": {
@@ -41,6 +42,14 @@ export const createHospotSchema = {
         "scope": {
             "type": "string",
             "enum": ["public", "private"]
+        },
+        "type": {
+            "type": "string",
+            "enum": [`${HotspotType.WallMessage}`]
+        },
+        "icon_type": {
+            "type": "string",
+            "enum": [`${HotspotIconType.Wall}`]
         }
     }
 };

@@ -1,3 +1,6 @@
+import HotspotBuilder from '../../factories/HotspotBuilder';
+import CityId from '../city/CityId';
+import HotspotId from './HotspotId';
 import Address from './Address';
 import Position from './Position';
 import Content from './Content';
@@ -8,59 +11,66 @@ export enum HotspotScope {
     Private = 'private',
 }
 
-class Hotspot {
+export enum HotspotType {
+    WallMessage = 'WallMessage',
+    Event = 'Event',
+    Accident = 'Accident',
+    Deterioration = 'Deterioration',
+}
 
-    protected _uid : string;
-    protected _position : Position;
-    protected _title : string;
-    protected _author : Author;
-    protected _idCity : string;
-    protected _address : Address;
-    protected _scope : HotspotScope;
+export enum HotspotIconType {
+    Wall = 'WallIcon',
+    Event = 'EventIcon',
+    Accident = 'AccidentIcon',
+    Deterioration = 'DeteriorationIcon',
+}
 
-    constructor(
-        id : string,
-        title : string,
-        position : Position,
-        author : Author,
-        idCity : string,
-        address : Address,
-        scope : HotspotScope,
-    ) {
-        this._uid = id;
-        this._idCity = idCity;
-        this._title = title;
-        this._position = position;
-        this._author = author;
-        this._address = address;
-        this._scope = scope;
+abstract class Hotspot {
+
+    protected _uid: HotspotId;
+    protected _position: Position;
+    protected _author: Author;
+    protected _cityId: CityId;
+    protected _address: Address;
+    protected _type: HotspotType;
+    protected _iconType: HotspotIconType;
+
+    constructor(builder: HotspotBuilder) {
+        this._uid = builder.id;
+        this._position = builder.position;
+        this._author = builder.author;
+        this._cityId = builder.cityId;
+        this._address = builder.address;
+        this._type = builder.type;
+        this._iconType = builder.iconType;
     }
+
     get id() : string {
-        return this._uid;
+        return this._uid.toString();
     }
 
     get position() : Position {
         return this._position;
     }
 
-    get title() : string {
-        return this._title;
-    }
-
     get author() : Author {
         return this._author;
     }
 
-    get idCity() : string {
-        return this._idCity;
+    get cityId() : string {
+        return this._cityId.toString();
     }
 
     get address() : Address {
         return this._address;
     }
 
-    get scope() : HotspotScope {
-        return this._scope;
+    get type(): HotspotType {
+        return this._type;
+    }
+
+    get iconType(): HotspotIconType {
+        return this._iconType;
     }
 
     moveTo(newLat : number, newLng : number) : void {
@@ -71,23 +81,15 @@ class Hotspot {
         this._address = new Address(newAddress, this._address.city);
     }
 
-    changeTitle(title : string) : void {
-        this._title = title;
-    }
-
-    changeScope(status : HotspotScope) : void {
-        this._scope = status;
-    }
-
-    toJSON() {
+    toString() {
         return {
             id: this.id,
-            idCity: this.idCity,
-            title: this.title,
             position: this.position,
             author: this.author,
+            cityId: this.cityId,
             address: this.address,
-            scope: this.scope,
+            type: this.type,
+            iconType: this.iconType,
         };
     }
 }

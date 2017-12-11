@@ -44,10 +44,10 @@ export const init = (server : restify.Server) => {
         new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory)));
     routers.push(new CityRouter(new CityCtrl(jwtParser, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(
-        new HotspotCtrl(jwtParser, hotspotRepositoryInMemory, new HotspotFactory())));
+        new HotspotCtrl(jwtParser, hotspotRepositoryInMemory)));
     routers.push(new MessageRouter(
         new MessageCtrl(
-            jwtParser, hotspotRepositoryInMemory, messageRepositoryInMemory, new MessageFactory()
+            jwtParser, hotspotRepositoryInMemory, messageRepositoryInMemory, new MessageFactory(),
         ),
     ));
 

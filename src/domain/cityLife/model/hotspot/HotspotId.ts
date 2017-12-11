@@ -5,10 +5,8 @@ class HotspotId {
         return this._id;
     }
 
-    toJSON() {
-        return {
-            id: this.id,
-        };
+    toString() {
+        return this.id;
     }
 }
 export default HotspotId;
