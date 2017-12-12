@@ -1,3 +1,4 @@
+import SlackWebhook from '../api/libs/SlackWebhook';
 import { format } from 'util';
 import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
@@ -13,10 +14,11 @@ import Hotspot, {
     HotspotType,
 } from '../domain/cityLife/model/hotspot/Hotspot';
 import Address from '../domain/cityLife/model/hotspot/Address';
-import config from './../../src/api/config/';
+import config from '../api/config/';
 import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
 import { createHospotSchemaRequiredProperties } from '../api/requestValidation/schema';
+const request = require('request');
 
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
@@ -89,10 +91,13 @@ class HotspotFactory {
     private throwErrorIfRequiredAndUndefined = (data: any) => {
 
         const errorMessage = '%s must be provided to HotspotFactory';
-
-        if (!data) throw new InvalidArgumentError(format(errorMessage, 'data'));
         createHospotSchemaRequiredProperties.forEach((prop) => {
-            if (!data[prop]) {
+            if (!data || !data[prop]) {
+                const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+                hook.alert(
+                    `Property ${prop} is undefined in hotspot factory \n
+                    data provided: ${JSON.stringify(data)}`,
+                );
                 throw new InvalidArgumentError(format(errorMessage, prop));
             }
         });

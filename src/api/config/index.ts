@@ -5,6 +5,7 @@ const auth0ClientSecret = process.env.AUTH_0_CLIENT_SECRET;
 const auth0Audience = process.env.AUTH_0_AUDIENCE;
 const auth0ManagementApiToken = process.env.AUTH_0_MANAGEMENT_API_TOKEN;
 const auth0JwtPayloadNamespace = 'https://www.cityzen.fr';
+const slackWebhookErrorUrl = process.env.SLACK_API_ERROR_WEBHOOK;
 const env = process.env.NODE_ENV;
 
 export default {
@@ -19,5 +20,8 @@ export default {
         auth0Audience,
         auth0ManagementApiToken,
         auth0JwtPayloadNamespace,
+    },
+    slack: {
+        slackWebhookErrorUrl,
     },
 };

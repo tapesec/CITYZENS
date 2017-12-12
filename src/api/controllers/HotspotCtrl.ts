@@ -16,6 +16,9 @@ import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { createHospotSchema, getHotspots } from '../requestValidation/schema';
+import SlackWebhook from '../libs/SlackWebhook';
+import config from '../config/index';
+const request = require('request');
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -40,8 +43,11 @@ class HotspotCtrl extends RootCtrl​​ {
         const queryStrings: any = strToNumQSProps(req.query, ['north', 'east', 'west', 'south']);
         let hotspotsResult : Hotspot[];
 
-        if (!this.schemaValidator.validate(getHotspots, queryStrings))
+        if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
+            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+            hook.alert(`Bad request on GET ${req.getPath()} \n ${JSON.stringify(queryStrings)}`);
             return next(new restifyErrors.BadRequestError(HotspotCtrl.BAD_REQUEST_MESSAGE));
+        }
         try {
             if (queryStrings.north) {
                 hotspotsResult = hotspotsByArea(queryStrings, this.hotspotRepository);
@@ -51,7 +57,6 @@ class HotspotCtrl extends RootCtrl​​ {
         } catch (err) {
             return next(new restifyErrors.InternalServerError(err));
         }
-
         res.json(OK, hotspotsResult);
     }
 
