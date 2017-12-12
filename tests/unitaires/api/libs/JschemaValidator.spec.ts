@@ -12,6 +12,7 @@ import {
     patchMessageSchema,
     getHotspots,
 } from '../../../../src/api/requestValidation/schema';
+import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 
 describe('JschemaValidator', () => {
 
@@ -30,14 +31,12 @@ describe('JschemaValidator', () => {
                 longitude: 22.1112221,
             },
             cityId: '33273',
-            message: 'a classic message',
-            newAttr: 'random value',
             scope: 'private',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
         };
         // Act
-        const isValid = validator.validate(createHospotSchema, body);
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
         // Assert
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
@@ -106,32 +105,60 @@ describe('JschemaValidator', () => {
     });
 
     it ('should validate a message patch body with all properties to update', () => {
+        // Arrange
         const body = {
             title: 'test title',
             body: 'lorem ipsum',
             pinned: false,
         };
-
+        // Act
         const isValid = validator.validate(patchMessageSchema, body);
+        // Assert
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
 
     it ('should validate a message patch body with only one property to update', () => {
+        // Arrange
         const body = {
             title: 'test title',
         };
-
+        // Act
         const isValid = validator.validate(patchMessageSchema, body);
+        // Assert
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
 
     it ('should reject a message patch body with no given required property', () => {
+        // Arrange
         const body = {
             foo: 'bar',
         };
+        // Act
         const isValid = validator.validate(patchMessageSchema, body);
+        // Assert
         expect(isValid).to.be.false;
+    });
+
+    it ('should validate data with schema built with merge mecanism', () => {
+        // Arrange
+        const body = {
+            title: 'my new hotspot',
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            scope: 'private',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            dateEnd: new Date().toISOString(),
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
     });
 });
