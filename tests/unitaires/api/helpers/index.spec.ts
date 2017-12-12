@@ -3,44 +3,24 @@ import * as helpers from '../../../../src/api/helpers';
 
 describe('Helpers', () => {
 
-    describe('latitudeLongitude', () => {
+    describe('strToNumQueryStringsProperties', () => {
 
-        let queryStrings : any;
-
-        beforeEach(() => {
+        it ('should parse given strings and convert to number', () => {
             // Arrange
-            const north = '1.23432878';
-            const south = '-2.3336827';
-            const east = '21.011221212';
-            const west = '-2.3434333';
-
-            queryStrings = {
-                north,
-                south,
-                east,
-                west,
+            const queryStrings = {
+                foo: 'string',
+                n: '123',
+                n2: '1.232',
+                n3: '-1.23',
+                n4: '0',
             };
-        });
-
-        it('should return false if a coords contain a character', () => {
-            // Arrange
-            queryStrings.north = '1.23432878a';
+            // Act
+            const parsedQs = helpers.strToNumQSProps(queryStrings, ['n', 'n2', 'n3', 'n4']);
             // Assert
-            expect(helpers.latitudeLongitude(queryStrings)).to.be.false;
-        });
-
-        it('should return false if a coords contain a character in middle of the coords', () => {
-            // Arrange
-            queryStrings.north = '1.234a32878';
-            // Assert
-            expect(helpers.latitudeLongitude(queryStrings)).to.be.false;
-        });
-
-        it('should return false if a coords is undefined', () => {
-            // Arrange
-            queryStrings.north = undefined;
-            // Assert
-            expect(helpers.latitudeLongitude(queryStrings)).to.be.false;
+            expect(parsedQs.n2).to.equal(1.232);
+            expect(parsedQs.n).to.equal(123);
+            expect(parsedQs.n3).to.equal(-1.23);
+            expect(parsedQs.n4).to.equal(0);
         });
     });
 });

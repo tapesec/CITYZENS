@@ -54,13 +54,13 @@ describe('ProfileCtrl', () => {
 
     describe('postFavorit', () => {
 
-        let querystring : any;
+        let queryStrings : any;
         let params : any;
         let cityzenMoq : TypeMoq.IMock<Cityzen>;
         let hotspotMoq : TypeMoq.IMock<Hotspot>;
 
         before(() => {
-            querystring = {
+            queryStrings = {
                 refresh_token: 'refresh.jwt.token',
             };
             params = {
@@ -79,14 +79,14 @@ describe('ProfileCtrl', () => {
 
             reqMoq
             .setup((x : rest.Request) => x.query)
-            .returns(() => querystring);
+            .returns(() => queryStrings);
 
             reqMoq
             .setup((x : rest.Request) => x.params)
             .returns(() => params);
 
             auth0SdkMoq
-            .setup(x => x.getAuthenticationRefreshToken(querystring.refresh_token))
+            .setup(x => x.getAuthenticationRefreshToken(queryStrings.refresh_token))
             .returns(() => Promise.resolve(renewedCredentials));
 
             // simule l'existance du hotspot à ajouter en favoris
@@ -114,7 +114,7 @@ describe('ProfileCtrl', () => {
 
             auth0SdkMoq
             .verify(
-                x => x.getAuthenticationRefreshToken(querystring.refresh_token),
+                x => x.getAuthenticationRefreshToken(queryStrings.refresh_token),
                 TypeMoq.Times.once());
 
             resMoq

@@ -8,7 +8,6 @@ import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import * as querystring from 'querystring';
 // tslint:disable-next-line:import-name
 import { HotspotRepositoryInMemory }
 from '../../../../src/infrastructure/HotspotRepositoryInMemory';
@@ -85,16 +84,13 @@ describe('HotspotCtrl', () => {
                 TypeMoq.Times.once());
         });
 
-        it('should returns an empty list if invalid coords query strings', () => {
+        it('should returns 400 if invalid format', () => {
+            // TODO test assert response isn't 200 but no assert response is 400
             // Arrange
             queryStrings.north = 'bad format';
             reqMoq
             .setup((x : rest.Request) => x.query)
             .returns(() => queryStrings);
-
-            hotspotRepositoryMoq
-            .setup(x => x.findInArea(north, west, south, east))
-            .returns(() => []);
 
             // Act
             hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
@@ -103,7 +99,7 @@ describe('HotspotCtrl', () => {
             resMoq
             .verify(
                 x => x.json(200, []),
-                TypeMoq.Times.once());
+                TypeMoq.Times.never());
         });
     });
 

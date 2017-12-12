@@ -1,11 +1,8 @@
-export const latitudeLongitude = (queryStrings : any) : boolean => {
-    if (
-        /^(-?[0-9]+\.[0-9]+)$/.test(queryStrings.north) &&
-        /^(-?[0-9]+\.[0-9]+)$/.test(queryStrings.west) &&
-        /^(-?[0-9]+\.[0-9]+)$/.test(queryStrings.south) &&
-        /^(-?[0-9]+\.[0-9]+)$/.test(queryStrings.east)
-    ) {
-        return true;
-    }
-    return false;
+export const strToNumQSProps = (queryStrings: any, props: string[]) => {
+    props.forEach((prop) => {
+        if (queryStrings[prop]) {
+            queryStrings[prop] = +(queryStrings[prop]);
+        }
+    });
+    return queryStrings;
 };

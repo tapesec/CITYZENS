@@ -3,6 +3,41 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
+export const getHotspots = {
+    "title": "GET /hotspots by area",
+    "type": "object",
+    "oneOf": [
+        {
+            "required": ["north", "west", "south", "east"],
+            "properties": {
+                "north": {
+                    "type": "number"
+                },
+                "west": {
+                    "type": "number"
+                },
+                "south": {
+                    "type": "number"
+                },
+                "east": {
+                    "type": "number"
+                },
+            },
+            "additionalProperties": false
+        },
+        {
+            "required": ["insee"],
+            "properties": {
+                "insee": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    ],
+
+};
+
 export const createHospotSchemaRequiredProperties = [
     "position", "title", "scope", "cityId", "type", "iconType"];
 
