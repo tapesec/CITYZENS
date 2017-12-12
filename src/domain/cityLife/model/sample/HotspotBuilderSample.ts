@@ -1,3 +1,4 @@
+import ViewsCount from '../hotspot/ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import HotspotId from '../hotspot/HotspotId';
 import PositionSample from './PositionSample';
@@ -14,6 +15,7 @@ class HotspotBuilderSample {
         AuthorSample.ELODIE,
         new CityId('33273'),
         AddressSample.TOWNHALL_ADDRESS,
+        new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
     );
@@ -24,6 +26,7 @@ class HotspotBuilderSample {
         AuthorSample.LOUISE,
         new CityId('33273'),
         AddressSample.SCHOOL_ADDRESS,
+        new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
     );
@@ -34,6 +37,7 @@ class HotspotBuilderSample {
         AuthorSample.MARTIN,
         new CityId('33273'),
         AddressSample.CHURCH_ADDRESS,
+        new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
     );
@@ -44,6 +48,7 @@ class HotspotBuilderSample {
         AuthorSample.ELODIE,
         new CityId('33281'),
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
+        new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
     );
@@ -54,6 +59,7 @@ class HotspotBuilderSample {
         AuthorSample.ELODIE,
         new CityId('33273'),
         AddressSample.TOEDIT_ADDRESS,
+        new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
     );

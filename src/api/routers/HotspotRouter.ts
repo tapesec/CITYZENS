@@ -1,7 +1,7 @@
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import * as restify from 'restify';
-import { HOTSPOT_ENDPOINT } from './constants';
+import { HOTSPOT_ENDPOINT, VIEWS_ENDPOINT } from './constants';
 
 class HotspotRouter {
 
@@ -23,6 +23,12 @@ class HotspotRouter {
             HOTSPOT_ENDPOINT,
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.postHotspots,
+        );
+
+        server.post(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + VIEWS_ENDPOINT,
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.countView,
         );
     }
 }

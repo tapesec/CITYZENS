@@ -77,10 +77,11 @@ describe('HotspotRepositoryInMemory', () => {
     it('should store a new hotspot in memory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
+        const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
+        wallHotspot.removed = false;
         // Act
         hotspotRepository.store(WallHotspotSample.CHURCH);
         // Expect
-        const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
         expect(saveStub.calledWith(wallHotspot)).to.be.true;
     });
 
@@ -104,7 +105,10 @@ describe('HotspotRepositoryInMemory', () => {
         // Act
         const hotspots : Hotspot[] = hotspotRepository.findInArea(north, west, south, east);
         // Assert
-        expect(findStub.calledWith({ byArea: [north, west, south, east] })).to.be.true;
+        expect(findStub.calledWith({
+            byArea: [north, west, south, east],
+            removed: false,
+        })).to.be.true;
         expect(findStub.calledOnce).to.be.true;
         expect(hotspots).to.have.lengthOf(3);
     });

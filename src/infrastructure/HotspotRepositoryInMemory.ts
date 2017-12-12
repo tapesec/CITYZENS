@@ -14,7 +14,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public findByCodeCommune = (insee: string): Hotspot[] => {
-        const data = this.orm.hotspot.findAll({ cityId: insee });
+        const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
             hotspotsArray.push(new HotspotFactory().build(entry));
@@ -24,7 +24,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
 
     public findById = (id: string): Hotspot => {
         let hotspot : Hotspot;
-        const data = this.orm.hotspot.findOne({ id });
+        const data = this.orm.hotspot.findOne({ id, removed: false });
         if (data) {
             hotspot = new HotspotFactory().build(data);
         }
@@ -32,13 +32,16 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public isSet(id: string): boolean {
-        const data = this.orm.hotspot.findOne({ id });
+        const data = this.orm.hotspot.findOne({ id, removed: false });
         return !!data;
     }
 
     public findInArea = (north : number, west : number, south : number, east : number)
     : Hotspot[] => {
-        const data = this.orm.hotspot.findAll({ byArea: [north, west, south, east] });
+        const data = this.orm.hotspot.findAll({
+            byArea: [north, west, south, east],
+            removed: false,
+        });
         const hotspotsArray : Hotspot[] = [];
         data.forEach((entry : any) => {
             hotspotsArray.push(new HotspotFactory().build(entry));
@@ -47,8 +50,15 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public store<T extends Hotspot>(hotspot: T): void {
-        this.orm.hotspot.save(JSON.parse(JSON.stringify(hotspot)));
+        const dataToSave = JSON.parse(JSON.stringify(hotspot));
+        dataToSave.removed = false;
+        this.orm.hotspot.save(dataToSave);
     }
+
+    public update<T extends Hotspot>(hotspot: T): void {
+        this.orm.hotspot.update(JSON.parse(JSON.stringify(hotspot)));
+    }
+
     public remove<T extends Hotspot>(hotspot: T): void {
         this.orm.hotspot.remove(hotspot.id);
     }

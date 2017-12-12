@@ -45,8 +45,16 @@ const hotspotSave = (data: any) => {
     hotspotCollection.insert(data);
 };
 
+const hotspotUpdate = (data: any) => {
+    const hotspot = hotspotCollection.findOne({ id: data.id, removed: false });
+    hotspot.views = data.views;
+    hotspotCollection.update(hotspot);
+};
+
 const hotspotRemove = (id: string) => {
-    hotspotCollection.remove({ id });
+    const hotspot = hotspotCollection.findOne({ id });
+    hotspot.removed = true;
+    hotspotCollection.update(hotspot);
 };
 
 const messageFind = (requestParams: any) => {
@@ -82,6 +90,7 @@ export default {
         findAll: hotspotFind,
         findOne: hotspotFindOne,
         save: hotspotSave,
+        update: hotspotUpdate,
         remove: hotspotRemove,
     },
     message: {

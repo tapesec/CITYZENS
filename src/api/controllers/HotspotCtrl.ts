@@ -12,7 +12,7 @@ import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
 const logs = require('./../../logs/');
 const httpResponseDataLogger = logs.get('http-response-data');
-import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
+import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { createHospotSchema, getHotspots } from '../requestValidation/schema';
@@ -24,17 +24,19 @@ class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
     private hotspotFactory : HotspotFactory;
+    private hook: SlackWebhook;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
+    private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
 
     constructor (
         jwtParser : JwtParser,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
     ) {
-
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
+        this.hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
     }
 
     // method=GET url=/hotspots
@@ -44,8 +46,7 @@ class HotspotCtrl extends RootCtrl​​ {
         let hotspotsResult : Hotspot[];
 
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
-            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
-            hook.alert(`Bad request on GET ${req.getPath()} \n ${JSON.stringify(queryStrings)}`);
+            this.hook.alert(`Bad request on GET ${req.path()} \n ${JSON.stringify(queryStrings)}`);
             return next(new restifyErrors.BadRequestError(HotspotCtrl.BAD_REQUEST_MESSAGE));
         }
         try {
@@ -73,6 +74,25 @@ class HotspotCtrl extends RootCtrl​​ {
             res.json(CREATED, newHotspot);
         } catch (err) {
             return next(new restifyErrors.InternalServerError(err));
+        }
+    }
+
+    // method= POST url=/hotspots/{hotspotId}/view
+    public countView = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+        }
+        try {
+            const visitedHotspot: Hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+            console.log(visitedHotspot);
+            visitedHotspot.countOneMoreView();
+            this.hotspotRepository.update(visitedHotspot);
+            res.json(OK);
+        } catch (err) {
+            httpResponseDataLogger.info(err.message);
+            this.hook.alert(`Error 500 on GET ${req.path()} \n ${JSON.stringify(err.message)}`);
+            return next(
+                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
         }
     }
 }

@@ -13,6 +13,7 @@ const db = new loki('loki.json');
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { v4 } from 'uuid';
+import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 
 const hotspotCollection = db.addCollection('hotspots');
 
@@ -23,9 +24,11 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     authorId: CityzenSample.ELODIE.id,
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    removed: false,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {
     id: WallHotspotSample.CHURCH.id,
@@ -34,9 +37,11 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     authorId: CityzenSample.LOUISE.id,
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    removed: false,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
     id: WallHotspotSample.SCHOOL.id,
@@ -45,9 +50,11 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     authorId: CityzenSample.ELODIE.id,
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    removed: false,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
     id: WallHotspotSample.MERIGNAC.id,
@@ -56,9 +63,11 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     authorId: CityzenSample.MARTIN.id,
     cityId: CitySample.MERIGNAC.insee,
     address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    removed: false,
 };
 
 export const HOTSPOT_SIMCITY_TOEDIT = {
@@ -68,9 +77,11 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     authorId: CityzenSample.MARTIN.id,
     cityId: CitySample.SIMCITY.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Private,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    removed: false,
 };
 
 hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);

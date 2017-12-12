@@ -1,3 +1,4 @@
+import ViewsCount from './ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import CityId from '../city/CityId';
 import HotspotId from './HotspotId';
@@ -32,6 +33,7 @@ abstract class Hotspot {
     protected _author: Author;
     protected _cityId: CityId;
     protected _address: Address;
+    protected _views: ViewsCount;
     protected _type: HotspotType;
     protected _iconType: HotspotIconType;
 
@@ -41,6 +43,7 @@ abstract class Hotspot {
         this._author = builder.author;
         this._cityId = builder.cityId;
         this._address = builder.address;
+        this._views = builder.views;
         this._type = builder.type;
         this._iconType = builder.iconType;
     }
@@ -65,12 +68,20 @@ abstract class Hotspot {
         return this._address;
     }
 
+    get views(): number {
+        return this._views.toString();
+    }
+
     get type(): HotspotType {
         return this._type;
     }
 
     get iconType(): HotspotIconType {
         return this._iconType;
+    }
+
+    countOneMoreView(): void {
+        this._views = new ViewsCount(this._views.toString() + 1);
     }
 
     moveTo(newLat : number, newLng : number) : void {
@@ -88,6 +99,7 @@ abstract class Hotspot {
             author: this.author,
             cityId: this.cityId,
             address: this.address,
+            views: this.views,
             type: this.type,
             iconType: this.iconType,
         };

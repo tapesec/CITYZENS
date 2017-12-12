@@ -1,3 +1,4 @@
+import ViewsCount from '../model/hotspot/ViewsCount';
 import Address from './../model/hotspot/Address';
 import CityId from '../model/city/CityId';
 import Author from '../model/author/Author';
@@ -15,6 +16,7 @@ class HotspotBuilder {
         protected _author: Author,
         protected _cityId: CityId,
         protected _address: Address,
+        protected _views: ViewsCount,
         protected _type: HotspotType,
         protected _iconType: HotspotIconType,
     ) {}
@@ -45,6 +47,10 @@ class HotspotBuilder {
 
     get iconType(): HotspotIconType {
         return this._iconType;
+    }
+
+    get views(): ViewsCount {
+        return this._views;
     }
 
 }

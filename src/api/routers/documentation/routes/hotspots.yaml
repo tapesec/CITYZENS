@@ -115,4 +115,26 @@
         description: Invalid body
       500:
         description: something went wrong
-
+/hotspots/{hotspotId}/views:
+  post:
+    tags:
+      - Hotspots
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+    - name: hotspotId
+      in: path
+      description: an hotspot identification (uuid)
+      required: true
+      type: string
+    description: Add an extra view
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Ok, view added
+      404:
+        description: The hotspot is not found
