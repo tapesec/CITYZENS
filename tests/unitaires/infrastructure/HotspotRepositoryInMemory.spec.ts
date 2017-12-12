@@ -1,5 +1,5 @@
+import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
-import HotspotSample from '../../../src/domain/cityLife/model/sample/HotspotSample';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
 import {
@@ -25,10 +25,10 @@ describe('HotspotRepositoryInMemory', () => {
     let fakeChurch : any;
     let fakeSchool : any;
     let orm : any = {};
-    let findStub : any; 
+    let findStub : any;
     let findOneStub : any;
     let removeStub : any;
-    let saveStub : any; 
+    let saveStub : any;
 
     beforeEach(() => {
         fakeTownHall = HOTSPOT_MARTIGNAS_TOWNHALL;
@@ -59,9 +59,9 @@ describe('HotspotRepositoryInMemory', () => {
         findOneStub.returns(fakeSchool);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
-        const school = hotspotRepository.findById(HotspotSample.SCHOOL.id);
+        const school = hotspotRepository.findById(WallHotspotSample.SCHOOL.id);
         // Expect
-        expect(school).to.be.eql(HotspotSample.SCHOOL);
+        expect(school).to.be.eql(WallHotspotSample.SCHOOL);
     });
 
     it('should return undefined if no hotspot found', () => {
@@ -78,20 +78,21 @@ describe('HotspotRepositoryInMemory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
-        hotspotRepository.store(HotspotSample.CHURCH);
+        hotspotRepository.store(WallHotspotSample.CHURCH);
         // Expect
-        expect(saveStub.calledWith(JSON.parse(JSON.stringify(HotspotSample.CHURCH)))).to.be.true;
+        const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
+        expect(saveStub.calledWith(wallHotspot)).to.be.true;
     });
-    
+
     it('should remove an hotspot from memory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
-        hotspotRepository.remove(HotspotSample.SCHOOL);
+        hotspotRepository.remove(WallHotspotSample.SCHOOL);
         // Expect
-        expect(removeStub.calledWith(HotspotSample.SCHOOL.id)).to.be.true;
+        expect(removeStub.calledWith(WallHotspotSample.SCHOOL.id)).to.be.true;
     });
-    
+
     it('should retrieve hotspots spoted in the provided area', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
@@ -107,7 +108,7 @@ describe('HotspotRepositoryInMemory', () => {
         expect(findStub.calledOnce).to.be.true;
         expect(hotspots).to.have.lengthOf(3);
     });
-    
+
     it('should\'nt match hotspot in the specified area', () => {
         // Arrange
         findStub.returns([]);
@@ -123,7 +124,7 @@ describe('HotspotRepositoryInMemory', () => {
         expect(hotspots).to.have.lengthOf(0);
         expect(hotspots).to.be.eql([]);
     });
-    
+
     it ('should retrieve hotspot by given city insee code', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);

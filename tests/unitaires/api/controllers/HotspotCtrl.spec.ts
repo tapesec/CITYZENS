@@ -118,12 +118,12 @@ describe('HotspotCtrl', () => {
                     latitude: 12.23323,
                     longitude: 22.1112221,
                 },
-                city_id: '33273',
+                cityId: '33273',
                 message: 'a classic message',
                 newAttr: 'random value',
                 scope: 'private',
                 type: HotspotType.WallMessage,
-                icon_type: HotspotIconType.Wall,
+                iconType: HotspotIconType.Wall,
             };
         });
 

@@ -1,6 +1,7 @@
 /**
  * a test suite for easily valid json schema
  */
+import { HotspotType, HotspotIconType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import * as ajv from 'ajv';
 import { expect } from 'chai';
 import {
@@ -23,10 +24,12 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
-            id_city: '33273',
+            cityId: '33273',
             message: 'a classic message',
             newAttr: 'random value',
             scope: 'private',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
         };
 
         const isValid = validator.validate(createHospotSchema, body);

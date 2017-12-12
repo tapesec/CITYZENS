@@ -2,9 +2,10 @@ import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
 import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
 import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
 import { expect } from 'chai';
+import { HotspotIconType, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 describe('HotspotFactory', () => {
 
-    it ('createHotspot method with data from post request should return a new hotspot', () => {
+    it ('should build a WallHotspot with data provided from POST request', () => {
         // Arrange
         const fakeDataFromRequestPost : any = {
             title: 'new title',
@@ -22,6 +23,8 @@ describe('HotspotFactory', () => {
                 city: 'Martignas sur Jalles',
             },
             cityId: '34345',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
         };
 
         fakeDataFromRequestPost.cityzen = CityzenSample.ELODIE;
@@ -30,10 +33,12 @@ describe('HotspotFactory', () => {
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromRequestPost);
         // Assert
         expect(fakeNewHotspot).to.have.property('id');
+        expect(fakeNewHotspot).to.have.property('title').and.to.be.equal('new title');
+        expect(fakeNewHotspot).to.have.property('scope').and.to.be.equal('private');
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 
-    it ('createHotspot method  with data from database should return a new hotspot', () => {
+    it ('should build a WallHotspot with data from database', () => {
         // Arrange
         const fakeDataFromDatabase : any = {
             id: 'fake-id',
@@ -52,21 +57,24 @@ describe('HotspotFactory', () => {
                 name: '4 rue Blanc',
                 city: 'Martignas sur Jalles',
             },
-            id_city: '34345',
+            cityId: '34345',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
         };
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
         // Assert
         expect(fakeNewHotspot).to.have.property('id').and.to.be.equal('fake-id');
+        expect(fakeNewHotspot).to.have.property('title').and.to.be.equal('new title');
+        expect(fakeNewHotspot).to.have.property('scope').and.to.be.equal('private');
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 });
 
 const commonHotspotPropertiesAssertion = (fakeNewHotspot : any) : void => {
-    expect(fakeNewHotspot).to.have.property('title').and.to.be.equal('new title');
-    expect(fakeNewHotspot).to.have.property('scope').and.to.be.equal('private');
-    expect(fakeNewHotspot).to.have.property('idCity').and.to.be.equal('34345');
+
+    expect(fakeNewHotspot).to.have.property('cityId').and.to.be.equal('34345');
     expect(fakeNewHotspot).to.have.property('position').to.have.property('latitude')
     .to.be.equal(12.25632);
     expect(fakeNewHotspot).to.have.property('position').to.have.property('longitude')
@@ -81,4 +89,6 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot : any) : void => {
     .to.be.equal('4 rue Blanc');
     expect(fakeNewHotspot).to.have.property('address').to.have.property('city')
     .to.be.equal('Martignas sur Jalles');
+    expect(fakeNewHotspot).to.have.property('type').to.be.equal(HotspotType.WallMessage);
+    expect(fakeNewHotspot).to.have.property('iconType').to.be.equal(HotspotIconType.Wall);
 };
