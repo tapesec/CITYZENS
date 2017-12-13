@@ -34,7 +34,6 @@ class SlackWebhook {
     private apiCall = (options : any) : any => {
         return new Promise((resolve, reject) => {
             this.request(options, (error : any, response : any, body : any) => {
-                console.log(response.body, response.statusCode);
                 if (error) {
                     reject(new Error(error));
                 } else if (response.statusCode !== OK) {

@@ -15,7 +15,8 @@ const httpResponseDataLogger = logs.get('http-response-data');
 import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { createHospotSchema, getHotspots } from '../requestValidation/schema';
+import { getHotspots } from '../requestValidation/schema';
+import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import SlackWebhook from '../libs/SlackWebhook';
 import config from '../config/index';
 const request = require('request');
@@ -63,8 +64,7 @@ class HotspotCtrl extends RootCtrl​​ {
 
     // method=POST url=/hotspots
     public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
-
-        if (!this.schemaValidator.validate(createHospotSchema, req.body))
+        if (!this.schemaValidator.validate(createHotspotsSchema(), req.body))
             return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
 
         try {
@@ -84,7 +84,6 @@ class HotspotCtrl extends RootCtrl​​ {
         }
         try {
             const visitedHotspot: Hotspot = this.hotspotRepository.findById(req.params.hotspotId);
-            console.log(visitedHotspot);
             visitedHotspot.countOneMoreView();
             this.hotspotRepository.update(visitedHotspot);
             res.json(OK);

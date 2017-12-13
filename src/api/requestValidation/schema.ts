@@ -38,60 +38,6 @@ export const getHotspots = {
 
 };
 
-export const createHospotSchemaRequiredProperties = [
-    "position", "title", "scope", "cityId", "type", "iconType"];
-
-export const createHospotSchema = {
-    "title": "POST /hotspots body validation",
-    "type": "object",
-    "required": createHospotSchemaRequiredProperties,
-    "properties": {
-        "title": {
-            "type": "string",
-            "maxLength": validation.TITLE_MAX_LENGTH
-        },
-        "cityId": {
-            "type": "string"
-        },
-        "position": {
-            "type": "object",
-            "properties": {
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                }
-            },
-            "required": ["latitude", "longitude"]
-        },
-        "address": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "city": {
-                    "type": "string"
-                }
-            },
-            "required": ["name", "city"]
-        },
-        "scope": {
-            "type": "string",
-            "enum": ["public", "private"]
-        },
-        "type": {
-            "type": "string",
-            "enum": [`${HotspotType.WallMessage}`]
-        },
-        "iconType": {
-            "type": "string",
-            "enum": [`${HotspotIconType.Wall}`]
-        }
-    }
-};
-
 export const createMessageSchema = {
     "title": "POST /hotspots/{hotspotId}/messages body validation",
     "type": "object",

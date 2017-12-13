@@ -7,6 +7,7 @@ import CityId from '../domain/cityLife/model/city/CityId';
 import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
 import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
+import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
 import Author from '../domain/cityLife/model/author/Author';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import Hotspot, {
@@ -18,7 +19,10 @@ import Address from '../domain/cityLife/model/hotspot/Address';
 import config from '../api/config/';
 import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
-import { createHospotSchemaRequiredProperties } from '../api/requestValidation/schema';
+import {
+    requiredWallHotspotProperties,
+    requiredEventHotspotProperties,
+} from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 const request = require('request');
 
@@ -28,29 +32,39 @@ class HotspotFactory {
 
     public build = (data: any): Hotspot => {
 
-        this.throwErrorIfRequiredAndUndefined(data);
-
         if (data.type === HotspotType.WallMessage) {
+            this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);
             return this.createWallHotspot(data);
+        }
+        if (data.type === HotspotType.Event) {
+            this.throwErrorIfRequiredAndUndefined(data, requiredEventHotspotProperties);
+            return this.createEventHotspot(data);
         }
 
     }
 
-    private createWallHotspot = (data: any) : WallHotspot => {
+    private createWallHotspot = (data: any): WallHotspot => {
+        return new WallHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
+    }
+
+    private createEventHotspot = (data: any): EventHotspot => {
+        let dateEnd: Date;
+        if (data && data.dateEnd) {
+            dateEnd = new Date(data.dateEnd);
+        }
+        return new EventHotspot(
+            this.createHotspotBuilder(data), this.createMediaBuilder(data), dateEnd);
+    }
+
+    private createHotspotBuilder = (data: any): HotspotBuilder => {
         let hotspotId: HotspotId;
-        let hotspotTitle: HotspotTitle;
         let position: Position;
         let address: Address;
         let author: Author;
-        let wallHotspot: WallHotspot;
-        let scope: HotspotScope;
         let cityId: CityId;
         let views: ViewsCount;
-
-        if (data.title) {
-            hotspotTitle = new HotspotTitle(data.title);
-        }
-
+        let type: HotspotType;
+        let icon: HotspotIconType;
         // data from both database or user
         if (data.position) {
             position = new Position(data.position.latitude,data.position.longitude);
@@ -62,10 +76,6 @@ class HotspotFactory {
         // data from both database or user
         if (data.cityzen) {
             author = new Author(data.cityzen.pseudo,data.cityzen.id);
-        }
-        if (data.scope) {
-            scope = data.scope === HotspotScope.Public ?
-            HotspotScope.Public : HotspotScope.Private;
         }
         // new hotspot posted by user
         if (!data.id) {
@@ -82,27 +92,44 @@ class HotspotFactory {
         } else {
             views = new ViewsCount(data.views);
         }
+        if (data.type === HotspotType.WallMessage) {
+            type = HotspotType.WallMessage;
+            icon = HotspotIconType.Wall;
+        }
+        if (data.type === HotspotType.Event) {
+            type = HotspotType.Event;
+            icon = HotspotIconType.Event;
+        }
 
-        const hotspotBuilder = new HotspotBuilder(
+
+        return new HotspotBuilder(
             hotspotId,
             position,
             author,
             cityId,
             address,
             views,
-            HotspotType.WallMessage,
-            HotspotIconType.Wall);
-
-        const mediaBuilder = new MediaBuilder(hotspotTitle, scope);
-
-        wallHotspot = new WallHotspot(hotspotBuilder, mediaBuilder);
-        return wallHotspot;
+            type,
+            icon);
     }
 
-    private throwErrorIfRequiredAndUndefined = (data: any) => {
+    private createMediaBuilder = (data: any) => {
+        let hotspotTitle: HotspotTitle;
+        let scope: HotspotScope;
+        if (data.title) {
+            hotspotTitle = new HotspotTitle(data.title);
+        }
+        if (data.scope) {
+            scope = data.scope === HotspotScope.Public ?
+            HotspotScope.Public : HotspotScope.Private;
+        }
+        return new MediaBuilder(hotspotTitle, scope);
+    }
+
+    private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {
 
         const errorMessage = '%s must be provided to HotspotFactory';
-        createHospotSchemaRequiredProperties.forEach((prop) => {
+        requiredProperties.forEach((prop) => {
             if (!data || !data[prop]) {
                 const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
                 hook.alert(

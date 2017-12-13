@@ -17,7 +17,6 @@ const hotspotsEndpointsTests = (state : any) => {
                 const west = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
                 const south = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
                 const east = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
-                console.log({ north, west, south, east });
                 // Act
                 const response = await request(server)
                 .get('/hotspots')
