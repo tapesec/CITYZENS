@@ -8,7 +8,6 @@ import {
 import * as ajv from 'ajv';
 import { expect } from 'chai';
 import {
-    createHospotSchema,
     patchMessageSchema,
     getHotspots,
 } from '../../../../src/api/requestValidation/schema';

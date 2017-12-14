@@ -40,7 +40,7 @@ describe('HotspotFactory', () => {
 
     it ('should build a WallHotspot with data from database', () => {
         // Arrange
-        const fakeDataFromDatabase : any = {
+        const fakeDataFromDatabase: any = {
             id: 'fake-id',
             title: 'new title',
             position: {
@@ -72,7 +72,7 @@ describe('HotspotFactory', () => {
     });
 });
 
-const commonHotspotPropertiesAssertion = (fakeNewHotspot : any) : void => {
+const commonHotspotPropertiesAssertion = (fakeNewHotspot: any) : void => {
 
     expect(fakeNewHotspot).to.have.property('cityId').and.to.be.equal('34345');
     expect(fakeNewHotspot).to.have.property('position').to.have.property('latitude')

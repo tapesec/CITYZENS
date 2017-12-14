@@ -105,7 +105,8 @@ describe('HotspotCtrl', () => {
 
     describe('postHotspots', () => {
 
-        let jsonBody : any;
+        let jsonBody: any;
+        let factoryData: any;
 
         before(() => {
             jsonBody = {
@@ -115,12 +116,11 @@ describe('HotspotCtrl', () => {
                     longitude: 22.1112221,
                 },
                 cityId: '33273',
-                message: 'a classic message',
-                newAttr: 'random value',
                 scope: 'private',
                 type: HotspotType.WallMessage,
                 iconType: HotspotIconType.Wall,
             };
+            factoryData = { ...jsonBody, cityzen: cityzenFromJwt(hotspotCtrl.decodedJwtPayload) };
         });
 
         it ('should create a new hotspot and return it with 200 OK', () => {
@@ -129,11 +129,10 @@ describe('HotspotCtrl', () => {
             .setup((x : rest.Request) => x.body)
             .returns(() => jsonBody);
 
-            jsonBody.cityzen = cityzenFromJwt(hotspotCtrl.decodedJwtPayload);
-            const fakeNewHotspot = new HotspotFactory().build(jsonBody);
+            const fakeNewHotspot = new HotspotFactory().build(factoryData);
 
             hotspotFactoryMoq
-            .setup(x => x.build(jsonBody))
+            .setup(x => x.build(factoryData))
             .returns(() => fakeNewHotspot);
 
             // Act
