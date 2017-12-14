@@ -79,7 +79,7 @@ const WallHotspotSchema = {
 const requiredEventHotspotProperties = [...hotspotSchema.required, "title", "scope", "dateEnd"];
 
 const EventHotspotSchema = {
-    "required": [...hotspotSchema.required, "title", "scope", "dateEnd"],
+    "required": [...hotspotSchema.required, "title", "scope", "dateEnd", "description"],
     "properties": {
         ...hotspotSchema.properties,
         "scope": {
@@ -89,6 +89,9 @@ const EventHotspotSchema = {
         "title": {
             "type": "string",
             "maxLength": validation.TITLE_MAX_LENGTH
+        },
+        "description": {
+            "type": "string"
         },
         "dateEnd": {
             "type": "string",

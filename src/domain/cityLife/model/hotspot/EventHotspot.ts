@@ -8,6 +8,7 @@ import Author from '../author/Author';
 import Hotspot, { HotspotScope, HotspotType, HotspotIconType } from './Hotspot';
 import Position from './Position';
 import Address from './Address';
+import EventDescription from './EventDescription';
 
 class EventHotspot extends MediaHotspot {
 
@@ -15,6 +16,7 @@ class EventHotspot extends MediaHotspot {
         hotpotBuilder: HotspotBuilder,
         mediaBuilder: MediaBuilder,
         protected _date_end: Date,
+        protected _description: EventDescription,
 
     ) {
         super(hotpotBuilder, mediaBuilder);
@@ -24,10 +26,15 @@ class EventHotspot extends MediaHotspot {
         return this._date_end;
     }
 
+    public get description(): EventDescription {
+        return this._description;
+    }
+
     toJSON() {
         return {
             ...super.toString(),
             dateEnd: this.dateEnd,
+            description: this._description,
         };
     }
 }

@@ -8,6 +8,7 @@ import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
 import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
 import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
+import EventDescription from '../domain/cityLife/model/hotspot/EventDescription';
 import Author from '../domain/cityLife/model/author/Author';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import Hotspot, {
@@ -49,11 +50,16 @@ class HotspotFactory {
 
     private createEventHotspot = (data: any): EventHotspot => {
         let dateEnd: Date;
+        let description: EventDescription;
+
         if (data && data.dateEnd) {
             dateEnd = new Date(data.dateEnd);
         }
+        if (data && data.description) {
+            description = new EventDescription(data.description);
+        }
         return new EventHotspot(
-            this.createHotspotBuilder(data), this.createMediaBuilder(data), dateEnd);
+            this.createHotspotBuilder(data), this.createMediaBuilder(data), dateEnd, description);
     }
 
     private createHotspotBuilder = (data: any): HotspotBuilder => {
