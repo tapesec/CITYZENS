@@ -107,7 +107,6 @@ class HotspotFactory {
             icon = HotspotIconType.Event;
         }
 
-
         return new HotspotBuilder(
             hotspotId,
             position,

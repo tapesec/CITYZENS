@@ -140,7 +140,27 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should validate data with schema built with merge mecanism', () => {
+    it ('should validate WallHotspot data with schema built with merge mecanism', () => {
+        // Arrange
+        const body = {
+            title: 'my new hotspot',
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            scope: 'private',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
+
+    it ('should validate EventHotspot data with schema built with merge mecanism', () => {
         // Arrange
         const body = {
             title: 'my new hotspot',
@@ -153,6 +173,7 @@ describe('JschemaValidator', () => {
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
             dateEnd: new Date().toISOString(),
+            description: 'lorem ipsum dolor',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);

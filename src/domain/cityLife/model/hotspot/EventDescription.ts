@@ -1,7 +1,7 @@
 class EventDescription {
     constructor(
         private _content: string,
-        private _updatedAt?: string,
+        private _updatedAt?: Date,
     ) {}
 
     get content() {

@@ -30,6 +30,10 @@ class EventHotspot extends MediaHotspot {
         return this._description;
     }
 
+    editDescription(newDescription: string): void {
+        this._description = new EventDescription(newDescription, new Date());
+    }
+
     toJSON() {
         return {
             ...super.toString(),
