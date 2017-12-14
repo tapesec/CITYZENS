@@ -1,0 +1,66 @@
+components:
+  schemas:
+    Hotspot:
+      properties:
+        cityId:
+          type: string
+        position:
+          type: object
+          properties:
+            latitude:
+              type: double
+            longitude:
+              type: double
+        address:
+          type: object
+          properties:
+            name:
+              type: string
+            city:
+              type: string
+        author:
+          type: object
+          properties:
+            pseudo:
+              type: string
+        views:
+          type: number
+        type:
+          type: string
+          enum:
+            - WallMessage
+            - Event
+            - Accident
+            - Deterioration
+        iconType:
+          type: string
+          enum:
+            - WallIcon
+            - EventIcon
+            - AccidentIcon
+            - DeteriorationIcon
+    WallHotspot:
+      properties:
+        $ref: '#/components/schemas/Hotspot/properties'
+        title:
+          type: string
+        scope:
+          type: string
+          enum:
+            - public
+            - private
+    EventHotspot:
+      properties:
+        $ref: '#/components/schemas/Hotspot/properties'
+        title:
+          type: string
+        description:
+          type: string
+        dateEnd:
+          type: string
+        scope:
+          type: string
+          enum:
+            - public
+            - private
+
