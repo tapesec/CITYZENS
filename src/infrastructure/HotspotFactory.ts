@@ -34,7 +34,7 @@ export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
 
-    public build = (data: any): Hotspot => {
+    public build = (data: any): WallHotspot|EventHotspot|AlertHotspot => {
 
         if (data.type === HotspotType.WallMessage) {
             this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);

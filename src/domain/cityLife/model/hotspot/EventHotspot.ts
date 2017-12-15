@@ -26,6 +26,10 @@ class EventHotspot extends MediaHotspot {
         return this._date_end;
     }
 
+    public reportDateEnd(newDate: Date): void {
+        this._date_end = newDate;
+    }
+
     public get description(): EventDescription {
         return this._description;
     }

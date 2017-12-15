@@ -48,6 +48,11 @@ const hotspotSave = (data: any) => {
 const hotspotUpdate = (data: any) => {
     const hotspot = hotspotCollection.findOne({ id: data.id, removed: false });
     hotspot.views = data.views;
+    if (data.title) hotspot.title = data.title;
+    if (data.scope) hotspot.scope = data.scope;
+    if (data.dateEnd) hotspot.dateEnd = data.dateEnd;
+    if (data.description) hotspot.description = data.description;
+    if (data.message) hotspot.message = data.message;
     hotspotCollection.update(hotspot);
 };
 

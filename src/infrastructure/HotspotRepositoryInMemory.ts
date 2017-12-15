@@ -1,3 +1,6 @@
+import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
+import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
+import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import HotspotFactory from './HotspotFactory';
 import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
 import Position from '../domain/cityLife/model/hotspot/Position';
@@ -13,17 +16,17 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         this.orm = orm;
     }
 
-    public findByCodeCommune = (insee: string): Hotspot[] => {
+    public findByCodeCommune = (insee: string): (WallHotspot|EventHotspot|AlertHotspot)[] => {
         const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
-        const hotspotsArray : Hotspot[] = [];
+        const hotspotsArray: (WallHotspot|EventHotspot|AlertHotspot)[] = [];
         data.forEach((entry : any) => {
             hotspotsArray.push(new HotspotFactory().build(entry));
         });
         return hotspotsArray;
     }
 
-    public findById = (id: string): Hotspot => {
-        let hotspot : Hotspot;
+    public findById = (id: string): WallHotspot|EventHotspot|AlertHotspot => {
+        let hotspot: WallHotspot|EventHotspot|AlertHotspot;
         const data = this.orm.hotspot.findOne({ id, removed: false });
         if (data) {
             hotspot = new HotspotFactory().build(data);
@@ -37,12 +40,12 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     }
 
     public findInArea = (north : number, west : number, south : number, east : number)
-    : Hotspot[] => {
+    : (WallHotspot|EventHotspot|AlertHotspot)[] => {
         const data = this.orm.hotspot.findAll({
             byArea: [north, west, south, east],
             removed: false,
         });
-        const hotspotsArray : Hotspot[] = [];
+        const hotspotsArray: (WallHotspot|EventHotspot|AlertHotspot)[] = [];
         data.forEach((entry : any) => {
             hotspotsArray.push(new HotspotFactory().build(entry));
         });

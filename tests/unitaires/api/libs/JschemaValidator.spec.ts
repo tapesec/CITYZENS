@@ -12,6 +12,7 @@ import {
     getHotspots,
 } from '../../../../src/api/requestValidation/schema';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
+import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
 
 describe('JschemaValidator', () => {
 
@@ -199,5 +200,54 @@ describe('JschemaValidator', () => {
         // Assert
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
+    });
+
+    it ('should validate AlertHotspot update with corresponding schema', () => {
+        // Arrange
+        const body = {
+            message: 'the message was updated',
+        };
+        // Act
+        const isValid = validator.validate(getUpdateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
+
+    it ('should validate WallHotspot update with corresponding schema', () => {
+        // Arrange
+        const body = {
+            title: 'an edited title',
+            scope: 'private',
+        };
+        // Act
+        const isValid = validator.validate(getUpdateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
+
+    it ('should validate EventHotspot update with corresponding schema', () => {
+        // Arrange
+        const body = {
+            title: 'an edited title',
+            scope: 'private',
+            dateEnd: new Date().toISOString(),
+            description: 'an edited description',
+        };
+        // Act
+        const isValid = validator.validate(getUpdateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
+
+    it ('should\'nt validate anything if no body is provided', () => {
+        // Arrange
+        const body = {};
+        // Act
+        const isValid = validator.validate(getUpdateHotspotSchema(), body);
+        // Assert
+        expect(isValid).to.be.false;
     });
 });

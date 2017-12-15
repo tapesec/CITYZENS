@@ -30,6 +30,12 @@ class HotspotRouter {
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.countView,
         );
+
+        server.patch(
+            HOTSPOT_ENDPOINT + '/:hotspotId',
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.patchHotspots,
+        );
     }
 }
 

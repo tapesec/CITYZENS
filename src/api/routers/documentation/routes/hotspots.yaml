@@ -158,6 +158,69 @@
         description: Invalid body
       500:
         description: something went wrong
+/hotspots/{hotspotId}:
+  patch:
+    tags:
+      - Hotspots
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: an hotspot identification (uuid)
+        required: true
+        type: string
+      - in: body
+        name: hotspot
+        description: hotspot properties to edit.
+        schema:
+          type: object
+          required:
+            - position
+            - title
+          properties:
+            title:
+              type: string
+            scope:
+              type: string
+              enum: [public, private]
+            dateEnd:
+              type: string
+            description:
+              type: string
+            message:
+              type: string
+          example:
+            WallHotspot:
+              title: Ecole Flora Tristan
+              scope: public
+            EventHotspot:
+              title: Les 10km du moulin Bidon de la Jalles
+              scope: public
+              dateEnd: 2017-12-15T14:55:12.754Z
+              description: Les dossards sont à retirer la veille. La course commence à 9h00
+            AlertHotspot:
+              message: Les pompiers sont partis, la DDE retire les débrits.
+    description: Choisir entre les options d'un des 3 types d'hotspots, ne pas passer le type d'hotspot à éditer
+    produces:
+      - application/json
+    responses:
+      200:
+        description: L'hotspot edité
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Hotspots'
+      400:
+        description: bad request, verifier le body envoyé
+      401:
+        description: Invalid body
+      500:
+        description: something went wrong
 /hotspots/{hotspotId}/views:
   post:
     tags:

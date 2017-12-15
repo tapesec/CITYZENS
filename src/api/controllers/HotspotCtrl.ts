@@ -1,3 +1,5 @@
+import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
+import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
 import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
@@ -17,8 +19,10 @@ import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { getHotspots } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
+import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import SlackWebhook from '../libs/SlackWebhook';
 import config from '../config/index';
+import actAsSpecified from '../services/hotspot/actAsSpecified';
 const request = require('request');
 
 class HotspotCtrl extends RootCtrl​​ {
@@ -87,6 +91,27 @@ class HotspotCtrl extends RootCtrl​​ {
             visitedHotspot.countOneMoreView();
             this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
+        } catch (err) {
+            httpResponseDataLogger.info(err.message);
+            this.hook.alert(`Error 500 on GET ${req.path()} \n ${JSON.stringify(err.message)}`);
+            return next(
+                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
+        }
+    }
+
+    // method=PATCH url/hotspots/{hotspotId}
+    public patchHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+        if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body))
+            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+        }
+        try {
+            const hotspot: WallHotspot|EventHotspot|AlertHotspot =
+            this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
+            this.hotspotRepository.update(hotspotToUpdate);
+            res.json(OK, hotspotToUpdate);
         } catch (err) {
             httpResponseDataLogger.info(err.message);
             this.hook.alert(`Error 500 on GET ${req.path()} \n ${JSON.stringify(err.message)}`);
