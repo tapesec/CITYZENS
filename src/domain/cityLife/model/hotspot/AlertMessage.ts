@@ -1,14 +1,14 @@
-class EventDescription {
+class AlertMessage {
     constructor(
         private _content: string,
         private _updatedAt?: Date,
     ) {}
 
-    get content() {
+    get content(): string {
         return this._content;
     }
 
-    get updatedAt() {
+    get updatedAt(): Date {
         return this._updatedAt;
     }
 
@@ -19,4 +19,4 @@ class EventDescription {
         };
     }
 }
-export default EventDescription;
+export default AlertMessage;

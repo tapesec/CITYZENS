@@ -15,8 +15,7 @@ export enum HotspotScope {
 export enum HotspotType {
     WallMessage = 'WallMessage',
     Event = 'Event',
-    Accident = 'Accident',
-    Deterioration = 'Deterioration',
+    Alert = 'Alert',
 }
 
 export enum HotspotIconType {

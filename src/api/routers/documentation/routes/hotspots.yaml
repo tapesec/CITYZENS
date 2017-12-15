@@ -70,8 +70,6 @@
             - position
             - title
           properties:
-            title:
-              type: string
             cityId:
               type: string
             position:
@@ -90,16 +88,61 @@
                   type: string
                 name:
                   type: string
-            scope:
-              type: string
-              enum: [public, private]
             type:
               type: string
-              enum: [WallMessage, Event, Accident, Deterioration]
+              enum: [WallMessage, Event, Alert]
             iconType:
               type: string
               enum: [WallIcon, EventIcon, AccidentIcon, DeteriorationIcon]
-
+            title:
+              type: An hotspot title
+            scope:
+              type: string
+              enum: [public, private]
+            dateEnd:
+              type: string
+            description:
+              type: string
+            message:
+              type: string
+          example:
+            WallHotspot:
+              cityId: 33273
+              position:
+                latitude: 22.12342
+                longitude: -1.12312
+              address:
+                city: Martignas sur Jalles
+                name: 12 place de l'Eglise
+              type: WallMessage
+              iconType: WallIcon
+              title: Ecole Flora Tristan
+              scope: public
+            EventHotspot:
+              cityId: 33273
+              position:
+                latitude: 22.12342
+                longitude: -1.12312
+              address:
+                city: Martignas sur Jalles
+                name: 12 place de l'Eglise
+              type: Event
+              iconType: EventIcon
+              title: Les 10km du moulin Bidon
+              scope: private
+              dateEnd: 2017-12-15T07:39:15.490Z
+              description: Les dossards sont à retirer la veille. La course commence à 9h00
+            AlertHotspot:
+              cityId: 33273
+              position:
+                latitude: 22.12342
+                longitude: -1.12312
+              address:
+                city: Martignas sur Jalles
+                name: 3 route de Saint Jean d'Illac
+              type: Alert
+              iconType: AccidentIcon
+              message: Accident entre une voiture et un scooter pompier sur place.
     description: Create an hotspot and return the new one
     produces:
       - application/json

@@ -8,14 +8,19 @@ export default () => {
     return {
         "title": "POST /hotspots body validation",
         "type": "object",
-        "anyOf": [
+        "oneOf": [
             WallHotspotSchema,
             EventHotspotSchema,
+            AlertHotspotSchema,
         ]
     };
 };
 
-export { requiredWallHotspotProperties, requiredEventHotspotProperties };
+export {
+    requiredWallHotspotProperties,
+    requiredEventHotspotProperties,
+    requiredAlertHotspotProperties,
+};
 
 const hotspotSchema = {
     "required": ["cityId", "position", "type", "iconType"],
@@ -49,11 +54,11 @@ const hotspotSchema = {
         },
         "type": {
             "type": "string",
-            "enum": [HotspotType.WallMessage, HotspotType.Event]
+            "enum": [HotspotType.WallMessage, HotspotType.Event, HotspotType.Alert]
         },
         "iconType": {
             "type": "string",
-            "enum": [HotspotIconType.Wall, HotspotIconType.Event]
+            "enum": [HotspotIconType.Wall, HotspotIconType.Event, HotspotIconType.Accident]
         }
     }
 };
@@ -61,7 +66,7 @@ const hotspotSchema = {
 const requiredWallHotspotProperties = [...hotspotSchema.required, "title", "scope"];
 
 const WallHotspotSchema = {
-    "required": [...hotspotSchema.required, "title", "scope"],
+    "required": requiredWallHotspotProperties,
     "properties": {
         ...hotspotSchema.properties,
         "scope": {
@@ -76,10 +81,11 @@ const WallHotspotSchema = {
     "additionalProperties": false
 };
 
-const requiredEventHotspotProperties = [...hotspotSchema.required, "title", "scope", "dateEnd"];
+const requiredEventHotspotProperties = [
+    ...hotspotSchema.required, "title", "scope", "dateEnd", "description"];
 
 const EventHotspotSchema = {
-    "required": [...hotspotSchema.required, "title", "scope", "dateEnd", "description"],
+    "required": requiredEventHotspotProperties,
     "properties": {
         ...hotspotSchema.properties,
         "scope": {
@@ -95,6 +101,20 @@ const EventHotspotSchema = {
         },
         "dateEnd": {
             "type": "string",
+        }
+    },
+    "additionalProperties": false
+};
+
+const requiredAlertHotspotProperties = [...hotspotSchema.required, "message"];
+
+const AlertHotspotSchema = {
+    "required": requiredAlertHotspotProperties,
+    "properties": {
+        ...hotspotSchema.properties,
+        "message": {
+            "type": "string",
+            "maxLength": validation.ALERT_MESSAGE_MAX_LENGTH
         }
     },
     "additionalProperties": false

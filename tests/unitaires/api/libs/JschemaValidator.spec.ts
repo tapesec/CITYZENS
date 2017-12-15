@@ -181,4 +181,23 @@ describe('JschemaValidator', () => {
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
+
+    it ('should validate AlertHotspot data with schema built with merge mecanism', () => {
+        // Arrange
+        const body = {
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            type: HotspotType.Alert,
+            iconType: HotspotIconType.Accident,
+            message: 'lorem ipsum dolor',
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
 });

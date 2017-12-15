@@ -38,7 +38,7 @@ class EventHotspot extends MediaHotspot {
         return {
             ...super.toString(),
             dateEnd: this.dateEnd,
-            description: this._description,
+            description: this.description,
         };
     }
 }

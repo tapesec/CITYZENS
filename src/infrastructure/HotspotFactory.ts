@@ -1,21 +1,23 @@
-import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
 import SlackWebhook from '../api/libs/SlackWebhook';
 import { format } from 'util';
-import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
-import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
-import CityId from '../domain/cityLife/model/city/CityId';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
 import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
 import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
+import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
+import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
+import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
 import EventDescription from '../domain/cityLife/model/hotspot/EventDescription';
-import Author from '../domain/cityLife/model/author/Author';
-import Position from '../domain/cityLife/model/hotspot/Position';
 import Hotspot, {
     HotspotIconType,
     HotspotScope,
     HotspotType,
 } from '../domain/cityLife/model/hotspot/Hotspot';
+import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
+import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
+import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
+import CityId from '../domain/cityLife/model/city/CityId';
+import Author from '../domain/cityLife/model/author/Author';
+import Position from '../domain/cityLife/model/hotspot/Position';
+import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
 import Address from '../domain/cityLife/model/hotspot/Address';
 import config from '../api/config/';
 import { v4 } from 'uuid';
@@ -23,6 +25,7 @@ import { InvalidArgumentError } from 'restify-errors';
 import {
     requiredWallHotspotProperties,
     requiredEventHotspotProperties,
+    requiredAlertHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 const request = require('request');
@@ -41,6 +44,10 @@ class HotspotFactory {
             this.throwErrorIfRequiredAndUndefined(data, requiredEventHotspotProperties);
             return this.createEventHotspot(data);
         }
+        if (data.type === HotspotType.Alert) {
+            this.throwErrorIfRequiredAndUndefined(data, requiredAlertHotspotProperties);
+            return this.createAlertHotspot(data);
+        }
 
     }
 
@@ -55,11 +62,34 @@ class HotspotFactory {
         if (data && data.dateEnd) {
             dateEnd = new Date(data.dateEnd);
         }
-        if (data && data.description) {
+        // data from db
+        if (data && data.description.content) {
+            const content = data.description.content;
+            const updatedAt = data.description.updatedAt;
+            description = new EventDescription(content, updatedAt);
+        }
+        // data from http POST request
+        if (data && data.description && typeof data.description === 'string') {
             description = new EventDescription(data.description);
         }
+
         return new EventHotspot(
             this.createHotspotBuilder(data), this.createMediaBuilder(data), dateEnd, description);
+    }
+
+    private createAlertHotspot = (data: any): AlertHotspot => {
+        let message: AlertMessage;
+
+        // data from database
+        if (data && data.message.content) {
+            message = new AlertMessage(data.message.content);
+        }
+        // data from http POST request
+        if (data && typeof data.message === 'string') {
+            message = new AlertMessage(data.message);
+        }
+        return new AlertHotspot(
+            this.createHotspotBuilder(data), message);
     }
 
     private createHotspotBuilder = (data: any): HotspotBuilder => {
@@ -101,10 +131,19 @@ class HotspotFactory {
         if (data.type === HotspotType.WallMessage) {
             type = HotspotType.WallMessage;
             icon = HotspotIconType.Wall;
-        }
-        if (data.type === HotspotType.Event) {
+        } else if (data.type === HotspotType.Event) {
             type = HotspotType.Event;
             icon = HotspotIconType.Event;
+        } else if (data.type === HotspotType.Alert) {
+            type = HotspotType.Alert;
+            icon = HotspotIconType.Accident;
+        } else {
+            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+            hook.alert(
+                `Property type is unknow in hotspot factory \n
+                data provided: ${JSON.stringify(data)}`,
+            );
+            throw new InvalidArgumentError('Unknow Hotspot type');
         }
 
         return new HotspotBuilder(

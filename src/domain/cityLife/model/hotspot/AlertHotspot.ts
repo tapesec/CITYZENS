@@ -1,7 +1,7 @@
+import AlertMessage from './AlertMessage';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import CityId from '../city/CityId';
 import HotspotId from './HotspotId';
-import Description from './Description';
 import Author from '../author/Author';
 import Hotspot, { HotspotScope, HotspotType, HotspotIconType } from './Hotspot';
 import Position from './Position';
@@ -11,23 +11,23 @@ class AlertHotspot extends Hotspot {
 
     constructor(
         hotpotBuilder: HotspotBuilder,
-        protected _description: Description,
+        protected _message: AlertMessage,
     ) {
         super(hotpotBuilder);
     }
 
-    public editDescription(newDescription: string): void {
-        this._description = new Description(newDescription, this.description.createdAt, new Date());
+    public editMessage(newMessage: string): void {
+        this._message = new AlertMessage(newMessage, new Date());
     }
 
-    public get description(): Description {
-        return this._description;
+    public get message(): AlertMessage {
+        return this._message;
     }
 
     toJSON() {
         return {
             ...super.toString(),
-            description: this._description,
+            message: this.message,
         };
     }
 }
