@@ -2,6 +2,10 @@
 
 let's the party begin !
 
+### Prérequis
+
+Node >=8.9.3
+
 ### Installation
 
 ```sh
@@ -47,11 +51,27 @@ Liste des plugins
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "debug",
+                "start"
+            ],
+            "port": 9229
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Debug api",
             "program": "${workspaceFolder}/build/api/server.js",
             "stopOnEntry": false,
-            "args": [],
-            "cwd": "${workspaceFolder}",
+            "runtimeArgs": [
+                "--require", "dotenv/config"
+            ],
+            "args": [
+                "--require", "dotenv/config"
+            ],
             "preLaunchTask": null,
             "sourceMaps": true,
             "protocol": "inspector"
