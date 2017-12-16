@@ -14,7 +14,7 @@ import {
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
 
-describe.only('JschemaValidator', () => {
+describe('JschemaValidator', () => {
 
     let validator : ajv.Ajv;
 

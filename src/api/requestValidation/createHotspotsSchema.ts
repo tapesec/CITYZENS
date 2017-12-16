@@ -130,7 +130,7 @@ const AlertHotspotSchema = {
         },
         "iconType": {
             "type": "string",
-            "enum": [HotspotIconType.Accident]
+            "enum": [HotspotIconType.Accident, HotspotIconType.Deterioration]
         }
     },
     "additionalProperties": false
