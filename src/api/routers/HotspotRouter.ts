@@ -36,6 +36,12 @@ class HotspotRouter {
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.patchHotspots,
         );
+
+        server.del(
+            HOTSPOT_ENDPOINT + '/:hotspotId',
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.removeHotspot,
+        );
     }
 }
 

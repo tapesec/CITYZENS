@@ -99,7 +99,7 @@ class HotspotCtrl extends RootCtrl​​ {
         }
     }
 
-    // method=PATCH url/hotspots/{hotspotId}
+    // method=PATCH url=/hotspots/{hotspotId}
     public patchHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body))
             return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
@@ -118,6 +118,20 @@ class HotspotCtrl extends RootCtrl​​ {
             return next(
                 new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
         }
+    }
+
+    // method=DELETE url=/hotspots/{hotspotId}
+    public removeHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+        }
+        try {
+            this.hotspotRepository.remove(req.params.hotspotId);
+        } catch (err) {
+            return next(new restifyErrors.InternalServerError(err.message));
+        }
+        res.json(OK, getStatusText(OK));
     }
 }
 
