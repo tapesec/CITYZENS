@@ -82,7 +82,7 @@ class HotspotFactory {
 
         // data from database
         if (data && data.message.content) {
-            message = new AlertMessage(data.message.content);
+            message = new AlertMessage(data.message.content, data.message.updatedAt);
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
