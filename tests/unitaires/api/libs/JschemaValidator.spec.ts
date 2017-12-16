@@ -14,7 +14,7 @@ import {
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
 
-describe('JschemaValidator', () => {
+describe.only('JschemaValidator', () => {
 
     let validator : ajv.Ajv;
 
@@ -171,8 +171,8 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
-            iconType: HotspotIconType.Wall,
+            type: HotspotType.Event,
+            iconType: HotspotIconType.Event,
             dateEnd: new Date().toISOString(),
             description: 'lorem ipsum dolor',
         };
@@ -200,6 +200,24 @@ describe('JschemaValidator', () => {
         // Assert
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
+    });
+
+    it ('should\'nt validate if type is not the same as the body properties', () => {
+        // Arrange
+        const body = {
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            type: HotspotType.Event, // <-- type is for EventHotspot
+            iconType: HotspotIconType.Event, // <-- icon for EventHotspot
+            message: 'lorem ipsum dolor', // <-- but message for alert hotspot
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(isValid).to.be.false;
     });
 
     it ('should validate AlertHotspot update with corresponding schema', () => {

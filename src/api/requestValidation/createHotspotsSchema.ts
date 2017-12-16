@@ -51,14 +51,6 @@ const hotspotSchema = {
                 }
             },
             "required": ["name", "city"]
-        },
-        "type": {
-            "type": "string",
-            "enum": [HotspotType.WallMessage, HotspotType.Event, HotspotType.Alert]
-        },
-        "iconType": {
-            "type": "string",
-            "enum": [HotspotIconType.Wall, HotspotIconType.Event, HotspotIconType.Accident]
         }
     }
 };
@@ -76,6 +68,14 @@ const WallHotspotSchema = {
         "title": {
             "type": "string",
             "maxLength": validation.TITLE_MAX_LENGTH
+        },
+        "type": {
+            "type": "string",
+            "enum": [HotspotType.WallMessage]
+        },
+        "iconType": {
+            "type": "string",
+            "enum": [HotspotIconType.Wall]
         }
     },
     "additionalProperties": false
@@ -101,6 +101,14 @@ const EventHotspotSchema = {
         },
         "dateEnd": {
             "type": "string",
+        },
+        "type": {
+            "type": "string",
+            "enum": [HotspotType.Event]
+        },
+        "iconType": {
+            "type": "string",
+            "enum": [HotspotIconType.Event]
         }
     },
     "additionalProperties": false
@@ -115,6 +123,14 @@ const AlertHotspotSchema = {
         "message": {
             "type": "string",
             "maxLength": validation.ALERT_MESSAGE_MAX_LENGTH
+        },
+        "type": {
+            "type": "string",
+            "enum": [HotspotType.Alert]
+        },
+        "iconType": {
+            "type": "string",
+            "enum": [HotspotIconType.Accident]
         }
     },
     "additionalProperties": false
