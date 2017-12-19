@@ -5,7 +5,7 @@
       - Auth
     # Describe this verb here. Note: you can use markdown
     description: |
-      submit credentials and get valid jwt token
+      Retourne un jeton jwt valide à l'appel avec des identifiants correctes.
     consumes:
     - application/json
     produces:
@@ -16,20 +16,20 @@
       -
         name: username
         in: query
-        description: username credential
+        description: Nom d'utilisateur
         required: true
         type: string
       -
         name: password
         in: query
-        description: password credential
+        description: Mot de passe
         required: true
         type: string
     # Expected responses for this operation:
     responses:
       # Response code
       200:
-        description: User authorized
+        description: Utilisateur authorisé
         content:
         schema:
           type: object

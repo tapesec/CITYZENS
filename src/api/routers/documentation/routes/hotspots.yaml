@@ -1,5 +1,6 @@
 /hotspots:
   get:
+    description: Retourne soit tout les hotspots étant dans le rectangle décrit par les coodronées gps, soit tout les hotspots associés a la ville, soit 401 si la requte est mal formée.
     tags:
       - Hotspots
     parameters:
@@ -10,40 +11,39 @@
         type: string
     - name: insee
       in: query
-      description: the code insee commune
+      description: Le code insee de la commune attachée au hotspot.
       required: false
       schema:
           type: string
     - name: north
       in: query
-      description: the latitude north of the area
+      description: La latitude nord de l'hotspot
       required: false
       schema:
           type: float
     - name: west
       in: query
-      description: the longitude west of the area
+      description: La longitude ouest de l'hotspot
       required: false
       schema:
           type: float
     - name: south
       in: query
-      description: the latitude south of the area
+      description: La latitude sud de l'hotspot 
       required: false
       schema:
           type: float
     - name: east
       in: query
-      description: the longitude east of the area
+      description: La longitude est de l'hotspot
       required: false
       schema:
           type: float
-    description: Returns all hotspots
     produces:
       - application/json
     responses:
       200:
-        description: An array of cityzens's hotspots
+        description: Un tableau de hotspots
         content:
           application/json:
             schema:
@@ -51,8 +51,9 @@
               items:
                 $ref: '#/definitions/Hotspots'
       401:
-        description: Invalid query strings
+        description: Requte mal formée.
   post:
+    description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requte est mal formé, ou encore une erreur 501 si une interne interne est survenue.
     tags:
       - Hotspots
     parameters:
@@ -62,8 +63,8 @@
         schema:
           type: string
       - in: body
+        description: Le hotspot à créer
         name: hotspot
-        description: The hotspot to create.
         schema:
           type: object
           required:
@@ -106,8 +107,7 @@
             message:
               type: string
           example:
-            WallHotspot:
-              cityId: "33273"
+            - cityId: "33273"
               position:
                 latitude: 22.12342
                 longitude: -1.12312
@@ -118,8 +118,7 @@
               iconType: WallIcon
               title: Ecole Flora Tristan
               scope: public
-            EventHotspot:
-              cityId: "33273"
+            - cityId: "33273"
               position:
                 latitude: 22.12342
                 longitude: -1.12312
@@ -132,8 +131,7 @@
               scope: private
               dateEnd: 2017-12-15T07:39:15.490Z
               description: Les dossards sont à retirer la veille. La course commence à 9h00
-            AlertHotspot:
-              cityId: "33273"
+            - cityId: "33273"
               position:
                 latitude: 22.12342
                 longitude: -1.12312
@@ -143,23 +141,23 @@
               type: Alert
               iconType: AccidentIcon
               message: Accident entre une voiture et un scooter pompier sur place.
-    description: Create an hotspot and return the new one
     produces:
       - application/json
     responses:
       201:
-        description: The new created hotspot
+        description: Le hotspot nouvelement créé.
         content:
           application/json:
             schema:
               type: object
               $ref: '#/definitions/Hotspots'
       401:
-        description: Invalid body
+        description: Hotspot invalide.
       500:
-        description: something went wrong
+        description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}:
   patch:
+    description: Il faut choisir une des trois options, la structure doit correspondre exactement. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une interne s'est produit.
     tags:
       - Hotspots
     parameters:
@@ -170,12 +168,12 @@
           type: string
       - name: hotspotId
         in: path
-        description: an hotspot identification (uuid)
+        description: l'uuid de l'hotspot.
         required: true
         type: string
       - in: body
         name: hotspot
-        description: hotspot properties to edit.
+        description: Les propriétées de l'hotspots.
         schema:
           type: object
           required:
@@ -194,17 +192,13 @@
             message:
               type: string
           example:
-            WallHotspot:
-              title: Ecole Flora Tristan
+            - title: Ecole Flora Tristan
               scope: public
-            EventHotspot:
-              title: Les 10km du moulin Bidon de la Jalles
+            - title: Les 10km du moulin Bidon de la Jalles
               scope: public
               dateEnd: 2017-12-15T14:55:12.754Z
               description: Les dossards sont à retirer la veille. La course commence à 9h00
-            AlertHotspot:
-              message: Les pompiers sont partis, la DDE retire les débrits.
-    description: Choisir entre les options d'un des 3 types d'hotspots, ne pas passer le type d'hotspot à éditer
+            - message: Les pompiers sont partis, la DDE retire les débrits.
     produces:
       - application/json
     responses:
@@ -216,12 +210,13 @@
               type: object
               $ref: '#/definitions/Hotspots'
       400:
-        description: bad request, verifier le body envoyé
+        description: Requète mal formé, verifier le body envoyé.
       401:
-        description: Invalid body
+        description: Body invalide.
       500:
-        description: something went wrong
+        description: Quelque chose à mal tourné :(.
   delete:
+    description: Supprimme un hotspot. Retourne 200 si tout s'est bien passé, 400 si l'id est invalide, 401 si le jeton jwt l'est et 500 si une erreur interne s'est produite.
     tags:
       - Hotspots
     parameters:
@@ -232,23 +227,23 @@
           type: string
       - name: hotspotId
         in: path
-        description: an hotspot identification (uuid)
+        description: L'uuid de l'hotspot à supprimer
         required: true
         type: string
-    description: delete an hotspot
     produces:
       - application/json
     responses:
       200:
-        description: ok, hotspot was successfully removed
+        description: L'hotspot n'est plus de ce monde :(.
       404:
-        description: invalid hotspotId
+        description: HotpotId invalide.
       401:
-        description: Invalid token
+        description: Jeton d'authentification invalide.
       500:
-        description: something went wrong
+        description: Quelque chose à mal tourné.
 /hotspots/{hotspotId}/views:
   post:
+    description: Ajoute une vue a un hotspot. Retourne 200 si tout s'est bien passé, 404 si l'hotspot ne peut pas etre trouvé.
     tags:
       - Hotspots
     parameters:
@@ -262,11 +257,10 @@
       description: an hotspot identification (uuid)
       required: true
       type: string
-    description: Add an extra view
     produces:
       - application/json
     responses:
       200:
-        description: Ok, view added
+        description: La vue a bien était ajoutée au hotspot.
       404:
-        description: The hotspot is not found
+        description: L'hotspot est introuvable.

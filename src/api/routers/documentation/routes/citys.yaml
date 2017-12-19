@@ -2,6 +2,7 @@
   get:
     tags:
       - City
+    description: Retourne soit une ville sur un appel correct sinon une erreur 404 
     parameters:
     - name: Authorization
       in: header
@@ -10,15 +11,14 @@
         type: string
     - name: inseeCode
       in: path
-      description: a city by insee code
+      description: Le code insee de la ville en question (https://goo.gl/B2aEdu)
       required: true
       type: string
-    description: Return a city
     produces:
       - application/json
     responses:
       200:
-        description: A french city
+        description: La ville française
         content:
           application/json:
             schema:
@@ -26,5 +26,5 @@
               items:
                 $ref: '#/definitions/Citys'
       404:
-        description: invalid insee code
+        description: Code insee invalide, verifiez votre code https://goo.gl/B2aEdu
 
