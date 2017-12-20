@@ -2,7 +2,7 @@
   get:
     tags:
       - City
-    description: Retourne soit une ville sur un appel correct sinon une erreur 404 
+    description: Retourne soit une ville sur un appel correct sinon une erreur 404. Vous pouvez verifiez votre code insee sur ce site https://goo.gl/B2aEdu.
     parameters:
     - name: Authorization
       in: header
@@ -11,7 +11,7 @@
         type: string
     - name: inseeCode
       in: path
-      description: Le code insee de la ville en question (https://goo.gl/B2aEdu)
+      description: Le code insee de la ville en question.
       required: true
       type: string
     produces:
@@ -26,5 +26,5 @@
               items:
                 $ref: '#/definitions/Citys'
       404:
-        description: Code insee invalide, verifiez votre code https://goo.gl/B2aEdu
+        description: Code insee invalide, verifiez votre code.
 

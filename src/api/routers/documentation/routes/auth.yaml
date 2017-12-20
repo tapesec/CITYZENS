@@ -16,20 +16,20 @@
       -
         name: username
         in: query
-        description: Nom d'utilisateur
+        description: Nom d'utilisateur.
         required: true
         type: string
       -
         name: password
         in: query
-        description: Mot de passe
+        description: Mot de passe.
         required: true
         type: string
     # Expected responses for this operation:
     responses:
       # Response code
       200:
-        description: Utilisateur authorisé
+        description: Utilisateur authorisé.
         content:
         schema:
           type: object

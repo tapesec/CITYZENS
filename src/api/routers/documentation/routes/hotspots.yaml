@@ -1,6 +1,6 @@
 /hotspots:
   get:
-    description: Retourne soit tout les hotspots étant dans le rectangle décrit par les coodronées gps, soit tout les hotspots associés a la ville, soit 401 si la requte est mal formée.
+    description: Retourne soit tout les hotspots étant dans le rectangle décrit par les coordonées gps, soit tout les hotspots associés a la ville associée au code INSEE, soit 401 si la requète est mal formée.
     tags:
       - Hotspots
     parameters:
@@ -17,25 +17,25 @@
           type: string
     - name: north
       in: query
-      description: La latitude nord de l'hotspot
+      description: La latitude nord du rectangle de sélection.
       required: false
       schema:
           type: float
     - name: west
       in: query
-      description: La longitude ouest de l'hotspot
+      description: La longitude ouest du rectangle de sélection.
       required: false
       schema:
           type: float
     - name: south
       in: query
-      description: La latitude sud de l'hotspot 
+      description: La latitude sud du rectangle de sélection.
       required: false
       schema:
           type: float
     - name: east
       in: query
-      description: La longitude est de l'hotspot
+      description: La longitude est du rectangle de sélection.
       required: false
       schema:
           type: float
@@ -43,7 +43,7 @@
       - application/json
     responses:
       200:
-        description: Un tableau de hotspots
+        description: Une liste de hotspots.
         content:
           application/json:
             schema:
@@ -51,9 +51,9 @@
               items:
                 $ref: '#/definitions/Hotspots'
       401:
-        description: Requte mal formée.
+        description: Requète mal formée.
   post:
-    description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requte est mal formé, ou encore une erreur 501 si une interne interne est survenue.
+    description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requète est mal formé, ou encore une erreur 501 si une interne interne est survenue.
     tags:
       - Hotspots
     parameters:
@@ -63,7 +63,7 @@
         schema:
           type: string
       - in: body
-        description: Le hotspot à créer
+        description: Le hotspot à créer.
         name: hotspot
         schema:
           type: object
@@ -145,7 +145,7 @@
       - application/json
     responses:
       201:
-        description: Le hotspot nouvelement créé.
+        description: Le hotspot nouvellement créé.
         content:
           application/json:
             schema:
@@ -157,7 +157,7 @@
         description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}:
   patch:
-    description: Il faut choisir une des trois options, la structure doit correspondre exactement. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une interne s'est produit.
+    description: Il faut choisir une des trois options, la structure doit correspondre exactement a seulement une option. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une interne s'est produit.
     tags:
       - Hotspots
     parameters:
@@ -168,7 +168,7 @@
           type: string
       - name: hotspotId
         in: path
-        description: l'uuid de l'hotspot.
+        description: L'uuid de l'hotspot.
         required: true
         type: string
       - in: body
@@ -203,7 +203,7 @@
       - application/json
     responses:
       200:
-        description: L'hotspot edité
+        description: L'hotspot correctement edité.
         content:
           application/json:
             schema:
@@ -212,11 +212,11 @@
       400:
         description: Requète mal formé, verifier le body envoyé.
       401:
-        description: Body invalide.
+        description: Body invalide, verifiez votre requète.
       500:
-        description: Quelque chose à mal tourné :(.
+        description: Quelque chose a mal tourné :(.
   delete:
-    description: Supprimme un hotspot. Retourne 200 si tout s'est bien passé, 400 si l'id est invalide, 401 si le jeton jwt l'est et 500 si une erreur interne s'est produite.
+    description: Supprime un hotspot. Retourne 200 si tout s'est bien passé, 404 si l'uuid est invalide, 401 si le jeton jwt l'est et 500 si une erreur interne s'est produite.
     tags:
       - Hotspots
     parameters:
@@ -254,7 +254,7 @@
         type: string
     - name: hotspotId
       in: path
-      description: an hotspot identification (uuid)
+      description: L'uuid de l'hotspot à voir.
       required: true
       type: string
     produces:

@@ -1,5 +1,6 @@
 /hotspots/{hotspotId}/messages:
   get:
+    description: Retourne la liste des messages associèe à un hotspot.
     tags:
       - Message
     parameters:
@@ -10,15 +11,14 @@
         type: string
     - name: hotspotId
       in: path
-      description: an hotspot identification (uuid)
+      description: L'uuid de l'hotspot en qestion.
       required: true
       type: string
-    description: Return a list of messages related to hotspot
     produces:
       - application/json
     responses:
       200:
-        description: A collection of messages
+        description: Une liste de messages.
         content:
           application/json:
             schema:
@@ -26,12 +26,13 @@
               items:
                 $ref: '#/definitions/Messages'
       404:
-        description: invalid insee code
+        description: HotspotId invalide, probablement introuvable.
       401:
-        description: Invalid token
+        description: Jeton invaide.
       500:
-        description: Internal server error
+        description: Quelque chose a mal tourné.
   post:
+    description: Créé et renvoie un message.
     tags:
       - Message
     parameters:
@@ -42,12 +43,12 @@
           type: string
       - name: hotspotId
         in: path
-        description: an hotspot identification (uuid)
+        description: L'uuid de l'hotspot dont on va créer un message.
         required: true
         type: string
       - in: body
         name: message
-        description: The message to create.
+        description: Le message à créer.
         schema:
           type: object
           required:
@@ -60,27 +61,27 @@
               type: string
             pinned:
               type: boolean
-    description: Create and return a message
     produces:
       - application/json
     responses:
       201:
-        description: The new created message
+        description: Le message nouvellement créé.
         content:
           application/json:
             schema:
               type: object
               $ref: '#/definitions/Messages'
       400:
-        description: Invalid request body
+        description: Body invalide, verifiez votre requète.
       401:
-        description: Invalid token
+        description: Jeton invalide.
       404:
-        description: invalid insee code
+        description: HotspotId invalide, probablement introuvable.
       500:
-        description: something went wrong
+        description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}/messages/{messageId}:
   patch:
+    description: Edite un message et le retourne.
     tags:
       - Message
     parameters:
@@ -91,17 +92,17 @@
           type: string
       - name: hotspotId
         in: path
-        description: an hotspot identification (uuid)
+        description: L'uuid de l'hotspot qui va se faire modifier un message.
         required: true
         type: string
       - name: messageId
         in: path
-        description: a message identification (uuid)
+        description: L'uuid du message à éditer.
         required: true
         type: string
       - in: body
         name: message
-        description: The message to update.
+        description: Le message à éditer.
         schema:
           type: object
           properties:
@@ -111,25 +112,24 @@
               type: string
             pinned:
               type: boolean
-    description: Patch a message and return it
     produces:
       - application/json
     responses:
       200:
-        description: The updated message
+        description: Le message édité correctement.
         content:
           application/json:
             schema:
               type: object
               $ref: '#/definitions/Messages'
       400:
-        description: Invalid request body
+        description: Body invalide verifiez votre requète.
       401:
-        description: Invalid token
+        description: Jeton invalide.
       404:
-        description: invalid hotspotId or messageId
+        description: HotspotId ou MessageId invalide(non trouvé).
       500:
-        description: something went wrong
+        description: Quelque chose à mal tourné.
   delete:
     tags:
       - Message
@@ -141,12 +141,12 @@
           type: string
       - name: hotspotId
         in: path
-        description: an hotspot identification (uuid)
+        description: L'id de l'hotspot dont il faut effacer le message.
         required: true
         type: string
       - name: messageId
         in: path
-        description: a message identification (uuid)
+        description: L'uuid du message à effacer.
         required: true
         type: string
     description: delete a message
@@ -154,17 +154,17 @@
       - application/json
     responses:
       200:
-        description: ok, message was successfuly removed
+        description: Le message a été correctement supprimé.
         content:
           application/json:
             schema:
               type: object
               $ref: '#/definitions/Messages'
       404:
-        description: invalid hotspotId or messageId
+        description: HotspotId ou MessageId invalide(non trouvé).
       401:
-        description: Invalid token
+        description: Jeton invalide.
       500:
-        description: something went wrong
+        description: Quelque chose à mal tourné.
 
 
