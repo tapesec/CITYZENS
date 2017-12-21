@@ -8,9 +8,6 @@ import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
 import cityzenFromJwt from '../../api/services/cityzen/cityzenFromJwt';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
-const logs = require('./../../logs/');
-const httpResponseDataLogger = logs.get('http-response-data');
-
 
 class ProfileCtrl extends RootCtrl {
 
@@ -50,7 +47,8 @@ class ProfileCtrl extends RootCtrl {
                     new restifyErrors.NotFoundError(ProfileCtrl.HOTSPOT_NOT_FOUND));
             }
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(ProfileCtrl.FIND_HOTSPOT_ERROR));
+            return this.nextInternalError(
+                next, err.message, `POST ${req.path()}`, ProfileCtrl.FIND_HOTSPOT_ERROR);
         }
         try {
             const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
@@ -59,8 +57,8 @@ class ProfileCtrl extends RootCtrl {
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
-            httpResponseDataLogger.info('Error when add a favorit hotspot', err);
-            return next(new restifyErrors.InternalServerError(ProfileCtrl.UPDATE_PROFILE_ERROR));
+            return this.nextInternalError(
+                next, err.message, `POST ${req.path()}`, ProfileCtrl.UPDATE_PROFILE_ERROR);
         }
     }
 }

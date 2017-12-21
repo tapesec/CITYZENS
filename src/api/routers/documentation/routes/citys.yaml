@@ -18,7 +18,7 @@
       - application/json
     responses:
       200:
-        description: La ville française
+        description: La ville française.
         content:
           application/json:
             schema:

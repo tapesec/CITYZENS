@@ -166,5 +166,6 @@
         description: Jeton invalide.
       500:
         description: Quelque chose à mal tourné.
+ 
 
-
+       

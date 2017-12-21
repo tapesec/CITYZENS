@@ -10,8 +10,6 @@ import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
 import * as rest from 'restify';
-const logs = require('./../../logs/');
-const httpResponseDataLogger = logs.get('http-response-data');
 import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 
@@ -45,9 +43,7 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.findByHotspotId(req.params.hotspotId);
             res.json(OK, hotspotContent);
         } catch (err) {
-            httpResponseDataLogger.info(err.message);
-            return next(
-                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
+            return this.nextInternalError(next, err.message, `GET ${req.path()}`);
         }
     }
 
@@ -66,9 +62,7 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
-            httpResponseDataLogger.info(err.message);
-            return next(
-                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
+            return this.nextInternalError(next, err.message, `POST ${req.path()}`);
         }
     }
 
@@ -99,11 +93,12 @@ class MessageCtrl extends RootCtrl​​ {
             }
             this.messageRepository.update(message);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err.message));
+            return this.nextInternalError(next, err.message, `PATCH ${req.path()}`);
         }
         res.json(OK, message);
     }
 
+    // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
     public removeMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
 
         if (!this.messageRepository.isSet(req.params.messageId)) {
@@ -112,7 +107,7 @@ class MessageCtrl extends RootCtrl​​ {
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err.message));
+            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
         }
         res.json(OK, getStatusText(OK));
     }
