@@ -53,7 +53,7 @@
       401:
         description: Requète mal formée.
   post:
-    description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requète est mal formé, ou encore une erreur 501 si une interne interne est survenue.
+    description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requète est mal formé, ou encore une erreur 501 si une erreur interne est survenue.
     tags:
       - Hotspots
     parameters:
@@ -157,7 +157,7 @@
         description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}:
   patch:
-    description: Il faut choisir une des trois options, la structure doit correspondre exactement a seulement une option. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une interne s'est produit.
+    description: Il faut choisir une des trois options, la structure doit correspondre exactement a seulement une option. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une erreur interne s'est produite.
     tags:
       - Hotspots
     parameters:
@@ -197,7 +197,7 @@
             - title: Les 10km du moulin Bidon de la Jalles
               scope: public
               dateEnd: 2017-12-15T14:55:12.754Z
-              description: Les dossards sont à retirer la veille. La course commence à 9h00
+              description: Les dossards sont à retirer la veille. La course commence à 9h00.
             - message: Les pompiers sont partis, la DDE retire les débrits.
     produces:
       - application/json
