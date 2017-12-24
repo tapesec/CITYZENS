@@ -1,5 +1,6 @@
 /profile/favorites/{favoritHotspotId}:
   post:
+    description: Ajoute un hotspot en tant que favori.
     tags:
       - Favorites
     parameters:
@@ -10,28 +11,27 @@
         type: string
     - name: favoritHotspotId
       in: path
-      description: hotspot id
+      description: L'uuid de l'hotspot a favoriser.
       required: true
       schema:
         type: string
     - name: refresh_token
       in: query
-      description: un token de rafraichissement
+      description: Un token de rafraichissement.
       required: true
       schema:
         type: string
-    description: add an hotspot as favorit
     produces:
       - application/json
     responses:
       200:
-        description: renewed credentials for further request
+        description: L'état de l'utilisateur a été modifié, voici de nouveaux identifiants pour de futurs requètes.
         content:
         schema:
           type: object
           $ref: '#/definitions/renewedCredentials'
       500:
-        description: Failed to update profile
+        description: Quelque chose à mal tourné.
       404:
-        description: hotspot not foud
+        description: HotspotId invalide, probablement introuvable.
 

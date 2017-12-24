@@ -12,24 +12,19 @@ import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
-const logs = require('./../../logs/');
-const httpResponseDataLogger = logs.get('http-response-data');
 import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { getHotspots } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
-import SlackWebhook from '../libs/SlackWebhook';
 import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
-const request = require('request');
 
 class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
     private hotspotFactory : HotspotFactory;
-    private hook: SlackWebhook;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
 
@@ -41,7 +36,6 @@ class HotspotCtrl extends RootCtrl​​ {
         super(jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
-        this.hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
     }
 
     // method=GET url=/hotspots
@@ -51,7 +45,8 @@ class HotspotCtrl extends RootCtrl​​ {
         let hotspotsResult : Hotspot[];
 
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
-            this.hook.alert(`Bad request on GET ${req.path()} \n ${JSON.stringify(queryStrings)}`);
+            // this.hook.alert
+            // (`Bad request on GET ${req.path()} \n ${JSON.stringify(queryStrings)}`);
             return next(new restifyErrors.BadRequestError(HotspotCtrl.BAD_REQUEST_MESSAGE));
         }
         try {
@@ -61,7 +56,7 @@ class HotspotCtrl extends RootCtrl​​ {
                 hotspotsResult = hotspotsByCodeCommune(queryStrings.insee, this.hotspotRepository);
             }
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err));
+            return this.nextInternalError(next, err.message, `GET ${req.path()}`);
         }
         res.json(OK, hotspotsResult);
     }
@@ -77,7 +72,7 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err));
+            return this.nextInternalError(next, err.message, `POST ${req.path()}`);
         }
     }
 
@@ -92,10 +87,7 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
-            httpResponseDataLogger.info(err.message);
-            this.hook.alert(`Error 500 on GET ${req.path()} \n ${JSON.stringify(err.message)}`);
-            return next(
-                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
+            return this.nextInternalError(next, err.message, `POST view ${req.path()}`);
         }
     }
 
@@ -113,10 +105,7 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
         } catch (err) {
-            httpResponseDataLogger.info(err.message);
-            this.hook.alert(`Error 500 on GET ${req.path()} \n ${JSON.stringify(err.message)}`);
-            return next(
-                new restifyErrors.InternalServerError(getStatusText(INTERNAL_SERVER_ERROR)));
+            return this.nextInternalError(next, err.message, `PATCH ${req.path()}`);
         }
     }
 
@@ -129,7 +118,7 @@ class HotspotCtrl extends RootCtrl​​ {
         try {
             this.hotspotRepository.remove(req.params.hotspotId);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err.message));
+            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
         }
         res.json(OK, getStatusText(OK));
     }

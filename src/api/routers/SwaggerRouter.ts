@@ -11,9 +11,9 @@ class SwaggerRouter {
     constructor() {
         this.swaggerDefinition = {
             info: { // API informations (required)
-                title: 'Cityzens API', // Title (required)
-                version: '1.0.0', // Version (required)
-                description: 'Cityzens REST API needed by the platform', // Description (optional)
+                title: 'API Cityzens', // Title (required)
+                version: '0.0.1', // Version (required)
+                description: 'REST API, Cityzens: https://github.com/tapesec/CITYZENS', // Description (optional)
             },
             host: 'localhost:3000', // Host (optional)
             basePath: '/', // Base path (optional)
@@ -32,7 +32,7 @@ class SwaggerRouter {
     bind(server : restify.Server) {
         const swaggerSpec = swaggerJsDoc(this.options);
         server.get(/\/api-docs\/?.*/, restify.plugins.serveStatic({
-            directory: path.win32.normalize(__dirname + '/../../../'),
+            directory: path.normalize(__dirname + '/../../../'),
             default: 'index.html',
         }));
 

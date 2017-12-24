@@ -22,7 +22,7 @@ class AuthCtrl extends RootCtrl {
             }
             res.json(body);
         } catch (err) {
-            next(new restifyErrors.InternalServerError(err.message));
+            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
         }
     }
 }
