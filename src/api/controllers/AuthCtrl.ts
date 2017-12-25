@@ -4,13 +4,16 @@ import * as rest from 'restify';
 import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
 import * as restifyErrors from 'restify-errors';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class AuthCtrl extends RootCtrl {
 
     private loginService : Login;
 
-    constructor(loginService : Login) {
-        super();
+    constructor(
+        errorHandler: ErrorHandler,
+        loginService : Login) {
+        super(errorHandler);
         this.loginService = loginService;
     }
 
@@ -22,7 +25,7 @@ class AuthCtrl extends RootCtrl {
             }
             res.json(body);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
+            return this.errorHandler.logInternal(err.message, `DELETE ${req.path()}`, next);
         }
     }
 }

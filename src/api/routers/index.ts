@@ -21,6 +21,8 @@ import JwtParser from './../services/auth/JwtParser';
 import * as request from 'request';
 import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
+import ErrorHandler from './../services/errors/ErrorHandler';
+import SlackWebhook from './../libs/SlackWebhook';
 
 const jwt = require('jsonwebtoken');
 
@@ -34,20 +36,26 @@ const loginService = new Login(
 );
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
-
+const errorHandler = new ErrorHandler(
+    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request));
 
 export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(loginService)));
+    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
     routers.push(new ProfileRouter(
-        new ProfileCtrl(jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory)));
-    routers.push(new CityRouter(new CityCtrl(jwtParser, cityRepositoryInMemory)));
+        new ProfileCtrl(
+            errorHandler, jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
+        ),
+    ));
+    routers.push(new CityRouter(new CityCtrl(errorHandler, jwtParser, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(
-        new HotspotCtrl(jwtParser, hotspotRepositoryInMemory, new HotspotFactory())));
+        new HotspotCtrl(errorHandler, jwtParser, hotspotRepositoryInMemory, new HotspotFactory())),
+    );
     routers.push(new MessageRouter(
         new MessageCtrl(
-            jwtParser, hotspotRepositoryInMemory, messageRepositoryInMemory, new MessageFactory(),
+            errorHandler, jwtParser, hotspotRepositoryInMemory, 
+            messageRepositoryInMemory, new MessageFactory(),
         ),
     ));
 

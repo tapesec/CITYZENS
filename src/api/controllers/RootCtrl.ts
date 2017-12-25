@@ -5,7 +5,7 @@ import * as r from 'restify';
 import config from './../config/index';
 import * as ajv from 'ajv';
 import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
-import SlackWebhook from '../libs/SlackWebhook';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 const request = require('request');
 const logs = require('./../../logs/');
 const restifyErrors = require('restify-errors');
@@ -16,11 +16,11 @@ class RootCtrl {
     protected _decodedJwtPayload : DecodedJwtPayload;
     protected jwtParser : JwtParser;
     protected schemaValidator : ajv.Ajv = new ajv();
-    private hook: SlackWebhook;
+    protected errorHandler: ErrorHandler;
 
-    constructor(jwtParser? : JwtParser) {
+    constructor(errorHandler?: ErrorHandler, jwtParser? : JwtParser) {
         if (jwtParser) this.jwtParser = jwtParser;
-        this.hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+        this.errorHandler = errorHandler;
     }
 
     public loadAuthenticatedUser = async (req : r.Request, res : r.Response, next : r.Next) => {
@@ -37,13 +37,6 @@ class RootCtrl {
         } catch (err) {
             return next(new restifyErrors.UnauthorizedError(err.message));
         }
-    }
-
-    public nextInternalError(next: r.Next, err: JSON, route: String, exceptionMsg?: String) {
-        httpResponseDataLogger.info(err);
-        this.hook.alert(`Error 500 on ${route} \n ${JSON.stringify(err)}`);
-        next(new restifyErrors.InternalServerError( 
-            exceptionMsg || getStatusText(INTERNAL_SERVER_ERROR)));
     }
 
     get decodedJwtPayload() : DecodedJwtPayload {

@@ -12,6 +12,7 @@ import { createMessageSchema, patchMessageSchema } from '../requestValidation/sc
 import * as rest from 'restify';
 import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class MessageCtrl extends RootCtrl​​ {
 
@@ -22,12 +23,13 @@ class MessageCtrl extends RootCtrl​​ {
     private static MESSAGE_NOT_FOUND = 'Message not found';
 
     constructor (
+        errorHandler: ErrorHandler,
         jwtParser : JwtParser,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(jwtParser);
+        super(errorHandler, jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -43,7 +45,7 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.findByHotspotId(req.params.hotspotId);
             res.json(OK, hotspotContent);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `GET ${req.path()}`);
+            return this.errorHandler.logInternal(err.message, `GET ${req.path()}`, next);
         }
     }
 
@@ -62,7 +64,7 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `POST ${req.path()}`);
+            return this.errorHandler.logInternal(err.message, `POST ${req.path()}`, next);
         }
     }
 
@@ -93,7 +95,7 @@ class MessageCtrl extends RootCtrl​​ {
             }
             this.messageRepository.update(message);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `PATCH ${req.path()}`);
+            return this.errorHandler.logInternal(err.message, `PATCH ${req.path()}`, next);
         }
         res.json(OK, message);
     }
@@ -107,7 +109,7 @@ class MessageCtrl extends RootCtrl​​ {
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
+            return this.errorHandler.logInternal(err.message, `DELETE ${req.path()}`, next);
         }
         res.json(OK, getStatusText(OK));
     }
