@@ -38,19 +38,21 @@ class ProfileCtrl extends RootCtrl {
         const refreshToken = req.query.refresh_token;
 
         if (!refreshToken) {
-            return next(
-                new restifyErrors.BadRequestError(ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR),
-            );
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST ${req.path()}`, ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR,
+            ));
         }
         try {
             const hotspot = this.hotspotRepository.findById(favoritId);
             if (!hotspot) {
-                return next(
-                    new restifyErrors.NotFoundError(ProfileCtrl.HOTSPOT_NOT_FOUND));
+                return next(this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`, ProfileCtrl.HOTSPOT_NOT_FOUND,
+                ));
             }
         } catch (err) {
-            return this.errorHandler.logInternal(
-                err.message, `POST ${req.path()}`, next, ProfileCtrl.FIND_HOTSPOT_ERROR);
+            return next(this.errorHandler.logAndCreateInternal(
+                `POST ${req.path()}`, err.message, ProfileCtrl.FIND_HOTSPOT_ERROR,
+            ));
         }
         try {
             const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
@@ -59,8 +61,9 @@ class ProfileCtrl extends RootCtrl {
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
-            return this.errorHandler.logInternal(
-                err.message, `POST ${req.path()}`, next, ProfileCtrl.UPDATE_PROFILE_ERROR);
+            return next(this.errorHandler.logAndCreateInternal(
+                `POST ${req.path()}`, err.message, ProfileCtrl.UPDATE_PROFILE_ERROR,
+            ));
         }
     }
 }

@@ -26,7 +26,9 @@ class RootCtrl {
     public loadAuthenticatedUser = async (req : r.Request, res : r.Response, next : r.Next) => {
 
         if (!req.header('Authorization')) {
-            return next(new restifyErrors.UnauthorizedError('Token must be provided'));
+            return next(this.errorHandler.logAndCreateUnautorized(
+                req.path(), 'Token must be provided',
+            ));
         }
         const token = req.header('Authorization').slice(7);
         try {
@@ -35,7 +37,7 @@ class RootCtrl {
             this._decodedJwtPayload = new DecodedJwtPayload(decodedToken, namespace);
             return next();
         } catch (err) {
-            return next(new restifyErrors.UnauthorizedError(err.message));
+            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err.message));
         }
     }
 

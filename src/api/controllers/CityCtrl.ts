@@ -28,10 +28,17 @@ class CityCtrl extends RootCtrl {
     public city = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         try {
             const askedCity : City = this.cityRepository.findByInsee(req.params.insee);
-            if (askedCity) res.json(200, askedCity);
-            else next(new restifyErrors.NotFoundError(CityCtrl.INSEE_NOT_FOUND));
+            if (askedCity) {
+                res.json(200, askedCity);
+            } else {
+                return next(this.errorHandler.logAndCreateNotFound(
+                    `GET ${req.path()}`, CityCtrl.INSEE_NOT_FOUND,
+                ));
+            }
         } catch (err) {
-            this.errorHandler.logInternal(err.message, `GET ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message),
+            );
         }
     }
 }

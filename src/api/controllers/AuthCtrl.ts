@@ -21,11 +21,15 @@ class AuthCtrl extends RootCtrl {
         try {
             const body : any = await this.loginService.try(req.query.username, req.query.password);
             if (body.error) {
-                return next(new restifyErrors.InvalidCredentialsError(body.error_description));
+                return next(this.errorHandler.logAndCreateInvalidCredentials(
+                    `DELETE ${req.path()}`, body.error_description,
+                ));
             }
             res.json(body);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `DELETE ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
+            );
         }
     }
 }

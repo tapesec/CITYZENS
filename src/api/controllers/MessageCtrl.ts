@@ -38,23 +38,31 @@ class MessageCtrl extends RootCtrl​​ {
     // method=GET url=/hotspots/{hotspotId}/messages
     public getMessages = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(getStatusText(NOT_FOUND)));
+            return next(
+                this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`),
+            );
         }
         try {
             const hotspotContent: Message[] =
             this.messageRepository.findByHotspotId(req.params.hotspotId);
             res.json(OK, hotspotContent);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `GET ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message),
+            );
         }
     }
 
     // method=POST url=/hotspots/{hotspotId}/messages
     public postMessage = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         if (!this.schemaValidator.validate(createMessageSchema, req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.HOTSPOT_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `POST ${req.path()}`, MessageCtrl.HOTSPOT_NOT_FOUND,
+            ));
         }
 
         req.body.hotspotId = req.params.hotspotId;
@@ -64,7 +72,9 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `POST ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message),
+            );
         }
     }
 
@@ -73,14 +83,18 @@ class MessageCtrl extends RootCtrl​​ {
         let message: Message;
 
         if (!this.schemaValidator.validate(patchMessageSchema, req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `PATCH ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
         try {
             message = this.messageRepository.findById(req.params.messageId);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err.message));
+            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
         }
         if (!message) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `PATCH ${req.path()}`, MessageCtrl.MESSAGE_NOT_FOUND,
+            ));
         }
         // TODO encapsuler la logique suivante
         try {
@@ -95,7 +109,9 @@ class MessageCtrl extends RootCtrl​​ {
             }
             this.messageRepository.update(message);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `PATCH ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message),
+            );
         }
         res.json(OK, message);
     }
@@ -104,12 +120,16 @@ class MessageCtrl extends RootCtrl​​ {
     public removeMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
 
         if (!this.messageRepository.isSet(req.params.messageId)) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `DELETE ${req.path()}`, MessageCtrl.MESSAGE_NOT_FOUND,
+            ));
         }
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `DELETE ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
+            );
         }
         res.json(OK, getStatusText(OK));
     }

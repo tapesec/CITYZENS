@@ -25,6 +25,9 @@ import ErrorHandler from './../services/errors/ErrorHandler';
 import SlackWebhook from './../libs/SlackWebhook';
 
 const jwt = require('jsonwebtoken');
+const restifyErrors = require('restify-errors');
+const logs = require('./../../logs');
+const httpResponseDataLogger = logs.get('http-response-data');
 
 const loginService = new Login(
     {
@@ -37,7 +40,10 @@ const loginService = new Login(
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 const errorHandler = new ErrorHandler(
-    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request));
+    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
+    httpResponseDataLogger,
+    restifyErrors,
+);
 
 export const init = (server : restify.Server) => {
     const routers = [];

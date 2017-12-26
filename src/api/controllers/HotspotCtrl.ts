@@ -47,9 +47,9 @@ class HotspotCtrl extends RootCtrl​​ {
         let hotspotsResult : Hotspot[];
 
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
-            // this.hook.alert
-            // (`Bad request on GET ${req.path()} \n ${JSON.stringify(queryStrings)}`);
-            return next(new restifyErrors.BadRequestError(HotspotCtrl.BAD_REQUEST_MESSAGE));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `GET ${req.path()}`, HotspotCtrl.BAD_REQUEST_MESSAGE,
+            ));
         }
         try {
             if (queryStrings.north) {
@@ -58,15 +58,20 @@ class HotspotCtrl extends RootCtrl​​ {
                 hotspotsResult = hotspotsByCodeCommune(queryStrings.insee, this.hotspotRepository);
             }
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `GET ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message),
+            );
         }
         res.json(OK, hotspotsResult);
     }
 
     // method=POST url=/hotspots
     public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
-        if (!this.schemaValidator.validate(createHotspotsSchema(), req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+        if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
+        }
 
         try {
             req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
@@ -74,14 +79,18 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `POST ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message),
+            );
         }
     }
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `POST view ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
+            ));
         }
         try {
             const visitedHotspot: Hotspot = this.hotspotRepository.findById(req.params.hotspotId);
@@ -89,16 +98,22 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `POST view ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err.message),
+            );
         }
     }
 
     // method=PATCH url=/hotspots/{hotspotId}
     public patchHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `PATCH ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `PATCH ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
+            ));
         }
         try {
             const hotspot: WallHotspot|EventHotspot|AlertHotspot =
@@ -107,7 +122,9 @@ class HotspotCtrl extends RootCtrl​​ {
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `PATCH ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message),
+            );
         }
     }
 
@@ -115,12 +132,14 @@ class HotspotCtrl extends RootCtrl​​ {
     public removeHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {
 
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND));
         }
         try {
             this.hotspotRepository.remove(req.params.hotspotId);
         } catch (err) {
-            return this.errorHandler.logInternal(err.message, `DELETE ${req.path()}`, next);
+            return next(
+                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
+            );
         }
         res.json(OK, getStatusText(OK));
     }
