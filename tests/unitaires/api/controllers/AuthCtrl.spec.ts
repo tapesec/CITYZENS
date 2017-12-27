@@ -3,6 +3,7 @@ import AuthCtrl from '../../../../src/api/controllers/AuthCtrl';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
+import * as sinon from 'sinon';
 const restifyErrors = require('restify-errors');
 
 describe('AuthCtrl', () => {
@@ -35,6 +36,9 @@ describe('AuthCtrl', () => {
             reqMoq
             .setup((x : rest.Request) => x.query)
             .returns(() => queryStrings);
+            reqMoq
+            .setup(x => x.path())
+            .returns(() => "path");
         });
 
         it(
@@ -48,9 +52,6 @@ describe('AuthCtrl', () => {
                 .setup(x => x.try(username, password))
                 .returns(() => Promise.resolve(body));
 
-                errorHandlerMoq
-                .setup(x => x.logInternal('a', 'b', nextMoq.object))
-                .returns(() => {});
                 // Act
                 const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
@@ -62,6 +63,7 @@ describe('AuthCtrl', () => {
         it(
             `Should try to log user and return a 401 http response with error description`,
             async () => {
+                
                 // Arrange
                 const fakeError = { 
                     error: 'an error occured', 
@@ -70,17 +72,26 @@ describe('AuthCtrl', () => {
                 loginServiceMoq
                 .setup(x => x.try(username, password))
                 .returns(() => Promise.resolve(fakeError));
+                
+                errorHandlerMoq
+                .setup(
+                    x => x.logAndCreateInvalidCredentials(
+                        "DELETE path", fakeError.error_description,
+                    )
+                )
+                .returns(() => "error")
+                
                 // Act
-                const authCtrl = new AuthCtrl(loginServiceMoq.object);
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 nextMoq
                 .verify(
-                    x => x(new restifyErrors.InvalidCredentialsError(fakeError.error_description)), 
+                    x => x("error"), 
                     TypeMoq.Times.once(),
                 );
             },
         );
     });
-
+    
 });

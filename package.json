@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "tsc && node --require dotenv/config build/api/server.js",
-    "test": "set NODE_ENV=test && mocha --opts tests/mocha.opts -r ts-node/register tests/**/*.spec.ts",
-    "test:unit": "set NODE_ENV=test && mocha --opts tests/mocha.opts -r ts-node/register tests/unitaires/**/*.spec.ts",
-    "test:integration": "set NODE_ENV=test && mocha --opts tests/mocha.opts -r ts-node/register tests/integrations/**/*.spec.ts",
+    "test": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/**/*.spec.ts\"",
+    "test:unit": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/unitaires/**/*.spec.ts\"",
+    "test:integration": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/integrations/**/*.spec.ts\"",
     "tslint": "tslint -c tslint.json src/**/*.ts"
   },
   "author": "lasalle",
@@ -46,7 +46,7 @@
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
   },
-  "engines" : {
-    "node" : ">=8.9.3"
+  "engines": {
+    "node": ">=8.9.3"
   }
 }
