@@ -51,7 +51,7 @@ class ProfileCtrl extends RootCtrl {
             }
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
-                `POST ${req.path()}`, err.message, ProfileCtrl.FIND_HOTSPOT_ERROR,
+                `POST ${req.path()}`, err.message
             ));
         }
         try {
@@ -62,7 +62,7 @@ class ProfileCtrl extends RootCtrl {
             res.json(OK, renewedTokens);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
-                `POST ${req.path()}`, err.message, ProfileCtrl.UPDATE_PROFILE_ERROR,
+                `POST ${req.path()}`, err.message,
             ));
         }
     }
