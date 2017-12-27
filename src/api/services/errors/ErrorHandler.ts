@@ -21,7 +21,7 @@ class ErrorHandler {
             msg || getStatusText(BAD_REQUEST),
         );
 
-        this.httpLogger.info(msg || getStatusText(NOT_FOUND));
+        this.httpLogger.info(msg || getStatusText(BAD_REQUEST));
         return error;
     }
 
@@ -30,7 +30,7 @@ class ErrorHandler {
             msg || getStatusText(UNAUTHORIZED),
         );
 
-        this.httpLogger.info(msg || getStatusText(NOT_FOUND));
+        this.httpLogger.info(msg || getStatusText(UNAUTHORIZED));
         return error;
     }
 
@@ -39,7 +39,7 @@ class ErrorHandler {
             msg || getStatusText(UNAUTHORIZED),
         );
 
-        this.httpLogger.info(msg || getStatusText(NOT_FOUND));
+        this.httpLogger.info(msg || getStatusText(UNAUTHORIZED));
         return error;
     }
 
