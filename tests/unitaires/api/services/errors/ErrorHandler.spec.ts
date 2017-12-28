@@ -1,3 +1,4 @@
+import { S_IFBLK } from 'constants';
 import * as TypeMoq from 'typemoq';
 import * as Sinon from 'sinon';
 import * as Chai from 'chai';
@@ -18,95 +19,44 @@ describe('Error service.', () => {
             UnauthorizedError: Sinon.stub(),
             InvalidCredentialsError: Sinon.stub(),
             NotFoundError: Sinon.stub(),
-            InternalServerError: Sinon.stub()
-         };
+            InternalServerError: Sinon.stub(),
+        };
 
         slackWebHookStub = { alert: Sinon.stub() };
     });
 
-    it(`logAndCreateBadRequest should call httpLogger once.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub.object,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateBadRequest(" ", " ");
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
-
-    it(`logAndCreateInternal should call httpLogger and slackWebHook once.`, () => {
+    it(`logAndCreateBadRequest should return BadRequest error and call httpLogger.`, () => {
         const errorHandler = new ErrorHandler(
             slackWebHookStub,
             httpLoggerStub,
             restifyErrorsStub,
         );
         
-        const json = {};
-
-        errorHandler.logAndCreateInternal(' ', json);
-        Chai.assert(httpLoggerStub.info.calledOnce);
-        Chai.assert(slackWebHookStub.alert.calledOnce);
+        errorHandler.logAndCreateBadRequest(' ', ' ');
+        Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
     });
 
-    it(`logAndCreateInvalidCredentials should call httpLogger once.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateInvalidCredentials(" ", " ");
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
+    it(
+        `logAndCreateInternal should return InternalError,
+        call httpLogger once, call httpLogger and slackWebHook.`,
+        () => {
+            const errorHandler = new ErrorHandler(
+                slackWebHookStub,
+                httpLoggerStub,
+                restifyErrorsStub,
+            );
+            
+            const json = {};
 
-    it(`logAndCreateNotFound should call httpLogger once.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateNotFound(" ", " ");
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
+            const error = errorHandler.logAndCreateInternal(' ', json);
+            
+            Chai.expect(error).to.be.eql(new restifyErrorsStub.InternalServerError(json));
+            Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
+            Chai.expect(slackWebHookStub.alert.calledOnce).to.be.eql(true);
+        },
+    );
 
-    it(`logAndCreateUnautorized should call httpLogger once.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateUnautorized(" ", " ");
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
-    
-    it(`logAndCreateBadRequest should return BadRequest error.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateBadRequest(" ", " ");
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
-
-    it(`logAndCreateInternal should call httpLogger once.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        const json = {};
-
-        errorHandler.logAndCreateInternal(" ", json);
-        Chai.assert(httpLoggerStub.info.calledOnce);
-    });
-
-    it(`logAndCreateBadRequest should return BadRequest error.`, () => {
+    it(`logAndCreateBadRequest should return BadRequest error and call httpLogger.`, () => {
         const errorHandler = new ErrorHandler(
             slackWebHookStub,
             httpLoggerStub,
@@ -115,9 +65,10 @@ describe('Error service.', () => {
         
         const error = errorHandler.logAndCreateBadRequest(' ', ' ');
         Chai.expect(error).to.be.eql(new restifyErrorsStub.BadRequestError(' '));
+        Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
     });
 
-    it(`logAndCreateUnautorized should return Unautorized error.`, () => {
+    it(`logAndCreateUnautorized should return Unautorized error and call httpLogger.`, () => {
         const errorHandler = new ErrorHandler(
             slackWebHookStub,
             httpLoggerStub,
@@ -126,20 +77,26 @@ describe('Error service.', () => {
         
         const error = errorHandler.logAndCreateUnautorized(' ', ' ');
         Chai.expect(error).to.be.eql(new restifyErrorsStub.UnauthorizedError(' '));
+        Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
     });
 
-    it(`logAndCreateInvalidCredentials should return InvalidCredentials error.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        const error = errorHandler.logAndCreateInvalidCredentials(' ', ' ');
-        Chai.expect(error).to.be.eql(new restifyErrorsStub.InvalidCredentialsError(' '));
-    });
+    it(
+        `logAndCreateInvalidCredentials should return InvalidCredentials error 
+        and call httpLogger.`, 
+        () => {
+            const errorHandler = new ErrorHandler(
+                slackWebHookStub,
+                httpLoggerStub,
+                restifyErrorsStub,
+            );
+            
+            const error = errorHandler.logAndCreateInvalidCredentials(' ', ' ');
+            Chai.expect(error).to.be.eql(new restifyErrorsStub.InvalidCredentialsError(' '));
+            Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
+        },
+    );
 
-    it(`logAndCreateNotFound should return NotFound error.`, () => {
+    it(`logAndCreateNotFound should return NotFound error and call httpLogger once.`, () => {
         const errorHandler = new ErrorHandler(
             slackWebHookStub,
             httpLoggerStub,
@@ -148,20 +105,6 @@ describe('Error service.', () => {
         
         const error = errorHandler.logAndCreateNotFound(' ', ' ');
         Chai.expect(error).to.be.eql(new restifyErrorsStub.NotFoundError(' '));
+        Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
     });
-
-    it(`logAndCreateInternal should return Internal error.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        const json = {};
-        
-        const error = errorHandler.logAndCreateInternal(" ", json);
-        Chai.expect(error).to.be.eql(new restifyErrorsStub.InternalServerError(json));
-    });
-
-
 });
