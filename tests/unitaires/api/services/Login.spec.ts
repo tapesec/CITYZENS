@@ -1,4 +1,4 @@
-import * as sinon from 'Sinon';
+import * as sinon from 'sinon';
 import { expect } from 'chai';
 import Login, { LoginOptions } from '../../../../src/api/services/auth/Login';
 describe('Login service', () => {

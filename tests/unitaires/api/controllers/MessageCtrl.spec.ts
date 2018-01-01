@@ -14,6 +14,7 @@ import { OK, CREATED, getStatusText } from 'http-status-codes';
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 
 describe('MessageCtrl', () => {
 
@@ -24,6 +25,7 @@ describe('MessageCtrl', () => {
     let hotspotRepositoryMoq: TypeMoq.IMock<HotspotRepositoryInMemory>;
     let messageRepositoryMoq: TypeMoq.IMock<MessageRepositoryInMemory>;
     let messageFactoryMoq: TypeMoq.IMock<MessageFactory>;
+    let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let messageCtrl: MessageCtrl;
     let hotspotId: string;
 
@@ -34,6 +36,7 @@ describe('MessageCtrl', () => {
         // simule la validation du jwt token
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
+        errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
 
         hotspotId = 'fake-hotspot-id';
@@ -42,7 +45,7 @@ describe('MessageCtrl', () => {
         messageRepositoryMoq = TypeMoq.Mock.ofType<MessageRepositoryInMemory>();
         messageFactoryMoq = TypeMoq.Mock.ofType<MessageFactory>();
         messageCtrl = new MessageCtrl(
-            jwtParserMoq.object,
+            errorHandlerMoq.object, jwtParserMoq.object,
             hotspotRepositoryMoq.object, messageRepositoryMoq.object, messageFactoryMoq.object);
 
         // appel du middleware de control d'acces de l'utilsateur

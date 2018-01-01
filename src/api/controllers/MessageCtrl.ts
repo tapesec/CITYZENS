@@ -12,6 +12,7 @@ import { createMessageSchema, patchMessageSchema } from '../requestValidation/sc
 import * as rest from 'restify';
 import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class MessageCtrl extends RootCtrl​​ {
 
@@ -22,12 +23,13 @@ class MessageCtrl extends RootCtrl​​ {
     private static MESSAGE_NOT_FOUND = 'Message not found';
 
     constructor (
+        errorHandler: ErrorHandler,
         jwtParser : JwtParser,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(jwtParser);
+        super(errorHandler, jwtParser);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -36,23 +38,31 @@ class MessageCtrl extends RootCtrl​​ {
     // method=GET url=/hotspots/{hotspotId}/messages
     public getMessages = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(getStatusText(NOT_FOUND)));
+            return next(
+                this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`),
+            );
         }
         try {
             const hotspotContent: Message[] =
             this.messageRepository.findByHotspotId(req.params.hotspotId);
             res.json(OK, hotspotContent);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `GET ${req.path()}`);
+            return next(
+                this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message),
+            );
         }
     }
 
     // method=POST url=/hotspots/{hotspotId}/messages
     public postMessage = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         if (!this.schemaValidator.validate(createMessageSchema, req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.HOTSPOT_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `POST ${req.path()}`, MessageCtrl.HOTSPOT_NOT_FOUND,
+            ));
         }
 
         req.body.hotspotId = req.params.hotspotId;
@@ -62,7 +72,9 @@ class MessageCtrl extends RootCtrl​​ {
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `POST ${req.path()}`);
+            return next(
+                this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message),
+            );
         }
     }
 
@@ -71,14 +83,18 @@ class MessageCtrl extends RootCtrl​​ {
         let message: Message;
 
         if (!this.schemaValidator.validate(patchMessageSchema, req.body))
-            return next(new restifyErrors.BadRequestError(this.schemaValidator.errorsText()));
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `PATCH ${req.path()}`, this.schemaValidator.errorsText(),
+            ));
         try {
             message = this.messageRepository.findById(req.params.messageId);
         } catch (err) {
-            return next(new restifyErrors.InternalServerError(err.message));
+            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
         }
         if (!message) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `PATCH ${req.path()}`, MessageCtrl.MESSAGE_NOT_FOUND,
+            ));
         }
         // TODO encapsuler la logique suivante
         try {
@@ -93,7 +109,9 @@ class MessageCtrl extends RootCtrl​​ {
             }
             this.messageRepository.update(message);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `PATCH ${req.path()}`);
+            return next(
+                this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message),
+            );
         }
         res.json(OK, message);
     }
@@ -102,12 +120,16 @@ class MessageCtrl extends RootCtrl​​ {
     public removeMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
 
         if (!this.messageRepository.isSet(req.params.messageId)) {
-            return next(new restifyErrors.NotFoundError(MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(this.errorHandler.logAndCreateNotFound(
+                `DELETE ${req.path()}`, MessageCtrl.MESSAGE_NOT_FOUND,
+            ));
         }
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {
-            return this.nextInternalError(next, err.message, `DELETE ${req.path()}`);
+            return next(
+                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
+            );
         }
         res.json(OK, getStatusText(OK));
     }

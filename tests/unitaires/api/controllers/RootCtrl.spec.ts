@@ -5,11 +5,13 @@ import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import RootCtrl from '../../../../src/api/controllers/RootCtrl';
 import { expect } from 'chai';
 import * as TypeMoq from 'typemoq';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 const restifyErrors = require('restify-errors');
 
 describe('RootCtrl', () => {
 
     let jwtParser : TypeMoq.IMock<JwtParser>;
+    let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let reqMoq : TypeMoq.IMock<rest.Request>;
     let resMoq : TypeMoq.IMock<rest.Response>;
     let nextMoq : TypeMoq.IMock<rest.Next>;
@@ -17,10 +19,15 @@ describe('RootCtrl', () => {
 
     beforeEach(() => {
         jwtParser = TypeMoq.Mock.ofType<JwtParser>();
+        errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         token = 'javascript.web.token';
+
+        reqMoq
+        .setup(x => x.path())
+        .returns(() => 'path');
     });
 
     it(
@@ -40,8 +47,10 @@ describe('RootCtrl', () => {
             const decodedJwtPayload = new DecodedJwtPayload(fakeJwtPayload, namespace);
             jwtParser.setup(x => x.verify(token))
             .returns(() => Promise.resolve(fakeJwtPayload));
+
+            
             // Act
-            const rootCtrl = new RootCtrl(jwtParser.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, jwtParser.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
@@ -51,22 +60,35 @@ describe('RootCtrl', () => {
             .to.be.eql(decodedJwtPayload);
         },
     );
-
+    
     it(
         'should return unauthorized error if no http Authorization header provider',
         async () => {
             // Arrange
-            reqMoq.setup(x => x.header('Authorization')).returns(() => undefined);
-            jwtParser.setup(x => x.verify(token))
+            reqMoq
+            .setup(x => x.header('Authorization'))
+            .returns(() => undefined);
+            
+            jwtParser
+            .setup(x => x.verify(token))
             .returns(() => Promise.resolve({ email: 'test@domain.com', nickname: 'test' }));
+            
+            errorHandlerMoq
+            .setup(
+                x => x.logAndCreateUnautorized(
+                    'path', 'Token must be provided'
+                )
+            )
+            .returns(() => 'error');
+            
             // Act
-            const rootCtrl = new RootCtrl(jwtParser.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, jwtParser.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.exactly(0));
             nextMoq.verify(
-                x => x(new restifyErrors.UnauthorizedError('Token must be provided')),
+                x => x('error'),
                 TypeMoq.Times.once(),
             );
         },
@@ -80,14 +102,23 @@ describe('RootCtrl', () => {
             reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
             jwtParser.setup(x => x.verify(token))
             .returns(() => Promise.reject(decodeError));
+
+            errorHandlerMoq
+            .setup(
+                x => x.logAndCreateUnautorized(
+                    'path', decodeError.message
+                )
+            )
+            .returns(() => 'error');
+            
             // Act
-            const rootCtrl = new RootCtrl(jwtParser.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, jwtParser.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
             jwtParser.verify(x => x.verify(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(
-                x => x(new restifyErrors.UnauthorizedError(decodeError.message)),
+                x => x('error'),
                 TypeMoq.Times.once(),
             );
         },

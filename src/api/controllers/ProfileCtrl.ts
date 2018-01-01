@@ -8,6 +8,7 @@ import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
 import cityzenFromJwt from '../../api/services/cityzen/cityzenFromJwt';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class ProfileCtrl extends RootCtrl {
 
@@ -20,12 +21,13 @@ class ProfileCtrl extends RootCtrl {
     public static HOTSPOT_NOT_FOUND = 'hotspot not found';
 
     constructor(
+        errorHandler: ErrorHandler,
         jwtParser : JwtParser,
         cityzenRepository: CityzenAuth0Repository,
         auth0Sdk : Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(jwtParser);
+        super(errorHandler, jwtParser);
         this.cityzenRepository = cityzenRepository;
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
@@ -36,19 +38,21 @@ class ProfileCtrl extends RootCtrl {
         const refreshToken = req.query.refresh_token;
 
         if (!refreshToken) {
-            return next(
-                new restifyErrors.BadRequestError(ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR),
-            );
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST ${req.path()}`, ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR,
+            ));
         }
         try {
             const hotspot = this.hotspotRepository.findById(favoritId);
             if (!hotspot) {
-                return next(
-                    new restifyErrors.NotFoundError(ProfileCtrl.HOTSPOT_NOT_FOUND));
+                return next(this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`, ProfileCtrl.HOTSPOT_NOT_FOUND,
+                ));
             }
         } catch (err) {
-            return this.nextInternalError(
-                next, err.message, `POST ${req.path()}`, ProfileCtrl.FIND_HOTSPOT_ERROR);
+            return next(this.errorHandler.logAndCreateInternal(
+                `POST ${req.path()}`, err.message
+            ));
         }
         try {
             const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
@@ -57,8 +61,9 @@ class ProfileCtrl extends RootCtrl {
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
-            return this.nextInternalError(
-                next, err.message, `POST ${req.path()}`, ProfileCtrl.UPDATE_PROFILE_ERROR);
+            return next(this.errorHandler.logAndCreateInternal(
+                `POST ${req.path()}`, err.message,
+            ));
         }
     }
 }

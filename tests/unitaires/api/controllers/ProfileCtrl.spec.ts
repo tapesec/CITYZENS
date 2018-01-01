@@ -15,6 +15,7 @@ import cityzenAuth0Repository, { CityzenAuth0Repository } from './../../../../sr
 import { Auth0 } from '../../../../src/api/libs/Auth0';
 import { OK } from 'http-status-codes';
 import * as sample from './sample';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 
 describe('ProfileCtrl', () => {
 
@@ -24,6 +25,7 @@ describe('ProfileCtrl', () => {
     let cityzenRepositoryMoq : TypeMoq.IMock<CityzenAuth0Repository>;
     let auth0SdkMoq : TypeMoq.IMock<Auth0>;
     let jwtParserMoq : TypeMoq.IMock<JwtParser>;
+    let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let profileCtrl : ProfileCtrl;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
 
@@ -38,15 +40,17 @@ describe('ProfileCtrl', () => {
 
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
-
+        
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
         cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-
+        
+        errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         // instanciation du ProfilCtrl
         profileCtrl = new ProfileCtrl(
-            jwtParserMoq.object,
-            cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object);
+            errorHandlerMoq.object, jwtParserMoq.object,
+            cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object,
+        );
 
         // appel du middleware de control d'acces de l'utilsateur
         await profileCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);

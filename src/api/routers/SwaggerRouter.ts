@@ -13,8 +13,10 @@ class SwaggerRouter {
             info: { // API informations (required)
                 title: 'API Cityzens', // Title (required)
                 version: '0.0.1', // Version (required)
-                description: 'REST API, Cityzens: https://github.com/tapesec/CITYZENS', // Description (optional)
+                // Description (optional)
+                description: 'REST API, Cityzens: https://github.com/tapesec/CITYZENS',
             },
+            
             host: 'localhost:3000', // Host (optional)
             basePath: '/', // Base path (optional)
         };

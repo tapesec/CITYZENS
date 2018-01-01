@@ -16,6 +16,7 @@ const restifyErrors = require('restify-errors');
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 
 describe('HotspotCtrl', () => {
 
@@ -25,6 +26,7 @@ describe('HotspotCtrl', () => {
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
     let hotspotFactoryMoq : TypeMoq.IMock<HotspotFactory>;
     let jwtParserMoq : TypeMoq.IMock<JwtParser>;
+    let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let hotspotCtrl : HotspotCtrl;
 
     before(async () => {
@@ -35,11 +37,15 @@ describe('HotspotCtrl', () => {
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
         sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
-
+        
+        errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
+        
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         hotspotCtrl = new HotspotCtrl(
-            jwtParserMoq.object, hotspotRepositoryMoq.object, hotspotFactoryMoq.object);
+            errorHandlerMoq.object, jwtParserMoq.object, hotspotRepositoryMoq.object,
+             hotspotFactoryMoq.object,
+        );
         // appel du middleware de control d'acces de l'utilsateur
         await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
     });
