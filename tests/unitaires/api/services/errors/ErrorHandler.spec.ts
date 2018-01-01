@@ -25,17 +25,6 @@ describe('Error service.', () => {
         slackWebHookStub = { alert: Sinon.stub() };
     });
 
-    it(`logAndCreateBadRequest should return BadRequest error and call httpLogger.`, () => {
-        const errorHandler = new ErrorHandler(
-            slackWebHookStub,
-            httpLoggerStub,
-            restifyErrorsStub,
-        );
-        
-        errorHandler.logAndCreateBadRequest(' ', ' ');
-        Chai.expect(httpLoggerStub.info.calledOnce).to.be.eql(true);
-    });
-
     it(
         `logAndCreateInternal should return InternalError,
         call httpLogger once, call httpLogger and slackWebHook.`,
