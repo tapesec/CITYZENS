@@ -12,8 +12,10 @@ class AuthCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        loginService : Login) {
-        super(errorHandler);
+        loginService : Login,
+        request: any,
+    ) {
+        super(errorHandler, request);
         this.loginService = loginService;
     }
 

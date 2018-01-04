@@ -2,7 +2,6 @@ import City from '../../domain/cityLife/model/city/City';
 import CitySample from '../../domain/cityLife/model/sample/CitySample';
 import cityRepositoryInMemory, { CityRepositoryInMemory }
 from '../../infrastructure/CityRepositoryInMemory';
-import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import ErrorHandler from 'src/api/services/errors/ErrorHandler';
@@ -16,10 +15,10 @@ class CityCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler, 
-        jwtParser : JwtParser, 
+        request: any,
         cityRepositoryInMemory : CityRepositoryInMemory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, request);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }

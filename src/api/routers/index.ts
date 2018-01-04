@@ -18,7 +18,6 @@ import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
-import * as request from 'request';
 import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
@@ -28,15 +27,7 @@ const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
-
-const loginService = new Login(
-    {
-        url: config.auth.auth0url,
-        clientId: config.auth.auth0ClientId,
-        clientSecret: config.auth.auth0ClientSecret,
-    },
-    request,
-);
+const request = require('request');
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 const errorHandler = new ErrorHandler(
@@ -44,23 +35,33 @@ const errorHandler = new ErrorHandler(
     httpResponseDataLogger,
     restifyErrors,
 );
+const loginService = new Login(
+
+    {
+        url: config.auth.auth0url,
+        clientId: config.auth.auth0ClientId,
+        clientSecret: config.auth.auth0ClientSecret,
+    },
+    request,
+    errorHandler,
+);
 
 export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
+    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService, request)));
     routers.push(new ProfileRouter(
         new ProfileCtrl(
-            errorHandler, jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
+            errorHandler, request, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
         ),
     ));
-    routers.push(new CityRouter(new CityCtrl(errorHandler, jwtParser, cityRepositoryInMemory)));
+    routers.push(new CityRouter(new CityCtrl(errorHandler, request, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(
-        new HotspotCtrl(errorHandler, jwtParser, hotspotRepositoryInMemory, new HotspotFactory())),
+        new HotspotCtrl(errorHandler, request, hotspotRepositoryInMemory, new HotspotFactory())),
     );
     routers.push(new MessageRouter(
         new MessageCtrl(
-            errorHandler, jwtParser, hotspotRepositoryInMemory, 
+            errorHandler, request, hotspotRepositoryInMemory, 
             messageRepositoryInMemory, new MessageFactory(),
         ),
     ));

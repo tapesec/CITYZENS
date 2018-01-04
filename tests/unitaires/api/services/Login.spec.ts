@@ -1,6 +1,7 @@
 import * as sinon from 'sinon';
 import { expect } from 'chai';
 import Login, { LoginOptions } from '../../../../src/api/services/auth/Login';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 describe('Login service', () => {
 
     it('Should call auth0 oauth/token endpoint to retrieve a jwt correct token', async () => {
@@ -31,7 +32,7 @@ describe('Login service', () => {
         const moqRequest = sinon.stub();
         moqRequest.callsArgWith(1, undefined, { /* response */ }, { token: 'a-fake-valid-token' });
         // Act
-        const loginService = new Login(loginOptions, moqRequest);
+        const loginService = new Login(loginOptions, moqRequest, {} as ErrorHandler);
         const token = await loginService.try(fakeEmail, fakePassword);
         // Assert
         expect(moqRequest.calledOnce).to.be.true;

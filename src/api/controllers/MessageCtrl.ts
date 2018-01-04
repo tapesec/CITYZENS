@@ -24,12 +24,12 @@ class MessageCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        request : any,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, request);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -67,7 +67,7 @@ class MessageCtrl extends RootCtrl​​ {
 
         req.body.hotspotId = req.params.hotspotId;
         try {
-            req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            req.body.cityzen = this.userInfo.createCityzen();
             const newMessage = this.messageFactory.createMessage(req.body);
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);

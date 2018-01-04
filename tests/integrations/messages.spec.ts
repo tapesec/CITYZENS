@@ -22,13 +22,13 @@ const messagesEndpointsTests = (state : any) => {
             hotspotId = MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.hotspotId.id;
         });
 
-        describe('GET /hotspots/{hotspotId}/messages', () => {
+        describe('GET /hotspots/{hotspotId}/messages', async () => {
 
             it ('should return a collection of message for a given hotspot', async () => {
                 // Act
                 const response = await request(server)
                 .get(`/hotspots/${hotspotId}/messages`)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
 
@@ -40,30 +40,33 @@ const messagesEndpointsTests = (state : any) => {
                 const hotspotId = 'not-found-id';
                 const response = await request(server)
                 .get(`/hotspots/${hotspotId}/messages`)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(404);
             });
         });
 
-        describe('POST /hotspots/{hotspotId}/messages', () => {
+        describe('POST /hotspots/{hotspotId}/messages', async () => {
 
-            it ('should create a new message and return 201 and the new message', async () => {
-                // Arrange
-                const body = createMessageBody;
-                // Act
-                const response = await request(server)
-                .post(`/hotspots/${hotspotId}/messages`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
-                .set('Accept', 'application/json')
-                .expect(201);
+            it (
+                'should create a new message and return 201 and the new message', 
+                async () => {
+                    // Arrange
+                    const body = createMessageBody;
+                    // Act
+                    const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/messages`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(201);
 
-                expect(response.body.title).to.equal(newMessageResponse(hotspotId).title);
-                expect(response.body.body).to.equal(newMessageResponse(hotspotId).body);
-                expect(response.body.author).to.have.property('pseudo').to.eql(username);
-                expect(response.body.pinned).to.equal(false);
-            });
+                    expect(response.body.title).to.equal(newMessageResponse(hotspotId).title);
+                    expect(response.body.body).to.equal(newMessageResponse(hotspotId).body);
+                    expect(response.body.author).to.have.property('pseudo').to.eql(username);
+                    expect(response.body.pinned).to.equal(false);
+                },
+            );
 
             it ('should return 404 if hotspot doesn\'t exist', async () => {
                 // Arrange
@@ -73,7 +76,7 @@ const messagesEndpointsTests = (state : any) => {
                 const response = await request(server)
                 .post(`/hotspots/${hotspotId}/messages`)
                 .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(404);
             });
@@ -85,13 +88,13 @@ const messagesEndpointsTests = (state : any) => {
                 const response = await request(server)
                 .post(`/hotspots/${hotspotId}/messages`)
                 .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(400);
             });
         });
 
-        describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', () => {
+        describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', async () => {
 
             let messageId: string;
             let hotspotId: string;
@@ -108,7 +111,7 @@ const messagesEndpointsTests = (state : any) => {
                 const response = await request(server)
                 .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                 .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
 
@@ -125,7 +128,7 @@ const messagesEndpointsTests = (state : any) => {
                 const response = await request(server)
                 .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                 .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(404);
             });
@@ -140,7 +143,7 @@ const messagesEndpointsTests = (state : any) => {
                 const response = await request(server)
                 .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                 .send(body)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(400);
             });

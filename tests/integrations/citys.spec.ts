@@ -14,7 +14,7 @@ const citysEndpointTests = (state : any) => {
                 // Act
                 const response = await request(server)
                 .get('/citys/' + insee)
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
 

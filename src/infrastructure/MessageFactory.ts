@@ -42,7 +42,8 @@ class MessageFactory {
         }
 
         return new Message(
-            data.id, data.title, data.body, author, pinned, hotspotId, createdAt, updatedAt);
+            data.id, data.title, data.body, author, pinned, hotspotId, createdAt, updatedAt,
+        );
     }
 }
 export default MessageFactory;

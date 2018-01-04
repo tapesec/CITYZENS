@@ -18,9 +18,10 @@ const hotspotsEndpointsTests = (state : any) => {
                 const south = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
                 const east = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
                 // Act
+
                 const response = await request(server)
                 .get('/hotspots')
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .query({ north, west, south, east })
                 .set('Accept', 'application/json')
                 .expect(200);
@@ -34,7 +35,7 @@ const hotspotsEndpointsTests = (state : any) => {
                 // Act
                 const response = await request(server)
                 .get('/hotspots')
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .query({ insee })
                 .set('Accept', 'application/json')
                 .expect(200);
@@ -43,12 +44,12 @@ const hotspotsEndpointsTests = (state : any) => {
             });
         });
 
-        describe('POST /hotspots', () => {
+        describe('POST /hotspots', async () => {
             it ('should return a new hotspot with 201 created status', async () => {
                 // Act
                 const response = await request(server)
                 .post('/hotspots')
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .send(createHotspotBody)
                 .set('Accept', 'application/json')
                 .expect(201);
@@ -77,7 +78,7 @@ const hotspotsEndpointsTests = (state : any) => {
                 // Act
                 const response = await request(server)
                 .post('/hotspots')
-                .set('Authorization', `Bearer ${state.id_token}`)
+                .set('Authorization', `Bearer ${state.access_token}`)
                 .send({ foo: 'bar' })
                 .set('Accept', 'application/json')
                 .expect(400);

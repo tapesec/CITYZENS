@@ -38,7 +38,7 @@ describe('AuthCtrl', () => {
             .returns(() => queryStrings);
             reqMoq
             .setup(x => x.path())
-            .returns(() => "path");
+            .returns(() => 'path');
         });
 
         it(
@@ -53,7 +53,7 @@ describe('AuthCtrl', () => {
                 .returns(() => Promise.resolve(body));
 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object, {});
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 resMoq.verify(x => x.json(body), TypeMoq.Times.once());
@@ -76,18 +76,18 @@ describe('AuthCtrl', () => {
                 errorHandlerMoq
                 .setup(
                     x => x.logAndCreateInvalidCredentials(
-                        "DELETE path", fakeError.error_description,
-                    )
+                        'DELETE path', fakeError.error_description,
+                    ),
                 )
-                .returns(() => "error")
+                .returns(() => 'error');
                 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object, {});
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 nextMoq
                 .verify(
-                    x => x("error"), 
+                    x => x('error'), 
                     TypeMoq.Times.once(),
                 );
             },

@@ -22,12 +22,12 @@ class ProfileCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        request : any,
         cityzenRepository: CityzenAuth0Repository,
         auth0Sdk : Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, request);
         this.cityzenRepository = cityzenRepository;
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
@@ -51,11 +51,11 @@ class ProfileCtrl extends RootCtrl {
             }
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
-                `POST ${req.path()}`, err.message
+                `POST ${req.path()}`, err.message,
             ));
         }
         try {
-            const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            const currentCityzen : Cityzen = this.userInfo.createCityzen();
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);

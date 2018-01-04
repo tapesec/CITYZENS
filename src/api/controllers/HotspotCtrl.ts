@@ -20,7 +20,9 @@ import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
+import Cityzen from '../../domain/cityzens/model/Cityzen';
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -31,11 +33,11 @@ class HotspotCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        request : any,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, request);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
     }
@@ -65,6 +67,25 @@ class HotspotCtrl extends RootCtrl​​ {
         res.json(OK, hotspotsResult);
     }
 
+    public createCityzen(usr: UserInfoAuth0) : Cityzen {
+        let id: string;
+        let email: string;
+        let pseudo: string;
+    
+        if (usr.sub) id = usr.sub;
+        else throw new Error('no subject found in auth0\'s userInfo');
+        if (usr.email) email = usr.email;
+        else throw new Error('no email found in auth0\'s userInfo');
+        if (usr.nickname) pseudo = usr.nickname;
+        else throw new Error('no nickname found in auth0\'s userInfo');
+    
+        const cityzen = new Cityzen(
+            id, email, pseudo,
+        );
+    
+        return cityzen;
+    }
+
     // method=POST url=/hotspots
     public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
@@ -74,7 +95,7 @@ class HotspotCtrl extends RootCtrl​​ {
         }
 
         try {
-            req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            req.body.cityzen = this.userInfo.createCityzen();   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
@@ -118,6 +139,19 @@ class HotspotCtrl extends RootCtrl​​ {
         try {
             const hotspot: WallHotspot|EventHotspot|AlertHotspot =
             this.hotspotRepository.findById(req.params.hotspotId);
+
+            /*
+            *    Je ne suis pas sur que ça soit dans le scope de ma story de rajouter 
+            *    les permissions d'edit/delete les hotspots.
+            *    Je laisse ça ici pour montrer comment je le ferai si j'avais a le faire.
+            
+            if (hotspot.author.id !== this.userInfo.createCityzen().id) {
+                return next(this.errorHandler.logAndCreateUnautorized(
+                    `PATCH ${req.path()}`, 'You don\'t have permissions.',
+                ));
+            }
+            */
+
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);

@@ -17,6 +17,7 @@ import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import RootCtrl from '../../../../src/api/controllers/RootCtrl';
 
 describe('HotspotCtrl', () => {
 
@@ -25,7 +26,6 @@ describe('HotspotCtrl', () => {
     let nextMoq : TypeMoq.IMock<rest.Next>;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
     let hotspotFactoryMoq : TypeMoq.IMock<HotspotFactory>;
-    let jwtParserMoq : TypeMoq.IMock<JwtParser>;
     let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let hotspotCtrl : HotspotCtrl;
 
@@ -35,16 +35,14 @@ describe('HotspotCtrl', () => {
         // mock la lecture du header http contenant le jwt
         // simule la validation du jwt token
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
-        jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
-        sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
         
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         hotspotCtrl = new HotspotCtrl(
-            errorHandlerMoq.object, jwtParserMoq.object, hotspotRepositoryMoq.object,
-             hotspotFactoryMoq.object,
+            errorHandlerMoq.object, {}, hotspotRepositoryMoq.object,
+            hotspotFactoryMoq.object,
         );
         // appel du middleware de control d'acces de l'utilsateur
         await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -126,7 +124,7 @@ describe('HotspotCtrl', () => {
                 type: HotspotType.WallMessage,
                 iconType: HotspotIconType.Wall,
             };
-            factoryData = { ...jsonBody, cityzen: cityzenFromJwt(hotspotCtrl.decodedJwtPayload) };
+            factoryData = { ...jsonBody };
         });
 
         it ('should create a new hotspot and return it with 200 OK', () => {

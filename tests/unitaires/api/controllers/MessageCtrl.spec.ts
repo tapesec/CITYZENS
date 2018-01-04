@@ -21,7 +21,6 @@ describe('MessageCtrl', () => {
     let reqMoq : TypeMoq.IMock<rest.Request>;
     let resMoq : TypeMoq.IMock<rest.Response>;
     let nextMoq : TypeMoq.IMock<rest.Next>;
-    let jwtParserMoq: TypeMoq.IMock<JwtParser>;
     let hotspotRepositoryMoq: TypeMoq.IMock<HotspotRepositoryInMemory>;
     let messageRepositoryMoq: TypeMoq.IMock<MessageRepositoryInMemory>;
     let messageFactoryMoq: TypeMoq.IMock<MessageFactory>;
@@ -35,9 +34,7 @@ describe('MessageCtrl', () => {
         // mock la lecture du header http contenant le jwt
         // simule la validation du jwt token
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
-        jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
-        sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
 
         hotspotId = 'fake-hotspot-id';
 
@@ -45,7 +42,7 @@ describe('MessageCtrl', () => {
         messageRepositoryMoq = TypeMoq.Mock.ofType<MessageRepositoryInMemory>();
         messageFactoryMoq = TypeMoq.Mock.ofType<MessageFactory>();
         messageCtrl = new MessageCtrl(
-            errorHandlerMoq.object, jwtParserMoq.object,
+            errorHandlerMoq.object, {},
             hotspotRepositoryMoq.object, messageRepositoryMoq.object, messageFactoryMoq.object);
 
         // appel du middleware de control d'acces de l'utilsateur
@@ -122,7 +119,7 @@ describe('MessageCtrl', () => {
             };
             reqMoq.setup(x => x.body).returns(() => reqBody);
             reqBody.hotspotId = hotspotId;
-            reqBody.cityzen = cityzenFromJwt(messageCtrl.decodedJwtPayload);
+            reqBody.cityzen = {};
             messageFactoryMoq.setup(x => x.createMessage(reqBody))
             .returns(() => MessageSample.MARTIGNAS_SCHOOL_MESSAGE);
             // Act
