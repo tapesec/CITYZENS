@@ -12,6 +12,7 @@ const citysEndpointTests = (state : any) => {
                 // Arrange
                 const insee = '33273';
                 // Act
+                console.log(state);
                 const response = await request(server)
                 .get('/citys/' + insee)
                 .set('Authorization', `Bearer ${state.access_token}`)

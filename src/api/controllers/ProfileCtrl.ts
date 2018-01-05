@@ -9,6 +9,7 @@ import { OK } from 'http-status-codes';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import Login from '../services/auth/Login';
 
 class ProfileCtrl extends RootCtrl {
 
@@ -22,12 +23,12 @@ class ProfileCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        request : any,
+        loginService : Login,
         cityzenRepository: CityzenAuth0Repository,
         auth0Sdk : Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, request);
+        super(errorHandler, loginService);
         this.cityzenRepository = cityzenRepository;
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
@@ -55,7 +56,7 @@ class ProfileCtrl extends RootCtrl {
             ));
         }
         try {
-            const currentCityzen : Cityzen = cityzenFromAuth0(await this.userInfo);
+            const currentCityzen : Cityzen = cityzenFromAuth0(this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);

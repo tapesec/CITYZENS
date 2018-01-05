@@ -13,6 +13,7 @@ import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'ht
 import * as restifyErrors from 'restify-errors';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import Login from '../services/auth/Login';
 
 class MessageCtrl extends RootCtrl​​ {
 
@@ -24,12 +25,12 @@ class MessageCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        request : any,
+        loginService : Login,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(errorHandler, request);
+        super(errorHandler, loginService);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -54,7 +55,7 @@ class MessageCtrl extends RootCtrl​​ {
     }
 
     // method=POST url=/hotspots/{hotspotId}/messages
-    public postMessage = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
+    public postMessage = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         if (!this.schemaValidator.validate(createMessageSchema, req.body))
             return next(this.errorHandler.logAndCreateBadRequest(
                 `POST ${req.path()}`, this.schemaValidator.errorsText(),
@@ -67,7 +68,7 @@ class MessageCtrl extends RootCtrl​​ {
 
         req.body.hotspotId = req.params.hotspotId;
         try {
-            req.body.cityzen = cityzenFromAuth0(await this.userInfo);
+            req.body.cityzen = cityzenFromAuth0(this.userInfo);
             const newMessage = this.messageFactory.createMessage(req.body);
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);

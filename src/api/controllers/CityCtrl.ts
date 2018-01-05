@@ -5,6 +5,7 @@ from '../../infrastructure/CityRepositoryInMemory';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import Login from 'src/api/services/auth/Login';
 const restifyErrors = require('restify-errors');
 
 class CityCtrl extends RootCtrl {
@@ -15,10 +16,10 @@ class CityCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler, 
-        request: any,
+        loginService: Login,
         cityRepositoryInMemory : CityRepositoryInMemory,
     ) {
-        super(errorHandler, request);
+        super(errorHandler, loginService);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }

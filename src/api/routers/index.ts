@@ -49,19 +49,19 @@ const loginService = new Login(
 export const init = (server : restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService, request)));
+    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
     routers.push(new ProfileRouter(
         new ProfileCtrl(
-            errorHandler, request, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
+            errorHandler, loginService, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
         ),
     ));
-    routers.push(new CityRouter(new CityCtrl(errorHandler, request, cityRepositoryInMemory)));
-    routers.push(new HotspotRouter(
-        new HotspotCtrl(errorHandler, request, hotspotRepositoryInMemory, new HotspotFactory())),
-    );
+    routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
+    routers.push(new HotspotRouter(new HotspotCtrl(
+        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(),
+    )));
     routers.push(new MessageRouter(
         new MessageCtrl(
-            errorHandler, request, hotspotRepositoryInMemory, 
+            errorHandler, loginService, hotspotRepositoryInMemory, 
             messageRepositoryInMemory, new MessageFactory(),
         ),
     ));

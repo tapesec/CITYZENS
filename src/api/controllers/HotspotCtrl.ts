@@ -23,6 +23,7 @@ import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
+import Login from '../services/auth/Login';
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -33,11 +34,11 @@ class HotspotCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        request : any,
+        loginService : Login,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
     ) {
-        super(errorHandler, request);
+        super(errorHandler, loginService);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
     }
@@ -68,7 +69,7 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method=POST url=/hotspots
-    public postHotspots = async (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
             return next(this.errorHandler.logAndCreateBadRequest(
                 `POST ${req.path()}`, this.schemaValidator.errorsText(),
@@ -76,7 +77,7 @@ class HotspotCtrl extends RootCtrl​​ {
         }
 
         try {
-            req.body.cityzen = cityzenFromAuth0(await this.userInfo);   
+            req.body.cityzen = cityzenFromAuth0(this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);

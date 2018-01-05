@@ -16,6 +16,9 @@ import { Auth0 } from '../../../../src/api/libs/Auth0';
 import { OK } from 'http-status-codes';
 import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import Login from '../../../../src/api/services/auth/Login';
+import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 
 describe('ProfileCtrl', () => {
 
@@ -27,25 +30,30 @@ describe('ProfileCtrl', () => {
     let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let profileCtrl : ProfileCtrl;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
+    let loginServiceMoq: TypeMoq.IMock<Login>;
 
     // simule la vérification et decode le token d'authentification
     before(async () => {
-
-        // mock la lecture du header http contenant le jwt
-        // simule la validation du jwt token
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
-
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
-        
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
         cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-        
+        loginServiceMoq = TypeMoq.Mock.ofType<Login>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
+
+        reqMoq
+            .setup(x => x.header('Authorization'))
+            .returns(() => 'Bearer toto');
+
+        loginServiceMoq
+            .setup(x => x.auth0UserInfo('toto'))
+            .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+
         // instanciation du ProfilCtrl
         profileCtrl = new ProfileCtrl(
-            errorHandlerMoq.object, {},
+            errorHandlerMoq.object, loginServiceMoq.object,
             cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object,
         );
 
@@ -95,13 +103,12 @@ describe('ProfileCtrl', () => {
             .setup(x => x.findById(params.favoritHotspotId))
             .returns(() => WallHotspotSample.CHURCH);
 
-            /*const cityzen = new Cityzen(
-                profileCtrl.decodedJwtPayload.sub,
-                profileCtrl.decodedJwtPayload.email,
-                profileCtrl.decodedJwtPayload.nickname,
-                profileCtrl.decodedJwtPayload.userMetadata.favoritesHotspots,
-            );
-            cityzen.addHotspotAsFavorit(params.favoritHotspotId);*/
+            const cityzen = cityzenFromAuth0(FAKE_USER_INFO_AUTH0);
+            cityzen.addHotspotAsFavorit(params.favoritHotspotId);
+
+            cityzenRepositoryMoq
+                .setup(x => x.updateFavoritesHotspots(cityzen))
+                .returns(() => Promise.resolve());
 
              // Act
             await profileCtrl.postFavorit(
@@ -111,7 +118,7 @@ describe('ProfileCtrl', () => {
             );
             // Assert
             cityzenRepositoryMoq
-            .verify(x => x.updateFavoritesHotspots({} as Cityzen), TypeMoq.Times.once());
+            .verify(x => x.updateFavoritesHotspots(cityzen), TypeMoq.Times.once());
 
             auth0SdkMoq
             .verify(

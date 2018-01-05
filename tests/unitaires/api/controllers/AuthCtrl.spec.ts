@@ -53,7 +53,7 @@ describe('AuthCtrl', () => {
                 .returns(() => Promise.resolve(body));
 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object, {});
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 resMoq.verify(x => x.json(body), TypeMoq.Times.once());
@@ -82,7 +82,7 @@ describe('AuthCtrl', () => {
                 .returns(() => 'error');
                 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object, {});
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 nextMoq

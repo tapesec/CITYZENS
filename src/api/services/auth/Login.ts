@@ -1,4 +1,6 @@
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../errors/ErrorHandler';
+import UserInfoAuth0 from './UserInfoAuth0';
+
 
 export interface LoginOptions {
     url : string;
@@ -18,6 +20,28 @@ class Login {
         this.opts = options;
         this.request = request;
         this.errorHandler = errorHandler;
+    }
+
+    auth0UserInfo(accessToken: string) { 
+        return new Promise<UserInfoAuth0>((resolve, reject) => {
+            const data = {
+                method: 'GET',
+                url: this.opts.url + '/userinfo',
+                headers: { Authorization: `Bearer ${accessToken}` },
+            };
+
+            const callbakck = (err: any, res: any, body: any) => {
+                if (res.statusCode !== 200) {
+                    reject(err || body);
+                } else {
+                    resolve(new UserInfoAuth0(body));
+                }
+            };
+
+            this.request(data, callbakck);
+        }).catch((r) => {
+            throw new Error(r);
+        });
     }
 
     try(username : string, password : string) {

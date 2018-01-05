@@ -7,6 +7,7 @@ import * as ajv from 'ajv';
 import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
+import Login from '../services/auth/Login';
 const request = require('request');
 const logs = require('./../../logs/');
 const restifyErrors = require('restify-errors');
@@ -16,11 +17,11 @@ class RootCtrl {
 
     protected schemaValidator : ajv.Ajv = new ajv();
     protected errorHandler: ErrorHandler;
-    protected userInfo: Promise<UserInfoAuth0>;
-    protected request: any;
+    protected userInfo: UserInfoAuth0;
+    protected loginService: Login;
 
-    constructor(errorHandler: ErrorHandler, request : any) {
-        this.request = request;
+    constructor(errorHandler: ErrorHandler, loginService : Login) {
+        this.loginService = loginService;
         this.errorHandler = errorHandler;
     }
 
@@ -34,29 +35,10 @@ class RootCtrl {
 
         const access_token = req.header('Authorization').slice(7);
         try {
-            
-            this.userInfo = new Promise((resolve, reject) => {
-                const data = {
-                    method: 'GET',
-                    url: config.auth.auth0url + '/userinfo',
-                    headers: { Authorization: `Bearer ${access_token}` },
-                };
-    
-                const callbakck = (err: any, res: any, body: any) => {
-                    if (res.statusCode !== 200) {
-                        reject(err || body);
-                    } else {
-                        resolve(new UserInfoAuth0(body));
-                    }
-                };
-    
-                this.request(data, callbakck);
-            });
-            this.userInfo.catch((reason: any) => {console.log(reason);});
-            
+            this.userInfo = await this.loginService.auth0UserInfo(access_token);
             return next();
         } catch (err) {
-            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err.message));
+            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err));
         }
     }
 }

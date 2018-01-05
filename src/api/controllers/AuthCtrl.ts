@@ -8,15 +8,11 @@ import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class AuthCtrl extends RootCtrl {
 
-    private loginService : Login;
-
     constructor(
         errorHandler: ErrorHandler,
         loginService : Login,
-        request: any,
     ) {
-        super(errorHandler, request);
-        this.loginService = loginService;
+        super(errorHandler, loginService);
     }
 
     public login = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
