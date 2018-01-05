@@ -2,31 +2,65 @@ import Cityzen from '../../../domain/cityzens/model/Cityzen';
 
 class UserInfoAuth0 {
 
-    public sub: string;
-    public nickname: string;
-    public name: string;
-    public picture: string;
-    public updateAt: string;
-    public email: string;
-    public email_verified: boolean;
+    private _sub: string;
+    private _nickname: string;
+    private _name: string;
+    private _picture: string;
+    private _updateAt: string;
+    private _email: string;
+    private _email_verified: boolean;
+    private _user_metadata: any;
+    private _app_metadata: any;
 
-    public createCityzen() : Cityzen {
-        let id: string;
-        let email: string;
-        let pseudo: string;
+    constructor(userInfoRaw: string) {
+        const userInfo = JSON.parse(userInfoRaw);
+
+        this._sub = userInfo.sub as string;
+        this._nickname = userInfo.nickname as string;
+        this._name = userInfo.name as string;
+        this._picture = userInfo.picture as string;
+        this._updateAt = userInfo.updateAt as string;
+        this._email = userInfo.email as string;
+        this._email_verified = userInfo.email_verified as boolean;
+        this._user_metadata = userInfo['https://www.cityzen.fr/user_metadata'] as any;
+        this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
+    }
+
     
-        if (this.sub) id = this.sub;
-        else throw new Error('no subject found in auth0\'s userInfo');
-        if (this.email) email = this.email;
-        else throw new Error('no email found in auth0\'s userInfo');
-        if (this.nickname) pseudo = this.nickname;
-        else throw new Error('no nickname found in auth0\'s userInfo');
+    public get sub() : string {
+        return this._sub;
+    }
+
+    public get nickname() : string {
+        return this._nickname;
+    }
+
+    public get name() : string {
+        return this._name;
+    }
     
-        const cityzen = new Cityzen(
-            id, email, pseudo,
-        );
+    public get picture() : string {
+        return this._picture;
+    }
+
+    public get updatedAt() : string {
+        return this._updateAt;
+    }
+
+    public get email() : string {
+        return this._email;
+    }
+
+    public get emailVerified() : boolean {
+        return this._email_verified;
+    }
     
-        return cityzen;
+    public get userMetadata() : any {
+        return this._user_metadata;
+    }
+
+    public get appMetadata() : any {
+        return this._app_metadata;
     }
 }
 

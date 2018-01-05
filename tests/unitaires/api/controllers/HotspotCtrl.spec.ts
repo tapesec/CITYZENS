@@ -19,6 +19,9 @@ import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import RootCtrl from '../../../../src/api/controllers/RootCtrl';
 
+import * as Sinon from 'sinon';
+import { resolve } from 'url';
+
 describe('HotspotCtrl', () => {
 
     let reqMoq : TypeMoq.IMock<rest.Request>;
@@ -40,8 +43,12 @@ describe('HotspotCtrl', () => {
         
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
+        
+        const requestStub = {
+        };
+
         hotspotCtrl = new HotspotCtrl(
-            errorHandlerMoq.object, {}, hotspotRepositoryMoq.object,
+            errorHandlerMoq.object, requestStub, hotspotRepositoryMoq.object,
             hotspotFactoryMoq.object,
         );
         // appel du middleware de control d'acces de l'utilsateur

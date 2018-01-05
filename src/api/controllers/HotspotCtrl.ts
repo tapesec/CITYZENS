@@ -1,7 +1,7 @@
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
-import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
@@ -67,27 +67,8 @@ class HotspotCtrl extends RootCtrl​​ {
         res.json(OK, hotspotsResult);
     }
 
-    public createCityzen(usr: UserInfoAuth0) : Cityzen {
-        let id: string;
-        let email: string;
-        let pseudo: string;
-    
-        if (usr.sub) id = usr.sub;
-        else throw new Error('no subject found in auth0\'s userInfo');
-        if (usr.email) email = usr.email;
-        else throw new Error('no email found in auth0\'s userInfo');
-        if (usr.nickname) pseudo = usr.nickname;
-        else throw new Error('no nickname found in auth0\'s userInfo');
-    
-        const cityzen = new Cityzen(
-            id, email, pseudo,
-        );
-    
-        return cityzen;
-    }
-
     // method=POST url=/hotspots
-    public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public postHotspots = async (req : rest.Request, res : rest.Response, next : rest.Next)  => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
             return next(this.errorHandler.logAndCreateBadRequest(
                 `POST ${req.path()}`, this.schemaValidator.errorsText(),
@@ -95,7 +76,7 @@ class HotspotCtrl extends RootCtrl​​ {
         }
 
         try {
-            req.body.cityzen = this.userInfo.createCityzen();   
+            req.body.cityzen = cityzenFromAuth0(await this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
@@ -139,19 +120,6 @@ class HotspotCtrl extends RootCtrl​​ {
         try {
             const hotspot: WallHotspot|EventHotspot|AlertHotspot =
             this.hotspotRepository.findById(req.params.hotspotId);
-
-            /*
-            *    Je ne suis pas sur que ça soit dans le scope de ma story de rajouter 
-            *    les permissions d'edit/delete les hotspots.
-            *    Je laisse ça ici pour montrer comment je le ferai si j'avais a le faire.
-            
-            if (hotspot.author.id !== this.userInfo.createCityzen().id) {
-                return next(this.errorHandler.logAndCreateUnautorized(
-                    `PATCH ${req.path()}`, 'You don\'t have permissions.',
-                ));
-            }
-            */
-
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);

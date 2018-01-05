@@ -5,8 +5,8 @@ import * as r from 'restify';
 import config from './../config/index';
 import * as ajv from 'ajv';
 import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
-import UserInfoAuth0 from 'src/api/services/auth/UserInfoAuth0';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 const request = require('request');
 const logs = require('./../../logs/');
 const restifyErrors = require('restify-errors');
@@ -16,7 +16,7 @@ class RootCtrl {
 
     protected schemaValidator : ajv.Ajv = new ajv();
     protected errorHandler: ErrorHandler;
-    protected userInfo: UserInfoAuth0;
+    protected userInfo: Promise<UserInfoAuth0>;
     protected request: any;
 
     constructor(errorHandler: ErrorHandler, request : any) {
@@ -34,8 +34,8 @@ class RootCtrl {
 
         const access_token = req.header('Authorization').slice(7);
         try {
-
-            const promise = new Promise((resolve, reject) => {
+            
+            this.userInfo = new Promise((resolve, reject) => {
                 const data = {
                     method: 'GET',
                     url: config.auth.auth0url + '/userinfo',
@@ -44,16 +44,15 @@ class RootCtrl {
     
                 const callbakck = (err: any, res: any, body: any) => {
                     if (res.statusCode !== 200) {
-                        reject(new Error(err || body));
+                        reject(err || body);
                     } else {
-                        resolve(body);
+                        resolve(new UserInfoAuth0(body));
                     }
                 };
     
                 this.request(data, callbakck);
             });
-            
-            this.userInfo = (await promise) as UserInfoAuth0;
+            this.userInfo.catch((reason: any) => {console.log(reason);});
             
             return next();
         } catch (err) {

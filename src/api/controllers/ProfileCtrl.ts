@@ -6,9 +6,9 @@ import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
-import cityzenFromJwt from '../../api/services/cityzen/cityzenFromJwt';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 
 class ProfileCtrl extends RootCtrl {
 
@@ -55,7 +55,7 @@ class ProfileCtrl extends RootCtrl {
             ));
         }
         try {
-            const currentCityzen : Cityzen = this.userInfo.createCityzen();
+            const currentCityzen : Cityzen = cityzenFromAuth0(await this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
