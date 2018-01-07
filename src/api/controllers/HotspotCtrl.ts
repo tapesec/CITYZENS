@@ -1,7 +1,7 @@
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
-import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
@@ -20,7 +20,8 @@ import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import Login from '../services/auth/Login';
 
 class HotspotCtrl extends RootCtrl​​ {
 
@@ -31,11 +32,11 @@ class HotspotCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        loginService : Login,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, loginService);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
     }
@@ -74,7 +75,7 @@ class HotspotCtrl extends RootCtrl​​ {
         }
 
         try {
-            req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            req.body.cityzen = cityzenFromAuth0(this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);

@@ -1,7 +1,6 @@
 import MessageFactory from '../../infrastructure/MessageFactory';
 import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import Message from './../../domain/cityLife/model/messages/Message';
-import cityzenFromJwt from '../services/cityzen/cityzenFromJwt';
 import
 messageRepositoryInMemory,
 { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
@@ -12,7 +11,9 @@ import { createMessageSchema, patchMessageSchema } from '../requestValidation/sc
 import * as rest from 'restify';
 import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import Login from '../services/auth/Login';
 
 class MessageCtrl extends RootCtrl​​ {
 
@@ -24,12 +25,12 @@ class MessageCtrl extends RootCtrl​​ {
 
     constructor (
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        loginService : Login,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, loginService);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -67,7 +68,7 @@ class MessageCtrl extends RootCtrl​​ {
 
         req.body.hotspotId = req.params.hotspotId;
         try {
-            req.body.cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            req.body.cityzen = cityzenFromAuth0(this.userInfo);
             const newMessage = this.messageFactory.createMessage(req.body);
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);

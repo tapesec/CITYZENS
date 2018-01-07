@@ -16,8 +16,9 @@ class ErrorHandler {
         this.resitfyErrors = restifyErrors;
     }
     
-    logAndCreateBadRequest(route: String, msg?: String) {
-        if (msg === undefined) msg = getStatusText(BAD_REQUEST);
+    logAndCreateBadRequest(route: String, pMsg?: String) {
+        const msg = (pMsg === undefined) ? getStatusText(BAD_REQUEST) : pMsg;
+        
         const error = new this.resitfyErrors.BadRequestError(
             msg,
         );
@@ -26,8 +27,9 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateUnautorized(route: String, msg?: String) {
-        if (msg === undefined) msg = getStatusText(UNAUTHORIZED);
+    logAndCreateUnautorized(route: String, pMsg?: String) {
+        const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
+        
         const error = new this.resitfyErrors.UnauthorizedError(
             msg,
         );
@@ -36,8 +38,9 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateInvalidCredentials(route: String, msg?: String) {
-        if (msg === undefined) msg = getStatusText(UNAUTHORIZED);
+    logAndCreateInvalidCredentials(route: String, pMsg?: String) {
+        const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
+        
         const error = new this.resitfyErrors.InvalidCredentialsError(
             msg,
         );
@@ -46,8 +49,9 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateNotFound(route: String, msg?: String) {
-        if (msg === undefined) msg = getStatusText(NOT_FOUND);
+    logAndCreateNotFound(route: String, pMsg?: String) {
+        const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
+
         const error = new this.resitfyErrors.NotFoundError(
             msg,
         );
@@ -61,14 +65,12 @@ class ErrorHandler {
             (err !== undefined) ? err : '',
         );
 
-        if (err !== undefined){
-            err = JSON.stringify(err, undefined, 4)
-        }
+        const errorToLog = (err !== undefined) ? JSON.stringify(err, undefined, 4) : err;
 
-        if (err !== undefined) this.httpLogger.info(err);
+        if (errorToLog !== undefined) this.httpLogger.info(errorToLog);
         this.slackHook.alert(
             `Error 500 on ${route} \n ${
-                (err !== undefined) ? err : ''
+                (errorToLog !== undefined) ? errorToLog : ''
             } \n 
              Call trace: ${error.stack}`,
         );

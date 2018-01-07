@@ -17,6 +17,14 @@ import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import RootCtrl from '../../../../src/api/controllers/RootCtrl';
+
+import * as Sinon from 'sinon';
+import { resolve } from 'url';
+import Login from '../../../../src/api/services/auth/Login';
+import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
+import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 
 describe('HotspotCtrl', () => {
 
@@ -25,26 +33,30 @@ describe('HotspotCtrl', () => {
     let nextMoq : TypeMoq.IMock<rest.Next>;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
     let hotspotFactoryMoq : TypeMoq.IMock<HotspotFactory>;
-    let jwtParserMoq : TypeMoq.IMock<JwtParser>;
     let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
+    let loginServiceMoq : TypeMoq.IMock<Login>;
     let hotspotCtrl : HotspotCtrl;
 
     before(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
-        // mock la lecture du header http contenant le jwt
-        // simule la validation du jwt token
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
-        jwtParserMoq = TypeMoq.Mock.ofType<JwtParser>();
-        sample.setupReqAuthorizationHeader(reqMoq, jwtParserMoq);
-        
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
-        
+        loginServiceMoq = TypeMoq.Mock.ofType<Login>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
+
+        reqMoq
+            .setup(x => x.header('Authorization'))
+            .returns(() => 'Bearer my authorisation');
+
+        loginServiceMoq
+            .setup(x => x.auth0UserInfo('my authorisation'))
+            .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+
         hotspotCtrl = new HotspotCtrl(
-            errorHandlerMoq.object, jwtParserMoq.object, hotspotRepositoryMoq.object,
-             hotspotFactoryMoq.object,
+            errorHandlerMoq.object, loginServiceMoq.object, hotspotRepositoryMoq.object,
+            hotspotFactoryMoq.object,
         );
         // appel du middleware de control d'acces de l'utilsateur
         await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -126,7 +138,10 @@ describe('HotspotCtrl', () => {
                 type: HotspotType.WallMessage,
                 iconType: HotspotIconType.Wall,
             };
-            factoryData = { ...jsonBody, cityzen: cityzenFromJwt(hotspotCtrl.decodedJwtPayload) };
+            factoryData = { 
+                ...jsonBody,
+                cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0), 
+            };
         });
 
         it ('should create a new hotspot and return it with 200 OK', () => {

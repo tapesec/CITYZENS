@@ -38,7 +38,7 @@ describe('AuthCtrl', () => {
             .returns(() => queryStrings);
             reqMoq
             .setup(x => x.path())
-            .returns(() => "path");
+            .returns(() => 'path');
         });
 
         it(
@@ -76,10 +76,10 @@ describe('AuthCtrl', () => {
                 errorHandlerMoq
                 .setup(
                     x => x.logAndCreateInvalidCredentials(
-                        "DELETE path", fakeError.error_description,
-                    )
+                        'DELETE path', fakeError.error_description,
+                    ),
                 )
-                .returns(() => "error")
+                .returns(() => 'error');
                 
                 // Act
                 const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
@@ -87,7 +87,7 @@ describe('AuthCtrl', () => {
                 // Assert
                 nextMoq
                 .verify(
-                    x => x("error"), 
+                    x => x('error'), 
                     TypeMoq.Times.once(),
                 );
             },

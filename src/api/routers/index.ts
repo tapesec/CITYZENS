@@ -18,7 +18,6 @@ import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import Login from './../services/auth/Login';
 import JwtParser from './../services/auth/JwtParser';
-import * as request from 'request';
 import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
@@ -28,7 +27,14 @@ const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
+const request = require('request');
 
+const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
+const errorHandler = new ErrorHandler(
+    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
+    httpResponseDataLogger,
+    restifyErrors,
+);
 const loginService = new Login(
     {
         url: config.auth.auth0url,
@@ -36,13 +42,7 @@ const loginService = new Login(
         clientSecret: config.auth.auth0ClientSecret,
     },
     request,
-);
-
-const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
-const errorHandler = new ErrorHandler(
-    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
-    httpResponseDataLogger,
-    restifyErrors,
+    errorHandler,
 );
 
 export const init = (server : restify.Server) => {
@@ -51,16 +51,16 @@ export const init = (server : restify.Server) => {
     routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
     routers.push(new ProfileRouter(
         new ProfileCtrl(
-            errorHandler, jwtParser, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
+            errorHandler, loginService, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
         ),
     ));
-    routers.push(new CityRouter(new CityCtrl(errorHandler, jwtParser, cityRepositoryInMemory)));
-    routers.push(new HotspotRouter(
-        new HotspotCtrl(errorHandler, jwtParser, hotspotRepositoryInMemory, new HotspotFactory())),
-    );
+    routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
+    routers.push(new HotspotRouter(new HotspotCtrl(
+        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(),
+    )));
     routers.push(new MessageRouter(
         new MessageCtrl(
-            errorHandler, jwtParser, hotspotRepositoryInMemory, 
+            errorHandler, loginService, hotspotRepositoryInMemory, 
             messageRepositoryInMemory, new MessageFactory(),
         ),
     ));

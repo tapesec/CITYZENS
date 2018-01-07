@@ -26,6 +26,7 @@ describe('/auth endpoint', () => {
             // Finaly
             state.id_token = response.body.id_token;
             state.refresh_token = response.body.refresh_token;
+            state.access_token = response.body.access_token;
         });
     });
     // /hotspots tests suite

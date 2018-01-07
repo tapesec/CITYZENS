@@ -6,9 +6,10 @@ import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
-import cityzenFromJwt from '../../api/services/cityzen/cityzenFromJwt';
 import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import Login from '../services/auth/Login';
 
 class ProfileCtrl extends RootCtrl {
 
@@ -22,12 +23,12 @@ class ProfileCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        jwtParser : JwtParser,
+        loginService : Login,
         cityzenRepository: CityzenAuth0Repository,
         auth0Sdk : Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, jwtParser);
+        super(errorHandler, loginService);
         this.cityzenRepository = cityzenRepository;
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
@@ -51,11 +52,11 @@ class ProfileCtrl extends RootCtrl {
             }
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
-                `POST ${req.path()}`, err.message
+                `POST ${req.path()}`, err.message,
             ));
         }
         try {
-            const currentCityzen : Cityzen = cityzenFromJwt(this.decodedJwtPayload);
+            const currentCityzen : Cityzen = cityzenFromAuth0(this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
