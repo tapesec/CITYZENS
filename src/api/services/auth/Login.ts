@@ -30,7 +30,7 @@ class Login {
                 headers: { Authorization: `Bearer ${accessToken}` },
             };
 
-            const callbakck = (err: any, res: any, body: any) => {
+            const callback = (err: any, res: any, body: any) => {
                 if (res.statusCode !== 200) {
                     reject(err || body);
                 } else {
@@ -38,7 +38,7 @@ class Login {
                 }
             };
 
-            this.request(data, callbakck);
+            this.request(data, callback);
         }).catch((r) => {
             throw new Error(r);
         });

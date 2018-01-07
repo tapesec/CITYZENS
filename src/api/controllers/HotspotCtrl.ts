@@ -21,8 +21,6 @@ import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
-import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
-import Cityzen from '../../domain/cityzens/model/Cityzen';
 import Login from '../services/auth/Login';
 
 class HotspotCtrl extends RootCtrl​​ {

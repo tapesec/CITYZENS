@@ -36,7 +36,6 @@ const errorHandler = new ErrorHandler(
     restifyErrors,
 );
 const loginService = new Login(
-
     {
         url: config.auth.auth0url,
         clientId: config.auth.auth0ClientId,
