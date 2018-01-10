@@ -2,9 +2,7 @@ import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHot
 import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import {
-    HotspotRepositoryInMemory,
-} from '../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 import orm from '../../../src/infrastructure/orm';
@@ -29,6 +27,7 @@ describe('HotspotRepositoryInMemory', () => {
     let findOneStub : any;
     let removeStub : any;
     let saveStub : any;
+    let algoliaStub: any;
 
     beforeEach(() => {
         fakeTownHall = HOTSPOT_MARTIGNAS_TOWNHALL;
@@ -41,6 +40,10 @@ describe('HotspotRepositoryInMemory', () => {
         findOneStub = sinon.stub();
         removeStub = sinon.stub();
         saveStub = sinon.stub();
+        algoliaStub = {
+            initIndex: sinon.stub(),
+            addHotspot: sinon.stub(),
+        };
         orm.hotspot = {
             findAll: findStub,
             findOne: findOneStub,
@@ -57,7 +60,7 @@ describe('HotspotRepositoryInMemory', () => {
     it('should find an hostpsot by id', () => {
         // Arrange
         findOneStub.returns(fakeSchool);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm, algoliaStub);
         // Act
         const school = hotspotRepository.findById(WallHotspotSample.SCHOOL.id);
         // Expect
@@ -67,27 +70,32 @@ describe('HotspotRepositoryInMemory', () => {
     it('should return undefined if no hotspot found', () => {
         // Arrange
         findOneStub.returns(undefined);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm, algoliaStub);
         // Act
         const nomatch = hotspotRepository.findById(v4());
         // Expect
         expect(nomatch).to.be.undefined;
     });
 
-    it('should store a new hotspot in memory', () => {
+    it('should store a new hotspot in memory and call Algolia api', () => {
+        algoliaStub.addHotspot
+            .withArgs(WallHotspotSample.CHURCH)
+            .returns(Promise.resolve<any>({}));
+
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
+        hotspotRepository = new HotspotRepositoryInMemory​​(orm, algoliaStub);
         const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
         hotspotRepository.store(WallHotspotSample.CHURCH);
         // Expect
         expect(saveStub.calledWith(wallHotspot)).to.be.true;
+        expect(algoliaStub.addHotspot.calledWith(WallHotspotSample.CHURCH)).to.be.true;
     });
 
     it('should remove an hotspot from memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
+        hotspotRepository = new HotspotRepositoryInMemory​​(orm, algoliaStub);
         // Act
         hotspotRepository.remove(WallHotspotSample.SCHOOL);
         // Expect
@@ -97,7 +105,7 @@ describe('HotspotRepositoryInMemory', () => {
     it('should retrieve hotspots spoted in the provided area', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm, algoliaStub);
         const north : number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
         const west : number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
         const south : number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
@@ -116,7 +124,7 @@ describe('HotspotRepositoryInMemory', () => {
     it('should\'nt match hotspot in the specified area', () => {
         // Arrange
         findStub.returns([]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm, algoliaStub);
         // Act
         const hotspots : Hotspot[] = hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
@@ -132,7 +140,7 @@ describe('HotspotRepositoryInMemory', () => {
     it ('should retrieve hotspot by given city insee code', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm, algoliaStub);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
         const hotspots : Hotspot[] = hotspotRepository.findByCodeCommune(insee);

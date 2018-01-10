@@ -9,7 +9,7 @@ import cityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository'
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityCtrl from '../controllers/CityCtrl';
 import CityRouter from './CityRouter';
-import hotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import AuthRouter from './AuthRouter';
 import AuthCtrl from '../controllers/AuthCtrl';
 import * as restify from 'restify';
@@ -22,12 +22,18 @@ import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import SlackWebhook from './../libs/SlackWebhook';
+import orm from './../../infrastructure/orm';
+import Algolia from '../libs/Algolia';
 
 const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
 const request = require('request');
+
+const algolia = new Algolia();
+
+const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, algolia);
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 const errorHandler = new ErrorHandler(

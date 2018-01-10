@@ -5,9 +5,7 @@ import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
-import hotspotRepositoryInMemory, {
-    HotspotRepositoryInMemory,
-} from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';

@@ -4,7 +4,7 @@ import Message from './../../domain/cityLife/model/messages/Message';
 import
 messageRepositoryInMemory,
 { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
-import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
