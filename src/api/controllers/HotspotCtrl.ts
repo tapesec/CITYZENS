@@ -20,10 +20,12 @@ import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import Login from '../services/auth/Login';
+import Algolia from './../services/algolia/Algolia';
 
 class HotspotCtrl extends RootCtrl​​ {
 
     private hotspotRepository : HotspotRepositoryInMemory;
+    private algolia: Algolia;
     private hotspotFactory : HotspotFactory;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
@@ -33,10 +35,13 @@ class HotspotCtrl extends RootCtrl​​ {
         loginService : Login,
         hotspotRepositoryInMemory : HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
+        algolia: Algolia,
     ) {
         super(errorHandler, loginService);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
+        this.algolia = algolia;
+        this.algolia.initHotspots();
     }
 
     // method=GET url=/hotspots
@@ -76,6 +81,7 @@ class HotspotCtrl extends RootCtrl​​ {
             req.body.cityzen = cityzenFromAuth0(this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
+            this.algolia.addHotspot(newHotspot, this.hotspotRepository);
             res.json(CREATED, newHotspot);
         } catch (err) {
             return next(

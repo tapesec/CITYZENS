@@ -5,9 +5,7 @@ import IHotspotRepository from '../../../../src/domain/cityLife/model/hotspot/IH
 import
 messageRepositoryInMemory,
 { MessageRepositoryInMemory } from '../../../../src/infrastructure/MessageRepositoryInMemory';
-import
-hotspotRepositoryInMemory,
-{ HotspotRepositoryInMemory } from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import { OK, CREATED, getStatusText } from 'http-status-codes';

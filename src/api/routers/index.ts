@@ -23,7 +23,8 @@ import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import SlackWebhook from './../libs/SlackWebhook';
 import orm from './../../infrastructure/orm';
-import Algolia from '../libs/Algolia';
+import AlgoliaApi from './../libs/AlgoliaAPI';
+import Algolia from './../services/algolia/Algolia';
 
 const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -31,9 +32,10 @@ const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
 const request = require('request');
 
-const algolia = new Algolia();
+const algoliaApi = new AlgoliaApi();
+const algolia = new Algolia(algoliaApi);
 
-const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, algolia);
+const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 const errorHandler = new ErrorHandler(
@@ -62,7 +64,7 @@ export const init = (server : restify.Server) => {
     ));
     routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(new HotspotCtrl(
-        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(),
+        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(), algolia,
     )));
     routers.push(new MessageRouter(
         new MessageCtrl(

@@ -6,14 +6,12 @@ import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
 import orm from './orm';
-import Algolia from './../api/libs/Algolia';
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
 
     protected hotspots : Map<string, Hotspot> = new Map();
 
-    constructor(protected orm : any, protected algolia: Algolia) {
-        this.algolia.initIndex('hotspots');
+    constructor(protected orm : any) {
     }
 
     public findByCodeCommune = (insee: string): (WallHotspot|EventHotspot|AlertHotspot)[] => {
@@ -56,7 +54,6 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         const dataToSave = JSON.parse(JSON.stringify(hotspot));
         dataToSave.removed = false;
         this.orm.hotspot.save(dataToSave);
-        this.algolia.addHotspot(hotspot).catch((reason) => {console.log(reason);});
     }
 
     public update<T extends Hotspot>(hotspot: T): void {

@@ -9,8 +9,7 @@ import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 // tslint:disable-next-line:import-name
-import { HotspotRepositoryInMemory }
-from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
 const restifyErrors = require('restify-errors');
 import * as TypeMoq from 'typemoq';
@@ -20,11 +19,13 @@ import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import RootCtrl from '../../../../src/api/controllers/RootCtrl';
 
 import * as Sinon from 'sinon';
+import * as Chai from 'chai';
 import { resolve } from 'url';
 import Login from '../../../../src/api/services/auth/Login';
 import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import Algolia from '../../../../src/api/services/algolia/Algolia';
 
 describe('HotspotCtrl', () => {
 
@@ -36,6 +37,7 @@ describe('HotspotCtrl', () => {
     let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let loginServiceMoq : TypeMoq.IMock<Login>;
     let hotspotCtrl : HotspotCtrl;
+    let algoliaMoq: TypeMoq.IMock<Algolia>;
 
     before(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
@@ -45,6 +47,11 @@ describe('HotspotCtrl', () => {
         loginServiceMoq = TypeMoq.Mock.ofType<Login>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
+        algoliaMoq = TypeMoq.Mock.ofType<Algolia>();
+
+        algoliaMoq
+            .setup(x => x.initHotspots())
+            .returns(() => {});
 
         reqMoq
             .setup(x => x.header('Authorization'))
@@ -56,7 +63,7 @@ describe('HotspotCtrl', () => {
 
         hotspotCtrl = new HotspotCtrl(
             errorHandlerMoq.object, loginServiceMoq.object, hotspotRepositoryMoq.object,
-            hotspotFactoryMoq.object,
+            hotspotFactoryMoq.object, algoliaMoq.object,
         );
         // appel du middleware de control d'acces de l'utilsateur
         await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -144,13 +151,18 @@ describe('HotspotCtrl', () => {
             };
         });
 
-        it ('should create a new hotspot and return it with 200 OK', () => {
+        it ('should create a new hotspot, post it to algolia, and return it with 200 OK', () => {
+            const fakeNewHotspot = new HotspotFactory().build(factoryData);
+            
             // Arrange
+            algoliaMoq
+                .setup(x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object))
+                .returns(() => Promise.resolve<any>({}));
+            
             reqMoq
             .setup((x : rest.Request) => x.body)
             .returns(() => jsonBody);
 
-            const fakeNewHotspot = new HotspotFactory().build(factoryData);
 
             hotspotFactoryMoq
             .setup(x => x.build(factoryData))
@@ -163,6 +175,10 @@ describe('HotspotCtrl', () => {
             hotspotFactoryMoq.verify(x => x.build(jsonBody), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.store(fakeNewHotspot), TypeMoq.Times.once());
             resMoq.verify(x => x.json(201, fakeNewHotspot), TypeMoq.Times.once());
+            algoliaMoq.verify(
+                x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object), 
+                TypeMoq.Times.once(),
+            );
         });
     });
 });

@@ -6,7 +6,7 @@ import EventHotspot from './../../domain/cityLife/model/hotspot/EventHotspot';
 import AlertHotspot from './../../domain/cityLife/model/hotspot/AlertHotspot';
 
 
-class Algolia {
+class AlgoliaAPI {
     protected client: AlgoliaSearch.AlgoliaClient;
     
     protected indexes: Map<string, AlgoliaSearch.AlgoliaIndex>;
@@ -20,6 +20,10 @@ class Algolia {
         this.indexes = new Map<string, AlgoliaSearch.AlgoliaIndex>();
     }
 
+    public isInit(name: string): boolean {
+        return this.indexes.has(name);
+    }
+
     public initIndex(name: string): void {
         const fullName = `${config.algolia.algoliaEnv}_${name}`;
         this.indexes.set(
@@ -28,24 +32,9 @@ class Algolia {
         );
     }
 
-    public addHotspot<T extends Hotspot>(hotspot: T): Promise<any> {
-        const data: any = {
-            address: hotspot.address,
-            cityId: hotspot.cityId,
-        };
-        if (hotspot instanceof WallHotspot) {
-            data.title = hotspot.title;
-        } else if (hotspot instanceof EventHotspot) {
-            data.title = hotspot.title;
-        } else if (hotspot instanceof AlertHotspot) {
-            data.message = hotspot.message;
-        }
-        return this.indexes.get('hotspots').addObject(
-            data, 
-            hotspot.id,
-        );
+    public sendObject(indexName: string, data: any, id?: string): Promise<any> {
+        return this.indexes.get(indexName).addObject(data, id);
     }
-
 }
 
-export default Algolia;
+export default AlgoliaAPI;
