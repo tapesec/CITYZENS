@@ -63,6 +63,10 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
     public remove<T extends Hotspot>(hotspot: T): void {
         this.orm.hotspot.remove(hotspot.id);
     }
+
+    public cacheAlgolia<T extends Hotspot>(hotspot: T, v = true): void {
+        this.orm.hotspot.cacheAlgolia(hotspot.id, v);
+    }
 }
 
 export default HotspotRepositoryInMemory;

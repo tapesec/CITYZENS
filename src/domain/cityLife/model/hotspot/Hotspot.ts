@@ -35,7 +35,6 @@ abstract class Hotspot {
     protected _views: ViewsCount;
     protected _type: HotspotType;
     protected _iconType: HotspotIconType;
-    protected _cachedAlgolia: boolean;
 
     constructor(builder: HotspotBuilder) {
         this._uid = builder.id;
@@ -46,7 +45,6 @@ abstract class Hotspot {
         this._views = builder.views;
         this._type = builder.type;
         this._iconType = builder.iconType;
-        this._cachedAlgolia = false;
     }
 
     get id() : string {
@@ -79,14 +77,6 @@ abstract class Hotspot {
 
     get iconType(): HotspotIconType {
         return this._iconType;
-    }
-
-    get cachedAlgolia(): boolean {
-        return this._cachedAlgolia;
-    }
-
-    set cachedAlgolia(v: boolean) {
-        this._cachedAlgolia = v;
     }
 
     countOneMoreView(): void {

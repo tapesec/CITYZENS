@@ -81,7 +81,21 @@ class HotspotCtrl extends RootCtrl​​ {
             req.body.cityzen = cityzenFromAuth0(this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
-            this.algolia.addHotspot(newHotspot, this.hotspotRepository);
+            try {
+                this.algolia.addHotspot(newHotspot, this.hotspotRepository)
+                    .then((v) => {
+                        this.hotspotRepository.cacheAlgolia(newHotspot, true);
+                    })
+                    .catch((v) => {
+                        this.hotspotRepository.cacheAlgolia(newHotspot, false);
+                    });
+            } catch (error) {
+                this.errorHandler.logAndCreateInternal(
+                    `POST ${req.path()} Algolia fail.`, 
+                    error.message,
+                );    
+            }
+
             res.json(CREATED, newHotspot);
         } catch (err) {
             return next(

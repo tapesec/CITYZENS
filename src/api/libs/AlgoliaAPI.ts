@@ -1,22 +1,10 @@
 import config from './../config';
 import * as AlgoliaSearch from 'algoliasearch';
-import Hotspot from './../../domain/cityLife/model/hotspot/Hotspot';
-import WallHotspot from './../../domain/cityLife/model/hotspot/WallHotspot';
-import EventHotspot from './../../domain/cityLife/model/hotspot/EventHotspot';
-import AlertHotspot from './../../domain/cityLife/model/hotspot/AlertHotspot';
-
 
 class AlgoliaAPI {
-    protected client: AlgoliaSearch.AlgoliaClient;
-    
     protected indexes: Map<string, AlgoliaSearch.AlgoliaIndex>;
 
-    constructor() {
-        this.client = AlgoliaSearch(
-            config.algolia.algoliaAppId,
-            config.algolia.algoliaApiKey,
-            config.algolia.opts,
-        );
+    constructor(protected client: AlgoliaSearch.AlgoliaClient) {
         this.indexes = new Map<string, AlgoliaSearch.AlgoliaIndex>();
     }
 

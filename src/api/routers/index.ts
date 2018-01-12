@@ -25,6 +25,7 @@ import SlackWebhook from './../libs/SlackWebhook';
 import orm from './../../infrastructure/orm';
 import AlgoliaApi from './../libs/AlgoliaAPI';
 import Algolia from './../services/algolia/Algolia';
+import * as AlgoliaSearch from 'algoliasearch';
 
 const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -32,7 +33,12 @@ const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
 const request = require('request');
 
-const algoliaApi = new AlgoliaApi();
+const algoliaSearch = AlgoliaSearch(
+    config.algolia.algoliaAppId,
+    config.algolia.algoliaApiKey,
+    config.algolia.opts,
+);
+const algoliaApi = new AlgoliaApi(algoliaSearch);
 const algolia = new Algolia(algoliaApi);
 
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);

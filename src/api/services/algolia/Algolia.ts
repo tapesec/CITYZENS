@@ -34,10 +34,7 @@ class Algolia {
             'hotspots',
             data, 
             hotspot.id,
-        ).then((v) => {
-            hotspot.cachedAlgolia = true;
-            repository.update(hotspot);
-        });
+        );
     }
 
 }
