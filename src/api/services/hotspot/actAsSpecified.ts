@@ -20,6 +20,5 @@ export default (hotspot: WallHotspot|EventHotspot|AlertHotspot, requestBody: any
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);
     }
-    console.log(hotspot);
     return hotspot;
 };
