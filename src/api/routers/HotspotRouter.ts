@@ -15,7 +15,6 @@ class HotspotRouter {
 
         server.get(
             HOTSPOT_ENDPOINT,
-            this.ctrl.loadAuthenticatedUser,
             this.ctrl.hotspots,
         );
 

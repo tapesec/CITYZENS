@@ -22,7 +22,7 @@ class Login {
         this.errorHandler = errorHandler;
     }
 
-    auth0UserInfo(accessToken: string) { 
+    auth0UserInfo(accessToken: string) {
         return new Promise<UserInfoAuth0>((resolve, reject) => {
             const data = {
                 method: 'GET',
