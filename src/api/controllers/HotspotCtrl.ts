@@ -70,7 +70,7 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method=POST url=/hotspots
-    public postHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public postHotspots = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
             return next(this.errorHandler.logAndCreateBadRequest(
                 `POST ${req.path()}`, this.schemaValidator.errorsText(),
@@ -81,21 +81,19 @@ class HotspotCtrl extends RootCtrl​​ {
             req.body.cityzen = cityzenFromAuth0(this.userInfo);   
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
-            try {
-                this.algolia.addHotspot(newHotspot, this.hotspotRepository)
-                    .then((v) => {
-                        this.hotspotRepository.cacheAlgolia(newHotspot, true);
-                    })
-                    .catch((v) => {
-                        this.hotspotRepository.cacheAlgolia(newHotspot, false);
-                    });
-            } catch (error) {
-                this.errorHandler.logAndCreateInternal(
-                    `POST ${req.path()} Algolia fail.`, 
-                    error.message,
-                );    
-            }
-
+            this.algolia.addHotspot(newHotspot, this.hotspotRepository).then(
+                (v) => {
+                    this.hotspotRepository.cacheAlgolia(newHotspot, true);
+                },
+            ).catch(
+                (r) => {
+                    this.hotspotRepository.cacheAlgolia(newHotspot, false);
+                    this.errorHandler.logSlack(
+                        `POST ${req.path()}`, 
+                        `Algolia fail. \n${JSON.stringify(r)}`,
+                    );
+                },
+            );
             res.json(CREATED, newHotspot);
         } catch (err) {
             return next(
