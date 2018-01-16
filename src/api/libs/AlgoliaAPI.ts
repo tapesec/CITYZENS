@@ -1,11 +1,11 @@
 import config from './../config';
-import * as AlgoliaSearch from 'algoliasearch';
+import { AlgoliaIndex, AlgoliaClient } from 'algoliasearch';
 
 class AlgoliaAPI {
-    protected indexes: Map<string, AlgoliaSearch.AlgoliaIndex>;
+    protected indexes: Map<string, AlgoliaIndex>;
 
-    constructor(protected client: AlgoliaSearch.AlgoliaClient) {
-        this.indexes = new Map<string, AlgoliaSearch.AlgoliaIndex>();
+    constructor(protected client: AlgoliaClient) {
+        this.indexes = new Map<string, AlgoliaIndex>();
     }
 
     public isInit(name: string): boolean {
@@ -15,7 +15,7 @@ class AlgoliaAPI {
     public initIndex(name: string): void {
         const fullName = `${config.algolia.algoliaEnv}_${name}`;
         this.indexes.set(
-            name, 
+            name,
             this.client.initIndex(fullName),
         );
     }

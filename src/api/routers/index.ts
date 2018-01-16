@@ -59,7 +59,7 @@ const loginService = new Login(
     errorHandler,
 );
 
-export const init = (server : restify.Server) => {
+export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
@@ -74,7 +74,7 @@ export const init = (server : restify.Server) => {
     )));
     routers.push(new MessageRouter(
         new MessageCtrl(
-            errorHandler, loginService, hotspotRepositoryInMemory, 
+            errorHandler, loginService, hotspotRepositoryInMemory,
             messageRepositoryInMemory, new MessageFactory(),
         ),
     ));

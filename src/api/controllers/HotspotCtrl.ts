@@ -6,11 +6,10 @@ import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
-import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
+import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR, getStatusText } from 'http-status-codes';
 import * as restifyErrors from 'restify-errors';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { getHotspots } from '../requestValidation/schema';
@@ -22,18 +21,18 @@ import ErrorHandler from '../services/errors/ErrorHandler';
 import Login from '../services/auth/Login';
 import Algolia from './../services/algolia/Algolia';
 
-class HotspotCtrl extends RootCtrl​​ {
+class HotspotCtrl extends RootCtrl {
 
-    private hotspotRepository : HotspotRepositoryInMemory;
+    private hotspotRepository: HotspotRepositoryInMemory;
     private algolia: Algolia;
-    private hotspotFactory : HotspotFactory;
+    private hotspotFactory: HotspotFactory;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
 
-    constructor (
+    constructor(
         errorHandler: ErrorHandler,
-        loginService : Login,
-        hotspotRepositoryInMemory : HotspotRepositoryInMemory,
+        loginService: Login,
+        hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
     ) {
@@ -45,10 +44,10 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method=GET url=/hotspots
-    public hotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public hotspots = (req: rest.Request, res: rest.Response, next: rest.Next) => {
 
         const queryStrings: any = strToNumQSProps(req.query, ['north', 'east', 'west', 'south']);
-        let hotspotsResult : Hotspot[];
+        let hotspotsResult: Hotspot[];
 
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
             return next(this.errorHandler.logAndCreateBadRequest(
@@ -70,7 +69,7 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method=POST url=/hotspots
-    public postHotspots = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
+    public postHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
             return next(this.errorHandler.logAndCreateBadRequest(
                 `POST ${req.path()}`, this.schemaValidator.errorsText(),
@@ -78,9 +77,10 @@ class HotspotCtrl extends RootCtrl​​ {
         }
 
         try {
-            req.body.cityzen = cityzenFromAuth0(this.userInfo);   
+            req.body.cityzen = cityzenFromAuth0(this.userInfo);
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
+            res.json(CREATED, newHotspot);
             this.algolia.addHotspot(newHotspot, this.hotspotRepository).then(
                 (v) => {
                     this.hotspotRepository.cacheAlgolia(newHotspot, true);
@@ -89,12 +89,11 @@ class HotspotCtrl extends RootCtrl​​ {
                 (r) => {
                     this.hotspotRepository.cacheAlgolia(newHotspot, false);
                     this.errorHandler.logSlack(
-                        `POST ${req.path()}`, 
+                        `POST ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(r)}`,
                     );
                 },
             );
-            res.json(CREATED, newHotspot);
         } catch (err) {
             return next(
                 this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message),
@@ -103,7 +102,7 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method= POST url=/hotspots/{hotspotId}/view
-    public countView = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public countView = (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(
                 `POST view ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
@@ -122,7 +121,7 @@ class HotspotCtrl extends RootCtrl​​ {
     }
 
     // method=PATCH url=/hotspots/{hotspotId}
-    public patchHotspots = (req : rest.Request, res : rest.Response, next : rest.Next)  => {
+    public patchHotspots = (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body))
             return next(this.errorHandler.logAndCreateBadRequest(
                 `PATCH ${req.path()}`, this.schemaValidator.errorsText(),
@@ -133,8 +132,8 @@ class HotspotCtrl extends RootCtrl​​ {
             ));
         }
         try {
-            const hotspot: WallHotspot|EventHotspot|AlertHotspot =
-            this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot: WallHotspot | EventHotspot | AlertHotspot =
+                this.hotspotRepository.findById(req.params.hotspotId);
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);

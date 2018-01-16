@@ -1,5 +1,5 @@
 // tslint:disable-next-line:import-name
-import JwtParser from '../../../../src/api/services/auth/JwtParser';
+import Login from '../../../../src/api/services/auth/Login';
 import hotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import HotspotRouter from '../../../../src/api/routers/HotspotRouter';
 import * as TypeMoq from 'typemoq';
@@ -10,30 +10,33 @@ import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
 import * as c from '../../../../src/api/routers/constants';
 import Algolia from '../../../../src/api/services/algolia/Algolia';
 import AlgoliaAPI from '../../../../src/api/libs/AlgoliaAPI';
+import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 
 describe('hotspots router', () => {
 
     it('should register routes related to hotspots', () => {
-
         // Arrange
-        const serverMock : TypeMoq.IMock<restify.Server> = TypeMoq.Mock.ofType<restify.Server>();
-        const algoliaMock: TypeMoq.IMock<Algolia> = TypeMoq.Mock.ofType<Algolia>();
-        const jwtParser : TypeMoq.IMock<JwtParser> = TypeMoq.Mock.ofType<JwtParser>();
+        const serverMock: TypeMoq.IMock<restify.Server> = TypeMoq.Mock.ofType<restify.Server>();
+        const errorHandlerMoq: TypeMoq.IMock<ErrorHandler> =
+            TypeMoq.Mock.ofType<ErrorHandler>();
+        const loginServiceMoq: TypeMoq.IMock<Login> = TypeMoq.Mock.ofType<Login>();
+        const hostpotFactoryMoq: TypeMoq.IMock<HotspotFactory> =
+            TypeMoq.Mock.ofType<HotspotFactory>();
+        const algoliaMock: TypeMoq.IMock<Algolia> =
+            TypeMoq.Mock.ofType<Algolia>(Algolia, TypeMoq.MockBehavior.Loose, true, AlgoliaAPI);
 
-        algoliaMock
-            .setup(x => x.initHotspots())
-            .returns(() => {});
-
-        const hotspotCtrl : TypeMoq.IMock<HotspotCtrl> =
-        TypeMoq.Mock.ofType(
-            HotspotCtrl,
-            TypeMoq.MockBehavior.Loose,
-            true,
-            jwtParser, 
-            hotspotRepositoryInMemory,
-            algoliaMock, // algoliaMock.object | { initHotspots: () => {}}
-            // J'ai une erreur cannot read initHotspots of undefined ??
-        );
+        const hotspotCtrl: TypeMoq.IMock<HotspotCtrl> =
+            TypeMoq.Mock.ofType(
+                HotspotCtrl,
+                TypeMoq.MockBehavior.Loose,
+                true,
+                errorHandlerMoq,
+                loginServiceMoq,
+                hotspotRepositoryInMemory,
+                hostpotFactoryMoq,
+                algoliaMock.object,
+            );
         const hotspotRouter = new HotspotRouter(hotspotCtrl.object);
         // Act
         hotspotRouter.bind(serverMock.object);
@@ -41,7 +44,6 @@ describe('hotspots router', () => {
         serverMock.verify(
             x => x.get(
                 c.HOTSPOT_ENDPOINT,
-                hotspotCtrl.object.loadAuthenticatedUser,
                 hotspotCtrl.object.hotspots),
             TypeMoq.Times.once(),
         );
