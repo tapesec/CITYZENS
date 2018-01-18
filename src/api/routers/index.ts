@@ -9,7 +9,7 @@ import cityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository'
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityCtrl from '../controllers/CityCtrl';
 import CityRouter from './CityRouter';
-import hotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import AuthRouter from './AuthRouter';
 import AuthCtrl from '../controllers/AuthCtrl';
 import * as restify from 'restify';
@@ -22,12 +22,26 @@ import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import SlackWebhook from './../libs/SlackWebhook';
+import orm from './../../infrastructure/orm';
+import AlgoliaApi from './../libs/AlgoliaAPI';
+import Algolia from './../services/algolia/Algolia';
+import * as AlgoliaSearch from 'algoliasearch';
 
 const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
 const request = require('request');
+
+const algoliaSearch = AlgoliaSearch(
+    config.algolia.algoliaAppId,
+    config.algolia.algoliaApiKey,
+    config.algolia.opts,
+);
+const algoliaApi = new AlgoliaApi(algoliaSearch);
+const algolia = new Algolia(algoliaApi);
+
+const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
 
 const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 const errorHandler = new ErrorHandler(
@@ -45,7 +59,7 @@ const loginService = new Login(
     errorHandler,
 );
 
-export const init = (server : restify.Server) => {
+export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
@@ -56,11 +70,11 @@ export const init = (server : restify.Server) => {
     ));
     routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
     routers.push(new HotspotRouter(new HotspotCtrl(
-        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(),
+        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(), algolia,
     )));
     routers.push(new MessageRouter(
         new MessageCtrl(
-            errorHandler, loginService, hotspotRepositoryInMemory, 
+            errorHandler, loginService, hotspotRepositoryInMemory,
             messageRepositoryInMemory, new MessageFactory(),
         ),
     ));

@@ -7,11 +7,22 @@ const auth0ManagementApiToken = process.env.AUTH_0_MANAGEMENT_API_TOKEN;
 const auth0JwtPayloadNamespace = 'https://www.cityzen.fr';
 const slackWebhookErrorUrl = process.env.SLACK_API_ERROR_WEBHOOK;
 const env = process.env.NODE_ENV;
+const algoliaAppId = process.env.ALGOLIA_APP_ID;
+const algoliaApiKey = process.env.ALGOLIA_API_KEY;
+const algoliaEnv = process.env.ALGOLIA_ENV;
 
 export default {
     server: {
         httpPort,
         env,
+    },
+    algolia: {
+        algoliaAppId,
+        algoliaApiKey,
+        algoliaEnv,
+        opts: {
+            timeout: 1000,
+        },
     },
     auth: {
         auth0url,

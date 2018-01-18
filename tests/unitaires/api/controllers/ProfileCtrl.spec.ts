@@ -1,8 +1,6 @@
 import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import Hotspot from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
-import
-hotspotRepositoryInMemory,
-{ HotspotRepositoryInMemory } from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import ProfileCtrl from '../../../../src/api/controllers/ProfileCtrl';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';

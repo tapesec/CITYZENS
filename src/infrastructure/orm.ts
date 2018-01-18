@@ -62,6 +62,12 @@ const hotspotRemove = (id: string) => {
     hotspotCollection.update(hotspot);
 };
 
+const hotspotCacheAlgolia = (id: string, v: boolean) => {
+    const hotspot = hotspotCollection.findOne({ id });
+    hotspot.cacheAlgolia = v;
+    hotspotCollection.update(hotspot);
+};
+
 const messageFind = (requestParams: any) => {
     return messageCollection.find(requestParams);
 };
@@ -97,6 +103,7 @@ export default {
         save: hotspotSave,
         update: hotspotUpdate,
         remove: hotspotRemove,
+        cacheAlgolia: hotspotCacheAlgolia,
     },
     message: {
         findAll: messageFind,

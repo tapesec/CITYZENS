@@ -2,9 +2,7 @@ import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHot
 import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import {
-    HotspotRepositoryInMemory,
-} from '../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 import orm from '../../../src/infrastructure/orm';
@@ -75,6 +73,7 @@ describe('HotspotRepositoryInMemory', () => {
     });
 
     it('should store a new hotspot in memory', () => {
+
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));

@@ -6,7 +6,7 @@ import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
-import { HotspotRepositoryInMemory } from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Login from '../services/auth/Login';

@@ -10,10 +10,8 @@ import orm from './orm';
 class HotspotRepositoryInMemory implements IHotspotRepository{
 
     protected hotspots : Map<string, Hotspot> = new Map();
-    protected orm : any;
 
-    constructor(orm : any) {
-        this.orm = orm;
+    constructor(protected orm : any) {
     }
 
     public findByCodeCommune = (insee: string): (WallHotspot|EventHotspot|AlertHotspot)[] => {
@@ -66,9 +64,9 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         this.orm.hotspot.remove(hotspot.id);
     }
 
+    public cacheAlgolia<T extends Hotspot>(hotspot: T, v = true): void {
+        this.orm.hotspot.cacheAlgolia(hotspot.id, v);
+    }
 }
-const hotspotRepositoryInMemory : HotspotRepositoryInMemory =
-new HotspotRepositoryInMemory(orm);
 
-export { HotspotRepositoryInMemory };
-export default hotspotRepositoryInMemory;
+export default HotspotRepositoryInMemory;

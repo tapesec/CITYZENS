@@ -16,7 +16,16 @@ class ErrorHandler {
         this.resitfyErrors = restifyErrors;
     }
     
-    logAndCreateBadRequest(route: String, pMsg?: String) {
+    logSlack(route: string, msg ?: string) {
+        this.slackHook.alert(
+            `Error on ${route} \n ${
+                (msg !== undefined) ? msg : ''
+            } \n 
+            Call trace: ${(new Error()).stack}`,
+        );
+    }
+
+    logAndCreateBadRequest(route: string, pMsg?: string) {
         const msg = (pMsg === undefined) ? getStatusText(BAD_REQUEST) : pMsg;
         
         const error = new this.resitfyErrors.BadRequestError(
@@ -27,7 +36,7 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateUnautorized(route: String, pMsg?: String) {
+    logAndCreateUnautorized(route: string, pMsg?: string) {
         const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
         
         const error = new this.resitfyErrors.UnauthorizedError(
@@ -38,7 +47,7 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateInvalidCredentials(route: String, pMsg?: String) {
+    logAndCreateInvalidCredentials(route: string, pMsg?: string) {
         const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
         
         const error = new this.resitfyErrors.InvalidCredentialsError(
@@ -49,7 +58,7 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateNotFound(route: String, pMsg?: String) {
+    logAndCreateNotFound(route: string, pMsg?: string) {
         const msg = (pMsg === undefined) ? getStatusText(UNAUTHORIZED) : pMsg;
 
         const error = new this.resitfyErrors.NotFoundError(
@@ -60,7 +69,7 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateInternal(route: String, err?: any) {
+    logAndCreateInternal(route: string, err?: any) {
         const error = new this.resitfyErrors.InternalServerError(
             (err !== undefined) ? err : '',
         );
