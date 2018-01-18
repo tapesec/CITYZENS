@@ -9,13 +9,11 @@ import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInM
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
-import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR, getStatusText } from 'http-status-codes';
-import * as restifyErrors from 'restify-errors';
+import { CREATED, OK, getStatusText } from 'http-status-codes';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { getHotspots } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
-import config from '../config/index';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import Login from '../services/auth/Login';

@@ -2,7 +2,6 @@ import WallHotspot from './WallHotspot';
 import EventHotspot from './EventHotspot';
 import AlertHotspot from './AlertHotspot';
 import Hotspot from './Hotspot';
-import Position from './Position';
 
 interface IHotspotRepository​​ {
 

@@ -4,7 +4,6 @@ import * as console from 'console';
 import * as restify from 'restify';
 
 const logger = require('restify-logger');
-const swaggerJsDoc = require('swagger-jsdoc');
 
 const server : restify.Server = restify.createServer();
 

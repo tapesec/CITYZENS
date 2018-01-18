@@ -11,7 +11,16 @@
             { "SwitchCase": 2 }
         ],
         "variable-name": false,
-        "import-name": false
+        "import-name": false,
+        "no-unused-variable": true,
+        "eofline": true,
+        "no-trailing-whitespace": true,
+        "strict-boolean-expressions": [
+            true,
+            "allow-undefined-union",
+            "allow-null-union",
+            "allow-string"
+        ]
     },
     "rulesDirectory": []
 }

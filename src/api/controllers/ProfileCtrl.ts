@@ -1,10 +1,8 @@
 import { Auth0 } from './../libs/Auth0';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
 import { CityzenAuth0Repository } from '../../infrastructure/CityzenAuth0Repository';
-import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
-import * as restifyErrors from 'restify-errors';
 import { OK } from 'http-status-codes';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import ErrorHandler from '../services/errors/ErrorHandler';

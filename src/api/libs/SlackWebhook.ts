@@ -1,6 +1,4 @@
-import config from '../config';
 import { OK } from 'http-status-codes';
-const request = require('request');
 
 export interface SlackWebhookOptions {
     url : string;

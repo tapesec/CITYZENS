@@ -1,11 +1,6 @@
 import AlertMessage from './AlertMessage';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import CityId from '../city/CityId';
-import HotspotId from './HotspotId';
-import Author from '../author/Author';
-import Hotspot, { HotspotScope, HotspotType, HotspotIconType } from './Hotspot';
-import Position from './Position';
-import Address from './Address';
+import Hotspot from './Hotspot';
 
 class AlertHotspot extends Hotspot {
 

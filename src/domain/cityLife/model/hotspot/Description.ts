@@ -2,6 +2,7 @@ class Description {
     constructor(
         private _description: string,
         private _createdAt: Date,
+        // tslint:disable-next-line:no-unused-variable
         private _updatedAt?: Date,
     ) {}
 

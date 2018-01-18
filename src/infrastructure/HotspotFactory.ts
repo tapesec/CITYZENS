@@ -6,7 +6,7 @@ import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
 import EventDescription from '../domain/cityLife/model/hotspot/EventDescription';
-import Hotspot, {
+import {
     HotspotIconType,
     HotspotScope,
     HotspotType,

@@ -1,5 +1,4 @@
 import Message from './Message';
-import HotspotId from '../hotspot/HotspotId';
 
 export default interface IMessageRepository {
 

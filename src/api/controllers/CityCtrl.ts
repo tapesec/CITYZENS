@@ -1,12 +1,11 @@
 import City from '../../domain/cityLife/model/city/City';
 import CitySample from '../../domain/cityLife/model/sample/CitySample';
-import cityRepositoryInMemory, { CityRepositoryInMemory }
+import { CityRepositoryInMemory }
 from '../../infrastructure/CityRepositoryInMemory';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 import Login from 'src/api/services/auth/Login';
-const restifyErrors = require('restify-errors');
 
 class CityCtrl extends RootCtrl {
 

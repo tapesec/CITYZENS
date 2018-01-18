@@ -1,9 +1,6 @@
 import RootCtrl from './RootCtrl';
-import { Response } from '_debugger';
 import * as rest from 'restify';
 import Login from './../services/auth/Login';
-import JwtParser from './../services/auth/JwtParser';
-import * as restifyErrors from 'restify-errors';
 import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 
 class AuthCtrl extends RootCtrl {

@@ -1,7 +1,6 @@
-import * as restify from 'restify';
 import SlackWebhook from 'src/api/libs/SlackWebhook';
 import { 
-    BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR, UNAUTHORIZED, getStatusText, 
+    BAD_REQUEST, UNAUTHORIZED, getStatusText, 
 } from 'http-status-codes';
 
 class ErrorHandler {

@@ -1,13 +1,4 @@
-import HotspotTitle from '../hotspot/HotspotTitle';
-import MediaBuilder from '../../factories/MediaBuilder';
-import CityId from '../city/CityId';
-import Hotspot, { HotspotIconType, HotspotScope, HotspotType } from '../hotspot/Hotspot';
-import HotspotId from '../hotspot/HotspotId';
-import HotspotBuilder from '../../factories/HotspotBuilder';
 import WallHotspot from '../hotspot/WallHotspot';
-import AddressSample from './AddressSample';
-import PositionSample from './PositionSample';
-import AuthorSample from './AuthorSample';
 import hotspotBuilderSample from './HotspotBuilderSample';
 import mediaBuilderSample from './MediaBuilderSample';
 

@@ -1,5 +1,4 @@
 import * as validation from './constant';
-import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hotspot/Hotspot';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma

@@ -17,7 +17,6 @@ import HotspotRouter from './HotspotRouter';
 import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import Login from './../services/auth/Login';
-import JwtParser from './../services/auth/JwtParser';
 import config from './../config/';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
@@ -27,7 +26,7 @@ import AlgoliaApi from './../libs/AlgoliaAPI';
 import Algolia from './../services/algolia/Algolia';
 import * as AlgoliaSearch from 'algoliasearch';
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
@@ -43,7 +42,8 @@ const algolia = new Algolia(algoliaApi);
 
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
 
-const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
+// const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
+
 const errorHandler = new ErrorHandler(
     new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
     httpResponseDataLogger,

@@ -2,10 +2,8 @@ import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
 import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import HotspotFactory from './HotspotFactory';
-import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
-import Position from '../domain/cityLife/model/hotspot/Position';
+import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
-import orm from './orm';
 
 class HotspotRepositoryInMemory implements IHotspotRepository{
 

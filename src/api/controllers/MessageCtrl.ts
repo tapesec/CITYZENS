@@ -1,16 +1,12 @@
 import MessageFactory from '../../infrastructure/MessageFactory';
-import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import Message from './../../domain/cityLife/model/messages/Message';
 import
-messageRepositoryInMemory,
 { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import JwtParser from '../services/auth/JwtParser';
 import RootCtrl from './RootCtrl';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
 import * as rest from 'restify';
-import { OK, NOT_FOUND, getStatusText, INTERNAL_SERVER_ERROR, CREATED } from 'http-status-codes';
-import * as restifyErrors from 'restify-errors';
+import { OK, getStatusText, CREATED } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Login from '../services/auth/Login';

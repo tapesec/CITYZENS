@@ -1,10 +1,5 @@
-import Address from './../model/hotspot/Address';
-import CityId from '../model/city/CityId';
-import Author from '../model/author/Author';
-import HotspotId from '../model/hotspot/HotspotId';
 import HotspotTitle from '../model/hotspot/HotspotTitle';
-import { HotspotScope, HotspotType, HotspotIconType } from '../model/hotspot/Hotspot';
-import Position from './../model/hotspot/Position';
+import { HotspotScope } from '../model/hotspot/Hotspot';
 
 
 class MediaBuilder {

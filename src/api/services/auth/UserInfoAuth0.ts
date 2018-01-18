@@ -1,4 +1,3 @@
-import Cityzen from '../../../domain/cityzens/model/Cityzen';
 
 class UserInfoAuth0 {
 

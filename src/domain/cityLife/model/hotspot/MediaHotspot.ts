@@ -1,12 +1,7 @@
 import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import CityId from '../city/CityId';
-import HotspotId from './HotspotId';
 import HotspotTitle from './HotspotTitle';
-import Author from '../author/Author';
-import Hotspot, { HotspotScope, HotspotType, HotspotIconType } from './Hotspot';
-import Position from './Position';
-import Address from './Address';
+import Hotspot, { HotspotScope } from './Hotspot';
 
 class MediaHotspot extends Hotspot {
 

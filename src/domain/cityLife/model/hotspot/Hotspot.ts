@@ -4,7 +4,6 @@ import CityId from '../city/CityId';
 import HotspotId from './HotspotId';
 import Address from './Address';
 import Position from './Position';
-import Content from './Content';
 import Author from '../author/Author';
 
 export enum HotspotScope {

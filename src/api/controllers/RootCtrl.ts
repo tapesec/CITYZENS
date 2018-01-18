@@ -1,17 +1,8 @@
-import DecodedJwtPayload from '../services/auth/DecodedJwtPayload';
-import Cityzen from './../../domain/cityzens/model/Cityzen';
-import JwtParser from './../services/auth/JwtParser';
 import * as r from 'restify';
-import config from './../config/index';
 import * as ajv from 'ajv';
-import { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR ,getStatusText } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 import Login from '../services/auth/Login';
-const request = require('request');
-const logs = require('./../../logs/');
-const restifyErrors = require('restify-errors');
-const httpResponseDataLogger = logs.get('http-response-data');
 
 class RootCtrl {
 

@@ -11,7 +11,9 @@ export interface LoginOptions {
 class Login {
 
     private errorHandler: ErrorHandler;
+    // tslint:disable-next-line:no-unused-variable
     private username : string;
+    // tslint:disable-next-line:no-unused-variable
     private password : string;
     private opts : any;
     private request : any;

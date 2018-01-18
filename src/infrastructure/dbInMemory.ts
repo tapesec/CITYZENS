@@ -1,5 +1,4 @@
 import MessageSample from '../domain/cityLife/model/sample/MessageSample';
-import { HOTSPOT_ENDPOINT } from '../api/routers/constants';
 import WallHotspotSample from '../domain/cityLife/model/sample/WallHotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
 import AddressSample from '../domain/cityLife/model/sample/AddressSample';
@@ -12,7 +11,6 @@ const loki = require('lokijs');
 const db = new loki('loki.json');
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
-import { v4 } from 'uuid';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 
 const hotspotCollection = db.addCollection('hotspots');
@@ -103,6 +101,7 @@ cityzenCollection.insert(CITYZEN_MARTIN);
 cityzenCollection.insert(CITYZEN_LIONNEL);
 cityzenCollection.insert(CITYZEN_LUCA);
 
+// tslint:disable-next-line:no-unused-variable
 const city = db.addCollection('city');
 
 const messageCollection = db.addCollection('messages');
