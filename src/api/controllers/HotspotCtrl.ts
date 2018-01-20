@@ -18,6 +18,7 @@ import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import Login from '../services/auth/Login';
 import Algolia from './../services/algolia/Algolia';
+import hotspotsBySlugCommune from './../services/hotspot/hotspotsBySlugCommune';
 
 class HotspotCtrl extends RootCtrl {
 
@@ -55,8 +56,8 @@ class HotspotCtrl extends RootCtrl {
         try {
             if (queryStrings.north) {
                 hotspotsResult = hotspotsByArea(queryStrings, this.hotspotRepository);
-            } else if (queryStrings.insee) {
-                hotspotsResult = hotspotsByCodeCommune(queryStrings.insee, this.hotspotRepository);
+            } else if (queryStrings.slug) {
+                hotspotsResult = hotspotsBySlugCommune(queryStrings.slug, this.hotspotRepository);
             }
         } catch (err) {
             return next(

@@ -25,9 +25,9 @@ export const getHotspots = {
             "additionalProperties": false
         },
         {
-            "required": ["insee"],
+            "required": ["slug"],
             "properties": {
-                "insee": {
+                "slug": {
                     "type": "string"
                 }
             },

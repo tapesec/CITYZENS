@@ -1,24 +1,25 @@
-/citys/{inseeCode}:
+/citys/{slug}:
   get:
     tags:
       - City
-    description: Retourne soit une ville sur un appel correct sinon une erreur 404. Vous pouvez verifier votre code insee sur ce site https://goo.gl/B2aEdu.
+    description: Retourne soit une ville sur un appel correct sinon une erreur 404. Vous pouvez verifier votre slug sur (NOM_COM) https://public.opendatasoft.com/explore/dataset/contours-iris-2016-epci/ .
+
     parameters:
     - name: Authorization
       in: header
       required: true
       schema:
         type: string
-    - name: inseeCode
+    - name: slug
       in: path
-      description: Le code insee de la ville en question.
+      description: Le slug de la ville en question. (Exemple; Martignas-sur-jalle)
       required: true
       type: string
     produces:
       - application/json
     responses:
       200:
-        description: La ville française.
+        description: La ville française correspondant au slug.
         content:
           application/json:
             schema:
@@ -26,5 +27,5 @@
               items:
                 $ref: '#/definitions/Citys'
       404:
-        description: Code insee invalide, verifiez votre code.
+        description: slug introuvable, verifiez votre requète.
 

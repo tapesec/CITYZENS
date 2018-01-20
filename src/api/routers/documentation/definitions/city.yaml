@@ -5,10 +5,19 @@ definitions:
         type: string
       insee:
         type: string
+      polygon:
+        type: array  
+        items:
+          type: object
+          properties:
+            latitude:
+              type: double
+            longitude:
+              type: double
       position2D:
         type: object
         properties:
           latitude:
             type: double
           longitude:
-            type: double
+            type: double      

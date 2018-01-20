@@ -8,17 +8,17 @@ const citysEndpointTests = (state : any) => {
 
         describe('GET /citys/{insee}', () => {
 
-            it ('should return a city by code commune', async () => {
+            it ('should return a city by commune slug', async () => {
                 // Arrange
-                const insee = '33273';
+                const slug = 'Martignas-sur-Jalle';
                 // Act
                 const response = await request(server)
-                .get('/citys/' + insee)
+                .get('/citys/' + slug)
                 .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
 
-                expect(response.body).to.have.property('name').to.be.equal('Martignas sur jalles');
+                expect(response.body).to.have.property('name').to.be.equal('Martignas-sur-Jalle');
             });
         });
     });
