@@ -1,6 +1,7 @@
-/* import Hotspot, {
+import Hotspot, {
     HotspotScope,
     HotspotType,
+    HotspotIconType,
 } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
@@ -8,43 +9,69 @@ import AuthorSample from '../../../../../src/domain/cityLife/model/sample/Author
 
 import { expect } from 'chai';
 import { v4 } from 'uuid';
+import MediaHotspot from '../../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
+import HotspotBuilder from '../../../../../src/domain/cityLife/factories/HotspotBuilder';
+import CityId from '../../../../../src/domain/cityLife/model/city/CityId';
+import MediaBuilder from '../../../../../src/domain/cityLife/factories/MediaBuilder';
+import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
+import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
+import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
 
-describe.skip('Hotspot entity', () => {
+const slug = require('slug');
+
+describe('WallHotspot entity', () => {
 
     it('Should have correct properties set by constructor', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
         // Act
-        const hotspot: Hotspot = new Hotspot(
-            id,
-            title,
-            PositionSample.MARTIGNAS_NORTH_OUEST,
-            AuthorSample.LOUISE,
-            '33273',
-            AddressSample.TOWNHALL_ADDRESS,
-            HotspotType.Accident,
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                HotspotScope.Public,
+            ),
         );
         // Assert
         expect(hotspot.id).to.be.equal(id);
         expect(hotspot.position).to.be.equal(PositionSample.MARTIGNAS_NORTH_OUEST);
         expect(hotspot.title).to.be.equal(title);
+        expect(hotspot.slug).to.be.equal(slug(title));
         expect(hotspot.author).to.be.equal(AuthorSample.LOUISE);
-        expect(hotspot.type).to.be.equal('Accident');
+        expect(hotspot.type).to.be.equal(HotspotType.WallMessage);
     });
 
     it('Should move to new position', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
-        const hotspot: Hotspot = new Hotspot(
-            id,
-            title,
-            PositionSample.MARTIGNAS_NORTH_OUEST,
-            AuthorSample.LOUISE,
-            '33273',
-            AddressSample.SCHOOL_ADDRESS,
-            HotspotScope.Public,
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                HotspotScope.Public,
+            ),
         );
         // Act
         hotspot.moveTo(
@@ -57,38 +84,54 @@ describe.skip('Hotspot entity', () => {
 
     it('should change title', () => {
         // Arrange
-        const id : string = v4();
-        const title : string = 'Mairie';
-        const newTitle : string = 'Ecole primaire';
-        const hotspot : Hotspot = new Hotspot(
-            id,
-            title,
-            PositionSample.MARTIGNAS_NORTH_OUEST,
-            AuthorSample.LOUISE,
-            '33273',
-            AddressSample.SCHOOL_ADDRESS,
-            HotspotScope.Public,
+        const id: string = v4();
+        const title: string = 'Mairie';
+        const newTitle: string = 'New Mairie';
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                HotspotScope.Public,
+            ),
         );
         // Act
         hotspot.changeTitle(newTitle);
         // assert
         expect(hotspot.title).to.be.equal(newTitle);
+        expect(hotspot.slug).to.be.equal(slug(newTitle));
     });
 
     it('should change address', () => {
-
         // Arrange
-        const id : string = v4();
-        const title : string = 'Mairie';
-        const newAddress : string = '2 rue Gustave Dubourg';
-        const hotspot : Hotspot = new Hotspot(
-            id,
-            title,
-            PositionSample.MARTIGNAS_NORTH_OUEST,
-            AuthorSample.LOUISE,
-            '33273',
-            AddressSample.SCHOOL_ADDRESS,
-            HotspotScope.Public,
+        const id: string = v4();
+        const title: string = 'Mairie';
+        const newAddress = 'New address';
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                HotspotScope.Public,
+            ),
         );
         // Act
         hotspot.changeAddress(newAddress);
@@ -97,19 +140,26 @@ describe.skip('Hotspot entity', () => {
     });
 
     it('should change scope', () => {
-
         // Arrange
-        const id : string = v4();
-        const title : string = 'Mairie';
-        const newScope : HotspotScope = HotspotScope.Private;
-        const hotspot : Hotspot = new Hotspot(
-            id,
-            title,
-            PositionSample.MARTIGNAS_NORTH_OUEST,
-            AuthorSample.LOUISE,
-            '33273',
-            AddressSample.SCHOOL_ADDRESS,
-            HotspotScope.Public,
+        const id: string = v4();
+        const title: string = 'Mairie';
+        const newScope = HotspotScope.Private;
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                HotspotScope.Public,
+            ),
         );
         // Act
         hotspot.changeScope(newScope);
@@ -117,4 +167,3 @@ describe.skip('Hotspot entity', () => {
         expect(hotspot.scope).to.be.equal(newScope);
     });
 });
- */

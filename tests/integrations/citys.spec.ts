@@ -1,8 +1,9 @@
 import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import nameToSlug from '../../src/api/services/city/nameToSlug';
 import CitySample from '../../src/domain/cityLife/model/sample/CitySample';
+
+const slugIt = require('slug');
 
 const citysEndpointTests = (state : any) => {
 
@@ -12,7 +13,7 @@ const citysEndpointTests = (state : any) => {
 
             it ('should return a city by commune slug', async () => {
                 // Arrange
-                const slug = nameToSlug(CitySample.MARTIGNAS.name);
+                const slug = slugIt(CitySample.MARTIGNAS.name);
                 // Act
                 const response = await request(server)
                 .get('/citys/' + slug)

@@ -2,6 +2,7 @@ import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import HotspotTitle from './HotspotTitle';
 import Hotspot, { HotspotScope } from './Hotspot';
+const slug = require('slug');
 
 class MediaHotspot extends Hotspot {
 
@@ -21,6 +22,10 @@ class MediaHotspot extends Hotspot {
         return this._title.toString();
     }
 
+    get slug() : string {
+        return slug(this._title.toString());
+    }
+
     public changeTitle(title: string): void {
         this._title = new HotspotTitle(title);
     }
@@ -38,6 +43,7 @@ class MediaHotspot extends Hotspot {
             ...super.toString(),
             scope: this._scope,
             title: this._title.toString(),
+            slug: slug(this._title.toString()),
         };
     }
 }

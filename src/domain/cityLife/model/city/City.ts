@@ -1,5 +1,5 @@
 import Position from './../hotspot/Position';
-import nameToSlug from './../../../../api/services/city/nameToSlug';
+const slug = require('slug');
 
 class City {
 
@@ -37,7 +37,7 @@ class City {
             insee: this._INSEE,
             polygon: this._polygon,
             position2D: this._position2D,
-            slug: nameToSlug(this._name),
+            slug: slug(this._name),
         };
     }
 }

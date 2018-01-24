@@ -154,7 +154,8 @@ class HotspotFactory {
             address,
             views,
             type,
-            icon);
+            icon,
+        );
     }
 
     private createMediaBuilder = (data: any) => {
