@@ -57,10 +57,10 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate a GET /hotspots by slug', () => {
+    it ('should validate a GET /hotspots by insee', () => {
         // Arrange
         const queryStrings = {
-            slug: 'Martignas-sur-Jalle',
+            insee: '33273',
         };
         // Act
         const isValid = validator.validate(getHotspots, queryStrings);

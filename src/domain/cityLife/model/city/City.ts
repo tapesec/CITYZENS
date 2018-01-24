@@ -1,4 +1,5 @@
-import Position from '../hotspot/Position';
+import Position from './../hotspot/Position';
+import nameToSlug from './../../../../api/services/city/nameToSlug';
 
 class City {
 
@@ -36,6 +37,7 @@ class City {
             insee: this._INSEE,
             polygon: this._polygon,
             position2D: this._position2D,
+            slug: nameToSlug(this._name),
         };
     }
 }

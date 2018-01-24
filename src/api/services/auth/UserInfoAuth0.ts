@@ -25,7 +25,7 @@ class UserInfoAuth0 {
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
     }
 
-    
+
     public get sub() : string {
         return this._sub;
     }
@@ -37,7 +37,7 @@ class UserInfoAuth0 {
     public get name() : string {
         return this._name;
     }
-    
+
     public get picture() : string {
         return this._picture;
     }
@@ -53,7 +53,7 @@ class UserInfoAuth0 {
     public get emailVerified() : boolean {
         return this._email_verified;
     }
-    
+
     public get userMetadata() : any {
         return this._user_metadata;
     }

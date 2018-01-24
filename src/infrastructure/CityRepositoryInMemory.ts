@@ -1,5 +1,6 @@
-import City from '../domain/cityLife/model/city/City';
-import ICityRepository from '../domain/cityLife/model/city/ICityRepository';
+import City from './../domain/cityLife/model/city/City';
+import ICityRepository from './../domain/cityLife/model/city/ICityRepository';
+import nameToSlug from './../api/services/city/nameToSlug';
 
 class CityRepositoryInMemory implements ICityRepository {
 
@@ -11,7 +12,7 @@ class CityRepositoryInMemory implements ICityRepository {
     public findBySlug(slug: string): City | undefined {
         let result : City | undefined = undefined;
         this.citys.forEach((v, k, m) => {
-            if (v.name === slug) result = v;
+            if (nameToSlug(v.name) === slug) result = v;
         });
         return result;
     }

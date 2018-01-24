@@ -1,16 +1,18 @@
 import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
+import nameToSlug from '../../src/api/services/city/nameToSlug';
+import CitySample from '../../src/domain/cityLife/model/sample/CitySample';
 
 const citysEndpointTests = (state : any) => {
 
     describe('/citys endpoint', () => {
 
-        describe('GET /citys/{insee}', () => {
+        describe('GET /citys/{slug}', () => {
 
             it ('should return a city by commune slug', async () => {
                 // Arrange
-                const slug = 'Martignas-sur-Jalle';
+                const slug = nameToSlug(CitySample.MARTIGNAS.name);
                 // Act
                 const response = await request(server)
                 .get('/citys/' + slug)
@@ -18,7 +20,8 @@ const citysEndpointTests = (state : any) => {
                 .set('Accept', 'application/json')
                 .expect(200);
 
-                expect(response.body).to.have.property('name').to.be.equal('Martignas-sur-Jalle');
+                expect(response.body).
+                    to.have.property('name').to.be.equal(CitySample.MARTIGNAS.name);
             });
         });
     });

@@ -21,15 +21,6 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         return hotspotsArray;
     }
 
-    public findBySlugCommune = (slug: string): (WallHotspot|EventHotspot|AlertHotspot)[] => {
-        const data = this.orm.hotspot.findAll({ citySlug: slug, removed: false });
-        const hotspotsArray: (WallHotspot|EventHotspot|AlertHotspot)[] = [];
-        data.forEach((entry : any) => {
-            hotspotsArray.push(new HotspotFactory().build(entry));
-        });
-        return hotspotsArray;
-    }
-
     public findById = (id: string): WallHotspot|EventHotspot|AlertHotspot => {
         let hotspot: WallHotspot|EventHotspot|AlertHotspot;
         const data = this.orm.hotspot.findOne({ id, removed: false });

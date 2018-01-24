@@ -7,8 +7,8 @@ class Cityzen {
     protected _favoritesHotspots : string[];
 
     constructor(
-        id : string, 
-        email : string, 
+        id : string,
+        email : string,
         pseudo : string,
         favoritesHotspots? : string[],
         description? : string,

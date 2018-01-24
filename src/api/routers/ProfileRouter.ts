@@ -14,7 +14,7 @@ class ProfileRouter {
     bind(server: restify.Server) {
 
         server.post(
-            FAVORIT_ENDPOINT + '/:favoritHotspotId', 
+            FAVORIT_ENDPOINT + '/:favoritHotspotId',
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.postFavorit,
         );

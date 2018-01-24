@@ -29,14 +29,14 @@ const hotspotsEndpointsTests = (state : any) => {
                 expect(response.body).to.have.lengthOf(3);
             });
 
-            it ('should return a collection of hotspots by city slug', async () => {
+            it ('should return a collection of hotspots by city insee', async () => {
                 // Arrange
-                const slug = 'Martignas-sur-Jalle';
+                const insee = '33273';
                 // Act
                 const response = await request(server)
                 .get('/hotspots')
                 .set('Authorization', `Bearer ${state.access_token}`)
-                .query({ slug })
+                .query({ insee })
                 .set('Accept', 'application/json')
                 .expect(200);
 

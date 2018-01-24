@@ -12,6 +12,7 @@ const db = new loki('loki.json');
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
+import nameToSlug from './../api/services/city/nameToSlug';
 
 const hotspotCollection = db.addCollection('hotspots');
 
@@ -21,7 +22,7 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
     authorId: CityzenSample.ELODIE.id,
     cityId: CitySample.MARTIGNAS.insee,
-    citySlug: CitySample.MARTIGNAS.name,
+    citySlug: nameToSlug(CitySample.MARTIGNAS.name),
     address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
@@ -34,7 +35,7 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     title: WallHotspotSample.CHURCH.title,
     position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
     authorId: CityzenSample.LOUISE.id,
-    citySlug: CitySample.MARTIGNAS.name,
+    citySlug: nameToSlug(CitySample.MARTIGNAS.name),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
@@ -48,7 +49,7 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     title: WallHotspotSample.SCHOOL.title,
     position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
     authorId: CityzenSample.ELODIE.id,
-    citySlug: CitySample.MARTIGNAS.name,
+    citySlug: nameToSlug(CitySample.MARTIGNAS.name),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
@@ -62,7 +63,7 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     title: WallHotspotSample.MERIGNAC.title,
     position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
     authorId: CityzenSample.MARTIN.id,
-    citySlug: CitySample.MERIGNAC.name,
+    citySlug: nameToSlug(CitySample.MERIGNAC.name),
     cityId: CitySample.MERIGNAC.insee,
     address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
@@ -77,7 +78,7 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     title: WallHotspotSample.TOEDIT.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
     authorId: CityzenSample.MARTIN.id,
-    citySlug: CitySample.SIMCITY.name,
+    citySlug: nameToSlug(CitySample.SIMCITY.name),
     cityId: CitySample.SIMCITY.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
