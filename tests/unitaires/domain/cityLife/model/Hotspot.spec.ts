@@ -17,6 +17,7 @@ import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotI
 import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
 import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
+import HotspotSlug from '../../../../../src/domain/cityLife/model/HotspotSlug';
 
 const slug = require('slug');
 
@@ -40,6 +41,7 @@ describe('WallHotspot entity', () => {
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
                 HotspotScope.Public,
             ),
         );
@@ -70,6 +72,7 @@ describe('WallHotspot entity', () => {
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
                 HotspotScope.Public,
             ),
         );
@@ -101,6 +104,7 @@ describe('WallHotspot entity', () => {
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
                 HotspotScope.Public,
             ),
         );
@@ -130,6 +134,7 @@ describe('WallHotspot entity', () => {
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
                 HotspotScope.Public,
             ),
         );
@@ -158,6 +163,7 @@ describe('WallHotspot entity', () => {
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
                 HotspotScope.Public,
             ),
         );
