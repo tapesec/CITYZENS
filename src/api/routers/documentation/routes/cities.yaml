@@ -1,15 +1,10 @@
-/citys/{slug}:
+/cities/{slug}:
   get:
     tags:
       - City
     description: Retourne soit une ville sur un appel correct sinon une erreur 404. Vous pouvez verifier votre slug sur (NOM_COM) https://public.opendatasoft.com/explore/dataset/contours-iris-2016-epci/ .
 
     parameters:
-    - name: Authorization
-      in: header
-      required: true
-      schema:
-        type: string
     - name: slug
       in: path
       description: Le slug de la ville en question. (Exemple; Martignas-sur-jalle)
@@ -25,7 +20,7 @@
             schema:
               type: object
               items:
-                $ref: '#/definitions/Citys'
+                $ref: '#/definitions/Cities'
       404:
         description: slug introuvable, verifiez votre requète.
 

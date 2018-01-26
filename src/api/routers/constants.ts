@@ -1,4 +1,4 @@
-export const CITY_ENDPOINT = '/citys';
+export const CITY_ENDPOINT = '/cities';
 export const HOTSPOT_ENDPOINT = '/hotspots';
 export const VIEWS_ENDPOINT = '/views';
 export const AUTH_LOGIN = '/auth/token';

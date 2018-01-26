@@ -24,7 +24,7 @@ class CityCtrl extends RootCtrl {
         this.cityRepository.store(CitySample.MARTIGNAS);
     }
 
-    // method=GET url=/citys/{slug}
+    // method=GET url=/cities/{slug}
     public city = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         try {
             const askedCity : City = this.cityRepository.findBySlug(req.params.slug);

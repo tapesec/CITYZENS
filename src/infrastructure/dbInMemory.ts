@@ -109,7 +109,10 @@ cityzenCollection.insert(CITYZEN_LIONNEL);
 cityzenCollection.insert(CITYZEN_LUCA);
 
 // tslint:disable-next-line:no-unused-variable
-const city = db.addCollection('city');
+const cityCollection = db.addCollection('city');
+export const MARTIGNAS_CITY = JSON.parse(JSON.stringify(CitySample.MARTIGNAS));
+
+cityCollection.insert(MARTIGNAS_CITY);
 
 const messageCollection = db.addCollection('messages');
 

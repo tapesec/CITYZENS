@@ -1,5 +1,6 @@
 import * as restify from 'restify';
 import * as path from 'path';
+import config from './../config';
 
 const swaggerJsDoc = require('swagger-jsdoc');
 
@@ -17,7 +18,7 @@ class SwaggerRouter {
                 description: 'REST API, Cityzens: https://github.com/tapesec/CITYZENS',
             },
 
-            host: 'localhost:3000', // Host (optional)
+            host: `localhost:${config.server.httpPort}`, // Host (optional)
             basePath: '/', // Base path (optional)
         };
 

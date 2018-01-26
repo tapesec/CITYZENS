@@ -15,7 +15,6 @@ class CityRouter {
 
         server.get(
             CITY_ENDPOINT + '/:slug',
-            this.ctrl.loadAuthenticatedUser,
             this.ctrl.city,
         );
     }

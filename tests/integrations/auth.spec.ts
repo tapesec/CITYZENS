@@ -2,7 +2,7 @@ import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import hotspotsEndpointsTests from './hotspots.spec';
-import citysEndpointTests from './citys.spec';
+import citiesEndpointTests from './cities.spec';
 import messagesEndpointsTests from './messages.spec';
 import { loginBody } from './sample/requests-responses';
 
@@ -31,8 +31,8 @@ describe('/auth endpoint', () => {
     });
     // /hotspots tests suite
     hotspotsEndpointsTests(state);
-    // /citys tests suite
-    citysEndpointTests(state);
+    // /cities tests suite
+    citiesEndpointTests(state);
     // /hotspots/id/messages suite
     messagesEndpointsTests(state);
 });

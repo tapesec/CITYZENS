@@ -4,23 +4,23 @@ const slugIt = require('slug');
 
 class CityRepositoryInMemory implements ICityRepository {
 
-    protected citys : Map<string, City> = new Map();
+    protected cities : Map<string, City> = new Map();
 
     public findByInsee(insee: string): City {
-        return this.citys.get(insee);
+        return this.cities.get(insee);
     }
     public findBySlug(slug: string): City | undefined {
         let result : City | undefined = undefined;
-        this.citys.forEach((v, k, m) => {
+        this.cities.forEach((v, k, m) => {
             if (slugIt(v.name) === slug) result = v;
         });
         return result;
     }
     public store(city: City): void {
-        this.citys.set(city.insee, city);
+        this.cities.set(city.insee, city);
     }
     public remove(insee: string): void {
-        this.citys.delete(insee);
+        this.cities.delete(insee);
     }
 
 }

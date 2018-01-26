@@ -1,22 +1,22 @@
-import * as server from './../../src/api/server';
+import * as server from '../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import CitySample from '../../src/domain/cityLife/model/sample/CitySample';
 
 const slugIt = require('slug');
 
-const citysEndpointTests = (state : any) => {
+const citiesEndpointTests = (state : any) => {
 
-    describe('/citys endpoint', () => {
+    describe('/cities endpoint', () => {
 
-        describe('GET /citys/{slug}', () => {
+        describe('GET /cities/{slug}', () => {
 
             it ('should return a city by commune slug', async () => {
                 // Arrange
                 const slug = slugIt(CitySample.MARTIGNAS.name);
                 // Act
                 const response = await request(server)
-                .get('/citys/' + slug)
+                .get('/cities/' + slug)
                 .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
@@ -28,4 +28,4 @@ const citysEndpointTests = (state : any) => {
     });
 };
 
-export default citysEndpointTests;
+export default citiesEndpointTests;

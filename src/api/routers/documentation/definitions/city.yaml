@@ -1,12 +1,12 @@
 definitions:
-  Citys:
+  Cities:
     properties:
       name:
         type: string
       insee:
         type: string
       polygon:
-        type: array  
+        type: array
         items:
           type: object
           properties:
@@ -20,4 +20,4 @@ definitions:
           latitude:
             type: double
           longitude:
-            type: double      
+            type: double
