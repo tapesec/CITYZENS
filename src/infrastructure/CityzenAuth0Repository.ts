@@ -3,7 +3,7 @@ import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
 import auth0, { Auth0 } from '../api/libs/Auth0';
 
 class CityzenAuth0Repository implements ICityzenRepository {
-    
+
     protected auth0Service : Auth0;
 
     constructor(auth0 : Auth0) {

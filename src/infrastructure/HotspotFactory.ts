@@ -28,7 +28,9 @@ import {
     requiredAlertHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
+import HotspotSlug from './../domain/cityLife/model/HotspotSlug';
 const request = require('request');
+const slug = require('slug');
 
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
@@ -154,20 +156,23 @@ class HotspotFactory {
             address,
             views,
             type,
-            icon);
+            icon,
+        );
     }
 
     private createMediaBuilder = (data: any) => {
         let hotspotTitle: HotspotTitle;
+        let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
+            hotspotSlug = new HotspotSlug(slug(data.title));
         }
         if (data.scope) {
             scope = data.scope === HotspotScope.Public ?
             HotspotScope.Public : HotspotScope.Private;
         }
-        return new MediaBuilder(hotspotTitle, scope);
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope);
     }
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

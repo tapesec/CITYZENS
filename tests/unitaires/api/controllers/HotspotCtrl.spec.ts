@@ -145,20 +145,20 @@ describe('HotspotCtrl', () => {
                 type: HotspotType.WallMessage,
                 iconType: HotspotIconType.Wall,
             };
-            factoryData = { 
+            factoryData = {
                 ...jsonBody,
-                cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0), 
+                cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
             };
         });
 
         it ('should create a new hotspot, post it to algolia, and return it with 200 OK', () => {
             const fakeNewHotspot = new HotspotFactory().build(factoryData);
-            
+
             // Arrange
             algoliaMoq
                 .setup(x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object))
                 .returns(() => Promise.resolve<any>({}));
-            
+
             reqMoq
             .setup((x : rest.Request) => x.body)
             .returns(() => jsonBody);
@@ -176,7 +176,7 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.verify(x => x.store(fakeNewHotspot), TypeMoq.Times.once());
             resMoq.verify(x => x.json(201, fakeNewHotspot), TypeMoq.Times.once());
             algoliaMoq.verify(
-                x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object), 
+                x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object),
                 TypeMoq.Times.once(),
             );
         });

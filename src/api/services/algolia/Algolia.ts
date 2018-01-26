@@ -13,9 +13,9 @@ class Algolia {
     public initHotspots(): void {
         this.algolia.initIndex('hotspots');
     }
-    
+
     public addHotspot<T extends Hotspot>(
-        hotspot: T, 
+        hotspot: T,
         repository: HotspotRepositoryInMemory,
     ): Promise<any> {
 
@@ -32,7 +32,7 @@ class Algolia {
         }
         return this.algolia.sendObject(
             'hotspots',
-            data, 
+            data,
             hotspot.id,
         );
     }

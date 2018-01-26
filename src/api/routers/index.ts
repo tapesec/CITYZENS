@@ -17,7 +17,7 @@ import HotspotRouter from './HotspotRouter';
 import SwaggerRouter from './SwaggerRouter';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import Login from './../services/auth/Login';
-import config from './../config/';
+import config from './../config';
 import auth0Sdk from '../libs/Auth0';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import SlackWebhook from './../libs/SlackWebhook';

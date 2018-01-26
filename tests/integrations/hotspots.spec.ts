@@ -29,7 +29,7 @@ const hotspotsEndpointsTests = (state : any) => {
                 expect(response.body).to.have.lengthOf(3);
             });
 
-            it ('should return a collection of hotspots by city code commune', async () => {
+            it ('should return a collection of hotspots by city insee', async () => {
                 // Arrange
                 const insee = '33273';
                 // Act

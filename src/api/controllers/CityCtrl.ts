@@ -12,9 +12,10 @@ class CityCtrl extends RootCtrl {
     private cityRepository : CityRepositoryInMemory;
 
     public static INSEE_NOT_FOUND = 'invalid insee code';
+    public static SLUG_NOT_FOUND = 'invalid slug name';
 
     constructor(
-        errorHandler: ErrorHandler, 
+        errorHandler: ErrorHandler,
         loginService: Login,
         cityRepositoryInMemory : CityRepositoryInMemory,
     ) {
@@ -23,15 +24,15 @@ class CityCtrl extends RootCtrl {
         this.cityRepository.store(CitySample.MARTIGNAS);
     }
 
-    // method=GET url=/citys/{inseeCode}
+    // method=GET url=/citys/{slug}
     public city = (req : rest.Request, res : rest.Response, next : rest.Next) => {
         try {
-            const askedCity : City = this.cityRepository.findByInsee(req.params.insee);
+            const askedCity : City = this.cityRepository.findBySlug(req.params.slug);
             if (askedCity) {
                 res.json(200, askedCity);
             } else {
                 return next(this.errorHandler.logAndCreateNotFound(
-                    `GET ${req.path()}`, CityCtrl.INSEE_NOT_FOUND,
+                    `GET ${req.path()}`, CityCtrl.SLUG_NOT_FOUND,
                 ));
             }
         } catch (err) {

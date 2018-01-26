@@ -2,7 +2,7 @@ import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepository
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 
 const hotspotsByCodeCommune = (
-    insee : string, 
+    insee : string,
     repository : HotspotRepositoryInMemory,
 ) : Hotspot[] => {
     return repository.findByCodeCommune(insee);

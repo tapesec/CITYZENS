@@ -1,6 +1,6 @@
 /hotspots:
   get:
-    description: Retourne soit tout les hotspots étant dans le rectangle décrit par les coordonées gps, soit tout les hotspots associés a la ville associée au code INSEE, soit 401 si la requète est mal formée.
+    description: Retourne soit tout les hotspots étant dans le rectangle décrit par les coordonées gps, soit tout les hotspots de la ville avec le code INSEE, soit 401 si la requète est mal formée.
     tags:
       - Hotspots
     parameters:
@@ -11,7 +11,7 @@
         type: string
     - name: insee
       in: query
-      description: Le code insee de la commune attachée au hotspot.
+      description: L'insee de la commune attachée au hotspot.
       required: false
       schema:
           type: string

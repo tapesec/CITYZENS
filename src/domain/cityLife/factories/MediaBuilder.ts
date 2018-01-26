@@ -1,11 +1,13 @@
 import HotspotTitle from '../model/hotspot/HotspotTitle';
 import { HotspotScope } from '../model/hotspot/Hotspot';
+import HotspotSlug from 'src/domain/cityLife/model/HotspotSlug';
 
 
 class MediaBuilder {
 
     constructor(
         protected _title: HotspotTitle,
+        protected _slug: HotspotSlug,
         protected _scope: HotspotScope,
     ) {}
 
@@ -15,6 +17,10 @@ class MediaBuilder {
 
     get title() : HotspotTitle {
         return this._title;
+    }
+
+    get slug() : HotspotSlug {
+        return this._slug;
     }
 }
 export default MediaBuilder;

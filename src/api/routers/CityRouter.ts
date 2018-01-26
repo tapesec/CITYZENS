@@ -14,7 +14,7 @@ class CityRouter {
     bind(server: restify.Server) {
 
         server.get(
-            CITY_ENDPOINT + '/:insee',
+            CITY_ENDPOINT + '/:slug',
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.city,
         );

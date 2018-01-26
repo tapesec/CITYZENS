@@ -57,7 +57,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate a GET /hotspots by code commune (INSEE)', () => {
+    it ('should validate a GET /hotspots by insee', () => {
         // Arrange
         const queryStrings = {
             insee: '33273',

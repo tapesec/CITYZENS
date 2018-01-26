@@ -16,7 +16,7 @@ class SwaggerRouter {
                 // Description (optional)
                 description: 'REST API, Cityzens: https://github.com/tapesec/CITYZENS',
             },
-            
+
             host: 'localhost:3000', // Host (optional)
             basePath: '/', // Base path (optional)
         };

@@ -3,7 +3,7 @@ class DecodedJwtPayload {
 
     protected payload : any;
     protected payloadNamespace : string;
-    
+
     constructor(tokenPayload : any, namespace : string) {
         this.payload = tokenPayload;
         this.payloadNamespace = namespace;
