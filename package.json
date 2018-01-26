@@ -5,12 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "tsc && node --require dotenv/config build/api/server.js",
-    "test":
-      "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/**/*.spec.ts\"",
-    "test:unit":
-      "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/unitaires/**/*.spec.ts\"",
-    "test:integration":
-      "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/integrations/**/*.spec.ts\"",
+    "test": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/**/*.spec.ts\"",
+    "test:unit": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/unitaires/**/*.spec.ts\"",
+    "test:integration": "set NODE_ENV=test && mocha --recursive --opts tests/mocha.opts -r ts-node/register \"tests/integrations/**/*.spec.ts\"",
     "tslint": "tslint -p ./tsconfig.json -c ./tslint.json src/**/*.ts"
   },
   "author": "lasalle",
@@ -30,6 +27,7 @@
     "jsonwebtoken": "^8.1.0",
     "lokijs": "^1.5.1",
     "restify": "^6.2.3",
+    "restify-cors-middleware": "^1.1.0",
     "restify-logger": "^2.0.1",
     "sinon": "^4.0.1",
     "slug": "^0.9.1",
