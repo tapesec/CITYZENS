@@ -37,6 +37,14 @@ export const getHotspots = {
 
 };
 
+export const getHotspotId = {
+    "title": "GET /hotspots/{hotspotId} by id",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+};
+
+
 export const createMessageSchema = {
     "title": "POST /hotspots/{hotspotId}/messages body validation",
     "type": "object",

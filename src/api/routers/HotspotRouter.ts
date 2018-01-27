@@ -17,6 +17,11 @@ class HotspotRouter {
             this.ctrl.hotspots,
         );
 
+        server.get(
+            HOTSPOT_ENDPOINT + '/:id',
+            this.ctrl.getHotspot,
+        );
+
         server.post(
             HOTSPOT_ENDPOINT,
             this.ctrl.loadAuthenticatedUser,

@@ -3,7 +3,7 @@ import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
-import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
+import Hotspot, { HotspotScope } from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import RootCtrl from './RootCtrl';
@@ -11,7 +11,7 @@ import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { getHotspots } from '../requestValidation/schema';
+import { getHotspots, getHotspotId } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
@@ -64,6 +64,33 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         res.json(OK, hotspotsResult);
+    }
+
+    public getHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        console.log(req);
+        if (!this.hotspotRepository.isSet(req.params.id)) {
+            return next(this.errorHandler.logAndCreateNotFound(
+                `PATCH ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
+            ));
+        }
+
+        try {
+            const hotspot = this.hotspotRepository.findById(req.params.id); 
+            if (
+                hotspot instanceof AlertHotspot ||
+                hotspot.scope === HotspotScope.Public
+            ) {
+                res.json(OK, hotspot);
+            } else {
+                return next(this.errorHandler.logAndCreateUnautorized(
+                    `GET ${req.path}`, 'Private hotspot access'
+                ));
+            }
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(
+                `GET ${req.path()}`, err.message,                
+            ));
+        }
     }
 
     // method=POST url=/hotspots

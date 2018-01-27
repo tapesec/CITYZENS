@@ -52,6 +52,7 @@
                 $ref: '#/definitions/Hotspots'
       401:
         description: Requète mal formée.
+  
   post:
     description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requète est mal formé, ou encore une erreur 501 si une erreur interne est survenue.
     tags:
@@ -156,6 +157,30 @@
       500:
         description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}:
+  get:
+    description: Retourne l'hotspot correspondant a l'id. Si l'hotspot est privé, retourne unauthorized, si il est introuvé, retourne 404.
+    tags:
+      - Hotspots
+    parameters:
+      - name: hotspotId
+        in: path
+        description: L'uuid de l'hotspot.
+        required: true
+        type: string
+    produces:
+      - application/json
+    responses:
+      200:
+        description: L'hotspot demandé.
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Hotspots'
+      404:
+        description: Hotspot introuvable.
+      401:
+        description: Hotspot privé.
   patch:
     description: Il faut choisir une des trois options, la structure doit correspondre exactement a seulement une option. Retourne 200 et l'hotspot édité si tout s'est bien passé, 400 si la requète est mal formé, 401 si le body est invalide et 500 si une erreur interne s'est produite.
     tags:
