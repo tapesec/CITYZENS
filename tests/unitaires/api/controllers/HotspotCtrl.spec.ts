@@ -2,6 +2,7 @@
 import {
     HotspotIconType,
     HotspotType,
+    HotspotScope,
 } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
@@ -26,6 +27,10 @@ import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 import Algolia from '../../../../src/api/services/algolia/Algolia';
+import WallHotspot from '../../../../src/domain/cityLife/model/hotspot/WallHotspot';
+import
+    HotspotBuilderSample from '../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
+import MediaBuilderSample from '../../../../src/domain/cityLife/model/sample/MediaBuilderSample';
 
 describe('HotspotCtrl', () => {
 
@@ -177,6 +182,93 @@ describe('HotspotCtrl', () => {
             resMoq.verify(x => x.json(201, fakeNewHotspot), TypeMoq.Times.once());
             algoliaMoq.verify(
                 x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object),
+                TypeMoq.Times.once(),
+            );
+        });
+    });
+
+    describe('getHotspots', () => {
+        let id: string;
+        let params: any;
+        let hotspot: WallHotspot;
+
+        const errorNotfound: any = { notfound: true };
+        const errorUnauthorized: any = { unauthorized: true };
+
+        before(() => {
+            id = 'idid';
+            params = {
+                id,
+            };
+            hotspot = new WallHotspot(
+                HotspotBuilderSample.CHURCH_HOTSPOT_BUILDER,
+                MediaBuilderSample.CHURCH_MEDIA_BUILDER,
+            );
+
+            reqMoq
+                .setup(x => x.path())
+                .returns(() => 'path');
+
+            reqMoq
+                .setup(x => x.params)
+                .returns(() => { return { id }; });
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateNotFound(`GET path`, HotspotCtrl.HOTSPOT_NOT_FOUND))
+                .returns(() => errorNotfound);
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateUnautorized(`GET path`, HotspotCtrl.HOTSPOT_PRIVATE))
+                .returns(() => errorUnauthorized);
+        });
+
+        it('Should return 200 on valid call', () => {
+            hotspotRepositoryMoq
+                .setup(x => x.isSet(id))
+                .returns(() => true);
+
+            hotspotRepositoryMoq
+                .setup(x => x.findById(id))
+                .returns(() => hotspot);
+
+            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
+        });
+
+        it('Should return 404 on unfondable call', () => {
+            hotspotRepositoryMoq
+                .setup(x => x.isSet(id))
+                .returns(() => false);
+
+            hotspotRepositoryMoq
+                .setup(x => x.findById(id))
+                .returns(() => hotspot);
+
+            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(
+                x => x(errorNotfound),
+                TypeMoq.Times.once(),
+            );
+        });
+
+
+        it('Should return 401 on private call', () => {
+            hotspot.changeScope(HotspotScope.Private);
+
+            hotspotRepositoryMoq
+                .setup(x => x.isSet(id))
+                .returns(() => true);
+
+            hotspotRepositoryMoq
+                .setup(x => x.findById(id))
+                .returns(() => hotspot);
+
+            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(
+                x => x(errorUnauthorized),
                 TypeMoq.Times.once(),
             );
         });

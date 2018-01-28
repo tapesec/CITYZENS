@@ -25,7 +25,8 @@ class HotspotCtrl extends RootCtrl {
     private algolia: Algolia;
     private hotspotFactory: HotspotFactory;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
-    private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
+    public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
+    public static HOTSPOT_PRIVATE = 'Private hotspot access';
 
     constructor(
         errorHandler: ErrorHandler,
@@ -67,28 +68,27 @@ class HotspotCtrl extends RootCtrl {
     }
 
     public getHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        console.log(req);
         if (!this.hotspotRepository.isSet(req.params.id)) {
             return next(this.errorHandler.logAndCreateNotFound(
-                `PATCH ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
+                `GET ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
             ));
         }
 
         try {
-            const hotspot = this.hotspotRepository.findById(req.params.id); 
+            const hotspot = this.hotspotRepository.findById(req.params.id);
             if (
-                hotspot instanceof AlertHotspot ||
-                hotspot.scope === HotspotScope.Public
+                hotspot instanceof AlertHotspot || // Si c'est un hotspot alert ou,
+                hotspot.scope === HotspotScope.Public // que c'est un hotspot publique...
             ) {
                 res.json(OK, hotspot);
             } else {
                 return next(this.errorHandler.logAndCreateUnautorized(
-                    `GET ${req.path}`, 'Private hotspot access'
+                    `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
                 ));
             }
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
-                `GET ${req.path()}`, err.message,                
+                `GET ${req.path()}`, err.message,
             ));
         }
     }
