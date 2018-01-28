@@ -77,8 +77,8 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
             if (
-                hotspot instanceof AlertHotspot || // Si c'est un hotspot alert ou,
-                hotspot.scope === HotspotScope.Public // que c'est un hotspot publique...
+                hotspot instanceof AlertHotspot ||
+                hotspot.scope === HotspotScope.Public
             ) {
                 res.json(OK, hotspot);
             } else {
