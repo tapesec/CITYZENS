@@ -15,7 +15,6 @@ class MessageRouter {
 
         server.get(
             HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT,
-            this.ctrl.loadAuthenticatedUser,
             this.ctrl.getMessages,
         );
 

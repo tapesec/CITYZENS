@@ -21,7 +21,6 @@ const hotspotsEndpointsTests = (state : any) => {
 
                 const response = await request(server)
                 .get('/hotspots')
-                .set('Authorization', `Bearer ${state.access_token}`)
                 .query({ north, west, south, east })
                 .set('Accept', 'application/json')
                 .expect(200);
@@ -35,7 +34,6 @@ const hotspotsEndpointsTests = (state : any) => {
                 // Act
                 const response = await request(server)
                 .get('/hotspots')
-                .set('Authorization', `Bearer ${state.access_token}`)
                 .query({ insee })
                 .set('Accept', 'application/json')
                 .expect(200);

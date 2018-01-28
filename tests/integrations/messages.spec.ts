@@ -28,7 +28,6 @@ const messagesEndpointsTests = (state : any) => {
                 // Act
                 const response = await request(server)
                 .get(`/hotspots/${hotspotId}/messages`)
-                .set('Authorization', `Bearer ${state.access_token}`)
                 .set('Accept', 'application/json')
                 .expect(200);
 
@@ -49,7 +48,7 @@ const messagesEndpointsTests = (state : any) => {
         describe('POST /hotspots/{hotspotId}/messages', async () => {
 
             it (
-                'should create a new message and return 201 and the new message', 
+                'should create a new message and return 201 and the new message',
                 async () => {
                     // Arrange
                     const body = createMessageBody;

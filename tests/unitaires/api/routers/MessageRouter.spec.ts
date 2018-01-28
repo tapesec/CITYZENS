@@ -34,7 +34,6 @@ describe('messages router', () => {
         serverMock.verify(
             x => x.get(
                 c.HOTSPOT_ENDPOINT + '/:hotspotId' + c.MESSAGE_ENDPOINT,
-                messageCtrl.object.loadAuthenticatedUser,
                 messageCtrl.object.getMessages),
             TypeMoq.Times.once(),
         );

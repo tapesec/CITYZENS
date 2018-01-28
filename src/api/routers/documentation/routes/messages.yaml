@@ -4,11 +4,6 @@
     tags:
       - Message
     parameters:
-    - name: Authorization
-      in: header
-      required: true
-      schema:
-        type: string
     - name: hotspotId
       in: path
       description: L'uuid de l'hotspot en qestion.
@@ -27,8 +22,6 @@
                 $ref: '#/definitions/Messages'
       404:
         description: HotspotId invalide, probablement introuvable.
-      401:
-        description: Jeton invaide.
       500:
         description: Quelque chose a mal tourné.
   post:
@@ -166,6 +159,5 @@
         description: Jeton invalide.
       500:
         description: Quelque chose à mal tourné.
- 
 
-       
+
