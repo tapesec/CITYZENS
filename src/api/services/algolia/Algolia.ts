@@ -2,8 +2,8 @@ import AlgoliaAPI from './../../../api/libs/AlgoliaAPI';
 import Hotspot from './../../../domain/cityLife/model/hotspot/Hotspot';
 import WallHotspot from './../../../domain/cityLife/model/hotspot/WallHotspot';
 import EventHotspot from './../../../domain/cityLife/model/hotspot/EventHotspot';
-import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
 import HotspotRepositoryInMemory from './../../../infrastructure/HotspotRepositoryInMemory';
+import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
 
 class Algolia {
 
@@ -23,13 +23,16 @@ class Algolia {
             address: hotspot.address.name,
             cityId: hotspot.cityId,
         };
-        if (hotspot instanceof WallHotspot) {
-            data.title = hotspot.title;
-        } else if (hotspot instanceof EventHotspot) {
-            data.title = hotspot.title;
-        } else if (hotspot instanceof AlertHotspot) {
+        if (hotspot instanceof AlertHotspot) {
             data.message = hotspot.message;
+        } else if (
+            hotspot instanceof EventHotspot ||
+            hotspot instanceof WallHotspot
+        ) {
+            data.title = hotspot.title;
+            data.slug = hotspot.slug;
         }
+
         return this.algolia.sendObject(
             'hotspots',
             data,

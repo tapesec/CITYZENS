@@ -11,7 +11,7 @@ import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { getHotspots, getHotspotId } from '../requestValidation/schema';
+import { getHotspots } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
