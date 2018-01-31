@@ -21,13 +21,14 @@ class MessageSample {
 
     public static MARTIGNAS_SCHOOL_MESSAGE = new Message(
         v4(), 'Recherche volontaires pour la kermess',
-        `The path of the righteous man is beset on all sides by the iniquities of the selfish
-        and the tyranny of evil men. Blessed is he who, in the name of charity and good will,
-        shepherds the weak through the valley of darkness,
-        for he is truly his brother's keeper and the finder of lost children. And I will
-        strike down upon thee with great vengeance and furious anger those who would attempt
-        to poison and destroy My brothers.
-        And you will know My name is the Lord when I lay My vengeance upon thee.`,
+        `Pour cette nouvelle édition de la kermess de l'école,
+        nous cherchons des volontaires pour tenir les stands.
+        Nous avons besoins aussi d'une friteuse et d'une machine à barbapapa.\n\n
+        Voici encore du texte pour voir ce que ça donne le test de différentes polices
+         de caractères.\n\n
+         Il était une fois un marchand de foie qui vendait du foie dans la ville de Foix,
+         il se dit mafois c'est bien la première et la dernière fois que je vendrai du foie
+         dans la ville de Foix.`,
         AuthorSample.MARTIN, false, new HotspotId(WallHotspotSample.SCHOOL.id),
         new Date(), new Date());
 
