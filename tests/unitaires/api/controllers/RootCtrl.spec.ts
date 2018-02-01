@@ -1,4 +1,3 @@
-import { Response } from '_debugger';
 import DecodedJwtPayload from '../../../../src/api/services/auth/DecodedJwtPayload';
 import * as rest from 'restify';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
