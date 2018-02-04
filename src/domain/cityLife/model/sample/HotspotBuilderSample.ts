@@ -5,7 +5,7 @@ import PositionSample from './PositionSample';
 import AuthorSample from './AuthorSample';
 import CityId from '../city/CityId';
 import AddressSample from './AddressSample';
-import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
+import Hotspot, { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
 import AlertHotspot from './../../../../domain/cityLife/model/hotspot/AlertHotspot';
 
 
@@ -70,10 +70,21 @@ class HotspotBuilderSample {
         PositionSample.ACCIDENT,
         AuthorSample.LUCA,
         new CityId('33273'),
-        AddressSample.ACCIDENT_ADDRES,
+        AddressSample.ACCIDENT_ADDRESS,
         new ViewsCount(1),
         HotspotType.Alert,
         HotspotIconType.Accident,
+    );
+
+    public static MATCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('match-static-id'),
+        PositionSample.MATCH,
+        AuthorSample.LUCA,
+        new CityId('33273'),
+        AddressSample.MATCH_ADDRESS,
+        new ViewsCount(1),
+        HotspotType.Event,
+        HotspotIconType.Event,
     );
 }
 

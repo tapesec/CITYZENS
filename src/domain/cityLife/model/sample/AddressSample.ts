@@ -12,8 +12,10 @@ class AddressSample {
     new Address('12 rue de l\'Aubépine', CitySample.MERIGNAC.name);
     public static TOEDIT_ADDRESS : Address =
     new Address('2 place des éditions galimard', CitySample.MARTIGNAS.name);
-    public static ACCIDENT_ADDRES : Address =
+    public static ACCIDENT_ADDRESS : Address =
     new Address('6 avenue de Verdin', CitySample.MARTIGNAS.name);
+    public static MATCH_ADDRESS : Address =
+    new Address('23 Avenue de Verdun', CitySample.MARTIGNAS.name);
 }
 
 export default AddressSample;

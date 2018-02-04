@@ -16,6 +16,7 @@ import AlertHotspot from './../domain/cityLife/model/hotspot/AlertHotspot';
 import HotspotBuilderSample from './../domain/cityLife/model/sample/HotspotBuilderSample';
 import AlertMessageSample from './../domain/cityLife/model/sample/AlertMessageSample';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
+import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
 
 const slug = require('slug');
 
@@ -99,11 +100,28 @@ export const ALERT_ACCIDENT = {
     position: JSON.parse(JSON.stringify(PositionSample.ACCIDENT)),
     authorId: CityzenSample.LUCA.id,
     cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.ACCIDENT_ADDRES)),
+    address: JSON.parse(JSON.stringify(AddressSample.ACCIDENT_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
     scope: HotspotScope.Public,
     type: HotspotType.Alert,
     iconType: HotspotIconType.Accident,
+    removed: false,
+};
+
+export const EVENT_MATCH = {
+    id: EventHotspotSample.MATCH_EVENT.id,
+    title: EventHotspotSample.MATCH_EVENT.title,
+    position: JSON.parse(JSON.stringify(PositionSample.MATCH)),
+    authorId: CityzenSample.LUCA.id,
+    slug: slug(EventHotspotSample.MATCH_EVENT.title),
+    cityId: CitySample.MARTIGNAS.insee,
+    address: JSON.parse(JSON.stringify(AddressSample.MATCH_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
+    scope: HotspotScope.Public,
+    type: HotspotType.Event,
+    iconType: HotspotIconType.Event,
+    description: EventHotspotSample.MATCH_EVENT.description,
+    dateEnd: EventHotspotSample.MATCH_EVENT.dateEnd,
     removed: false,
 };
 
@@ -113,6 +131,7 @@ hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
 hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
 hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
 hotspotCollection.insert(ALERT_ACCIDENT);
+hotspotCollection.insert(EVENT_MATCH);
 
 const cityzenCollection = db.addCollection('cityzens');
 export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
