@@ -8,6 +8,8 @@ class PositionSample {
     public static SCHOOL = new Position(44.84665782, -0.76560438);
     public static MERIGNAC = new Position(44.84181, -0.64759);
     public static TOEDIT = new Position(44.84181, -0.64759);
+    public static ACCIDENT = new Position(44.841633, -0.776771);
+    public static MATCH = new Position(44.842358, -0.780284);
 }
 
 export default PositionSample;

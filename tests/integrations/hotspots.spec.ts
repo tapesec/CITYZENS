@@ -25,7 +25,7 @@ const hotspotsEndpointsTests = (state : any) => {
                 .set('Accept', 'application/json')
                 .expect(200);
 
-                expect(response.body).to.have.lengthOf(3);
+                expect(response.body).to.have.lengthOf(5);
             });
 
             it ('should return a collection of hotspots by city insee', async () => {
@@ -38,7 +38,7 @@ const hotspotsEndpointsTests = (state : any) => {
                 .set('Accept', 'application/json')
                 .expect(200);
 
-                expect(response.body).to.have.lengthOf(3);
+                expect(response.body).to.have.lengthOf(5);
             });
         });
 
