@@ -6,6 +6,7 @@ import AuthorSample from './AuthorSample';
 import CityId from '../city/CityId';
 import AddressSample from './AddressSample';
 import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
+import AlertHotspot from './../../../../domain/cityLife/model/hotspot/AlertHotspot';
 
 
 class HotspotBuilderSample {
@@ -62,6 +63,17 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+    );
+
+    public static ACCIDENT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('ACCIDENT-hotspot-id'),
+        PositionSample.ACCIDENT,
+        AuthorSample.LUCA,
+        new CityId('33273'),
+        AddressSample.ACCIDENT_ADDRES,
+        new ViewsCount(1),
+        HotspotType.Alert,
+        HotspotIconType.Accident,
     );
 }
 
