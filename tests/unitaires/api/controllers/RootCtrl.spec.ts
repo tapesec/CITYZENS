@@ -33,88 +33,116 @@ describe('RootCtrl', () => {
         .returns(() => 'path');
     });
 
-    it(
-        'should load an authorized cityzen according to given token passed by http header',
-        async () => {
-            // Arrange
-            reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
-            
-            loginServiceMoq
+    describe('loadAuthenticatedUser', () => {
+        it(
+            'should load an authorized cityzen according to given token passed by http header',
+            async () => {
+                // Arrange
+                reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
+                
+                loginServiceMoq
+                    .setup(x => x.auth0UserInfo(token))
+                    .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+                
+                // Act
+                const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+                // Assert
+                reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+                loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.once());
+                nextMoq.verify(x => x(), TypeMoq.Times.once());
+            },
+        );
+        
+        it(
+            'should return unauthorized error if no http Authorization header provider',
+            async () => {
+                // Arrange
+                reqMoq
+                .setup(x => x.header('Authorization'))
+                .returns(() => undefined);
+                
+                loginServiceMoq
                 .setup(x => x.auth0UserInfo(token))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
-            
-            // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
-            await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
-            // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
-            loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.once());
-            nextMoq.verify(x => x(), TypeMoq.Times.once());
-        },
-    );
+                
+                errorHandlerMoq
+                .setup(
+                    x => x.logAndCreateUnautorized(
+                        'path', 'Token must be provided',
+                    ),
+                )
+                .returns(() => 'error');
+                
+                // Act
+                const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+                // Assert
+                reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
+                loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.exactly(0));
+                nextMoq.verify(
+                    x => x('error'),
+                    TypeMoq.Times.once(),
+                );
+            },
+        );
     
-    it(
-        'should return unauthorized error if no http Authorization header provider',
-        async () => {
-            // Arrange
-            reqMoq
-            .setup(x => x.header('Authorization'))
-            .returns(() => undefined);
-            
-            loginServiceMoq
-            .setup(x => x.auth0UserInfo(token))
-            .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
-            
-            errorHandlerMoq
-            .setup(
-                x => x.logAndCreateUnautorized(
-                    'path', 'Token must be provided',
-                ),
-            )
-            .returns(() => 'error');
-            
-            // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
-            await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
-            // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
-            loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.exactly(0));
-            nextMoq.verify(
-                x => x('error'),
-                TypeMoq.Times.once(),
-            );
-        },
-    );
+        it(
+            'should return unauthorized error if access token is invalid',
+            async () => {
+                // Arrange
+                const decodeError = { message: 'Invalid token' };
+                reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
+    
+                loginServiceMoq
+                    .setup(x => x.auth0UserInfo(token))
+                    .returns(() => Promise.reject({ message: 'tata' }));
+    
+                errorHandlerMoq
+                .setup(
+                    x => x.logAndCreateUnautorized(
+                        'path', 'tata',
+                    ),
+                )
+                .returns(() => 'error');
+                
+                // Act
+                const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+                // Assert
+                reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+                loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.exactly(1));
+                nextMoq.verify(
+                    x => x('error'),
+                    TypeMoq.Times.once(),
+                );
+            },
+        );
+    });
 
-    it(
-        'should return unauthorized error if access token is invalid',
-        async () => {
-            // Arrange
-            const decodeError = { message: 'Invalid token' };
-            reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
-
-            loginServiceMoq
-                .setup(x => x.auth0UserInfo(token))
-                .returns(() => Promise.reject('tata'));
-
-            errorHandlerMoq
-            .setup(
-                x => x.logAndCreateUnautorized(
-                    'path', 'tata',
-                ),
-            )
-            .returns(() => 'error');
-            
-            // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
-            await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
-            // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
-            loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.exactly(1));
-            nextMoq.verify(
-                x => x('error'),
-                TypeMoq.Times.once(),
-            );
-        },
-    );
+    describe('optInAuthenticateUser', () => {
+        it(
+            'should _not_ return unauthorized error instead should set userInfo to null',
+            async () => {
+                // Arrange
+                const decodeError = { message: 'Invalid token' };
+                reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
+    
+                loginServiceMoq
+                    .setup(x => x.auth0UserInfo(token))
+                    .returns(() => Promise.reject('tata'));
+                
+                // Act
+                const rootCtrl = new RootCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                await rootCtrl.optInAuthenticateUser(reqMoq.object, resMoq.object, nextMoq.object);
+                // Assert
+                reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+                loginServiceMoq.verify(x => x.auth0UserInfo(token), TypeMoq.Times.exactly(1));
+                nextMoq.verify(
+                    x => x(),
+                    TypeMoq.Times.once(),
+                );
+            },
+        );
+    });
 });

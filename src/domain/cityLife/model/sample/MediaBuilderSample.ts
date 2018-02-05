@@ -1,6 +1,6 @@
 import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotTitle from '../hotspot/HotspotTitle';
-import Hotspot, { HotspotScope } from '../hotspot/Hotspot';
+import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/HotspotSlug';
 
 const slug = require('slug');

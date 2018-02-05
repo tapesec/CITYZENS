@@ -12,9 +12,6 @@ const db = new loki('loki.json');
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
-import AlertHotspot from './../domain/cityLife/model/hotspot/AlertHotspot';
-import HotspotBuilderSample from './../domain/cityLife/model/sample/HotspotBuilderSample';
-import AlertMessageSample from './../domain/cityLife/model/sample/AlertMessageSample';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
 
