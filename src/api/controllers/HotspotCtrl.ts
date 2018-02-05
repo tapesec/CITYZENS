@@ -76,11 +76,16 @@ class HotspotCtrl extends RootCtrl {
 
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
-            if (
-                hotspot instanceof AlertHotspot ||
-                hotspot.scope === HotspotScope.Public
-            ) {
+            if (hotspot instanceof AlertHotspot) {
                 res.json(OK, hotspot);
+            } else if (hotspot.scope === HotspotScope.Public) {
+                res.json(OK, hotspot);
+            } else if (this.userInfo) {
+                const cityzen = cityzenFromAuth0(this.userInfo);
+                if (cityzen.id === hotspot.author.id) res.json(OK, hotspot);
+                else return next(this.errorHandler.logAndCreateUnautorized(
+                    `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
+                ));
             } else {
                 return next(this.errorHandler.logAndCreateUnautorized(
                     `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
