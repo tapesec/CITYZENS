@@ -9,6 +9,7 @@ class MediaBuilder {
         protected _title: HotspotTitle,
         protected _slug: HotspotSlug,
         protected _scope: HotspotScope,
+        protected _members: Set<string>,
     ) {}
 
     get scope(): HotspotScope {
@@ -21,6 +22,10 @@ class MediaBuilder {
 
     get slug() : HotspotSlug {
         return this._slug;
+    }
+
+    get members(): Set<string> {
+        return this._members;
     }
 }
 export default MediaBuilder;

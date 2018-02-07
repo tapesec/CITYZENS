@@ -32,6 +32,7 @@ class ProfileCtrl extends RootCtrl {
         this.hotspotRepository = hotspotRepositoryInMemory;
     }
 
+    // POST/profiles/favorites/:favoriteId
     public postFavorit = async (req : rest.Request, res : rest.Response, next : rest.Next) => {
         const favoritId = req.params.favoritHotspotId;
         const refreshToken = req.query.refresh_token;

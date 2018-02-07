@@ -43,6 +43,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
+                new Set<string>(),
             ),
         );
         // Assert
@@ -74,6 +75,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
+                new Set<string>(),
             ),
         );
         // Act
@@ -106,6 +108,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
+                new Set<string>(),
             ),
         );
         // Act
@@ -136,6 +139,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
+                new Set<string>(),
             ),
         );
         // Act
@@ -165,6 +169,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
+                new Set<string>(),
             ),
         );
         // Act

@@ -18,6 +18,7 @@ import actAsSpecified from '../services/hotspot/actAsSpecified';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import Login from '../services/auth/Login';
 import Algolia from './../services/algolia/Algolia';
+import isAuthorized from './../services/hotspot/isAuthorized';
 
 class HotspotCtrl extends RootCtrl {
 
@@ -27,6 +28,7 @@ class HotspotCtrl extends RootCtrl {
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
+    public static NOT_AUTHOR = 'You must be the author';
 
     constructor(
         errorHandler: ErrorHandler,
@@ -76,21 +78,13 @@ class HotspotCtrl extends RootCtrl {
 
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
-            if (hotspot instanceof AlertHotspot) {
-                res.json(OK, hotspot);
-            } else if (hotspot.scope === HotspotScope.Public) {
-                res.json(OK, hotspot);
-            } else if (this.userInfo) {
-                const cityzen = cityzenFromAuth0(this.userInfo);
-                if (cityzen.id === hotspot.author.id) res.json(OK, hotspot);
-                else return next(this.errorHandler.logAndCreateUnautorized(
-                    `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
-                ));
-            } else {
-                return next(this.errorHandler.logAndCreateUnautorized(
-                    `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
-                ));
-            }
+            const caller = this.userInfo ? cityzenFromAuth0(this.userInfo) : undefined;
+
+            if (isAuthorized(hotspot, caller)) res.json(OK, hotspot);
+            else return next(this.errorHandler.logAndCreateUnautorized(
+                `GET ${req.path()}`, HotspotCtrl.HOTSPOT_PRIVATE,
+            ));
+
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
                 `GET ${req.path()}`, err.message,
@@ -147,6 +141,39 @@ class HotspotCtrl extends RootCtrl {
             return next(
                 this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err.message),
             );
+        }
+    }
+
+    // method=POST url=/hotspots/{hotspotId}/members
+    public addMember = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(this.errorHandler.logAndCreateNotFound(
+                `POST addMember ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
+            ));
+        }
+
+        try {
+            const hotspot = this.hotspotRepository.findById(req.params.id);
+            const caller = cityzenFromAuth0(this.userInfo);
+
+            if (hotspot instanceof AlertHotspot) {
+                return next(this.errorHandler.logAndCreateBadRequest(
+                    `POST addMember ${req.path()}`, HotspotCtrl.BAD_REQUEST_MESSAGE,
+                ));
+            }
+            if (hotspot.author.id !== caller.id) {
+                return next(this.errorHandler.logAndCreateUnautorized(
+                    `POST addMember ${req.path()}`, HotspotCtrl.NOT_AUTHOR,
+                ));
+            }
+
+            hotspot.addMember(caller);
+            this.hotspotRepository.update(hotspot);
+
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(
+                `POST addMember ${req.path()}`, err.message,
+            ));
         }
     }
 
