@@ -3,7 +3,7 @@ import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
-import Hotspot, { HotspotScope } from '../../domain/cityLife/model/hotspot/Hotspot';
+import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import RootCtrl from './RootCtrl';
@@ -11,7 +11,7 @@ import * as rest from 'restify';
 import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { getHotspots } from '../requestValidation/schema';
+import { getHotspots, postMemberSchema } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
@@ -146,12 +146,17 @@ class HotspotCtrl extends RootCtrl {
 
     // method=POST url=/hotspots/{hotspotId}/members
     public addMember = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.schemaValidator.validate(postMemberSchema, req.body)) {
+            return next(this.errorHandler.logAndCreateBadRequest(
+                `POST addMember ${req.path()}`, HotspotCtrl.BAD_REQUEST_MESSAGE,
+            ));
+        }
+
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(
                 `POST addMember ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
             ));
         }
-
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
             const caller = cityzenFromAuth0(this.userInfo);
@@ -167,7 +172,7 @@ class HotspotCtrl extends RootCtrl {
                 ));
             }
 
-            hotspot.addMember(caller);
+            hotspot.addMember(req.body.memberId);
             this.hotspotRepository.update(hotspot);
 
         } catch (err) {
