@@ -130,22 +130,16 @@ class HotspotFactory {
         } else {
             views = new ViewsCount(data.views);
         }
-        if (data.type === HotspotType.WallMessage) {
-            type = HotspotType.WallMessage;
-            icon = HotspotIconType.Wall;
-        } else if (data.type === HotspotType.Event) {
-            type = HotspotType.Event;
-            icon = HotspotIconType.Event;
-        } else if (data.type === HotspotType.Alert) {
-            type = HotspotType.Alert;
-            icon = HotspotIconType.Accident;
-        } else {
+        try {
+            type = this.setType(data.type);
+            icon = this.setIconType(data.iconType);
+        } catch (error) {
             const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
             hook.alert(
-                `Property type is unknow in hotspot factory \n
+                `${error.message} in hotspot factory \n
                 data provided: ${JSON.stringify(data)}`,
             );
-            throw new InvalidArgumentError('Unknow Hotspot type');
+            throw new InvalidArgumentError(error.message);
         }
 
         return new HotspotBuilder(
@@ -158,6 +152,30 @@ class HotspotFactory {
             type,
             icon,
         );
+    }
+
+    private setIconType = (iconType: any) => {
+        if (iconType === HotspotIconType.Wall ||
+            iconType === HotspotIconType.Event ||
+            iconType === HotspotIconType.Accident ||
+            iconType === HotspotIconType.Destruction ||
+            iconType === HotspotIconType.Handicap ||
+            iconType === HotspotIconType.RoadWorks) {
+            return iconType;
+        } else {
+            throw new InvalidArgumentError('Unknow Hotspot iconType');
+        }
+    }
+
+    private setType = (hotspotType: any) => {
+        if (hotspotType === HotspotType.WallMessage ||
+            hotspotType === HotspotType.Event ||
+            hotspotType === HotspotType.Alert
+            ) {
+            return hotspotType;
+        } else {
+            throw new InvalidArgumentError('Unknow Hotspot type');
+        }
     }
 
     private createMediaBuilder = (data: any) => {

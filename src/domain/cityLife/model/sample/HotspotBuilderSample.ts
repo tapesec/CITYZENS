@@ -5,8 +5,7 @@ import PositionSample from './PositionSample';
 import AuthorSample from './AuthorSample';
 import CityId from '../city/CityId';
 import AddressSample from './AddressSample';
-import Hotspot, { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
-import AlertHotspot from './../../../../domain/cityLife/model/hotspot/AlertHotspot';
+import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
 
 
 class HotspotBuilderSample {
