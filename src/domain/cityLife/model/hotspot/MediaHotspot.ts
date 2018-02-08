@@ -63,6 +63,7 @@ class MediaHotspot extends Hotspot {
             scope: this._scope,
             title: this._title.toString(),
             slug: this._slug.toString(),
+            members: this._members,
         };
     }
 }
