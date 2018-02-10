@@ -3,7 +3,7 @@ import EventDescription from './../../../../domain/cityLife/model/hotspot/EventD
 class EventDescriptionSample {
     public static MATCH_DESCRIPTION = new EventDescription(
         'Un matche va se dérouler entre Oberyn et La Montagne pour décider du destin de tyrion',
-        new Date('December 25, 2020 12:00:00'),
+        new Date('December 25, 2017 12:00:00'),
     );
 }
 
