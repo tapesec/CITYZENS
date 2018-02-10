@@ -21,7 +21,9 @@ export enum HotspotIconType {
     Wall = 'WallIcon',
     Event = 'EventIcon',
     Accident = 'AccidentIcon',
-    Deterioration = 'DeteriorationIcon',
+    Destruction = 'DestructionIcon',
+    Handicap = 'HandicapIcon',
+    RoadWorks = 'RoadWorksIcon',
 }
 
 abstract class Hotspot {
