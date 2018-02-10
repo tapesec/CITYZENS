@@ -88,7 +88,7 @@ describe('HotspotRepositoryInMemory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory​​(orm);
         // Act
-        hotspotRepository.remove(WallHotspotSample.SCHOOL);
+        hotspotRepository.remove(WallHotspotSample.SCHOOL.id);
         // Expect
         expect(removeStub.calledWith(WallHotspotSample.SCHOOL.id)).to.be.true;
     });
