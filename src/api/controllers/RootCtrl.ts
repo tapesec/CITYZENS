@@ -8,7 +8,7 @@ class RootCtrl {
 
     protected schemaValidator : ajv.Ajv = new ajv();
     protected errorHandler: ErrorHandler;
-    protected userInfo: UserInfoAuth0 | null;
+    protected userInfo: UserInfoAuth0;
     protected loginService: Login;
 
     constructor(errorHandler: ErrorHandler, loginService : Login) {
@@ -34,7 +34,7 @@ class RootCtrl {
     }
 
     public optInAuthenticateUser = async (req: r.Request, res: r.Response, next: r.Next) => {
-        this.userInfo = null;
+        this.userInfo = undefined;
 
         if (!req.header('Authorization')) return next();
 
