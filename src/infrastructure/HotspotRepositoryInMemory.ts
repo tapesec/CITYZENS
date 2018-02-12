@@ -58,8 +58,8 @@ class HotspotRepositoryInMemory implements IHotspotRepository{
         this.orm.hotspot.update(JSON.parse(JSON.stringify(hotspot)));
     }
 
-    public remove<T extends Hotspot>(hotspot: T): void {
-        this.orm.hotspot.remove(hotspot.id);
+    public remove(hotspotId: string): void {
+        this.orm.hotspot.remove(hotspotId);
     }
 
     public cacheAlgolia<T extends Hotspot>(hotspot: T, v = true): void {

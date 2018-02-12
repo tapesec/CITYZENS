@@ -16,7 +16,7 @@ interface IHotspotRepository​​ {
 
     store(hotspot : Hotspot) : void;
 
-    remove(hotspot : Hotspot) : void;
+    remove(id : string) : void;
 }
 
 export default IHotspotRepository;

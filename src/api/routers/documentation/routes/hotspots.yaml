@@ -52,7 +52,7 @@
                 $ref: '#/definitions/Hotspots'
       401:
         description: Requète mal formée.
-  
+
   post:
     description: Créé un hotspot en fonction des parametres envoyés, retourne celui ci ou une erreur 401 si la requète est mal formé, ou encore une erreur 501 si une erreur interne est survenue.
     tags:
@@ -95,7 +95,7 @@
               enum: [WallMessage, Event, Alert]
             iconType:
               type: string
-              enum: [WallIcon, EventIcon, AccidentIcon, DeteriorationIcon]
+              enum: [WallIcon, EventIcon, AccidentIcon, DestructionIcon, HandicapIcon, RoadWorksIcon]
             title:
               type: An hotspot title
             scope:

@@ -22,6 +22,8 @@ class Algolia {
         const data: any = {
             address: hotspot.address.name,
             cityId: hotspot.cityId,
+            type: hotspot.type,
+            iconType: hotspot.iconType,
         };
         if (hotspot instanceof AlertHotspot) {
             data.message = hotspot.message;
