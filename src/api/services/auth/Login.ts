@@ -1,6 +1,5 @@
 import ErrorHandler from '../errors/ErrorHandler';
 import UserInfoAuth0 from './UserInfoAuth0';
-import AuthentificationError from './../errors/AuthentificationError';
 
 export interface LoginOptions {
     url : string;
@@ -45,7 +44,7 @@ class Login {
 
             this.request(data, callback);
         }).catch((r) => {
-            throw new AuthentificationError(r.err, r.body, accessToken);
+            throw new Error(`Err: ${r.err},\n body: ${r.body}, \n ${accessToken}`);
         });
     }
 
