@@ -7,7 +7,6 @@ import CityId from '../city/CityId';
 import AddressSample from './AddressSample';
 import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
 
-
 class HotspotBuilderSample {
     public static TOWNHALL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
         new HotspotId('townhall-static-id'),

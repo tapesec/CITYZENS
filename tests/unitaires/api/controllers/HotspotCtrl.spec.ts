@@ -31,6 +31,9 @@ import WallHotspot from '../../../../src/domain/cityLife/model/hotspot/WallHotsp
 import
     HotspotBuilderSample from '../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
 import MediaBuilderSample from '../../../../src/domain/cityLife/model/sample/MediaBuilderSample';
+import Author from '../../../../src/domain/cityLife/model/author/Author';
+import HotspotBuilder from '../../../../src/domain/cityLife/factories/HotspotBuilder';
+import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 
 describe('HotspotCtrl', () => {
 
@@ -254,7 +257,7 @@ describe('HotspotCtrl', () => {
         });
 
 
-        it('Should return 401 on private call', () => {
+        it('Should return 401 on private call and wrong id', () => {
             hotspot.changeScope(HotspotScope.Private);
 
             hotspotRepositoryMoq
@@ -271,6 +274,39 @@ describe('HotspotCtrl', () => {
                 x => x(errorUnauthorized),
                 TypeMoq.Times.once(),
             );
+        });
+
+
+        it('Should return 200 on private call with right id', () => {
+            const HB = ({
+                ...HotspotBuilderSample.CHURCH_HOTSPOT_BUILDER,
+                author: {
+                    ...AuthorSample.MARTIN,
+                    id: cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id,
+                },
+            } as HotspotBuilder);
+
+            hotspot = new WallHotspot(
+                HB,
+                MediaBuilderSample.CHURCH_MEDIA_BUILDER,
+            );
+
+            hotspot.changeScope(HotspotScope.Private);
+            const newHotspot = {
+                ...hotspot,
+            };
+
+            hotspotRepositoryMoq
+                .setup(x => x.isSet(id))
+                .returns(() => true);
+
+            hotspotRepositoryMoq
+                .setup(x => x.findById(id))
+                .returns(() => (newHotspot as WallHotspot));
+
+            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
         });
     });
 });

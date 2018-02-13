@@ -29,8 +29,22 @@ class RootCtrl {
             this.userInfo = await this.loginService.auth0UserInfo(access_token);
             return next();
         } catch (err) {
-            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err));
+            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err.message));
         }
+    }
+
+    public optInAuthenticateUser = async (req: r.Request, res: r.Response, next: r.Next) => {
+        this.userInfo = undefined;
+
+        if (!req.header('Authorization')) return next();
+
+        const access_token = req.header('Authorization').slice(7);
+
+        try {
+            this.userInfo = await this.loginService.auth0UserInfo(access_token);
+        } catch (err) {}
+
+        return next();
     }
 }
 export default RootCtrl;

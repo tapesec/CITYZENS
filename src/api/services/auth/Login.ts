@@ -1,7 +1,6 @@
 import ErrorHandler from '../errors/ErrorHandler';
 import UserInfoAuth0 from './UserInfoAuth0';
 
-
 export interface LoginOptions {
     url : string;
     clientId : string;
@@ -34,7 +33,10 @@ class Login {
 
             const callback = (err: any, res: any, body: any) => {
                 if (res.statusCode !== 200) {
-                    reject(err || body);
+                    reject({
+                        err,
+                        body,
+                    });
                 } else {
                     resolve(new UserInfoAuth0(body));
                 }
@@ -42,7 +44,7 @@ class Login {
 
             this.request(data, callback);
         }).catch((r) => {
-            throw new Error(r);
+            throw new Error(`Err: ${r.err},\n body: ${r.body}, \n ${accessToken}`);
         });
     }
 
