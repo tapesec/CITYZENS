@@ -151,14 +151,13 @@ class HotspotCtrl extends RootCtrl {
                 `POST addMember ${req.path()}`, HotspotCtrl.BAD_REQUEST_MESSAGE,
             ));
         }
-
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(
                 `POST addMember ${req.path()}`, HotspotCtrl.HOTSPOT_NOT_FOUND,
             ));
         }
         try {
-            const hotspot = this.hotspotRepository.findById(req.params.id);
+            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
             const caller = cityzenFromAuth0(this.userInfo);
 
             if (hotspot instanceof AlertHotspot) {
@@ -174,7 +173,7 @@ class HotspotCtrl extends RootCtrl {
 
             hotspot.addMember(req.body.memberId);
             this.hotspotRepository.update(hotspot);
-
+            res.json(OK, hotspot);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(
                 `POST addMember ${req.path()}`, err.message,

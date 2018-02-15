@@ -47,7 +47,7 @@ describe('HotspotCtrl', () => {
     let hotspotCtrl : HotspotCtrl;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
 
-    before(async () => {
+    beforeEach(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
@@ -198,7 +198,7 @@ describe('HotspotCtrl', () => {
         const errorNotfound: any = { notfound: true };
         const errorUnauthorized: any = { unauthorized: true };
 
-        before(() => {
+        beforeEach(() => {
             id = 'idid';
             params = {
                 id,
@@ -214,7 +214,7 @@ describe('HotspotCtrl', () => {
 
             reqMoq
                 .setup(x => x.params)
-                .returns(() => { return { id }; });
+                .returns(() => params);
 
             errorHandlerMoq
                 .setup(x => x.logAndCreateNotFound(`GET path`, HotspotCtrl.HOTSPOT_NOT_FOUND))
@@ -278,23 +278,20 @@ describe('HotspotCtrl', () => {
 
 
         it('Should return 200 on private call with right id', () => {
-            const HB = ({
-                ...HotspotBuilderSample.CHURCH_HOTSPOT_BUILDER,
-                author: {
-                    ...AuthorSample.MARTIN,
-                    id: cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id,
-                },
-            } as HotspotBuilder);
 
-            hotspot = new WallHotspot(
-                HB,
-                MediaBuilderSample.CHURCH_MEDIA_BUILDER,
-            );
+            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
 
-            hotspot.changeScope(HotspotScope.Private);
-            const newHotspot = {
-                ...hotspot,
-            };
+            hotspotMoq
+                .setup(x => x.scope)
+                .returns(() => HotspotScope.Private);
+
+            hotspotMoq
+                .setup(x => x.members)
+                .returns(() => new Set<string>());
+
+            hotspotMoq
+                .setup(x => x.author)
+                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
 
             hotspotRepositoryMoq
                 .setup(x => x.isSet(id))
@@ -302,11 +299,64 @@ describe('HotspotCtrl', () => {
 
             hotspotRepositoryMoq
                 .setup(x => x.findById(id))
-                .returns(() => (newHotspot as WallHotspot));
+                .returns(() => hotspotMoq.object);
 
             hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
-            resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(200, hotspotMoq.object), TypeMoq.Times.once());
         });
     });
+
+
+
+    describe('addMember', () => {
+
+        let jsonBody: any;
+        let jsonParams: any;
+        const hotspot = TypeMoq.Mock.ofType<WallHotspot>();
+
+        before(() => {
+            jsonBody = {
+                memberId: 'idMacIdFace',
+            };
+            jsonParams = {
+                hotspotId: 'idid',
+            };
+        });
+
+        it ('should add new member to hotspot on validcall', () => {
+
+            hotspot
+                .setup(x => x.author)
+                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+
+            reqMoq
+                .setup((x : rest.Request) => x.body)
+                .returns(() => jsonBody);
+
+            reqMoq
+                .setup((x: rest.Request) => x.params)
+                .returns(() => jsonParams);
+
+            hotspotRepositoryMoq
+                .setup(x => x.isSet(jsonParams.hotspotId))
+                .returns(() => true);
+
+            hotspotRepositoryMoq
+                .setup(x => x.findById(jsonParams.hotspotId))
+                .returns(() => hotspot.object);
+
+            // Act
+            hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
+
+            // Assert
+            hotspotRepositoryMoq.verify(
+                x => x.findById(jsonParams.hotspotId), TypeMoq.Times.once()
+            );
+            hotspotRepositoryMoq.verify(x => x.update(hotspot.object), TypeMoq.Times.once());
+            hotspot.verify(x => x.addMember(jsonBody.memberId), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(200, hotspot.object), TypeMoq.Times.once());
+        });
+    });
+
 });

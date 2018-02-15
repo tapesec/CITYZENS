@@ -90,9 +90,9 @@ export const patchMessageSchema = {
 export const postMemberSchema = {
     "title": "POST /hotspots/{hotspotId}/members body validation",
     "type": "object",
-    "required": ["member"],
+    "required": ["memberId"],
     "properties": {
-        "member": {
+        "memberId": {
             "type": "string",
         }
     }
