@@ -29,6 +29,7 @@ class HotspotCtrl extends RootCtrl {
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
     public static NOT_AUTHOR = 'You must be the author';
+    public static ADD_ITSELF = 'Tou can\'t add yourself';
 
     constructor(
         errorHandler: ErrorHandler,
@@ -168,6 +169,11 @@ class HotspotCtrl extends RootCtrl {
             if (hotspot.author.id !== caller.id) {
                 return next(this.errorHandler.logAndCreateUnautorized(
                     `POST addMember ${req.path()}`, HotspotCtrl.NOT_AUTHOR,
+                ));
+            }
+            if (caller.id === req.body.memberId) {
+                return next(this.errorHandler.logAndCreateBadRequest(
+                    `POST addMember ${req.path()}`, HotspotCtrl.ADD_ITSELF,
                 ));
             }
 
