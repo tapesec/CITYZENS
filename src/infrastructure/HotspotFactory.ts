@@ -182,6 +182,7 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
+        const members = new Set<string>();
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
             hotspotSlug = new HotspotSlug(slug(data.title));
@@ -190,7 +191,12 @@ class HotspotFactory {
             scope = data.scope === HotspotScope.Public ?
             HotspotScope.Public : HotspotScope.Private;
         }
-        return new MediaBuilder(hotspotTitle, hotspotSlug, scope);
+        if (data.members) {
+            data.members.forEach((m: string) => {
+                members.add(m);
+            });
+        }
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members);
     }
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

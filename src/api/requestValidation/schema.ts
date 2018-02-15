@@ -86,3 +86,14 @@ export const patchMessageSchema = {
         }
     }
 };
+
+export const postMemberSchema = {
+    "title": "POST /hotspots/{hotspotId}/members body validation",
+    "type": "object",
+    "required": ["memberId"],
+    "properties": {
+        "memberId": {
+            "type": "string",
+        }
+    }
+};

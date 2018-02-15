@@ -3,6 +3,7 @@ import HotspotBuilder from '../../factories/HotspotBuilder';
 import HotspotTitle from './HotspotTitle';
 import Hotspot, { HotspotScope } from './Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/HotspotSlug';
+import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 const slug = require('slug');
 
 class MediaHotspot extends Hotspot {
@@ -10,6 +11,7 @@ class MediaHotspot extends Hotspot {
     protected _scope: HotspotScope;
     protected _title: HotspotTitle;
     protected _slug: HotspotSlug;
+    protected _members: Set<string>;
 
     constructor(
         hotpotBuilder: HotspotBuilder,
@@ -19,6 +21,7 @@ class MediaHotspot extends Hotspot {
         this._scope = mediaBuilder.scope;
         this._title = mediaBuilder.title;
         this._slug = mediaBuilder.slug;
+        this._members = mediaBuilder.members;
     }
 
     get title() : string {
@@ -27,6 +30,18 @@ class MediaHotspot extends Hotspot {
 
     get slug() : string {
         return this._slug.toString();
+    }
+
+    get members(): Set<string> {
+        return this._members;
+    }
+
+    public addMember(member: Cityzen) {
+        this._members.add(member.id);
+    }
+    public excludeMember(member: Cityzen) {
+        if (this._members.has(member.id))
+            this._members.delete(member.id);
     }
 
     public changeTitle(title: string): void {
@@ -48,6 +63,7 @@ class MediaHotspot extends Hotspot {
             scope: this._scope,
             title: this._title.toString(),
             slug: this._slug.toString(),
+            members: this._members,
         };
     }
 }

@@ -294,3 +294,28 @@
         description: La vue a bien était ajoutée au hotspot.
       404:
         description: L'hotspot est introuvable.
+/hotspots/{hotspotId}/members:
+  post:
+    description: Ajoute un membre à un hotspot. Retourne 200 si tout s'est bien passé, 404 si l'hotspot ne peut pas etre trouvé. 401 si vous n'êtes pas l'auteur du hotspot.
+    tags:
+      - Hotspots
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+    - name: memberId
+      in: body
+      description: L'uuid du membre à ajouter.
+      required: true
+      type: string
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Le membre a bien était ajoutée au hotspot.
+      404:
+        description: L'hotspot est introuvable.
+      401:
+        descritpion: Vous n'êtes pas l'auteur du hotspot.
