@@ -7,7 +7,7 @@ const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
     let id: string;
     let email: string;
     let pseudo: string;
-    let favoritesHotspots: string[];
+    let favoritesHotspots: Set<string>;
     let description: string;
 
     if (payload.sub) id = payload.sub;
@@ -18,7 +18,8 @@ const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
     else throw new InvalidPayloadError('no nickname found in jwt decoded payload');
 
     if (payload.userMetadata && payload.userMetadata.favoritesHotspots) {
-        favoritesHotspots = payload.userMetadata.favoritesHotspots;
+        const arrayFav = payload.userMetadata.favoritesHotspots as string[];
+        favoritesHotspots = new Set<string>(arrayFav);
     }
     if (payload.userMetadata && payload.userMetadata.description) {
         description = payload.userMetadata.description;

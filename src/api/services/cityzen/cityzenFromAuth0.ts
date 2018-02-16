@@ -12,7 +12,7 @@ const cityzenFromAuth0 = (payload : UserInfoAuth0): Cityzen => {
     let id: string;
     let email: string;
     let pseudo: string;
-    let favoritesHotspots: string[];
+    let favoritesHotspots: Set<string>;
     let description: string;
 
     if (payload.sub) id = payload.sub;
@@ -23,7 +23,8 @@ const cityzenFromAuth0 = (payload : UserInfoAuth0): Cityzen => {
     else throw new InvalidPayloadError('no nickname found in userInfo\'s Auth0 payload');
 
     if (payload.userMetadata && payload.userMetadata.favoritesHotspots) {
-        favoritesHotspots = payload.userMetadata.favoritesHotspots;
+        const arrayFav = payload.userMetadata.favoritesHotspots as string[];
+        favoritesHotspots = new Set<string>(arrayFav);
     }
     if (payload.userMetadata && payload.userMetadata.description) {
         description = payload.userMetadata.description;
