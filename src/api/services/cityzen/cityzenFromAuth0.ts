@@ -24,7 +24,7 @@ const cityzenFromAuth0 = (payload : UserInfoAuth0): Cityzen => {
 
     if (payload.userMetadata && payload.userMetadata.favoritesHotspots) {
         const arrayFav = payload.userMetadata.favoritesHotspots as string[];
-        favoritesHotspots = new Set<string>(arrayFav);
+        favoritesHotspots = new Set<string>(Array.from(arrayFav));
     }
     if (payload.userMetadata && payload.userMetadata.description) {
         description = payload.userMetadata.description;
