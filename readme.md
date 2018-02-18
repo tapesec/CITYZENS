@@ -44,10 +44,35 @@ Liste des plugins
 * TSlint
 
 ### .vscode
+
+#### launch.json
 ```json
 {
     "version": "0.2.0",
     "configurations": [
+         {
+            "type": "node",
+            "request": "launch",
+            "name": "build & debug",
+            "preLaunchTask": "run tsc",
+            "program": "${workspaceFolder}/build/api/server.js",
+            "runtimeArgs": [
+                "--require",
+                "dotenv/config"
+            ],
+        },
+        
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "debug",
+            "program": "${workspaceFolder}/build/api/server.js",
+            "runtimeArgs": [
+                "--require",
+                "dotenv/config"
+            ],
+        },
+
         {
             "type": "node",
             "request": "launch",
@@ -109,7 +134,21 @@ Liste des plugins
     ]
 }
 ```
-
+#### tasks.json
+```json
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "run tsc",
+            "type": "shell",
+            "command": "tsc"
+        }
+    ]
+}
+```
 ### remarque
 
 La validation par jsonSchema me semble lente (57ms) pour valider moins d'une dizaine d'attribut
