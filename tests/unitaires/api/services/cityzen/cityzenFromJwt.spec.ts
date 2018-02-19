@@ -12,7 +12,7 @@ describe('CityzenFromJwt', () => {
         // Act
         const cityzen: Cityzen = cityzenFromJwt(decodedJwtPayload);
         // Assert
-        expect(cityzen.favoritesHotspots).to.have.lengthOf(1);
+        expect(cityzen.favoritesHotspots.size).to.equal(1);
         expect(cityzen).to.have.property('favoritesHotspots');
         expect(cityzen).to.have.property('id');
         expect(cityzen).to.have.property('email');

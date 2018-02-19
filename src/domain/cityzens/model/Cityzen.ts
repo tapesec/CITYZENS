@@ -4,13 +4,13 @@ class Cityzen {
     protected _email : string;
     protected _pseudo : string;
     protected _description : string;
-    protected _favoritesHotspots : string[];
+    protected _favoritesHotspots : Set<string>;
 
     constructor(
         id : string,
         email : string,
         pseudo : string,
-        favoritesHotspots? : string[],
+        favoritesHotspots? : Set<string>,
         description? : string,
     ) {
         this._id = id;
@@ -40,7 +40,7 @@ class Cityzen {
         return this._description;
     }
 
-    get favoritesHotspots() : string[] {
+    get favoritesHotspots() : Set<string> {
         return this._favoritesHotspots;
     }
 
@@ -50,9 +50,9 @@ class Cityzen {
 
     addHotspotAsFavorit(hotspotId : string) : void {
         if (!this._favoritesHotspots) {
-            this._favoritesHotspots = [];
+            this._favoritesHotspots = new Set<string>();
         }
-        this._favoritesHotspots.push(hotspotId);
+        this._favoritesHotspots.add(hotspotId);
     }
 
     toJSON() {

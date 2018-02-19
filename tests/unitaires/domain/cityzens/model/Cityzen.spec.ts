@@ -9,14 +9,14 @@ describe('Cityzens entity', () => {
         const id = 'auth0|fake-id1';
         const email : string = 'mail@mailbox.com';
         const pseudo : string = 'kenny';
-        const favoritsHotspots : string[] = ['fake-id', 'fake-id-2'];
+        const favoritsHotspots = new Set<string>(['fake-id', 'fake-id-2']);
         const description : string = 'fake description';
         // Act
         const kenny : Cityzen = new Cityzen(id, email, pseudo, favoritsHotspots, description);
         // Arrange
         expect(kenny.email).to.be.equal(email);
         expect(kenny.pseudo).to.be.equal(pseudo);
-        expect(kenny.favoritesHotspots).to.be.eql(['fake-id', 'fake-id-2']);
+        expect(kenny.favoritesHotspots).to.be.eql(favoritsHotspots);
         expect(kenny.description).to.be.equal(description);
     });
 
@@ -37,7 +37,7 @@ describe('Cityzens entity', () => {
         // Act
         elodie.addHotspotAsFavorit(favoritHotspotId);
         // Assert
-        expect(elodie.favoritesHotspots).to.be.lengthOf(1);
-        expect(elodie.favoritesHotspots[0]).to.be.equal(favoritHotspotId);
+        expect(elodie.favoritesHotspots.size).to.be.equal(1);
+        expect(elodie.favoritesHotspots.has(favoritHotspotId)).to.be.true;
     });
 });
