@@ -1,5 +1,6 @@
 import config from './../config';
 import { AlgoliaIndex, AlgoliaClient } from 'algoliasearch';
+import retryPromise from '../services/errors/retryPromise';
 
 class AlgoliaAPI {
     protected indexes: Map<string, AlgoliaIndex>;
@@ -20,8 +21,13 @@ class AlgoliaAPI {
         );
     }
 
+
     public sendObject(indexName: string, data: any, id?: string): Promise<any> {
-        return this.indexes.get(indexName).addObject(data, id);
+        const opts = {
+            retries: 5,
+        };
+
+        return retryPromise(() => this.indexes.get(indexName).addObject(data, id), opts);
     }
 }
 
