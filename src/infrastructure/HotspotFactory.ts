@@ -162,9 +162,8 @@ class HotspotFactory {
             iconType === HotspotIconType.Handicap ||
             iconType === HotspotIconType.RoadWorks) {
             return iconType;
-        } else {
-            throw new InvalidArgumentError('Unknow Hotspot iconType');
         }
+        throw new InvalidArgumentError('Unknow Hotspot iconType');
     }
 
     private setType = (hotspotType: any) => {
@@ -173,9 +172,8 @@ class HotspotFactory {
             hotspotType === HotspotType.Alert
             ) {
             return hotspotType;
-        } else {
-            throw new InvalidArgumentError('Unknow Hotspot type');
         }
+        throw new InvalidArgumentError('Unknow Hotspot type');
     }
 
     private createMediaBuilder = (data: any) => {
