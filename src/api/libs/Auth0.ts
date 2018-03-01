@@ -1,5 +1,6 @@
 import config from '../config';
 import { OK } from 'http-status-codes';
+import retryPromise from '../services/errors/retryPromise';
 const request = require('request');
 
 
@@ -34,7 +35,7 @@ class Auth0 {
             body: { user_metadata: data },
             json: true,
         };
-        return this.apiCall(options);
+        return this.retryApiCall(options);
     }
 
     public getAuthenticationRefreshToken = (refreshToken : string) : Promise<any> => {
@@ -52,7 +53,14 @@ class Auth0 {
             },
             json: true,
         };
-        return this.apiCall(options);
+        return this.retryApiCall(options);
+    }
+
+    private retryApiCall = (opts: any): Promise<any> => {
+        const retryOpts = {
+            retries: 2,
+        };
+        return retryPromise(() => this.apiCall(opts), retryOpts);
     }
 
     private apiCall = (options : any) : any => {

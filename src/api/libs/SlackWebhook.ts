@@ -1,4 +1,5 @@
 import { OK } from 'http-status-codes';
+import retryPromise from '../services/errors/retryPromise';
 
 export interface SlackWebhookOptions {
     url : string;
@@ -26,9 +27,15 @@ class SlackWebhook {
             },
             json: true,
         };
-        return this.apiCall(options);
+        return this.retryApiCall(options);
     }
 
+    private retryApiCall = (opts: any): Promise<any> => {
+        const retryOpts = {
+            retries: 5,
+        };
+        return retryPromise(() => this.apiCall(opts), retryOpts);
+    }
     private apiCall = (options : any) : any => {
         return new Promise((resolve, reject) => {
             this.request(options, (error : any, response : any, body : any) => {
