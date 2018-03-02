@@ -4,6 +4,7 @@ const defaultOpts = {
     delayBase: 2,
     delayMultiple: 100,
     delayCustom: undefined as number[],
+    onError: (err: any) => {},
 };
 
 const sleep = (ms: number): Promise<{}> => {
@@ -26,6 +27,8 @@ export default async <T>(call: () => Promise<T>, _opts?: any): Promise<T> => {
             ? opts.delayCustom
             : defaultOpts.delayCustom;
 
+    const onError = opts.onError ? opts.onError : defaultOpts.onError;
+
     let result: T;
     let err: any;
 
@@ -37,6 +40,7 @@ export default async <T>(call: () => Promise<T>, _opts?: any): Promise<T> => {
             return result;
         } catch (error) {
             err = error;
+            onError(err);
             await sleep(lastDelay);
 
             lastDelay *= delayBase;
