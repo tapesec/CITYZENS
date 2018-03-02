@@ -19,6 +19,7 @@ const cors = corsMiddleware({
         'Api-Version',
         'Origin',
         'X-Requested-With',
+        'Authorization',
     ],
 });
 server.pre(cors.preflight);
