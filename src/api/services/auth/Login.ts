@@ -32,6 +32,7 @@ class Login {
             };
 
             const callback = (err: any, res: any, body: any) => {
+                if (err) return reject({ err, body });
                 if (res.statusCode !== 200) {
                     reject({
                         err,
