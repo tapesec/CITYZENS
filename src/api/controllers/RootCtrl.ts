@@ -39,7 +39,7 @@ class RootCtrl {
         if (!req.header('Authorization')) return next();
 
         const access_token = req.header('Authorization').slice(7);
-
+        if (access_token === '') return next();
         try {
             this.userInfo = await this.loginService.auth0UserInfo(access_token);
         } catch (err) {}
