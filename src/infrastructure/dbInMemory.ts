@@ -135,12 +135,14 @@ export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
 export const CITYZEN_LOUISE = JSON.parse(JSON.stringify(CityzenSample.LOUISE));
 export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
 export const CITYZEN_LIONNEL = JSON.parse(JSON.stringify(CityzenSample.LIONNEL));
+export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2));
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 
 cityzenCollection.insert(CITYZEN_ELODIE);
 cityzenCollection.insert(CITYZEN_LOUISE);
 cityzenCollection.insert(CITYZEN_MARTIN);
 cityzenCollection.insert(CITYZEN_LIONNEL);
+cityzenCollection.insert(CITYZEN_LIONNEL2);
 cityzenCollection.insert(CITYZEN_LUCA);
 
 // tslint:disable-next-line:no-unused-variable

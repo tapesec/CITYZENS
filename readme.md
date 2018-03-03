@@ -61,7 +61,7 @@ Liste des plugins
                 "dotenv/config"
             ],
         },
-        
+
         {
             "type": "node",
             "request": "launch",
@@ -72,65 +72,6 @@ Liste des plugins
                 "dotenv/config"
             ],
         },
-
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch via NPM",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run-script",
-                "debug",
-                "start"
-            ],
-            "port": 9229
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug api",
-            "program": "${workspaceFolder}/build/api/server.js",
-            "stopOnEntry": false,
-            "runtimeArgs": [
-                "--require", "dotenv/config"
-            ],
-            "args": [
-                "--require", "dotenv/config"
-            ],
-            "preLaunchTask": null,
-            "sourceMaps": true,
-            "protocol": "inspector"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Mocha Tests",
-            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "protocol": "inspector",
-            "args": [
-                "-r",
-                "ts-node/register",
-                "${workspaceFolder}/tests/**/*.spec.ts"
-            ],
-            "internalConsoleOptions": "openOnSessionStart",
-            "sourceMaps": true
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "node server.js",
-            "program": "${workspaceFolder}/build/api/server.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/src\\api\\controllers\\RootCtrl.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/build/**/*.js"
-            ]
-        }
     ]
 }
 ```

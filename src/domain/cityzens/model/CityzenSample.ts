@@ -26,6 +26,12 @@ class CityzenSample {
         'auth0|59f989805c12313f24aae17b',
         'lionel.dupouy@gmail.com', 'Lasalle', undefined, 'Hipster');
 
+
+    public static LIONNEL2 : Cityzen =
+    new Cityzen(
+        'auth0|59f836a23f551143a6964889',
+        'lionnel.dupouy@gmail.com', 'Tapesec', undefined, 'Casu');
+
     public static LUCA : Cityzen =
     new Cityzen(
         'auth0|5a1e6928f96aa12d71333e0e',
