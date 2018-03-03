@@ -43,7 +43,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(),
+                new Set<string>(['fake-id1', 'fake-id2']),
             ),
         );
         // Assert
@@ -53,6 +53,38 @@ describe('WallHotspot entity', () => {
         expect(hotspot.slug).to.be.equal(slug(title));
         expect(hotspot.author).to.be.equal(AuthorSample.LOUISE);
         expect(hotspot.type).to.be.equal(HotspotType.WallMessage);
+        /* console will output {} to equal {} due to map deep structure but the test is correct
+        .to.have.any.keys('fake-id2'); could works but
+        not yet implemented in "@types/chai": "^4.1.2"
+        https://github.com/chaijs/chai/releases/tag/4.0.0 */
+        expect(hotspot.members).to.deep.equal(new Set<string>(['fake-id1', 'fake-id2']));
+    });
+
+    it('Should return a stringified members as array when hotspot toJson() called', () => {
+        // Arrange
+        const id: string = v4();
+        const title: string = 'Mairie';
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
+                HotspotScope.Public,
+                new Set<string>(['fake-id1', 'fake-id2']),
+            ),
+        );
+
+        expect(JSON.stringify(hotspot)).to.match(/"members":\["fake-id1","fake-id2"\]/);
     });
 
     it('Should move to new position', () => {

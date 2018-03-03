@@ -43,6 +43,10 @@ describe('HotspotFactory', () => {
         const fakeDataFromDatabase: any = {
             id: 'fake-id',
             title: 'new title',
+            members : [
+                'fake-member-id',
+                'fake-member-id2',
+            ],
             position: {
                 latitude: 12.25632,
                 longitude: 47.12345,
@@ -68,6 +72,8 @@ describe('HotspotFactory', () => {
         expect(fakeNewHotspot).to.have.property('id').and.to.be.equal('fake-id');
         expect(fakeNewHotspot).to.have.property('title').and.to.be.equal('new title');
         expect(fakeNewHotspot).to.have.property('scope').and.to.be.equal('private');
+        expect(fakeNewHotspot).to.have.property('members').and
+        .to.deep.equal(new Set(['fake-member-id', 'fake-member-id2']));
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 });

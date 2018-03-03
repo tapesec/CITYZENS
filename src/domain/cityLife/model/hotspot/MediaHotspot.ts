@@ -40,8 +40,7 @@ class MediaHotspot extends Hotspot {
         this._members.add(member.id);
     }
     public excludeMember(member: Cityzen) {
-        if (this._members.has(member.id))
-            this._members.delete(member.id);
+        if (this._members.has(member.id)) this._members.delete(member.id);
     }
 
     public changeTitle(title: string): void {
@@ -63,7 +62,7 @@ class MediaHotspot extends Hotspot {
             scope: this._scope,
             title: this._title.toString(),
             slug: this._slug.toString(),
-            members: this._members,
+            members: Array.from(this._members),
         };
     }
 }
