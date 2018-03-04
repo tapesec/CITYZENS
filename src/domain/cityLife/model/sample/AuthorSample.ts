@@ -11,6 +11,8 @@ class AuthorSample {
     new Author(CityzenSample.ELODIE.pseudo, CityzenSample.ELODIE.id);
     public static LUCA : Author =
     new Author(CityzenSample.LUCA.pseudo, CityzenSample.LUCA.id);
+    public static LIONNEL2 : Author =
+    new Author(CityzenSample.LIONNEL2.pseudo, CityzenSample.LIONNEL2.id);
 }
 
 export default AuthorSample;

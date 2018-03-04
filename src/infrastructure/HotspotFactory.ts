@@ -35,9 +35,7 @@ const slug = require('slug');
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
-
-    public build = (data: any): WallHotspot|EventHotspot|AlertHotspot => {
-
+    public build = (data: any): WallHotspot | EventHotspot | AlertHotspot => {
         if (data.type === HotspotType.WallMessage) {
             this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);
             return this.createWallHotspot(data);
@@ -50,12 +48,11 @@ class HotspotFactory {
             this.throwErrorIfRequiredAndUndefined(data, requiredAlertHotspotProperties);
             return this.createAlertHotspot(data);
         }
-
-    }
+    };
 
     private createWallHotspot = (data: any): WallHotspot => {
         return new WallHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
-    }
+    };
 
     private createEventHotspot = (data: any): EventHotspot => {
         let dateEnd: Date;
@@ -76,8 +73,12 @@ class HotspotFactory {
         }
 
         return new EventHotspot(
-            this.createHotspotBuilder(data), this.createMediaBuilder(data), dateEnd, description);
-    }
+            this.createHotspotBuilder(data),
+            this.createMediaBuilder(data),
+            dateEnd,
+            description,
+        );
+    };
 
     private createAlertHotspot = (data: any): AlertHotspot => {
         let message: AlertMessage;
@@ -90,9 +91,8 @@ class HotspotFactory {
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
         }
-        return new AlertHotspot(
-            this.createHotspotBuilder(data), message);
-    }
+        return new AlertHotspot(this.createHotspotBuilder(data), message);
+    };
 
     private createHotspotBuilder = (data: any): HotspotBuilder => {
         let hotspotId: HotspotId;
@@ -105,15 +105,15 @@ class HotspotFactory {
         let icon: HotspotIconType;
         // data from both database or user
         if (data.position) {
-            position = new Position(data.position.latitude,data.position.longitude);
+            position = new Position(data.position.latitude, data.position.longitude);
         }
         // data from both database or user
         if (data.address) {
-            address = new Address(data.address.name,data.address.city);
+            address = new Address(data.address.name, data.address.city);
         }
         // data from both database or user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo,data.cityzen.id);
+            author = new Author(data.cityzen.pseudo, data.cityzen.id);
         }
         // new hotspot posted by user
         if (!data.id) {
@@ -142,39 +142,33 @@ class HotspotFactory {
             throw new InvalidArgumentError(error.message);
         }
 
-        return new HotspotBuilder(
-            hotspotId,
-            position,
-            author,
-            cityId,
-            address,
-            views,
-            type,
-            icon,
-        );
-    }
+        return new HotspotBuilder(hotspotId, position, author, cityId, address, views, type, icon);
+    };
 
     private setIconType = (iconType: any) => {
-        if (iconType === HotspotIconType.Wall ||
+        if (
+            iconType === HotspotIconType.Wall ||
             iconType === HotspotIconType.Event ||
             iconType === HotspotIconType.Accident ||
             iconType === HotspotIconType.Destruction ||
             iconType === HotspotIconType.Handicap ||
-            iconType === HotspotIconType.RoadWorks) {
+            iconType === HotspotIconType.RoadWorks
+        ) {
             return iconType;
         }
         throw new InvalidArgumentError('Unknow Hotspot iconType');
-    }
+    };
 
     private setType = (hotspotType: any) => {
-        if (hotspotType === HotspotType.WallMessage ||
+        if (
+            hotspotType === HotspotType.WallMessage ||
             hotspotType === HotspotType.Event ||
             hotspotType === HotspotType.Alert
-            ) {
+        ) {
             return hotspotType;
         }
         throw new InvalidArgumentError('Unknow Hotspot type');
-    }
+    };
 
     private createMediaBuilder = (data: any) => {
         let hotspotTitle: HotspotTitle;
@@ -186,8 +180,7 @@ class HotspotFactory {
             hotspotSlug = new HotspotSlug(slug(data.title));
         }
         if (data.scope) {
-            scope = data.scope === HotspotScope.Public ?
-            HotspotScope.Public : HotspotScope.Private;
+            scope = data.scope === HotspotScope.Public ? HotspotScope.Public : HotspotScope.Private;
         }
         if (data.members) {
             data.members.forEach((m: string) => {
@@ -195,12 +188,11 @@ class HotspotFactory {
             });
         }
         return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members);
-    }
+    };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {
-
         const errorMessage = '%s must be provided to HotspotFactory';
-        requiredProperties.forEach((prop) => {
+        requiredProperties.forEach(prop => {
             if (!data || !data[prop]) {
                 const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
                 hook.alert(
@@ -210,6 +202,6 @@ class HotspotFactory {
                 throw new InvalidArgumentError(format(errorMessage, prop));
             }
         });
-    }
+    };
 }
 export default HotspotFactory;

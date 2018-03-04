@@ -1,6 +1,4 @@
-
 class UserInfoAuth0 {
-
     private _sub: string;
     private _nickname: string;
     private _name: string;
@@ -25,40 +23,39 @@ class UserInfoAuth0 {
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
     }
 
-
-    public get sub() : string {
+    public get sub(): string {
         return this._sub;
     }
 
-    public get nickname() : string {
+    public get nickname(): string {
         return this._nickname;
     }
 
-    public get name() : string {
+    public get name(): string {
         return this._name;
     }
 
-    public get picture() : string {
+    public get picture(): string {
         return this._picture;
     }
 
-    public get updatedAt() : string {
+    public get updatedAt(): string {
         return this._updateAt;
     }
 
-    public get email() : string {
+    public get email(): string {
         return this._email;
     }
 
-    public get emailVerified() : boolean {
+    public get emailVerified(): boolean {
         return this._email_verified;
     }
 
-    public get userMetadata() : any {
+    public get userMetadata(): any {
         return this._user_metadata;
     }
 
-    public get appMetadata() : any {
+    public get appMetadata(): any {
         return this._app_metadata;
     }
 }

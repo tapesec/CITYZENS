@@ -84,6 +84,17 @@ class HotspotBuilderSample {
         HotspotType.Event,
         HotspotIconType.Event,
     );
+
+    public static DOCTOR_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('doctor-static-id'),
+        PositionSample.DOCTOR,
+        AuthorSample.LIONNEL2,
+        new CityId('33273'),
+        AddressSample.DOCTOR_ADDRESS,
+        new ViewsCount(1),
+        HotspotType.WallMessage,
+        HotspotIconType.Wall,
+    );
 }
 
 export default HotspotBuilderSample;

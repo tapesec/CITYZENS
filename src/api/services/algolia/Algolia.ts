@@ -6,9 +6,7 @@ import HotspotRepositoryInMemory from './../../../infrastructure/HotspotReposito
 import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
 
 class Algolia {
-
-    constructor(protected algolia: AlgoliaAPI) {
-    }
+    constructor(protected algolia: AlgoliaAPI) {}
 
     public initHotspots(): void {
         this.algolia.initIndex('hotspots');
@@ -18,7 +16,6 @@ class Algolia {
         hotspot: T,
         repository: HotspotRepositoryInMemory,
     ): Promise<any> {
-
         const data: any = {
             address: hotspot.address.name,
             cityId: hotspot.cityId,
@@ -27,21 +24,13 @@ class Algolia {
         };
         if (hotspot instanceof AlertHotspot) {
             data.message = hotspot.message;
-        } else if (
-            hotspot instanceof EventHotspot ||
-            hotspot instanceof WallHotspot
-        ) {
+        } else if (hotspot instanceof EventHotspot || hotspot instanceof WallHotspot) {
             data.title = hotspot.title;
             data.slug = hotspot.slug;
         }
 
-        return this.algolia.sendObject(
-            'hotspots',
-            data,
-            hotspot.id,
-        );
+        return this.algolia.sendObject('hotspots', data, hotspot.id);
     }
-
 }
 
 export default Algolia;

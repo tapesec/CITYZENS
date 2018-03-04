@@ -4,14 +4,12 @@ import Message from '../domain/cityLife/model/messages/Message';
 import { v4 } from 'uuid';
 
 class MessageFactory {
-
-    public createMessage = (data: any) : Message => {
-
-        let author : Author;
-        let pinned : boolean;
-        let hotspotId : HotspotId;
-        let createdAt : Date;
-        let updatedAt : Date;
+    public createMessage = (data: any): Message => {
+        let author: Author;
+        let pinned: boolean;
+        let hotspotId: HotspotId;
+        let createdAt: Date;
+        let updatedAt: Date;
 
         if (!data.id) {
             data.id = v4();
@@ -42,8 +40,15 @@ class MessageFactory {
         }
 
         return new Message(
-            data.id, data.title, data.body, author, pinned, hotspotId, createdAt, updatedAt,
+            data.id,
+            data.title,
+            data.body,
+            author,
+            pinned,
+            hotspotId,
+            createdAt,
+            updatedAt,
         );
-    }
+    };
 }
 export default MessageFactory;

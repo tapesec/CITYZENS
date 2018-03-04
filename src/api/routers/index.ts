@@ -63,21 +63,40 @@ export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
-    routers.push(new ProfileRouter(
-        new ProfileCtrl(
-            errorHandler, loginService, cityzenAuth0Repository, auth0Sdk, hotspotRepositoryInMemory,
+    routers.push(
+        new ProfileRouter(
+            new ProfileCtrl(
+                errorHandler,
+                loginService,
+                cityzenAuth0Repository,
+                auth0Sdk,
+                hotspotRepositoryInMemory,
+            ),
         ),
-    ));
+    );
     routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
-    routers.push(new HotspotRouter(new HotspotCtrl(
-        errorHandler, loginService, hotspotRepositoryInMemory, new HotspotFactory(), algolia,
-    )));
-    routers.push(new MessageRouter(
-        new MessageCtrl(
-            errorHandler, loginService, hotspotRepositoryInMemory,
-            messageRepositoryInMemory, new MessageFactory(),
+    routers.push(
+        new HotspotRouter(
+            new HotspotCtrl(
+                errorHandler,
+                loginService,
+                hotspotRepositoryInMemory,
+                new HotspotFactory(),
+                algolia,
+            ),
         ),
-    ));
+    );
+    routers.push(
+        new MessageRouter(
+            new MessageCtrl(
+                errorHandler,
+                loginService,
+                hotspotRepositoryInMemory,
+                messageRepositoryInMemory,
+                new MessageFactory(),
+            ),
+        ),
+    );
 
     routers.forEach(r => r.bind(server));
 };

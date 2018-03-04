@@ -47,6 +47,13 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new Set<string>(),
     );
+
+    public static DOCTOR_MEDIA_BUILDER = new MediaBuilder(
+        new HotspotTitle('Docteur Maboul'),
+        new HotspotSlug(slug('Docteur Maboul')),
+        HotspotScope.Private,
+        new Set<string>(),
+    );
 }
 
 export default MediaBuilderSample;

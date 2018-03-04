@@ -1,27 +1,25 @@
-
 class DecodedJwtPayload {
+    protected payload: any;
+    protected payloadNamespace: string;
 
-    protected payload : any;
-    protected payloadNamespace : string;
-
-    constructor(tokenPayload : any, namespace : string) {
+    constructor(tokenPayload: any, namespace: string) {
         this.payload = tokenPayload;
         this.payloadNamespace = namespace;
     }
 
-    public get sub() : string {
+    public get sub(): string {
         return this.payload.sub;
     }
 
-    public get email() : string {
+    public get email(): string {
         return this.payload.email;
     }
 
-    public get nickname() : string {
+    public get nickname(): string {
         return this.payload.nickname;
     }
 
-    public get userMetadata() : any {
+    public get userMetadata(): any {
         return this.payload[this.payloadNamespace + '/user_metadata'];
     }
 }

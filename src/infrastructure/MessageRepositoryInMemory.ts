@@ -4,12 +4,11 @@ import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import orm from './orm';
 import IMessageRepository from 'src/domain/cityLife/model/messages/IMessageRepository';
 
-class MessageRepositoryInMemory implements IMessageRepository{
-
-    protected orm : any;
+class MessageRepositoryInMemory implements IMessageRepository {
+    protected orm: any;
     protected messageFactory: MessageFactory;
 
-    constructor(orm : any, messageFactory: MessageFactory) {
+    constructor(orm: any, messageFactory: MessageFactory) {
         this.orm = orm;
         this.messageFactory = messageFactory;
     }
@@ -17,7 +16,7 @@ class MessageRepositoryInMemory implements IMessageRepository{
     public findByHotspotId(id: string): Message[] {
         const hotspotId = new HotspotId(id);
         const data = this.orm.message.findAll({ hotspotId: hotspotId.id, removed: false });
-        return data.map((messageEntry : any) => this.messageFactory.createMessage(messageEntry));
+        return data.map((messageEntry: any) => this.messageFactory.createMessage(messageEntry));
     }
 
     public findById(id: string): Message {
@@ -44,8 +43,10 @@ class MessageRepositoryInMemory implements IMessageRepository{
         this.orm.message.delete(id);
     }
 }
-const messageRepositoryInMemory: MessageRepositoryInMemory =
-new MessageRepositoryInMemory(orm, new MessageFactory());
+const messageRepositoryInMemory: MessageRepositoryInMemory = new MessageRepositoryInMemory(
+    orm,
+    new MessageFactory(),
+);
 
 export { MessageRepositoryInMemory };
 export default messageRepositoryInMemory;

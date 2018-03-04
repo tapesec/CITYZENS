@@ -16,6 +16,8 @@ class AddressSample {
     new Address('6 avenue de Verdin', CitySample.MARTIGNAS.name);
     public static MATCH_ADDRESS : Address =
     new Address('23 Avenue de Verdun', CitySample.MARTIGNAS.name);
+    public static DOCTOR_ADDRESS : Address =
+    new Address('3 Impasse Ludovic Trarieux', CitySample.MARTIGNAS.name);
 }
 
 export default AddressSample;

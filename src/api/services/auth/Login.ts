@@ -2,22 +2,21 @@ import ErrorHandler from '../errors/ErrorHandler';
 import UserInfoAuth0 from './UserInfoAuth0';
 
 export interface LoginOptions {
-    url : string;
-    clientId : string;
-    clientSecret : string;
+    url: string;
+    clientId: string;
+    clientSecret: string;
 }
 
 class Login {
-
     private errorHandler: ErrorHandler;
     // tslint:disable-next-line:no-unused-variable
-    private username : string;
+    private username: string;
     // tslint:disable-next-line:no-unused-variable
-    private password : string;
-    private opts : any;
-    private request : any;
+    private password: string;
+    private opts: any;
+    private request: any;
 
-    constructor(options : LoginOptions, request : any, errorHandler: ErrorHandler) {
+    constructor(options: LoginOptions, request: any, errorHandler: ErrorHandler) {
         this.opts = options;
         this.request = request;
         this.errorHandler = errorHandler;
@@ -44,19 +43,18 @@ class Login {
             };
 
             this.request(data, callback);
-        }).catch((r) => {
+        }).catch(r => {
             throw new Error(`Err: ${r.err},\n body: ${r.body}, \n ${accessToken}`);
         });
     }
 
-    try(username : string, password : string) {
+    try(username: string, password: string) {
         return new Promise((resolve, reject) => {
             const data = {
                 method: 'POST',
                 url: this.opts.url + '/oauth/token',
                 headers: { 'content-type': 'application/json' },
-                body:
-                {
+                body: {
                     username,
                     password,
                     grant_type: 'password',
@@ -69,7 +67,7 @@ class Login {
                 json: true,
             };
 
-            const callback = (error : any, response : any, body : any) => {
+            const callback = (error: any, response: any, body: any) => {
                 if (error) {
                     reject(this.errorHandler.logAndCreateInternal('GET auth', error));
                 } else {

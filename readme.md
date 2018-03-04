@@ -16,7 +16,6 @@ npm install
 
 Créer un fichier .env avec les variables nécessaires (voir src/api/config/index)
 
-
 ```sh
 npm start
 ```
@@ -32,6 +31,7 @@ npm test
 ```sh
 npm run tslint
 ```
+
 ### Consulter la doc API
 
 Après le lancement du serveur se rendre sur [la page de doc swagger](localhost:3000/api-docs/#/)
@@ -39,27 +39,26 @@ Après le lancement du serveur se rendre sur [la page de doc swagger](localhost:
 ### Visual studio code :
 
 Liste des plugins
-* Typescript hero
-* Move Ts
-* TSlint
+
+*   Typescript hero
+*   Move Ts
+*   TSlint
 
 ### .vscode
 
 #### launch.json
+
 ```json
 {
     "version": "0.2.0",
     "configurations": [
-         {
+        {
             "type": "node",
             "request": "launch",
             "name": "build & debug",
             "preLaunchTask": "run tsc",
             "program": "${workspaceFolder}/build/api/server.js",
-            "runtimeArgs": [
-                "--require",
-                "dotenv/config"
-            ],
+            "runtimeArgs": ["--require", "dotenv/config"]
         },
 
         {
@@ -67,15 +66,14 @@ Liste des plugins
             "request": "launch",
             "name": "debug",
             "program": "${workspaceFolder}/build/api/server.js",
-            "runtimeArgs": [
-                "--require",
-                "dotenv/config"
-            ],
-        },
+            "runtimeArgs": ["--require", "dotenv/config"]
+        }
     ]
 }
 ```
+
 #### tasks.json
+
 ```json
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
@@ -90,8 +88,17 @@ Liste des plugins
     ]
 }
 ```
+
+#### paramètre vscode de dossiers pour prettier/eslint
+
+```json
+{
+    "editor.formatOnSave": true,
+    "tslint.exclude": "C:\\workspace\\CITYZENS\\tests\\**\\*.spec.ts"
+}
+```
+
 ### remarque
 
 La validation par jsonSchema me semble lente (57ms) pour valider moins d'une dizaine d'attribut
 à méditer un jour ou les perfs seront à optimiser
-

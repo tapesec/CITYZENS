@@ -19,6 +19,9 @@ class WallHotspotSample {
     public static TOEDIT: WallHotspot = new WallHotspot(
         hotspotBuilderSample.TOEDIT_HOTSPOT_BUILDER, mediaBuilderSample.TOEDIT_MEDIA_BUILDER);
 
+    public static DOCTOR: WallHotspot = new WallHotspot(
+        hotspotBuilderSample.DOCTOR_HOTSPOT_BUILDER, mediaBuilderSample.DOCTOR_MEDIA_BUILDER);
+
 }
 
 export default WallHotspotSample;
