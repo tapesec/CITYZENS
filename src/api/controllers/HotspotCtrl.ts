@@ -1,24 +1,26 @@
+import * as rest from 'restify';
+import RootCtrl from './RootCtrl';
+import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
+import hotspotsByArea from '../services/hotspot/hotspotsByArea';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import isAuthorized from './../services/hotspot/isAuthorized';
+import actAsSpecified from '../services/hotspot/actAsSpecified';
+import HotspotReducer from './../services/hotspot/HotspotReducer';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import Login from '../services/auth/Login';
+import Algolia from './../services/algolia/Algolia';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
 import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
-import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
-import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import RootCtrl from './RootCtrl';
-import * as rest from 'restify';
-import { strToNumQSProps } from '../helpers/';
-import { CREATED, OK, getStatusText } from 'http-status-codes';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import { getHotspots, postMemberSchema } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
-import actAsSpecified from '../services/hotspot/actAsSpecified';
-import ErrorHandler from '../services/errors/ErrorHandler';
-import Login from '../services/auth/Login';
-import Algolia from './../services/algolia/Algolia';
-import isAuthorized from './../services/hotspot/isAuthorized';
+import { strToNumQSProps } from '../helpers/';
+import { CREATED, OK, getStatusText } from 'http-status-codes';
+import Author from '../../domain/cityLife/model/author/Author';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -44,16 +46,6 @@ class HotspotCtrl extends RootCtrl {
         this.algolia.initHotspots();
     }
 
-    /*
-    Si pas connecté
-        retourner uniquement tous les hotspots publics
-    Si connecté
-        retourner
-            tous les hotspots public
-            tous les hotspots privée dont le cityzen connecté est membre
-            tous les hotspots privée dont le cityzen est l'autheur
-*/
-
     // method=GET url=/hotspots
     public hotspots = (req: rest.Request, res: rest.Response, next: rest.Next) => {
         const queryStrings: any = strToNumQSProps(req.query, ['north', 'east', 'west', 'south']);
@@ -73,12 +65,14 @@ class HotspotCtrl extends RootCtrl {
             } else if (queryStrings.insee) {
                 hotspotsResult = hotspotsByCodeCommune(queryStrings.insee, this.hotspotRepository);
             }
-            // nom du service qui applique les règles métiers
-            // filterResultByVisitorStatus
+            const visitor = this.userInfo ? cityzenFromAuth0(this.userInfo) : undefined;
+            const hotspotReducer = new HotspotReducer(hotspotsResult);
+            const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(visitor);
+
+            res.json(OK, visibleHotspots);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
         }
-        res.json(OK, hotspotsResult);
     };
 
     public getHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {

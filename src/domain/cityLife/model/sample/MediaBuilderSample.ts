@@ -2,6 +2,7 @@ import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotTitle from '../hotspot/HotspotTitle';
 import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/HotspotSlug';
+import CityzenSample from '../../../cityzens/model/CityzenSample';
 
 const slug = require('slug');
 
@@ -52,7 +53,7 @@ class MediaBuilderSample {
         new HotspotTitle('Docteur Maboul'),
         new HotspotSlug(slug('Docteur Maboul')),
         HotspotScope.Private,
-        new Set<string>(),
+        new Set<string>([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
     );
 }
 
