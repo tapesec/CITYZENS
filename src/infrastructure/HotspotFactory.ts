@@ -29,6 +29,7 @@ import {
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import HotspotSlug from './../domain/cityLife/model/HotspotSlug';
+import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 const request = require('request');
 const slug = require('slug');
 
@@ -174,7 +175,7 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        const members = new Set<string>();
+        const members = new MemberList();
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
             hotspotSlug = new HotspotSlug(slug(data.title));
