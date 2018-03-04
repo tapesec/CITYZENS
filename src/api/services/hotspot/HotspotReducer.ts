@@ -57,9 +57,9 @@ class HotspotReducer {
         return Array.from(this.filteredHotspotCollections);
     };
 
-    public renderVisibleHotspotsByVisitorStatus = (visitor: any): Hotspot[] => {
+    public renderVisibleHotspotsByVisitorStatus = (visitor: Cityzen): Hotspot[] => {
         this.pickPublicHotspot();
-        if (visitor && visitor instanceof Cityzen) {
+        if (visitor) {
             this.pickHotspotMemberShip(visitor.id);
             this.pickHotspotOwnerShip(new Author(visitor.pseudo, visitor.id));
         }

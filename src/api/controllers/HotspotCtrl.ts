@@ -65,9 +65,10 @@ class HotspotCtrl extends RootCtrl {
             } else if (queryStrings.insee) {
                 hotspotsResult = hotspotsByCodeCommune(queryStrings.insee, this.hotspotRepository);
             }
-            const visitor = this.userInfo ? cityzenFromAuth0(this.userInfo) : undefined;
             const hotspotReducer = new HotspotReducer(hotspotsResult);
-            const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(visitor);
+            const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(
+                this.authenticatedCityzen,
+            );
 
             res.json(OK, visibleHotspots);
         } catch (err) {
@@ -87,9 +88,8 @@ class HotspotCtrl extends RootCtrl {
 
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
-            const caller = this.userInfo ? cityzenFromAuth0(this.userInfo) : undefined;
 
-            if (isAuthorized(hotspot, caller)) {
+            if (isAuthorized(hotspot, this.authenticatedCityzen)) {
                 res.json(OK, hotspot);
             } else {
                 return next(
@@ -116,7 +116,7 @@ class HotspotCtrl extends RootCtrl {
         }
 
         try {
-            req.body.cityzen = cityzenFromAuth0(this.userInfo);
+            req.body.cityzen = this.authenticatedCityzen;
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
@@ -179,7 +179,6 @@ class HotspotCtrl extends RootCtrl {
         }
         try {
             const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
-            const caller = cityzenFromAuth0(this.userInfo);
 
             if (hotspot instanceof AlertHotspot) {
                 return next(
@@ -189,7 +188,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (hotspot.author.id !== caller.id) {
+            if (hotspot.author.id !== this.authenticatedCityzen.id) {
                 return next(
                     this.errorHandler.logAndCreateUnautorized(
                         `POST addMember ${req.path()}`,
@@ -197,7 +196,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (caller.id === req.body.memberId) {
+            if (this.authenticatedCityzen.id === req.body.memberId) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
                         `POST addMember ${req.path()}`,
