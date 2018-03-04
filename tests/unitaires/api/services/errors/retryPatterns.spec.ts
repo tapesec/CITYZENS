@@ -1,4 +1,5 @@
 import * as TypeMoq from 'typemoq';
+import * as Sinon from 'sinon';
 import * as Chai from 'chai';
 import retryPromise from '../../../../../src/api/services/errors/retryPromise';
 
@@ -20,26 +21,28 @@ describe('RetryPatterns', () => {
         call.verify(x => x(), TypeMoq.Times.once());
     });
 
-    it('Should retry 3 times before a success.', async () => {
+    it('Should retry 3 times before a success and call callback on each errors.', async () => {
         let n = 3;
+
+        const callback = Sinon.stub();
 
         call.reset();
         call
             .setup(x => x())
             .returns(() => {
-                n = n - 1;
                 if (n !== 0) {
+                    n = n - 1;
                     return Promise.reject(1);
                 }
                 return Promise.resolve<number>(0);
             });
 
-        const result = await retryPromise(call.object, { delayMultiple: 1 });
+        const result = await retryPromise(call.object, { delayMultiple: 1, onError: callback });
 
+        Chai.expect(callback.callCount).to.be.equal(3);
         Chai.expect(result).to.be.equal(0);
-        call.verify(x => x(), TypeMoq.Times.exactly(3));
+        call.verify(x => x(), TypeMoq.Times.exactly(4));
     });
-
 
     it('Should retry 5 times and finally fail.', async () => {
 
