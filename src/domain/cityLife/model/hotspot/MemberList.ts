@@ -16,14 +16,14 @@ class MemberList {
         return Array.from(this._memberSet);
     }
 
-    public add(c: string) {
-        this._memberSet.add(c);
+    public add(cityzenId: string) {
+        this._memberSet.add(cityzenId);
     }
-    public has(c: string) {
-        return this._memberSet.has(c);
+    public has(cityzenId: string) {
+        return this._memberSet.has(cityzenId);
     }
-    public delete(c: string) {
-        if (this.has(c)) this._memberSet.delete(c);
+    public delete(cityzenId: string) {
+        if (this.has(cityzenId)) this._memberSet.delete(cityzenId);
     }
 
     public toString() {
