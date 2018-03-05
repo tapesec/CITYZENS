@@ -67,7 +67,7 @@ class HotspotCtrl extends RootCtrl {
             }
             const hotspotReducer = new HotspotReducer(hotspotsResult);
             const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(
-                this.authenticatedCityzen,
+                this.cityzenIfAuthenticated,
             );
 
             res.json(OK, visibleHotspots);
@@ -89,7 +89,7 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
 
-            if (isAuthorized(hotspot, this.authenticatedCityzen)) {
+            if (isAuthorized(hotspot, this.cityzenIfAuthenticated)) {
                 res.json(OK, hotspot);
             } else {
                 return next(
@@ -116,7 +116,7 @@ class HotspotCtrl extends RootCtrl {
         }
 
         try {
-            req.body.cityzen = this.authenticatedCityzen;
+            req.body.cityzen = this.cityzenIfAuthenticated;
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
@@ -188,7 +188,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (hotspot.author.id !== this.authenticatedCityzen.id) {
+            if (hotspot.author.id !== this.cityzenIfAuthenticated.id) {
                 return next(
                     this.errorHandler.logAndCreateUnautorized(
                         `POST addMember ${req.path()}`,
@@ -196,7 +196,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (this.authenticatedCityzen.id === req.body.memberId) {
+            if (this.cityzenIfAuthenticated.id === req.body.memberId) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
                         `POST addMember ${req.path()}`,

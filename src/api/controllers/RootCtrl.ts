@@ -10,7 +10,7 @@ class RootCtrl {
     protected schemaValidator: ajv.Ajv = new ajv();
     protected errorHandler: ErrorHandler;
     protected userInfo: UserInfoAuth0;
-    protected authenticatedCityzen: Cityzen;
+    protected cityzenIfAuthenticated: Cityzen;
     protected loginService: Login;
 
     constructor(errorHandler: ErrorHandler, loginService: Login) {
@@ -20,7 +20,7 @@ class RootCtrl {
 
     public loadAuthenticatedUser = async (req: r.Request, res: r.Response, next: r.Next) => {
         this.userInfo = undefined;
-        this.authenticatedCityzen = undefined;
+        this.cityzenIfAuthenticated = undefined;
 
         if (!req.header('Authorization')) {
             return next(
@@ -31,7 +31,7 @@ class RootCtrl {
         const access_token = req.header('Authorization').slice(7);
         try {
             this.userInfo = await this.loginService.auth0UserInfo(access_token);
-            this.authenticatedCityzen = cityzenFromAuth0(this.userInfo);
+            this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
             return next();
         } catch (err) {
             return next(this.errorHandler.logAndCreateUnautorized(req.path(), err.message));
@@ -40,7 +40,7 @@ class RootCtrl {
 
     public optInAuthenticateUser = async (req: r.Request, res: r.Response, next: r.Next) => {
         this.userInfo = undefined;
-        this.authenticatedCityzen = undefined;
+        this.cityzenIfAuthenticated = undefined;
 
         if (!req.header('Authorization')) return next();
 
@@ -48,7 +48,7 @@ class RootCtrl {
         if (access_token === '') return next();
         try {
             this.userInfo = await this.loginService.auth0UserInfo(access_token);
-            this.authenticatedCityzen = cityzenFromAuth0(this.userInfo);
+            this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
         } catch (err) {}
 
         return next();
