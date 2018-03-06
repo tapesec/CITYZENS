@@ -18,11 +18,11 @@ import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/Hotsp
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
 import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
 import HotspotSlug from '../../../../../src/domain/cityLife/model/HotspotSlug';
+import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
 
 const slug = require('slug');
 
 describe('WallHotspot entity', () => {
-
     it('Should have correct properties set by constructor', () => {
         // Arrange
         const id: string = v4();
@@ -43,7 +43,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(['fake-id1', 'fake-id2']),
+                new MemberList(['fake-id1', 'fake-id2']),
             ),
         );
         // Assert
@@ -53,11 +53,7 @@ describe('WallHotspot entity', () => {
         expect(hotspot.slug).to.be.equal(slug(title));
         expect(hotspot.author).to.be.equal(AuthorSample.LOUISE);
         expect(hotspot.type).to.be.equal(HotspotType.WallMessage);
-        /* console will output {} to equal {} due to map deep structure but the test is correct
-        .to.have.any.keys('fake-id2'); could works but
-        not yet implemented in "@types/chai": "^4.1.2"
-        https://github.com/chaijs/chai/releases/tag/4.0.0 */
-        expect(hotspot.members).to.deep.equal(new Set<string>(['fake-id1', 'fake-id2']));
+        expect(hotspot.members.toArray()).to.deep.equal(['fake-id1', 'fake-id2']);
     });
 
     it('Should return a stringified members as array when hotspot toJson() called', () => {
@@ -80,7 +76,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(['fake-id1', 'fake-id2']),
+                new MemberList(['fake-id1', 'fake-id2']),
             ),
         );
 
@@ -107,7 +103,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(),
+                new MemberList(),
             ),
         );
         // Act
@@ -140,7 +136,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(),
+                new MemberList(),
             ),
         );
         // Act
@@ -171,7 +167,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(),
+                new MemberList(),
             ),
         );
         // Act
@@ -201,7 +197,7 @@ describe('WallHotspot entity', () => {
                 new HotspotTitle(title),
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
-                new Set<string>(),
+                new MemberList(),
             ),
         );
         // Act
