@@ -9,6 +9,7 @@ import { OK, getStatusText, CREATED } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Login from '../services/auth/Login';
+import isAuthorized from '../services/hotspot/isAuthorized';
 
 class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -16,6 +17,7 @@ class MessageCtrl extends RootCtrl {
     private messageFactory: MessageFactory;
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
+    private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
 
     constructor(
         errorHandler: ErrorHandler,
@@ -36,6 +38,16 @@ class MessageCtrl extends RootCtrl {
             return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
         }
         try {
+            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+            if (!isAuthorized(hotspot, this.cityzenIfAuthenticated)) {
+                next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path()}`,
+                        MessageCtrl.MESSAGE_PRIVATE,
+                    ),
+                );
+            }
+
             const hotspotContent: Message[] = this.messageRepository.findByHotspotId(
                 req.params.hotspotId,
             );
