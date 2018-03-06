@@ -57,11 +57,13 @@ class HotspotReducer {
         return Array.from(this.filteredHotspotCollections);
     };
 
-    public renderVisibleHotspotsByVisitorStatus = (visitor: any): Hotspot[] => {
+    public renderVisibleHotspotsByVisitorStatus = (cityzenAuthenticated?: Cityzen): Hotspot[] => {
         this.pickPublicHotspot();
-        if (visitor && visitor instanceof Cityzen) {
-            this.pickHotspotMemberShip(visitor.id);
-            this.pickHotspotOwnerShip(new Author(visitor.pseudo, visitor.id));
+        if (cityzenAuthenticated) {
+            this.pickHotspotMemberShip(cityzenAuthenticated.id);
+            this.pickHotspotOwnerShip(
+                new Author(cityzenAuthenticated.pseudo, cityzenAuthenticated.id),
+            );
         }
         return this.releaseFilteredHotspots();
     };
