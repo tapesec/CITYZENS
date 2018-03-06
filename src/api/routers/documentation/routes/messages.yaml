@@ -1,9 +1,14 @@
 /hotspots/{hotspotId}/messages:
   get:
-    description: Retourne la liste des messages associèe à un hotspot.
+    description: Retourne la liste des messages associèe à un hotspot. Si vous recherchez un messages privé, vous devez fournir le header Authorization.
     tags:
       - Message
     parameters:
+    - name: Authorization
+      in: header
+      required: false
+      schema:
+        type: string
     - name: hotspotId
       in: path
       description: L'uuid de l'hotspot en qestion.
@@ -20,6 +25,8 @@
               type: object
               items:
                 $ref: '#/definitions/Messages'
+      401:
+        description: L'hotspot est protégé, vous n'avez pas les droits.
       404:
         description: HotspotId invalide, probablement introuvable.
       500:
