@@ -40,7 +40,7 @@ class MessageCtrl extends RootCtrl {
         try {
             const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
             if (!isAuthorized(hotspot, this.cityzenIfAuthenticated)) {
-                next(
+                return next(
                     this.errorHandler.logAndCreateUnautorized(
                         `GET ${req.path()}`,
                         MessageCtrl.MESSAGE_PRIVATE,

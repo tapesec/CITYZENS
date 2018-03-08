@@ -69,7 +69,6 @@ class HotspotCtrl extends RootCtrl {
             const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(
                 this.cityzenIfAuthenticated,
             );
-
             res.json(OK, visibleHotspots);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
