@@ -2,7 +2,7 @@ import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import HotspotTitle from './HotspotTitle';
 import Hotspot, { HotspotScope } from './Hotspot';
-import HotspotSlug from './../../../../domain/cityLife/model/HotspotSlug';
+import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
 const slug = require('slug');

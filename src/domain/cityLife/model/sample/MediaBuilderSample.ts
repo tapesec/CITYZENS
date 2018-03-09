@@ -1,7 +1,7 @@
 import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotTitle from '../hotspot/HotspotTitle';
 import { HotspotScope } from '../hotspot/Hotspot';
-import HotspotSlug from './../../../../domain/cityLife/model/HotspotSlug';
+import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
 

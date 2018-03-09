@@ -17,7 +17,7 @@ import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotI
 import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
 import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
-import HotspotSlug from '../../../../../src/domain/cityLife/model/HotspotSlug';
+import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
 
 const slug = require('slug');
