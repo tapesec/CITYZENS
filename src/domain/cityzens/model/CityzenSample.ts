@@ -33,8 +33,8 @@ class CityzenSample {
 
     public static LIONNEL2: Cityzen = new Cityzen(
         'auth0|59f836a23f551143a6964889',
-        'lionnel.dupouy@gmail.com',
-        'lionnel.dupouy',
+        'lionel.dupouy@gmail.com',
+        'lionel.dupouy',
         undefined,
         'Casu',
     );

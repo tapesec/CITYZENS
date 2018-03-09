@@ -1,3 +1,4 @@
+const slug = require('slug');
 import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import WallHotspotSample from '../domain/cityLife/model/sample/WallHotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
@@ -8,16 +9,16 @@ import {
     HotspotIconType,
 } from '../domain/cityLife/model/hotspot/Hotspot';
 const loki = require('lokijs');
-const db = new loki('loki.json');
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
 
-const slug = require('slug');
-
-const hotspotCollection = db.addCollection('hotspots');
+let hotspotCollection: any;
+let messageCollection: any;
+let cityCollection: any;
+let cityzenCollection: any;
 
 export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     id: WallHotspotSample.TOWNHALL.id,
@@ -122,15 +123,8 @@ export const EVENT_MATCH = {
     removed: false,
 };
 
-hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
-hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
-hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
-hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
-hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
-hotspotCollection.insert(ALERT_ACCIDENT);
-hotspotCollection.insert(EVENT_MATCH);
+export const MARTIGNAS_CITY = JSON.parse(JSON.stringify(CitySample.MARTIGNAS));
 
-const cityzenCollection = db.addCollection('cityzens');
 export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
 export const CITYZEN_LOUISE = JSON.parse(JSON.stringify(CityzenSample.LOUISE));
 export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
@@ -138,32 +132,61 @@ export const CITYZEN_LIONNEL = JSON.parse(JSON.stringify(CityzenSample.LIONNEL))
 export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2));
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 
-cityzenCollection.insert(CITYZEN_ELODIE);
-cityzenCollection.insert(CITYZEN_LOUISE);
-cityzenCollection.insert(CITYZEN_MARTIN);
-cityzenCollection.insert(CITYZEN_LIONNEL);
-cityzenCollection.insert(CITYZEN_LIONNEL2);
-cityzenCollection.insert(CITYZEN_LUCA);
+const databaseInitialize = () => {
+    hotspotCollection = db.getCollection('hotspots');
+    if (hotspotCollection === null) {
+        hotspotCollection = db.addCollection('hotspots');
 
-// tslint:disable-next-line:no-unused-variable
-const cityCollection = db.addCollection('city');
-export const MARTIGNAS_CITY = JSON.parse(JSON.stringify(CitySample.MARTIGNAS));
+        hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
+        hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
+        hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
+        hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
+        hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
+        hotspotCollection.insert(ALERT_ACCIDENT);
+        hotspotCollection.insert(EVENT_MATCH);
+    }
+    messageCollection = db.getCollection('messages');
+    if (messageCollection === null) {
+        messageCollection = db.addCollection('messages');
 
-cityCollection.insert(MARTIGNAS_CITY);
+        const message1 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_CHURCH_MESSAGE));
+        message1.removed = false;
+        messageCollection.insert(message1);
+        const message2 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_SCHOOL_MESSAGE));
+        message2.removed = false;
+        messageCollection.insert(message2);
+        const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
+        message3.removed = false;
+        messageCollection.insert(message3);
+        const message4 = JSON.parse(JSON.stringify(MessageSample.SIMCITY_TOEDIT_MESSAGE));
+        message4.removed = false;
+        messageCollection.insert(message4);
+    }
+    cityCollection = db.getCollection('city');
+    if (cityCollection === null) {
+        cityCollection = db.addCollection('city');
 
-const messageCollection = db.addCollection('messages');
+        cityCollection.insert(MARTIGNAS_CITY);
+    }
 
-const message1 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_CHURCH_MESSAGE));
-message1.removed = false;
-messageCollection.insert(message1);
-const message2 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_SCHOOL_MESSAGE));
-message2.removed = false;
-messageCollection.insert(message2);
-const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
-message3.removed = false;
-messageCollection.insert(message3);
-const message4 = JSON.parse(JSON.stringify(MessageSample.SIMCITY_TOEDIT_MESSAGE));
-message4.removed = false;
-messageCollection.insert(message4);
+    cityzenCollection = db.getCollection('cityzens');
+    if (cityzenCollection === null) {
+        cityzenCollection = db.addCollection('cityzens');
 
-export { cityzenCollection, hotspotCollection, messageCollection };
+        cityzenCollection.insert(CITYZEN_ELODIE);
+        cityzenCollection.insert(CITYZEN_LOUISE);
+        cityzenCollection.insert(CITYZEN_MARTIN);
+        cityzenCollection.insert(CITYZEN_LIONNEL);
+        cityzenCollection.insert(CITYZEN_LIONNEL2);
+        cityzenCollection.insert(CITYZEN_LUCA);
+    }
+};
+
+const db = new loki('loki.json', {
+    autoload: true,
+    autoloadCallback: databaseInitialize,
+    autosave: true,
+    autosaveInterval: 4000,
+});
+
+export { cityzenCollection, hotspotCollection, messageCollection, cityCollection };
