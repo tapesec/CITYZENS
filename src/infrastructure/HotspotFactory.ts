@@ -28,7 +28,7 @@ import {
     requiredAlertHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
-import HotspotSlug from './../domain/cityLife/model/HotspotSlug';
+import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 const request = require('request');
 const slug = require('slug');
@@ -178,7 +178,10 @@ class HotspotFactory {
         const members = new MemberList();
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
-            hotspotSlug = new HotspotSlug(slug(data.title));
+            hotspotSlug = new HotspotSlug(slug(data.title + ' ' + v4().slice(0, 4)));
+        }
+        if (data.slug) {
+            hotspotSlug = new HotspotSlug(data.slug);
         }
         if (data.scope) {
             scope = data.scope === HotspotScope.Public ? HotspotScope.Public : HotspotScope.Private;

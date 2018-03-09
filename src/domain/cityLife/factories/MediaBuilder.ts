@@ -1,6 +1,6 @@
 import HotspotTitle from '../model/hotspot/HotspotTitle';
 import { HotspotScope } from '../model/hotspot/Hotspot';
-import HotspotSlug from 'src/domain/cityLife/model/HotspotSlug';
+import HotspotSlug from 'src/domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../model/hotspot/MemberList';
 
 class MediaBuilder {
