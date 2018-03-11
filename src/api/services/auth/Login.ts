@@ -1,10 +1,17 @@
 import ErrorHandler from '../errors/ErrorHandler';
 import UserInfoAuth0 from './UserInfoAuth0';
+import * as now from './../time/now';
 
 export interface LoginOptions {
     url: string;
     clientId: string;
     clientSecret: string;
+}
+
+class UserInfoCache {
+    public static VALID_TIME = 10 * 60;
+
+    constructor(public time: number, public userInfo: UserInfoAuth0) {}
 }
 
 class Login {
@@ -16,13 +23,26 @@ class Login {
     private opts: any;
     private request: any;
 
+    private userInfoCache: Map<string, UserInfoCache>;
+
     constructor(options: LoginOptions, request: any, errorHandler: ErrorHandler) {
         this.opts = options;
         this.request = request;
         this.errorHandler = errorHandler;
+        this.userInfoCache = new Map();
     }
 
     auth0UserInfo(accessToken: string) {
+        if (this.userInfoCache.has(accessToken)) {
+            const cache = this.userInfoCache.get(accessToken);
+
+            if (now.seconds() - cache.time < UserInfoCache.VALID_TIME) {
+                return Promise.resolve<UserInfoAuth0>(cache.userInfo);
+            }
+
+            this.userInfoCache.delete(accessToken);
+        }
+
         return new Promise<UserInfoAuth0>((resolve, reject) => {
             const data = {
                 method: 'GET',
@@ -38,7 +58,13 @@ class Login {
                         body,
                     });
                 } else {
-                    resolve(new UserInfoAuth0(body));
+                    const userInfoAuth0 = new UserInfoAuth0(body);
+                    this.userInfoCache.set(
+                        accessToken,
+                        new UserInfoCache(now.seconds(), userInfoAuth0),
+                    );
+
+                    resolve(userInfoAuth0);
                 }
             };
 
