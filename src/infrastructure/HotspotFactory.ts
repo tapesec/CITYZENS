@@ -115,6 +115,8 @@ class HotspotFactory {
         // data from both database or user
         if (data.cityzen) {
             author = new Author(data.cityzen.pseudo, data.cityzen.id);
+        } else if (data.author) {
+            author = data.author;
         }
         // new hotspot posted by user
         if (!data.id) {

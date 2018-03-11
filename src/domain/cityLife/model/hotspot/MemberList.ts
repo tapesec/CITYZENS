@@ -1,6 +1,7 @@
 import Cityzen from '../../../cityzens/model/Cityzen';
+import ValueObject from './../../../interface/ValueObject';
 
-class MemberList {
+class MemberList implements ValueObject {
     private _memberSet: Set<string>;
 
     constructor(members?: string[]) {
@@ -26,7 +27,11 @@ class MemberList {
         if (this.has(cityzenId)) this._memberSet.delete(cityzenId);
     }
 
-    public toString() {
+    public isEqual(other: MemberList) {
+        return other.member === this.member;
+    }
+
+    public toString(): string[] {
         return this.toArray();
     }
 }
