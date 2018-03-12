@@ -3,10 +3,10 @@ import HotspotBuilder from '../../factories/HotspotBuilder';
 import Hotspot from './Hotspot';
 
 class AlertHotspot extends Hotspot {
-
     constructor(
         hotpotBuilder: HotspotBuilder,
         protected _message: AlertMessage,
+        protected _pertinence: PertinenceScore,
     ) {
         super(hotpotBuilder);
     }
@@ -17,6 +17,9 @@ class AlertHotspot extends Hotspot {
 
     public get message(): AlertMessage {
         return this._message;
+    }
+    public get pertinence(): PertinenceScore {
+        return this._pertinence;
     }
 
     toJSON() {

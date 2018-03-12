@@ -31,6 +31,7 @@ class HotspotCtrl extends RootCtrl {
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
     public static NOT_AUTHOR = 'You must be the author';
     public static ADD_ITSELF = "Tou can't add yourself";
+    public static PERTINENCE_ON_NOT_ALERT = "You can't vote on the pertinence of a non-Alert hotspot";
 
     constructor(
         errorHandler: ErrorHandler,
@@ -212,6 +213,37 @@ class HotspotCtrl extends RootCtrl {
                 this.errorHandler.logAndCreateInternal(`POST addMember ${req.path()}`, err.message),
             );
         }
+    };
+
+    // method=POST url=/hotspots/{hotspotId}/pertinence
+    public postPertinence = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
+        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        if (!(hotspot instanceof AlertHotspot)) {
+            return next(
+                this.errorHandler.logAndCreateBadRequest(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
+                ),
+            );
+        }
+
+        if (req.body.agree) {
+            hotspot.pertinence.agree();
+        } else {
+            hotspot.pertinence.disagree();
+        }
+        this.hotspotRepository.update(hotspot);
+
+        res.json(OK, hotspot);
     };
 
     // method=PATCH url=/hotspots/{hotspotId}
