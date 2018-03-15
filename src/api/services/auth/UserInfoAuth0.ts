@@ -8,6 +8,7 @@ class UserInfoAuth0 {
     private _email_verified: boolean;
     private _user_metadata: any;
     private _app_metadata: any;
+    private _isAdmin: boolean;
 
     constructor(userInfoRaw: string) {
         const userInfo = JSON.parse(userInfoRaw);
@@ -19,6 +20,7 @@ class UserInfoAuth0 {
         this._updateAt = userInfo.updateAt as string;
         this._email = userInfo.email as string;
         this._email_verified = userInfo.email_verified as boolean;
+        this._isAdmin = userInfo.isAdmin as boolean;
         this._user_metadata = userInfo['https://www.cityzen.fr/user_metadata'] as any;
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
     }
@@ -49,6 +51,10 @@ class UserInfoAuth0 {
 
     public get emailVerified(): boolean {
         return this._email_verified;
+    }
+
+    public get isAdmin(): boolean {
+        return this._isAdmin;
     }
 
     public get userMetadata(): any {

@@ -22,6 +22,10 @@ class DecodedJwtPayload {
     public get userMetadata(): any {
         return this.payload[this.payloadNamespace + '/user_metadata'];
     }
+
+    public get isAdmin(): boolean {
+        return this.payload.isAdmin;
+    }
 }
 
 export default DecodedJwtPayload;
