@@ -32,7 +32,7 @@ class HotspotRouter {
 
         server.post(
             HOTSPOT_ENDPOINT + '/:hotspotId' + VIEWS_ENDPOINT,
-            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.optInAuthenticateUser,
             this.ctrl.countView,
         );
 
