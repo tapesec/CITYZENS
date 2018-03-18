@@ -1,8 +1,5 @@
 import ValueObject from './../../../interface/ValueObject';
-<<<<<<< HEAD
 import * as lodash from 'lodash';
-=======
->>>>>>> e5585c8d190beab0611c1211c22d24d23fb831a3
 
 class Address implements ValueObject {
     protected _name: string;
@@ -22,11 +19,7 @@ class Address implements ValueObject {
     }
 
     public isEqual(other: Address) {
-<<<<<<< HEAD
         return lodash.isEqual(this, other);
-=======
-        return this.name === other.name && this.city === other.city;
->>>>>>> e5585c8d190beab0611c1211c22d24d23fb831a3
     }
 
     toJSON() {
