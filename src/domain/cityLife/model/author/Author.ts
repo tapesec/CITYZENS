@@ -1,7 +1,7 @@
-import ValueObject from './../../../interface/ValueObject';
 import { OutgoingMessage } from 'http';
+import Entity from '../../../interface/Entity';
 
-class Author implements ValueObject {
+class Author implements Entity {
     protected _pseudo: string;
     protected _id: string;
 

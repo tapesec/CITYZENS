@@ -1,5 +1,5 @@
 import ValueObject from './../../../interface/ValueObject';
-
+import * as lodash from 'lodash';
 class HotspotId implements ValueObject {
     constructor(private _id: string) {}
 
@@ -12,7 +12,7 @@ class HotspotId implements ValueObject {
     }
 
     isEqual(other: HotspotId) {
-        return other.id === this.id;
+        return lodash.isEqual(this, other);
     }
 }
 export default HotspotId;

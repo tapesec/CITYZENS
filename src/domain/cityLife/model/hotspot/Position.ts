@@ -1,4 +1,5 @@
 import ValueObject from './../../../interface/ValueObject';
+import * as lodash from 'lodash';
 
 class Position implements ValueObject {
     protected lat: number;
@@ -24,7 +25,7 @@ class Position implements ValueObject {
     }
 
     public isEqual(other: Position) {
-        return other.latitude === this.latitude && other.longitude === this.longitude;
+        return lodash.isEqual(this, other);
     }
 }
 

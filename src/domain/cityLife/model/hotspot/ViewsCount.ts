@@ -1,4 +1,5 @@
 import ValueObject from './../../../interface/ValueObject';
+import * as lodash from 'lodash';
 
 class ViewsCount implements ValueObject {
     constructor(private _views: number) {}
@@ -12,7 +13,7 @@ class ViewsCount implements ValueObject {
     }
 
     public isEqual(other: ViewsCount) {
-        return other.views === this.views;
+        return lodash.isEqual(this, other);
     }
 }
 export default ViewsCount;

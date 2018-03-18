@@ -1,6 +1,6 @@
 import Cityzen from '../../../cityzens/model/Cityzen';
 import ValueObject from './../../../interface/ValueObject';
-
+import * as lodash from 'lodash';
 class MemberList implements ValueObject {
     private _memberSet: Set<string>;
 
@@ -28,7 +28,7 @@ class MemberList implements ValueObject {
     }
 
     public isEqual(other: MemberList) {
-        return other.member === this.member;
+        return lodash.isEqual(this, other);
     }
 
     public toString(): string[] {

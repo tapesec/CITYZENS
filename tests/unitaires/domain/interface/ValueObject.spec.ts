@@ -11,7 +11,7 @@ import Author from '../../../../src/domain/cityLife/model/author/Author';
 import * as Chai from 'chai';
 
 describe('ValueObject', () => {
-    describe('Equality checks', () => {
+    describe('Equalities checks', () => {
         it('hotspotId', () => {
             const hotspotId = new HotspotId('idid');
             const hotspotId2 = new HotspotId('id2id2');
