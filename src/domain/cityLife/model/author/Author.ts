@@ -1,7 +1,6 @@
 import { OutgoingMessage } from 'http';
-import Entity from '../../../interface/Entity';
 
-class Author implements Entity {
+class Author {
     protected _pseudo: string;
     protected _id: string;
 
