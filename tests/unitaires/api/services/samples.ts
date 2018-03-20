@@ -11,8 +11,10 @@ const decodedToken = {
     },
 };
 
-export const DECODED_PAYLOAD =
-new DecodedJwtPayload(decodedToken, config.auth.auth0JwtPayloadNamespace);
+export const DECODED_PAYLOAD = new DecodedJwtPayload(
+    decodedToken,
+    config.auth.auth0JwtPayloadNamespace,
+);
 
 const malformedDecodedToken = {
     email: 'fake@email.com',
@@ -22,9 +24,10 @@ const malformedDecodedToken = {
     },
 };
 
-export const MALFORMED_DECODED_PAYLOAD =
-new DecodedJwtPayload(malformedDecodedToken, config.auth.auth0JwtPayloadNamespace);
-
+export const MALFORMED_DECODED_PAYLOAD = new DecodedJwtPayload(
+    malformedDecodedToken,
+    config.auth.auth0JwtPayloadNamespace,
+);
 
 export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(`
 {
@@ -40,6 +43,20 @@ export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(`
 }
 `);
 
+export const FAKE_ADMIN_USER_INFO_AUTH0 = new UserInfoAuth0(`
+{
+    "sub": "s",
+    "isAdmin": true,
+    "nickname": "n",
+    "name": "n",
+    "picture": "p",
+    "updatedAt": "a",
+    "email": "e",
+    "email_verified": true,
+    "https://www.cityzen.fr/user_metadata": {},
+    "https://www.cityzen.fr/app_metadata": {}
+}
+`);
 
 export const ILL_USER_INFO_AUTH0 = new UserInfoAuth0(`
 {

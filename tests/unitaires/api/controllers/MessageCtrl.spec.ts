@@ -16,7 +16,7 @@ import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import Login from '../../../../src/api/services/auth/Login';
 import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
-import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 
@@ -125,12 +125,14 @@ describe('MessageCtrl', () => {
     });
 
     describe('postMessage action', () => {
-        beforeEach(() => {
-            reqMoq.setup(x => x.params).returns(() => {
-                return {
-                    hotspotId,
-                };
-            });
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+
+            loginServiceMoq
+                .setup(x => x.auth0UserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+
+            await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
         afterEach(() => {
@@ -141,19 +143,28 @@ describe('MessageCtrl', () => {
         });
 
         it('create a new message and store it in repository then respond created', async () => {
-            // Arrange
-            hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
             const reqBody: any = {
+                hotspotId: 'fake-hotspot-id',
                 title: 'fake-title',
                 body: 'lorem ipsum',
                 pinned: true,
             };
-            reqMoq.setup(x => x.body).returns(() => reqBody);
-            reqBody.cityzen = cityzenFromAuth0(FAKE_USER_INFO_AUTH0);
-            reqBody.hotspotId = hotspotId;
+            const reqParam = {
+                hotspotId,
+            };
+
+            // Arrange
+            hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(hotspotId))
+                .returns(() => WallHotspotSample.SCHOOL);
+
             messageFactoryMoq
-                .setup(x => x.createMessage(reqBody))
+                .setup(x => x.createMessage(TypeMoq.It.isAny()))
                 .returns(() => MessageSample.MARTIGNAS_SCHOOL_MESSAGE);
+
+            reqMoq.setup(x => x.params).returns(() => reqParam);
+            reqMoq.setup(x => x.body).returns(() => reqBody);
             // Act
             await messageCtrl.postMessage(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
@@ -172,7 +183,15 @@ describe('MessageCtrl', () => {
     describe('patchMessage action', () => {
         let messageId: string;
 
-        beforeEach(() => {
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+
+            loginServiceMoq
+                .setup(x => x.auth0UserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+
+            await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+
             messageId = 'fake-message-id';
             reqMoq.setup(x => x.params).returns(() => {
                 return {
@@ -196,11 +215,19 @@ describe('MessageCtrl', () => {
                 pinned: true,
             };
             const message = MessageSample.MARTIGNAS_SCHOOL_MESSAGE;
-            reqMoq.setup(x => x.body).returns(() => reqBody);
-            messageRepositoryMoq.setup(x => x.findById(messageId)).returns(() => message);
             message.changeTitle('fake-title');
             message.editBody('lorem ipsum');
             message.togglePinMode();
+
+            hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(hotspotId))
+                .returns(() => WallHotspotSample.SCHOOL);
+
+            messageRepositoryMoq.setup(x => x.findById(messageId)).returns(() => message);
+
+            reqMoq.setup(x => x.body).returns(() => reqBody);
+
             // Act
             await messageCtrl.patchMessage(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
@@ -212,7 +239,15 @@ describe('MessageCtrl', () => {
     describe('deleteMessage action', () => {
         let messageId: string;
 
-        beforeEach(() => {
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+
+            loginServiceMoq
+                .setup(x => x.auth0UserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+
+            await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+
             messageId = 'fake-message-id';
             reqMoq.setup(x => x.params).returns(() => {
                 return {

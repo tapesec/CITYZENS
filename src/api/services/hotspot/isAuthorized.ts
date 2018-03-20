@@ -43,6 +43,9 @@ const toPatchMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
 };
 
 const toPatchMessage = (hotspot: Hotspot, message: Message, cityzen?: Cityzen) => {
+    if (!cityzen) return false;
+    if (cityzen.isAdmin) return true;
+
     return toPatchHotspot(hotspot, cityzen) && message.author.id === cityzen.id;
 };
 
