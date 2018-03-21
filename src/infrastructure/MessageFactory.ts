@@ -1,5 +1,5 @@
 import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import Author from '../domain/cityLife/model/author/Author';
+import Author from './../domain/cityLife/model/author/Author';
 import Message from '../domain/cityLife/model/messages/Message';
 import { v4 } from 'uuid';
 
