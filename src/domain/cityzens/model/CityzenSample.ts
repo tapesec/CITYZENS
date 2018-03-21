@@ -47,10 +47,19 @@ class CityzenSample {
     public static LUCA: Cityzen = new Cityzen(
         'auth0|5a1e6928f96aa12d71333e0e',
         'lucabrx@gmail.com',
-        'Lasalle',
+        'lucabrx',
         true,
         undefined,
         'Hipster',
+    );
+
+    public static LUCA_GOOGLE: Cityzen = new Cityzen(
+        'google-oauth2|102733031473233157543',
+        'lucabrx@gmail.com',
+        'lucabrx',
+        true,
+        undefined,
+        'Hipster Go',
     );
 }
 
