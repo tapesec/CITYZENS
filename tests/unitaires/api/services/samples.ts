@@ -46,14 +46,15 @@ export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(`
 export const FAKE_ADMIN_USER_INFO_AUTH0 = new UserInfoAuth0(`
 {
     "sub": "s",
-    "isAdmin": true,
     "nickname": "n",
     "name": "n",
     "picture": "p",
     "updatedAt": "a",
     "email": "e",
     "email_verified": true,
-    "https://www.cityzen.fr/user_metadata": {},
+    "https://www.cityzen.fr/user_metadata": {
+        "isAdmin": true
+    },
     "https://www.cityzen.fr/app_metadata": {}
 }
 `);

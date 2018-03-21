@@ -20,8 +20,8 @@ class UserInfoAuth0 {
         this._updateAt = userInfo.updateAt as string;
         this._email = userInfo.email as string;
         this._email_verified = userInfo.email_verified as boolean;
-        this._isAdmin = userInfo.isAdmin as boolean;
         this._user_metadata = userInfo['https://www.cityzen.fr/user_metadata'] as any;
+        if (this._user_metadata) this._isAdmin = this._user_metadata.isAdmin as boolean;
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
     }
 
