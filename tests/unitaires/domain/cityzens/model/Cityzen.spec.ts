@@ -7,12 +7,12 @@ describe('Cityzens entity', () => {
     it('Should have correct properties set by constructor', () => {
         // Arrange
         const id = 'auth0|fake-id1';
-        const email : string = 'mail@mailbox.com';
-        const pseudo : string = 'kenny';
+        const email: string = 'mail@mailbox.com';
+        const pseudo: string = 'kenny';
         const favoritsHotspots = new Set<string>(['fake-id', 'fake-id-2']);
-        const description : string = 'fake description';
+        const description: string = 'fake description';
         // Act
-        const kenny : Cityzen = new Cityzen(id, email, pseudo, favoritsHotspots, description);
+        const kenny: Cityzen = new Cityzen(id, email, pseudo, false, favoritsHotspots, description);
         // Arrange
         expect(kenny.email).to.be.equal(email);
         expect(kenny.pseudo).to.be.equal(pseudo);
@@ -22,8 +22,8 @@ describe('Cityzens entity', () => {
 
     it('Should edit his description', () => {
         // Arrange
-        const elodie : Cityzen = CityzenSample.ELODIE;
-        const newDescription : string = 'new fake description';
+        const elodie: Cityzen = CityzenSample.ELODIE;
+        const newDescription: string = 'new fake description';
         // Act
         elodie.editDescription(newDescription);
         // Assert
@@ -32,8 +32,8 @@ describe('Cityzens entity', () => {
 
     it('Should add an hotspot as favorit', () => {
         // Arrange
-        const elodie : Cityzen = CityzenSample.ELODIE;
-        const favoritHotspotId : string = WallHotspotSample.SCHOOL.id;
+        const elodie: Cityzen = CityzenSample.ELODIE;
+        const favoritHotspotId: string = WallHotspotSample.SCHOOL.id;
         // Act
         elodie.addHotspotAsFavorit(favoritHotspotId);
         // Assert

@@ -5,6 +5,7 @@ class CityzenSample {
         'auth0|fake-id1',
         'martin@cityzen.com',
         'Martinus',
+        false,
         new Set<string>(['auth0|fake-id1', 'auth0|fake-id2']),
         'Jeune enfant',
     );
@@ -12,6 +13,7 @@ class CityzenSample {
         'auth0|fake-id2',
         'louise@cityzen.com',
         'Louisounette',
+        false,
         new Set<string>(['auth0|fake-id2']),
         'Jeune écolière',
     );
@@ -19,6 +21,7 @@ class CityzenSample {
         'auth0|fake-id3',
         'elodie@cityzen.com',
         'Princesse',
+        false,
         undefined,
         'Infirmière libérale',
     );
@@ -27,6 +30,7 @@ class CityzenSample {
         'auth0|59f989805c12313f24aae17b',
         'lionel.dupouy@gmail.com',
         'Lasalle',
+        true,
         undefined,
         'Hipster',
     );
@@ -35,6 +39,7 @@ class CityzenSample {
         'auth0|59f836a23f551143a6964889',
         'lionel.dupouy@gmail.com',
         'lionel.dupouy',
+        true,
         undefined,
         'Casu',
     );
@@ -43,6 +48,7 @@ class CityzenSample {
         'auth0|5a1e6928f96aa12d71333e0e',
         'lucabrx@gmail.com',
         'lucabrx',
+        true,
         undefined,
         'Hipster',
     );
@@ -51,6 +57,7 @@ class CityzenSample {
         'google-oauth2|102733031473233157543',
         'lucabrx@gmail.com',
         'lucabrx',
+        true,
         undefined,
         'Hipster Go',
     );

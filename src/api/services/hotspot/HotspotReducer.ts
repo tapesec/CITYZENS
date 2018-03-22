@@ -59,6 +59,8 @@ class HotspotReducer {
     public renderVisibleHotspotsByVisitorStatus = (cityzenAuthenticated?: Cityzen): Hotspot[] => {
         this.pickPublicHotspot();
         if (cityzenAuthenticated) {
+            if (cityzenAuthenticated.isAdmin) return this.hotspotCollection;
+
             this.pickHotspotMemberShip(cityzenAuthenticated.id);
             this.pickHotspotOwnerShip(
                 new Author(cityzenAuthenticated.pseudo, cityzenAuthenticated.id),
