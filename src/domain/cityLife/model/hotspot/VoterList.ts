@@ -19,10 +19,6 @@ class VoterList implements ValueObject {
         this._list.has(id);
     }
 
-    public set(id: string, doAgree: boolean) {
-        this._list.set(id, doAgree);
-    }
-
     public didAgree(id: string) {
         return this._list.get(id);
     }

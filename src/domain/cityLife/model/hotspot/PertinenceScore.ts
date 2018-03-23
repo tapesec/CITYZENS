@@ -11,13 +11,6 @@ class PertinenceScore implements ValueObject {
         this._disagree += 1;
     }
 
-    public cancelAgree() {
-        this._agree -= 1;
-    }
-    public cancelDisagree() {
-        this._disagree -= 1;
-    }
-
     get nAgree() {
         return this._agree;
     }

@@ -32,6 +32,7 @@ class HotspotCtrl extends RootCtrl {
     public static NOT_AUTHOR = 'You must be the author';
     public static ADD_ITSELF = "Tou can't add yourself";
     public static PERTINENCE_ON_NOT_ALERT = "You can't vote on the pertinence of a non-Alert hotspot";
+    public static PERTINENCE_DOUBLE_VOTE = "You can't vote twice on the same Alert Hotspot";
 
     constructor(
         errorHandler: ErrorHandler,
@@ -238,15 +239,15 @@ class HotspotCtrl extends RootCtrl {
 
         const cityzenId = this.cityzenIfAuthenticated.id;
         if (hotspot.voterList.has(cityzenId)) {
-            const oldVote = hotspot.voterList.didAgree(cityzenId);
-            if (oldVote !== (req.body.agree as boolean)) {
-                if (oldVote) hotspot.pertinence.cancelAgree();
-                else hotspot.pertinence.cancelDisagree();
-            }
-            hotspot.voterList.set(cityzenId, req.body.agree as boolean);
-        } else {
-            hotspot.addVoter(cityzenId, req.body.agree as boolean);
+            return next(
+                this.errorHandler.logAndCreateBadRequest(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
+                ),
+            );
         }
+
+        hotspot.addVoter(cityzenId, req.body.agree as boolean);
         this.hotspotRepository.update(hotspot);
 
         res.json(OK, hotspot);
