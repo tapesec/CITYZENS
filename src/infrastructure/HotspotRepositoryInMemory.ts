@@ -13,8 +13,9 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     public findByCodeCommune = (insee: string): (WallHotspot | EventHotspot | AlertHotspot)[] => {
         const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
         const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
+        const factory = new HotspotFactory();
         data.forEach((entry: any) => {
-            hotspotsArray.push(new HotspotFactory().build(entry));
+            hotspotsArray.push(factory.build(entry));
         });
         return hotspotsArray;
     };
@@ -22,8 +23,9 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     public findById = (id: string): WallHotspot | EventHotspot | AlertHotspot => {
         let hotspot: WallHotspot | EventHotspot | AlertHotspot;
         const data = this.orm.hotspot.findOne({ id, removed: false });
+        const factory = new HotspotFactory();
         if (data) {
-            hotspot = new HotspotFactory().build(data);
+            hotspot = factory.build(data);
         }
         return hotspot;
     };
@@ -44,8 +46,9 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             removed: false,
         });
         const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
+        const factory = new HotspotFactory();
         data.forEach((entry: any) => {
-            hotspotsArray.push(new HotspotFactory().build(entry));
+            hotspotsArray.push(factory.build(entry));
         });
         return hotspotsArray;
     };

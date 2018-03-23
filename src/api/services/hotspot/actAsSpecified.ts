@@ -12,7 +12,7 @@ export default (hotspot: WallHotspot|EventHotspot|AlertHotspot, requestBody: any
     }
 
     if (requestBody.dateEnd) {
-        (<EventHotspot>hotspot).reportDateEnd(requestBody.scope);
+        (<EventHotspot>hotspot).reportDateEnd(requestBody.dateEnd);
     }
     if (requestBody.description) {
         (<EventHotspot>hotspot).editDescription(requestBody.description);

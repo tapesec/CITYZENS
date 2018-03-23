@@ -9,7 +9,8 @@ import { OK, getStatusText, CREATED } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Login from '../services/auth/Login';
-import isAuthorized from '../services/hotspot/isAuthorized';
+import * as isAuthorized from '../services/hotspot/isAuthorized';
+import HotspotCtrl from './HotspotCtrl';
 
 class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -39,7 +40,16 @@ class MessageCtrl extends RootCtrl {
         }
         try {
             const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
-            if (!isAuthorized(hotspot, this.cityzenIfAuthenticated)) {
+            if (!hotspot) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
                     this.errorHandler.logAndCreateUnautorized(
                         `GET ${req.path()}`,
@@ -76,9 +86,28 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        req.body.hotspotId = req.params.hotspotId;
+        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        if (!hotspot) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
+        if (!isAuthorized.toPostMessages(hotspot, this.cityzenIfAuthenticated)) {
+            return next(
+                this.errorHandler.logAndCreateUnautorized(
+                    `POST ${req.path()}`,
+                    MessageCtrl.MESSAGE_PRIVATE,
+                ),
+            );
+        }
+
         try {
-            req.body.cityzen = cityzenFromAuth0(this.userInfo);
+            req.body.hotspotId = req.params.hotspotId;
+            req.body.cityzen = this.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
@@ -99,6 +128,17 @@ class MessageCtrl extends RootCtrl {
                 ),
             );
         }
+
+        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        if (!hotspot) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `PATCH ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
         try {
             message = this.messageRepository.findById(req.params.messageId);
         } catch (err) {
@@ -112,6 +152,16 @@ class MessageCtrl extends RootCtrl {
                 ),
             );
         }
+
+        if (!isAuthorized.toPatchMessage(hotspot, message, this.cityzenIfAuthenticated)) {
+            return next(
+                this.errorHandler.logAndCreateUnautorized(
+                    `PATCH ${req.path()}`,
+                    MessageCtrl.MESSAGE_PRIVATE,
+                ),
+            );
+        }
+
         // TODO encapsuler la logique suivante
         try {
             if (req.body.title) {
@@ -140,6 +190,26 @@ class MessageCtrl extends RootCtrl {
                 ),
             );
         }
+
+        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        if (!hotspot) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `GET ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
+        if (!isAuthorized.toRemoveMessages(hotspot, this.cityzenIfAuthenticated)) {
+            return next(
+                this.errorHandler.logAndCreateUnautorized(
+                    `DELETE ${req.path()}`,
+                    MessageCtrl.MESSAGE_PRIVATE,
+                ),
+            );
+        }
+
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {

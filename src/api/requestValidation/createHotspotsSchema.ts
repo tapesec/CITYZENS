@@ -6,13 +6,9 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 
 export default () => {
     return {
-        "title": "POST /hotspots body validation",
-        "type": "object",
-        "oneOf": [
-            WallHotspotSchema,
-            EventHotspotSchema,
-            AlertHotspotSchema,
-        ]
+        title: 'POST /hotspots body validation',
+        type: 'object',
+        oneOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
     };
 };
 
@@ -23,115 +19,125 @@ export {
 };
 
 const hotspotSchema = {
-    "required": ["cityId", "position", "type", "iconType"],
-    "properties": {
-        "cityId": {
-            "type": "string"
+    required: ['cityId', 'position', 'type', 'iconType'],
+    properties: {
+        cityId: {
+            type: 'string',
         },
-        "position": {
-            "type": "object",
-            "properties": {
-                "latitude": {
-                    "type": "number"
+        position: {
+            type: 'object',
+            properties: {
+                latitude: {
+                    type: 'number',
                 },
-                "longitude": {
-                    "type": "number"
-                }
+                longitude: {
+                    type: 'number',
+                },
             },
-            "required": ["latitude", "longitude"]
+            required: ['latitude', 'longitude'],
         },
-        "address": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
+        address: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
                 },
-                "city": {
-                    "type": "string"
-                }
+                city: {
+                    type: 'string',
+                },
             },
-            "required": ["name", "city"]
-        }
-    }
+            required: ['name', 'city'],
+        },
+    },
 };
 
-const requiredWallHotspotProperties = [...hotspotSchema.required, "title", "scope"];
+const requiredWallHotspotProperties = [...hotspotSchema.required, 'title', 'scope'];
 
 const WallHotspotSchema = {
-    "required": requiredWallHotspotProperties,
-    "properties": {
+    required: requiredWallHotspotProperties,
+    properties: {
         ...hotspotSchema.properties,
-        "scope": {
-            "type": "string",
-            "enum": ["public", "private"]
+        scope: {
+            type: 'string',
+            enum: ['public', 'private'],
         },
-        "title": {
-            "type": "string",
-            "maxLength": validation.TITLE_MAX_LENGTH
+        title: {
+            type: 'string',
+            maxLength: validation.TITLE_MAX_LENGTH,
         },
-        "type": {
-            "type": "string",
-            "enum": [HotspotType.WallMessage]
+        type: {
+            type: 'string',
+            enum: [HotspotType.WallMessage],
         },
-        "iconType": {
-            "type": "string",
-            "enum": [HotspotIconType.Wall]
-        }
+        iconType: {
+            type: 'string',
+            enum: [HotspotIconType.Wall],
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };
 
 const requiredEventHotspotProperties = [
-    ...hotspotSchema.required, "title", "scope", "dateEnd", "description"];
+    ...hotspotSchema.required,
+    'title',
+    'scope',
+    'dateEnd',
+    'description',
+];
 
 const EventHotspotSchema = {
-    "required": requiredEventHotspotProperties,
-    "properties": {
+    required: requiredEventHotspotProperties,
+    properties: {
         ...hotspotSchema.properties,
-        "scope": {
-            "type": "string",
-            "enum": ["public", "private"]
+        scope: {
+            type: 'string',
+            enum: ['public', 'private'],
         },
-        "title": {
-            "type": "string",
-            "maxLength": validation.TITLE_MAX_LENGTH
+        title: {
+            type: 'string',
+            maxLength: validation.TITLE_MAX_LENGTH,
         },
-        "description": {
-            "type": "string"
+        description: {
+            type: 'string',
         },
-        "dateEnd": {
-            "type": "string",
+        dateEnd: {
+            type: 'string',
         },
-        "type": {
-            "type": "string",
-            "enum": [HotspotType.Event]
+        type: {
+            type: 'string',
+            enum: [HotspotType.Event],
         },
-        "iconType": {
-            "type": "string",
-            "enum": [HotspotIconType.Event]
-        }
+        iconType: {
+            type: 'string',
+            enum: [HotspotIconType.Event],
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };
 
-const requiredAlertHotspotProperties = [...hotspotSchema.required, "message"];
+const requiredAlertHotspotProperties = [...hotspotSchema.required, 'message'];
 
 const AlertHotspotSchema = {
-    "required": requiredAlertHotspotProperties,
-    "properties": {
+    required: requiredAlertHotspotProperties,
+    properties: {
         ...hotspotSchema.properties,
-        "message": {
-            "type": "string",
-            "maxLength": validation.ALERT_MESSAGE_MAX_LENGTH
+        message: {
+            type: 'string',
+            maxLength: validation.ALERT_MESSAGE_MAX_LENGTH,
         },
-        "type": {
-            "type": "string",
-            "enum": [HotspotType.Alert]
+        type: {
+            type: 'string',
+            enum: [HotspotType.Alert],
         },
-        "iconType": {
-            "type": "string",
-            "enum": [HotspotIconType.Accident, HotspotIconType.Destruction]
-        }
+        iconType: {
+            type: 'string',
+            enum: [
+                HotspotIconType.Accident,
+                HotspotIconType.Destruction,
+                HotspotIconType.Handicap,
+                HotspotIconType.RoadWorks,
+            ],
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };

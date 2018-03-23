@@ -1,18 +1,19 @@
+import { OutgoingMessage } from 'http';
+
 class Author {
+    protected _pseudo: string;
+    protected _id: string;
 
-    protected _pseudo : string;
-    protected _id : string;
-
-    constructor(pseudo : string, id : string) {
+    constructor(pseudo: string, id: string) {
         this._pseudo = pseudo;
         this._id = id;
     }
 
-    get pseudo() : string {
+    get pseudo(): string {
         return this._pseudo;
     }
 
-    get id() : string {
+    get id(): string {
         return this._id;
     }
 
@@ -21,6 +22,10 @@ class Author {
             pseudo: this._pseudo,
             id: this._id,
         };
+    }
+
+    public isEqual(other: Author) {
+        return other.id === this.id;
     }
 }
 

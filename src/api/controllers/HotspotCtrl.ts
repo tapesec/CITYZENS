@@ -3,7 +3,7 @@ import RootCtrl from './RootCtrl';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import isAuthorized from './../services/hotspot/isAuthorized';
+import * as isAuthorized from './../services/hotspot/isAuthorized';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import HotspotReducer from './../services/hotspot/HotspotReducer';
 import ErrorHandler from '../services/errors/ErrorHandler';
@@ -89,7 +89,7 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = this.hotspotRepository.findById(req.params.id);
 
-            if (isAuthorized(hotspot, this.cityzenIfAuthenticated)) {
+            if (isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 res.json(OK, hotspot);
             } else {
                 return next(
@@ -188,19 +188,19 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (hotspot.author.id !== this.cityzenIfAuthenticated.id) {
-                return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `POST addMember ${req.path()}`,
-                        HotspotCtrl.NOT_AUTHOR,
-                    ),
-                );
-            }
             if (this.cityzenIfAuthenticated.id === req.body.memberId) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
                         `POST addMember ${req.path()}`,
                         HotspotCtrl.ADD_ITSELF,
+                    ),
+                );
+            }
+            if (!isAuthorized.toAddMember(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `POST addMember ${req.path()}`,
+                        HotspotCtrl.NOT_AUTHOR,
                     ),
                 );
             }
@@ -269,6 +269,16 @@ class HotspotCtrl extends RootCtrl {
                 | WallHotspot
                 | EventHotspot
                 | AlertHotspot = this.hotspotRepository.findById(req.params.hotspotId);
+
+            if (!isAuthorized.toPatchHotspot(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `PATCH ${req.path()}`,
+                        HotspotCtrl.NOT_AUTHOR,
+                    ),
+                );
+            }
+
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
@@ -283,6 +293,17 @@ class HotspotCtrl extends RootCtrl {
             return next(this.errorHandler.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND));
         }
         try {
+            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+
+            if (!isAuthorized.toRemoveHotspot(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `DELETE ${req.path()}`,
+                        HotspotCtrl.NOT_AUTHOR,
+                    ),
+                );
+            }
+
             this.hotspotRepository.remove(req.params.hotspotId);
         } catch (err) {
             return next(
