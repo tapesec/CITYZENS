@@ -236,10 +236,16 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        if (req.body.agree) {
-            hotspot.pertinence.agree();
+        const cityzenId = this.cityzenIfAuthenticated.id;
+        if (hotspot.voterList.has(cityzenId)) {
+            const oldVote = hotspot.voterList.didAgree(cityzenId);
+            if (oldVote !== (req.body.agree as boolean)) {
+                if (oldVote) hotspot.pertinence.cancelAgree();
+                else hotspot.pertinence.cancelDisagree();
+            }
+            hotspot.voterList.set(cityzenId, req.body.agree as boolean);
         } else {
-            hotspot.pertinence.disagree();
+            hotspot.addVoter(cityzenId, req.body.agree as boolean);
         }
         this.hotspotRepository.update(hotspot);
 

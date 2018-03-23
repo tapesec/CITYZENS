@@ -1,4 +1,7 @@
-class PertinenceScore {
+import ValueObject from '../../../interface/ValueObject';
+import * as lodash from 'lodash';
+
+class PertinenceScore implements ValueObject {
     constructor(private _agree: number, private _disagree: number) {}
 
     public agree() {
@@ -6,6 +9,13 @@ class PertinenceScore {
     }
     public disagree() {
         this._disagree += 1;
+    }
+
+    public cancelAgree() {
+        this._agree -= 1;
+    }
+    public cancelDisagree() {
+        this._disagree -= 1;
     }
 
     get nAgree() {
@@ -28,4 +38,10 @@ class PertinenceScore {
         // For now, very simple algorithm
         return this.percent > 0.7;
     }
+
+    public isEqual(other: PertinenceScore) {
+        return lodash.isEqual(this, other);
+    }
 }
+
+export default PertinenceScore;

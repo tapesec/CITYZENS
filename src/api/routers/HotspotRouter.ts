@@ -26,7 +26,11 @@ class HotspotRouter {
             this.ctrl.countView,
         );
 
-        server.post(HOTSPOT_ENDPOINT + '/:hotspotId' + ALERT_PERTINENCE, this.ctrl.postPertinence);
+        server.post(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + ALERT_PERTINENCE,
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.postPertinence,
+        );
 
         server.patch(
             HOTSPOT_ENDPOINT + '/:hotspotId',

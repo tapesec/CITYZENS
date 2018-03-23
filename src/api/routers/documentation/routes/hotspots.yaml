@@ -300,16 +300,16 @@
     tags:
       - Hotspots
     parameters:
-    - name: Authorization
-      in: header
-      required: true
-      schema:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: memberId
+        in: body
+        description: L'uuid du membre à ajouter.
+        required: true
         type: string
-    - name: memberId
-      in: body
-      description: L'uuid du membre à ajouter.
-      required: true
-      type: string
     produces:
       - application/json
     responses:
@@ -319,3 +319,35 @@
         description: L'hotspot est introuvable.
       401:
         descritpion: Vous n'êtes pas l'auteur du hotspot.
+/hotspots/{hotspotId}/pertinence:
+  post:
+    description: Vote for the pertinence of the hotspots, return 404 if the hotspot you're voting on doesn't exist.
+    tags:
+      - AlertHotspot
+      - Pertinence
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema: 
+          type: string
+      - name: hotspotId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: agree
+        in: body
+        required: false
+        description: if it isn't present means disagree, if it is present and evaluate to true means agree
+        schema:
+          type: object
+          example:
+            agree: true
+    produces:
+      - applications/json
+    responses:
+      200:
+        description: Your vote has been taken into account.
+      404:
+        description: The hotspot you're trying to vote on doesn't exist.
