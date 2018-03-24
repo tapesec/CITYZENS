@@ -8,19 +8,22 @@ export class InvalidPayloadError extends Error {
     }
 }
 
-const cityzenFromAuth0 = (payload : UserInfoAuth0): Cityzen => {
+const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
     let id: string;
     let email: string;
     let pseudo: string;
     let favoritesHotspots: Set<string>;
     let description: string;
+    let isAdmin = false;
 
     if (payload.sub) id = payload.sub;
-    else throw new InvalidPayloadError('no subject found in userInfo\'s Auth0 payload');
+    else throw new InvalidPayloadError("no subject found in userInfo's Auth0 payload");
     if (payload.email) email = payload.email;
-    else throw new InvalidPayloadError('no email found in userInfo\'s Auth0 payload');
+    else throw new InvalidPayloadError("no email found in userInfo's Auth0 payload");
     if (payload.nickname) pseudo = payload.nickname;
-    else throw new InvalidPayloadError('no nickname found in userInfo\'s Auth0 payload');
+    else throw new InvalidPayloadError("no nickname found in userInfo's Auth0 payload");
+
+    if (payload.isAdmin) isAdmin = payload.isAdmin;
 
     if (payload.userMetadata && payload.userMetadata.favoritesHotspots) {
         const arrayFav = payload.userMetadata.favoritesHotspots as string[];
@@ -31,7 +34,12 @@ const cityzenFromAuth0 = (payload : UserInfoAuth0): Cityzen => {
     }
 
     const cityzen = new Cityzen(
-        payload.sub, payload.email, payload.nickname, favoritesHotspots, description,
+        payload.sub,
+        payload.email,
+        payload.nickname,
+        isAdmin,
+        favoritesHotspots,
+        description,
     );
 
     return cityzen;

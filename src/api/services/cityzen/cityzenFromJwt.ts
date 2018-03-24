@@ -1,14 +1,13 @@
-
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import DecodedJwtPayload from '../auth/DecodedJwtPayload';
 
-const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
-
+const cityzenFromJwt = (payload: DecodedJwtPayload): Cityzen => {
     let id: string;
     let email: string;
     let pseudo: string;
     let favoritesHotspots: Set<string>;
     let description: string;
+    let isAdmin = false;
 
     if (payload.sub) id = payload.sub;
     else throw new InvalidPayloadError('no subject found in jwt decoded payload');
@@ -16,6 +15,8 @@ const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
     else throw new InvalidPayloadError('no email found in jwt decoded payload');
     if (payload.nickname) pseudo = payload.nickname;
     else throw new InvalidPayloadError('no nickname found in jwt decoded payload');
+
+    if (payload.isAdmin) isAdmin = payload.isAdmin;
 
     if (payload.userMetadata && payload.userMetadata.favoritesHotspots) {
         const arrayFav = payload.userMetadata.favoritesHotspots as string[];
@@ -26,7 +27,13 @@ const cityzenFromJwt = (payload : DecodedJwtPayload): Cityzen => {
     }
 
     const cityzen = new Cityzen(
-        payload.sub, payload.email, payload.nickname, favoritesHotspots, description);
+        payload.sub,
+        payload.email,
+        payload.nickname,
+        isAdmin,
+        favoritesHotspots,
+        description,
+    );
 
     return cityzen;
 };

@@ -15,7 +15,7 @@ import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
 import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
 import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import CityId from '../domain/cityLife/model/city/CityId';
-import Author from '../domain/cityLife/model/author/Author';
+import Author from './../domain/cityLife/model/author/Author';
 import Position from '../domain/cityLife/model/hotspot/Position';
 import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
 import Address from '../domain/cityLife/model/hotspot/Address';

@@ -131,6 +131,7 @@ export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
 export const CITYZEN_LIONNEL = JSON.parse(JSON.stringify(CityzenSample.LIONNEL));
 export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2));
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
+export const CITYZEN_LUCA_GOOGLE = JSON.parse(JSON.stringify(CityzenSample.LUCA_GOOGLE));
 
 const databaseInitialize = () => {
     hotspotCollection = db.getCollection('hotspots');
@@ -179,6 +180,7 @@ const databaseInitialize = () => {
         cityzenCollection.insert(CITYZEN_LIONNEL);
         cityzenCollection.insert(CITYZEN_LIONNEL2);
         cityzenCollection.insert(CITYZEN_LUCA);
+        cityzenCollection.insert(CITYZEN_LUCA_GOOGLE);
     }
 };
 

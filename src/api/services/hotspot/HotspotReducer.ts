@@ -1,4 +1,3 @@
-const isEqual = require('lodash.isequal');
 import Hotspot, { HotspotType, HotspotScope } from '../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 import Author from '../../../domain/cityLife/model/author/Author';
@@ -27,7 +26,7 @@ class HotspotReducer {
     public pickHotspotOwnerShip = (author: Author): HotspotReducer => {
         if (author instanceof Author) {
             const hotspotOwnerShip = this.hotspotCollection.filter((hotspot: Hotspot) => {
-                return isEqual(hotspot.author, author);
+                return author.isEqual(hotspot.author);
             });
             this.filteredHotspotCollections = new Set([
                 ...this.filteredHotspotCollections,
@@ -60,6 +59,8 @@ class HotspotReducer {
     public renderVisibleHotspotsByVisitorStatus = (cityzenAuthenticated?: Cityzen): Hotspot[] => {
         this.pickPublicHotspot();
         if (cityzenAuthenticated) {
+            if (cityzenAuthenticated.isAdmin) return this.hotspotCollection;
+
             this.pickHotspotMemberShip(cityzenAuthenticated.id);
             this.pickHotspotOwnerShip(
                 new Author(cityzenAuthenticated.pseudo, cityzenAuthenticated.id),

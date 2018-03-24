@@ -1,21 +1,23 @@
 class Cityzen {
-
-    protected _id : string;
-    protected _email : string;
-    protected _pseudo : string;
-    protected _description : string;
-    protected _favoritesHotspots : Set<string>;
+    protected _id: string;
+    protected _email: string;
+    protected _pseudo: string;
+    protected _description: string;
+    protected _isAdmin: boolean;
+    protected _favoritesHotspots: Set<string>;
 
     constructor(
-        id : string,
-        email : string,
-        pseudo : string,
-        favoritesHotspots? : Set<string>,
-        description? : string,
+        id: string,
+        email: string,
+        pseudo: string,
+        isAdmin: boolean,
+        favoritesHotspots?: Set<string>,
+        description?: string,
     ) {
         this._id = id;
         this._email = email;
         this._pseudo = pseudo;
+        this._isAdmin = isAdmin;
         if (favoritesHotspots) {
             this._favoritesHotspots = favoritesHotspots;
         }
@@ -24,31 +26,35 @@ class Cityzen {
         }
     }
 
-    get id() : string {
+    get id(): string {
         return this._id;
     }
 
-    get email() : string {
+    get email(): string {
         return this._email;
     }
 
-    get pseudo() : string {
+    get pseudo(): string {
         return this._pseudo;
     }
 
-    get description() : string {
+    get description(): string {
         return this._description;
     }
 
-    get favoritesHotspots() : Set<string> {
+    get favoritesHotspots(): Set<string> {
         return this._favoritesHotspots;
     }
 
-    editDescription(newDescription : string) : void {
+    get isAdmin(): boolean {
+        return this._isAdmin;
+    }
+
+    editDescription(newDescription: string): void {
         this._description = newDescription;
     }
 
-    addHotspotAsFavorit(hotspotId : string) : void {
+    addHotspotAsFavorit(hotspotId: string): void {
         if (!this._favoritesHotspots) {
             this._favoritesHotspots = new Set<string>();
         }
@@ -60,6 +66,7 @@ class Cityzen {
             id: this.id,
             email: this.email,
             pseudo: this.pseudo,
+            isAdmin: this.isAdmin,
             description: this.description,
             favoritesHotspots: this.favoritesHotspots,
         };
