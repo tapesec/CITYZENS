@@ -24,7 +24,7 @@ import * as Chai from 'chai';
 import { resolve } from 'url';
 import Login from '../../../../src/api/services/auth/Login';
 import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
-import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import { FAKE_USER_INFO_AUTH0, FAKE_ADMIN_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 import Algolia from '../../../../src/api/services/algolia/Algolia';
 import WallHotspot from '../../../../src/domain/cityLife/model/hotspot/WallHotspot';
@@ -34,6 +34,10 @@ import Author from '../../../../src/domain/cityLife/model/author/Author';
 import HotspotBuilder from '../../../../src/domain/cityLife/factories/HotspotBuilder';
 import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
+import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
+import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
+import { OK } from 'http-status-codes';
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -293,6 +297,58 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.verify(x => x.update(hotspot.object), TypeMoq.Times.once());
             hotspot.verify(x => x.addMember(jsonBody.memberId), TypeMoq.Times.once());
             resMoq.verify(x => x.json(200, hotspot.object), TypeMoq.Times.once());
+        });
+    });
+
+    describe('PostPertinence', () => {
+        let body: any;
+        let params: any;
+
+        before(async () => {
+            body = {
+                agree: true,
+            };
+
+            params = {
+                hotspotId: 'hotspotId',
+            };
+
+            loginServiceMoq
+                .setup(x => x.auth0UserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+        });
+
+        it('Should agree on the pertinence of an hotspot', () => {
+            const hotspot = AlertHotspotSample.ACCIDENT;
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            resMoq.verify(x => x.json(OK, TypeMoq.It.isAny()), TypeMoq.Times.once());
+            Chai.expect(hotspot.pertinence.nAgree).to.be.greaterThan(0);
+        });
+
+        it('Should disagree on the pertinence of an hotspot', () => {
+            body = { agree: false };
+            const hotspot = AlertHotspotSample.ACCIDENT;
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            resMoq.verify(x => x.json(OK, TypeMoq.It.isAny()), TypeMoq.Times.once());
+            Chai.expect(hotspot.pertinence.nDisagree).to.be.greaterThan(0);
         });
     });
 });
