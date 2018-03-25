@@ -7,13 +7,13 @@ import * as TypeMoq from 'typemoq';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import Login from '../../../../src/api/services/auth/Login';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
-import Auth0Info from '../../../../src/api/services/auth/Auth0Info';
+import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 const restifyErrors = require('restify-errors');
 
 describe('RootCtrl', () => {
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let resMoq: TypeMoq.IMock<rest.Response>;
-    let auth0InfoMoq: TypeMoq.IMock<Auth0Info>;
+    let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let reqMoq: TypeMoq.IMock<rest.Request>;
     let nextMoq: TypeMoq.IMock<rest.Next>;
 
@@ -21,7 +21,7 @@ describe('RootCtrl', () => {
 
     beforeEach(() => {
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
-        auth0InfoMoq = TypeMoq.Mock.ofType<Auth0Info>();
+        auth0ServiceMoq = TypeMoq.Mock.ofType<Auth0Service>();
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
@@ -36,16 +36,16 @@ describe('RootCtrl', () => {
             // Arrange
             reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
 
-            auth0InfoMoq
+            auth0ServiceMoq
                 .setup(x => x.getUserInfo(token))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
-            auth0InfoMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.once());
+            auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.once());
             nextMoq.verify(x => x(), TypeMoq.Times.once());
         });
 
@@ -53,7 +53,7 @@ describe('RootCtrl', () => {
             // Arrange
             reqMoq.setup(x => x.header('Authorization')).returns(() => undefined);
 
-            auth0InfoMoq
+            auth0ServiceMoq
                 .setup(x => x.getUserInfo(token))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
@@ -62,11 +62,11 @@ describe('RootCtrl', () => {
                 .returns(() => 'error');
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
-            auth0InfoMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(0));
+            auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(0));
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
 
@@ -75,7 +75,7 @@ describe('RootCtrl', () => {
             const decodeError = { message: 'Invalid token' };
             reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
 
-            auth0InfoMoq
+            auth0ServiceMoq
                 .setup(x => x.getUserInfo(token))
                 .returns(() => Promise.reject({ message: 'tata' }));
 
@@ -84,11 +84,11 @@ describe('RootCtrl', () => {
                 .returns(() => 'error');
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
-            auth0InfoMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
+            auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
     });
@@ -99,16 +99,14 @@ describe('RootCtrl', () => {
             const decodeError = { message: 'Invalid token' };
             reqMoq.setup(x => x.header('Authorization')).returns(() => `Bearer ${token}`);
 
-            auth0InfoMoq
-                .setup(x => x.getUserInfo(token))
-                .returns(() => Promise.reject('tata'));
+            auth0ServiceMoq.setup(x => x.getUserInfo(token)).returns(() => Promise.reject('tata'));
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
+            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.optInAuthenticateUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
-            auth0InfoMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
+            auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(x => x(), TypeMoq.Times.once());
         });
     });

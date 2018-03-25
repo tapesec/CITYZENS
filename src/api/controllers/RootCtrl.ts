@@ -4,17 +4,17 @@ import ErrorHandler from '../services/errors/ErrorHandler';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import Auth0Info from 'src/api/services/auth/Auth0Info';
+import Auth0Service from 'src/api/services/auth/Auth0Service';
 
 class RootCtrl {
     protected schemaValidator: ajv.Ajv = new ajv();
     protected errorHandler: ErrorHandler;
     protected userInfo: UserInfoAuth0;
     protected cityzenIfAuthenticated: Cityzen;
-    protected auth0Info: Auth0Info;
+    protected auth0Service: Auth0Service;
 
-    constructor(errorHandler: ErrorHandler, auth0Info: Auth0Info) {
-        this.auth0Info = auth0Info;
+    constructor(errorHandler: ErrorHandler, auth0Info: Auth0Service) {
+        this.auth0Service = auth0Info;
         this.errorHandler = errorHandler;
     }
 
@@ -30,7 +30,7 @@ class RootCtrl {
 
         const access_token = req.header('Authorization').slice(7);
         try {
-            this.userInfo = await this.auth0Info.getUserInfo(access_token);
+            this.userInfo = await this.auth0Service.getUserInfo(access_token);
             this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
             return next();
         } catch (err) {
@@ -47,7 +47,7 @@ class RootCtrl {
         const access_token = req.header('Authorization').slice(7);
         if (access_token === '') return next();
         try {
-            this.userInfo = await this.auth0Info.getUserInfo(access_token);
+            this.userInfo = await this.auth0Service.getUserInfo(access_token);
             this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
         } catch (err) {}
 

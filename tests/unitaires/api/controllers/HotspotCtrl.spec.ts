@@ -34,7 +34,7 @@ import Author from '../../../../src/domain/cityLife/model/author/Author';
 import HotspotBuilder from '../../../../src/domain/cityLife/factories/HotspotBuilder';
 import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
-import Auth0Info from '../../../../src/api/services/auth/Auth0Info';
+import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -43,7 +43,7 @@ describe('HotspotCtrl', () => {
     let hotspotRepositoryMoq: TypeMoq.IMock<HotspotRepositoryInMemory>;
     let hotspotFactoryMoq: TypeMoq.IMock<HotspotFactory>;
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
-    let auth0InfoMoq: TypeMoq.IMock<Auth0Info>;
+    let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let hotspotCtrl: HotspotCtrl;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
 
@@ -52,7 +52,7 @@ describe('HotspotCtrl', () => {
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
-        auth0InfoMoq = TypeMoq.Mock.ofType<Auth0Info>();
+        auth0ServiceMoq = TypeMoq.Mock.ofType<Auth0Service>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         algoliaMoq = TypeMoq.Mock.ofType<Algolia>();
@@ -61,13 +61,13 @@ describe('HotspotCtrl', () => {
 
         reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
 
-        auth0InfoMoq
+        auth0ServiceMoq
             .setup(x => x.getUserInfo('my authorisation'))
             .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
         hotspotCtrl = new HotspotCtrl(
             errorHandlerMoq.object,
-            auth0InfoMoq.object,
+            auth0ServiceMoq.object,
             hotspotRepositoryMoq.object,
             hotspotFactoryMoq.object,
             algoliaMoq.object,

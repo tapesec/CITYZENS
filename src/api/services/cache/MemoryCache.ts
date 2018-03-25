@@ -27,9 +27,8 @@ class MemoryCache<KeyT> {
     }
     public set(key: KeyT, value: any, opts?: any) {
         const options = MemoryCache.DEFAULT_OPTIONS;
-        if (opts !== undefined){
-            if (opts.timeout !== undefined)
-               options.timeout = opts.timeout;
+        if (opts !== undefined) {
+            if (opts.timeout !== undefined) options.timeout = opts.timeout;
         }
         const timeout = options.timeout;
 
@@ -37,11 +36,11 @@ class MemoryCache<KeyT> {
         this.cacheMap.set(key, cached);
     }
 
-    public isValid(key: KeyT){
+    public isValid(key: KeyT) {
         return this.cacheMap.has(key) && this.cacheMap.get(key).isValid;
     }
 
-    public invalidate(key: KeyT){
+    public invalidate(key: KeyT) {
         this.cacheMap.delete(key);
     }
 

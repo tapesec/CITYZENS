@@ -20,7 +20,7 @@ import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import Author from '../../domain/cityLife/model/author/Author';
-import Auth0Info from 'src/api/services/auth/Auth0Info';
+import Auth0Service from 'src/api/services/auth/Auth0Service';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -34,12 +34,12 @@ class HotspotCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        auth0Info: Auth0Info,
+        auth0Service: Auth0Service,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
     ) {
-        super(errorHandler, auth0Info);
+        super(errorHandler, auth0Service);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
