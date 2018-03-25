@@ -17,6 +17,7 @@ import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import Login from '../../../../src/api/services/auth/Login';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import Auth0Info from '../../../../src/api/services/auth/Auth0Info';
 
 describe('ProfileCtrl', () => {
 
@@ -28,7 +29,7 @@ describe('ProfileCtrl', () => {
     let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
     let profileCtrl : ProfileCtrl;
     let hotspotRepositoryMoq : TypeMoq.IMock<HotspotRepositoryInMemory>;
-    let loginServiceMoq: TypeMoq.IMock<Login>;
+    let auth0InfoMoq: TypeMoq.IMock<Auth0Info>;
 
     // simule la vérification et decode le token d'authentification
     before(async () => {
@@ -38,20 +39,20 @@ describe('ProfileCtrl', () => {
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
         cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-        loginServiceMoq = TypeMoq.Mock.ofType<Login>();
+        auth0InfoMoq = TypeMoq.Mock.ofType<Auth0Info>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
 
         reqMoq
             .setup(x => x.header('Authorization'))
             .returns(() => 'Bearer toto');
 
-        loginServiceMoq
-            .setup(x => x.auth0UserInfo('toto'))
+        auth0InfoMoq
+            .setup(x => x.getUserInfo('toto'))
             .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
         // instanciation du ProfilCtrl
         profileCtrl = new ProfileCtrl(
-            errorHandlerMoq.object, loginServiceMoq.object,
+            errorHandlerMoq.object, auth0InfoMoq.object,
             cityzenRepositoryMoq.object, auth0SdkMoq.object, hotspotRepositoryMoq.object,
         );
 
@@ -105,7 +106,7 @@ describe('ProfileCtrl', () => {
             cityzen.addHotspotAsFavorit(params.favoritHotspotId);
 
             cityzenRepositoryMoq
-                .setup(x => x.updateFavoritesHotspots(cityzen))
+                .setup(x => x.updateFavoritesHotspots(cityzen, ''))
                 .returns(() => Promise.resolve());
 
              // Act
@@ -116,7 +117,7 @@ describe('ProfileCtrl', () => {
             );
             // Assert
             cityzenRepositoryMoq
-            .verify(x => x.updateFavoritesHotspots(cityzen), TypeMoq.Times.once());
+            .verify(x => x.updateFavoritesHotspots(cityzen, TypeMoq.It.isAny()), TypeMoq.Times.once());
 
             auth0SdkMoq
             .verify(

@@ -25,6 +25,7 @@ import orm from './../../infrastructure/orm';
 import AlgoliaApi from './../libs/AlgoliaAPI';
 import Algolia from './../services/algolia/Algolia';
 import * as AlgoliaSearch from 'algoliasearch';
+import { auth0Info } from './../services/auth/Auth0Info';
 
 // const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -48,7 +49,7 @@ const errorHandler = new ErrorHandler(
     new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
     httpResponseDataLogger,
     restifyErrors,
-);
+);/*
 const loginService = new Login(
     {
         url: config.auth.auth0url,
@@ -58,28 +59,28 @@ const loginService = new Login(
     request,
     errorHandler,
 );
-
+*/
 export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(errorHandler, loginService)));
+    routers.push(new AuthRouter(new AuthCtrl(errorHandler, auth0Info)));
     routers.push(
         new ProfileRouter(
             new ProfileCtrl(
                 errorHandler,
-                loginService,
+                auth0Info,
                 cityzenAuth0Repository,
                 auth0Sdk,
                 hotspotRepositoryInMemory,
             ),
         ),
     );
-    routers.push(new CityRouter(new CityCtrl(errorHandler, loginService, cityRepositoryInMemory)));
+    routers.push(new CityRouter(new CityCtrl(errorHandler, auth0Info, cityRepositoryInMemory)));
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 errorHandler,
-                loginService,
+                auth0Info,
                 hotspotRepositoryInMemory,
                 new HotspotFactory(),
                 algolia,
@@ -90,7 +91,7 @@ export const init = (server: restify.Server) => {
         new MessageRouter(
             new MessageCtrl(
                 errorHandler,
-                loginService,
+                auth0Info,
                 hotspotRepositoryInMemory,
                 messageRepositoryInMemory,
                 new MessageFactory(),

@@ -1,9 +1,9 @@
-import Login from '../../../../src/api/services/auth/Login';
 import AuthCtrl from '../../../../src/api/controllers/AuthCtrl';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
 import * as sinon from 'sinon';
+import Auth0Info from '../../../../src/api/services/auth/Auth0Info';
 const restifyErrors = require('restify-errors');
 
 describe('AuthCtrl', () => {
@@ -12,7 +12,7 @@ describe('AuthCtrl', () => {
         let reqMoq : TypeMoq.IMock<rest.Request>;
         let resMoq : TypeMoq.IMock<rest.Response>;
         let nextMoq : TypeMoq.IMock<rest.Next>;
-        let loginServiceMoq : TypeMoq.IMock<Login>;
+        let auth0InfoMoq : TypeMoq.IMock<Auth0Info>;
         let errorHandlerMoq : TypeMoq.IMock<ErrorHandler>;
         let queryStrings : any;
         let username : string;
@@ -31,7 +31,7 @@ describe('AuthCtrl', () => {
             reqMoq = TypeMoq.Mock.ofType<rest.Request>();
             resMoq = TypeMoq.Mock.ofType<rest.Response>();
             nextMoq = TypeMoq.Mock.ofType<rest.Next>();
-            loginServiceMoq = TypeMoq.Mock.ofType<Login>();
+            auth0InfoMoq = TypeMoq.Mock.ofType<Auth0Info>();
             errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
             reqMoq
             .setup((x : rest.Request) => x.query)
@@ -48,12 +48,12 @@ describe('AuthCtrl', () => {
                 const body = {
                     token: 'a.jwt.token',
                 };
-                loginServiceMoq
-                .setup(x => x.try(username, password))
+                auth0InfoMoq
+                .setup(x => x.login(username, password))
                 .returns(() => Promise.resolve(body));
 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 resMoq.verify(x => x.json(body), TypeMoq.Times.once());
@@ -69,8 +69,8 @@ describe('AuthCtrl', () => {
                     error: 'an error occured', 
                     error_description: 'error description',
                 };
-                loginServiceMoq
-                .setup(x => x.try(username, password))
+                auth0InfoMoq
+                .setup(x => x.login(username, password))
                 .returns(() => Promise.resolve(fakeError));
                 
                 errorHandlerMoq
@@ -82,7 +82,7 @@ describe('AuthCtrl', () => {
                 .returns(() => 'error');
                 
                 // Act
-                const authCtrl = new AuthCtrl(errorHandlerMoq.object, loginServiceMoq.object);
+                const authCtrl = new AuthCtrl(errorHandlerMoq.object, auth0InfoMoq.object);
                 await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
                 // Assert
                 nextMoq

@@ -4,7 +4,7 @@ import { CityRepositoryInMemory } from '../../infrastructure/CityRepositoryInMem
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import ErrorHandler from 'src/api/services/errors/ErrorHandler';
-import Login from 'src/api/services/auth/Login';
+import Auth0Info from 'src/api/services/auth/Auth0Info';
 
 class CityCtrl extends RootCtrl {
     private cityRepository: CityRepositoryInMemory;
@@ -14,10 +14,10 @@ class CityCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        loginService: Login,
+        auth0Info: Auth0Info,
         cityRepositoryInMemory: CityRepositoryInMemory,
     ) {
-        super(errorHandler, loginService);
+        super(errorHandler, auth0Info);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }

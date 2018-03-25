@@ -1,7 +1,13 @@
-import SlackWebhook from 'src/api/libs/SlackWebhook';
+import SlackWebhook from './../../libs/SlackWebhook';
+import config from './../../config';
 import {
     BAD_REQUEST, UNAUTHORIZED, getStatusText,
 } from 'http-status-codes';
+
+const request = require('request');
+const restifyErrors = require('restify-errors');
+const logs = require('./../../../logs');
+const httpLogger = logs.get('http-response-data');
 
 class ErrorHandler {
 
@@ -88,6 +94,12 @@ class ErrorHandler {
 
 }
 
+const errorHandler = new ErrorHandler(
+    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
+    httpLogger,
+    restifyErrors,
+);
+export { errorHandler };
 export default ErrorHandler;
 
 

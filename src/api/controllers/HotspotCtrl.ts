@@ -7,7 +7,6 @@ import * as isAuthorized from './../services/hotspot/isAuthorized';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import HotspotReducer from './../services/hotspot/HotspotReducer';
 import ErrorHandler from '../services/errors/ErrorHandler';
-import Login from '../services/auth/Login';
 import Algolia from './../services/algolia/Algolia';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import EventHotspot from '../../domain/cityLife/model/hotspot/EventHotspot';
@@ -21,6 +20,7 @@ import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import Author from '../../domain/cityLife/model/author/Author';
+import Auth0Info from 'src/api/services/auth/Auth0Info';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -34,12 +34,12 @@ class HotspotCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        loginService: Login,
+        auth0Info: Auth0Info,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
     ) {
-        super(errorHandler, loginService);
+        super(errorHandler, auth0Info);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;

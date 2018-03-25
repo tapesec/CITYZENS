@@ -58,7 +58,7 @@ class Login {
                         body,
                     });
                 } else {
-                    const userInfoAuth0 = new UserInfoAuth0(body);
+                    const userInfoAuth0 = new UserInfoAuth0(body, accessToken);
                     this.userInfoCache.set(
                         accessToken,
                         new UserInfoCache(now.seconds(), userInfoAuth0),

@@ -7,7 +7,7 @@ import { OK } from 'http-status-codes';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import Login from '../services/auth/Login';
+import Auth0Info from 'src/api/services/auth/Auth0Info';
 
 class ProfileCtrl extends RootCtrl {
     protected cityzenRepository: CityzenAuth0Repository;
@@ -20,12 +20,12 @@ class ProfileCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        loginService: Login,
+        auth0Info: Auth0Info,
         cityzenRepository: CityzenAuth0Repository,
         auth0Sdk: Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, loginService);
+        super(errorHandler, auth0Info);
         this.cityzenRepository = cityzenRepository;
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
@@ -60,7 +60,7 @@ class ProfileCtrl extends RootCtrl {
         try {
             const currentCityzen: Cityzen = cityzenFromAuth0(this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
-            await this.cityzenRepository.updateFavoritesHotspots(currentCityzen);
+            await this.cityzenRepository.updateFavoritesHotspots(currentCityzen, this.userInfo.accessToken);
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {

@@ -23,6 +23,37 @@ class Auth0 {
         this.request = request;
     }
 
+    public getUserInfo = async (accessToken: string) => {
+        const options = {
+            method: 'GET',
+            url: this.opts.url + '/userinfo',
+            headers: { Authorization: `Bearer ${accessToken}` },
+        };
+
+        return this.retryApiCall(options);
+    }
+
+    public login = async (username: string, password: string) => {
+        const options = {
+            method: 'POST',
+            url: this.opts.url + '/oauth/token',
+            headers: { 'content-type': 'application/json' },
+            body: {
+                username,
+                password,
+                grant_type: 'password',
+                // offline_access enable refresh_token in the response
+                scope: 'openid offline_access',
+                client_id: this.opts.clientId,
+                client_secret: this.opts.clientSecret,
+                connection: 'Cityzens',
+            },
+            json: true,
+        };
+
+        return this.retryApiCall(options);
+    }
+
     public updateUserMetadataById = async (userId : string, data : any) => {
         const options = {
             method: 'PATCH',
