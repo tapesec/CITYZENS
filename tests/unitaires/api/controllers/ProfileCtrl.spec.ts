@@ -9,9 +9,7 @@ import * as TypeMoq from 'typemoq';
 import { expect } from 'chai';
 import * as rest from 'restify';
 // tslint:disable-next-line:max-line-length
-import cityzenAuth0Repository, {
-    CityzenAuth0Repository,
-} from './../../../../src/infrastructure/CityzenAuth0Repository';
+import CityzenAuth0Repository from './../../../../src/infrastructure/CityzenAuth0Repository';
 import { Auth0 } from '../../../../src/api/libs/Auth0';
 import { OK } from 'http-status-codes';
 import * as sample from './sample';
