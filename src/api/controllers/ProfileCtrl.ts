@@ -1,6 +1,6 @@
 import { Auth0 } from './../libs/Auth0';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
-import { CityzenAuth0Repository } from '../../infrastructure/CityzenAuth0Repository';
+import CityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository';
 import RootCtrl from './RootCtrl';
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';

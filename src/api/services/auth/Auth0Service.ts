@@ -1,6 +1,6 @@
 import MemoryCache from '../cache/MemoryCache';
 import UserInfoAuth0 from './UserInfoAuth0';
-import ErrorHandler, { errorHandler } from '../errors/ErrorHandler';
+import ErrorHandler from '../errors/ErrorHandler';
 import auth0, { Auth0 } from '../../libs/Auth0';
 const request = require('request');
 
@@ -61,6 +61,4 @@ class Auth0Service {
     }
 }
 
-const auth0Service = new Auth0Service(auth0, request, errorHandler);
-export { auth0Service };
 export default Auth0Service;

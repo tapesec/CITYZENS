@@ -1,6 +1,6 @@
 import Cityzen from '../domain/cityzens/model/Cityzen';
 import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
-import Auth0Service, { auth0Service } from '../api/services/auth/Auth0Service';
+import Auth0Service from '../api/services/auth/Auth0Service';
 
 class CityzenAuth0Repository implements ICityzenRepository {
     protected auth0Service: Auth0Service;
@@ -15,6 +15,4 @@ class CityzenAuth0Repository implements ICityzenRepository {
     };
 }
 
-export { CityzenAuth0Repository };
-const cityzenAuth0Repository = new CityzenAuth0Repository(auth0Service);
-export default cityzenAuth0Repository;
+export default CityzenAuth0Repository;
