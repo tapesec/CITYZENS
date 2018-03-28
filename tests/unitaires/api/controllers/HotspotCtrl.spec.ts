@@ -18,7 +18,7 @@ import * as rest from 'restify';
 import * as sample from './sample';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import RootCtrl from '../../../../src/api/controllers/RootCtrl';
-
+import CityzenId from './../../../../src/domain/cityzens/model/CityzenId';
 import * as Sinon from 'sinon';
 import * as Chai from 'chai';
 import { resolve } from 'url';
@@ -296,7 +296,10 @@ describe('HotspotCtrl', () => {
                 TypeMoq.Times.once(),
             );
             hotspotRepositoryMoq.verify(x => x.update(hotspot.object), TypeMoq.Times.once());
-            hotspot.verify(x => x.addMember(jsonBody.memberId), TypeMoq.Times.once());
+            hotspot.verify(
+                x => x.addMember(new CityzenId(jsonBody.memberId)),
+                TypeMoq.Times.once(),
+            );
             resMoq.verify(x => x.json(200, hotspot.object), TypeMoq.Times.once());
         });
     });

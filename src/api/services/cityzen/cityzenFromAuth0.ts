@@ -1,5 +1,6 @@
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import UserInfoAuth0 from 'src/api/services/auth/UserInfoAuth0';
+import CityzenId from '../../../domain/cityzens/model/CityzenId';
 
 export class InvalidPayloadError extends Error {
     constructor(message: string) {
@@ -9,14 +10,14 @@ export class InvalidPayloadError extends Error {
 }
 
 const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
-    let id: string;
+    let id: CityzenId;
     let email: string;
     let pseudo: string;
     let favoritesHotspots: Set<string>;
     let description: string;
     let isAdmin = false;
 
-    if (payload.sub) id = payload.sub;
+    if (payload.sub) id = new CityzenId(payload.sub);
     else throw new InvalidPayloadError("no subject found in userInfo's Auth0 payload");
     if (payload.email) email = payload.email;
     else throw new InvalidPayloadError("no email found in userInfo's Auth0 payload");
@@ -33,14 +34,7 @@ const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
         description = payload.userMetadata.description;
     }
 
-    const cityzen = new Cityzen(
-        payload.sub,
-        payload.email,
-        payload.nickname,
-        isAdmin,
-        favoritesHotspots,
-        description,
-    );
+    const cityzen = new Cityzen(id, email, pseudo, isAdmin, favoritesHotspots, description);
 
     return cityzen;
 };

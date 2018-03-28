@@ -1,5 +1,7 @@
+import CityzenId from './CityzenId';
+
 class Cityzen {
-    protected _id: string;
+    protected _id: CityzenId;
     protected _email: string;
     protected _pseudo: string;
     protected _description: string;
@@ -7,7 +9,7 @@ class Cityzen {
     protected _favoritesHotspots: Set<string>;
 
     constructor(
-        id: string,
+        id: CityzenId,
         email: string,
         pseudo: string,
         isAdmin: boolean,
@@ -26,7 +28,7 @@ class Cityzen {
         }
     }
 
-    get id(): string {
+    get id(): CityzenId {
         return this._id;
     }
 

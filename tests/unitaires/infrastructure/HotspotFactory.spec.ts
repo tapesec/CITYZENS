@@ -1,6 +1,7 @@
 import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
 import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
 import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
+import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
 import { expect } from 'chai';
 import { HotspotIconType, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
@@ -16,7 +17,7 @@ describe('HotspotFactory', () => {
             },
             author: {
                 pseudo: CityzenSample.ELODIE.pseudo,
-                id: CityzenSample.ELODIE.id,
+                id: CityzenSample.ELODIE.id.id,
             },
             scope: 'private',
             address: {
@@ -29,6 +30,7 @@ describe('HotspotFactory', () => {
         };
 
         fakeDataFromRequestPost.cityzen = CityzenSample.ELODIE;
+        fakeDataFromRequestPost.cityzen._id = CityzenSample.ELODIE.id.id;
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromRequestPost);
@@ -56,7 +58,7 @@ describe('HotspotFactory', () => {
             cityzen: CityzenSample.ELODIE,
             author: {
                 pseudo: CityzenSample.ELODIE.pseudo,
-                id: CityzenSample.ELODIE.id,
+                id: CityzenSample.ELODIE.id.id,
             },
             scope: 'private',
             address: {
@@ -67,6 +69,7 @@ describe('HotspotFactory', () => {
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
         };
+        fakeDataFromDatabase.cityzen._id = CityzenSample.ELODIE.id.id;
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
@@ -82,7 +85,9 @@ describe('HotspotFactory', () => {
             .and.to.be.equal('private');
         expect(fakeNewHotspot)
             .to.have.property('members')
-            .and.to.deep.equal(new MemberList(['fake-member-id', 'fake-member-id2']));
+            .and.to.deep.equal(
+                new MemberList([new CityzenId('fake-member-id'), new CityzenId('fake-member-id2')]),
+            );
         commonHotspotPropertiesAssertion(fakeNewHotspot);
     });
 });
@@ -103,10 +108,13 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any): void => {
         .to.have.property('author')
         .to.have.property('pseudo')
         .to.be.equal('Princesse');
+
+    console.log(fakeNewHotspot.author.id);
+    console.log(CityzenSample.ELODIE.id);
     expect(fakeNewHotspot)
         .to.have.property('author')
         .to.have.property('id')
-        .to.be.equal(CityzenSample.ELODIE.id);
+        .to.be.deep.equal(CityzenSample.ELODIE.id);
     expect(fakeNewHotspot)
         .to.have.property('position')
         .to.have.property('longitude')

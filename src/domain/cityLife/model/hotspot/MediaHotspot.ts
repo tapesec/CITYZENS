@@ -5,6 +5,7 @@ import Hotspot, { HotspotScope } from './Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
+import CityzenId from '../../../cityzens/model/CityzenId';
 const slug = require('slug');
 
 class MediaHotspot extends Hotspot {
@@ -33,10 +34,10 @@ class MediaHotspot extends Hotspot {
         return this._members;
     }
 
-    public addMember(member: string) {
+    public addMember(member: CityzenId) {
         this._members.add(member);
     }
-    public excludeMember(member: string) {
+    public excludeMember(member: CityzenId) {
         this._members.delete(member);
     }
 

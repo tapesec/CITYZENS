@@ -32,6 +32,7 @@ import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
+import CityzenId from '../domain/cityzens/model/CityzenId';
 const request = require('request');
 const slug = require('slug');
 
@@ -134,7 +135,8 @@ class HotspotFactory {
         }
         // data from both database or user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo, data.cityzen.id);
+            const cityzenId = new CityzenId(data.cityzen.id);
+            author = new Author(data.cityzen.pseudo, cityzenId);
         }
         // new hotspot posted by user
         if (!data.id) {
@@ -208,7 +210,7 @@ class HotspotFactory {
         }
         if (data.members) {
             data.members.forEach((m: string) => {
-                members.add(m);
+                members.add(new CityzenId(m));
             });
         }
         return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members);

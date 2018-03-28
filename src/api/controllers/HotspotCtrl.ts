@@ -21,6 +21,7 @@ import { strToNumQSProps } from '../helpers/';
 import { CREATED, OK, getStatusText } from 'http-status-codes';
 import Author from '../../domain/cityLife/model/author/Author';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import CityzenId from '../../domain/cityzens/model/CityzenId';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -179,6 +180,7 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         try {
+            const memberId = new CityzenId(req.body.memberId);
             const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
 
             if (hotspot instanceof AlertHotspot) {
@@ -189,7 +191,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            if (this.cityzenIfAuthenticated.id === req.body.memberId) {
+            if (this.cityzenIfAuthenticated.id === memberId) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
                         `POST addMember ${req.path()}`,

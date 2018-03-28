@@ -1,10 +1,11 @@
 import { OutgoingMessage } from 'http';
+import CityzenId from '../../../cityzens/model/CityzenId';
 
 class Author {
     protected _pseudo: string;
-    protected _id: string;
+    protected _id: CityzenId;
 
-    constructor(pseudo: string, id: string) {
+    constructor(pseudo: string, id: CityzenId) {
         this._pseudo = pseudo;
         this._id = id;
     }
@@ -13,7 +14,7 @@ class Author {
         return this._pseudo;
     }
 
-    get id(): string {
+    get id(): CityzenId {
         return this._id;
     }
 

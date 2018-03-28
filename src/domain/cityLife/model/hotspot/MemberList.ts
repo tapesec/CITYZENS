@@ -1,29 +1,30 @@
 import Cityzen from '../../../cityzens/model/Cityzen';
 import ValueObject from './../../../interface/ValueObject';
 import * as lodash from 'lodash';
+import CityzenId from '../../../cityzens/model/CityzenId';
 class MemberList implements ValueObject {
-    private _memberSet: Set<string>;
+    private _memberSet: Set<CityzenId>;
 
-    constructor(members?: string[]) {
-        if (members !== undefined) this._memberSet = new Set<string>(members);
-        else this._memberSet = new Set<string>();
+    constructor(members?: CityzenId[]) {
+        if (members !== undefined) this._memberSet = new Set<CityzenId>(members);
+        else this._memberSet = new Set<CityzenId>();
     }
 
-    public get member(): Set<string> {
+    public get member(): Set<CityzenId> {
         return this._memberSet;
     }
 
-    public toArray(): string[] {
+    public toArray(): CityzenId[] {
         return Array.from(this._memberSet);
     }
 
-    public add(cityzenId: string) {
+    public add(cityzenId: CityzenId) {
         this._memberSet.add(cityzenId);
     }
-    public has(cityzenId: string) {
+    public has(cityzenId: CityzenId) {
         return this._memberSet.has(cityzenId);
     }
-    public delete(cityzenId: string) {
+    public delete(cityzenId: CityzenId) {
         if (this.has(cityzenId)) this._memberSet.delete(cityzenId);
     }
 
@@ -32,7 +33,7 @@ class MemberList implements ValueObject {
     }
 
     public toString(): string[] {
-        return this.toArray();
+        return this.toArray().map(x => x.toString());
     }
 }
 
