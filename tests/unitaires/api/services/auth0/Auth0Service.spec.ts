@@ -11,12 +11,14 @@ describe('Auth0Service', () => {
     let auth0Moq: TypeMoq.IMock<Auth0>;
 
     it('Should cache getUserInfo requests.', async () => {
+        const fakeAccessToken = 'fake access token';
+
         reqMoq = TypeMoq.Mock.ofType<any>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         auth0Moq = TypeMoq.Mock.ofType<Auth0>();
 
         auth0Moq
-            .setup(x => x.getUserInfo('ac tk'))
+            .setup(x => x.getUserInfo(fakeAccessToken))
             .returns(() => Promise.resolve<any>(FAKE_USER_INFO_BODY));
 
         const auth0Service = new Auth0Service(
@@ -25,10 +27,10 @@ describe('Auth0Service', () => {
             errorHandlerMoq.object,
         );
 
-        await auth0Service.getUserInfo('ac tk');
-        await auth0Service.getUserInfo('ac tk');
-        await auth0Service.getUserInfo('ac tk');
+        await auth0Service.getUserInfo(fakeAccessToken);
+        await auth0Service.getUserInfo(fakeAccessToken);
+        await auth0Service.getUserInfo(fakeAccessToken);
 
-        auth0Moq.verify(x => x.getUserInfo('ac tk'), TypeMoq.Times.once());
+        auth0Moq.verify(x => x.getUserInfo(fakeAccessToken), TypeMoq.Times.once());
     });
 });
