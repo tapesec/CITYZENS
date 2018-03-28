@@ -314,8 +314,8 @@ describe('HotspotCtrl', () => {
                 hotspotId: 'hotspotId',
             };
 
-            loginServiceMoq
-                .setup(x => x.auth0UserInfo('my authorisation'))
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
 
             await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
