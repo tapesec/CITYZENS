@@ -10,7 +10,7 @@ class UserInfoAuth0 {
     private _app_metadata: any;
     private _isAdmin: boolean;
 
-    constructor(userInfoRaw: string) {
+    constructor(userInfoRaw: string, private _accessToken: string) {
         const userInfo = JSON.parse(userInfoRaw);
 
         this._sub = userInfo.sub as string;
@@ -63,6 +63,10 @@ class UserInfoAuth0 {
 
     public get appMetadata(): any {
         return this._app_metadata;
+    }
+
+    public get accessToken(): string {
+        return this._accessToken;
     }
 }
 

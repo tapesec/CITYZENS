@@ -29,7 +29,7 @@ export const MALFORMED_DECODED_PAYLOAD = new DecodedJwtPayload(
     config.auth.auth0JwtPayloadNamespace,
 );
 
-export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(`
+export const FAKE_USER_INFO_BODY = `
 {
     "sub": "s",
     "nickname": "n",
@@ -41,9 +41,27 @@ export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(`
     "https://www.cityzen.fr/user_metadata": {},
     "https://www.cityzen.fr/app_metadata": {}
 }
-`);
+`;
 
-export const FAKE_ADMIN_USER_INFO_AUTH0 = new UserInfoAuth0(`
+export const FAKE_USER_INFO_AUTH0 = new UserInfoAuth0(
+    `
+{
+    "sub": "s",
+    "nickname": "n",
+    "name": "n",
+    "picture": "p",
+    "updatedAt": "a",
+    "email": "e",
+    "email_verified": true,
+    "https://www.cityzen.fr/user_metadata": {},
+    "https://www.cityzen.fr/app_metadata": {}
+}
+`,
+    '',
+);
+
+export const FAKE_ADMIN_USER_INFO_AUTH0 = new UserInfoAuth0(
+    `
 {
     "sub": "s",
     "nickname": "n",
@@ -57,9 +75,12 @@ export const FAKE_ADMIN_USER_INFO_AUTH0 = new UserInfoAuth0(`
     },
     "https://www.cityzen.fr/app_metadata": {}
 }
-`);
+`,
+    '',
+);
 
-export const ILL_USER_INFO_AUTH0 = new UserInfoAuth0(`
+export const ILL_USER_INFO_AUTH0 = new UserInfoAuth0(
+    `
 {
     "subaze": "s",
     "niaezckname": "n",
@@ -68,4 +89,6 @@ export const ILL_USER_INFO_AUTH0 = new UserInfoAuth0(`
     "emaiqsdl": "e",
     "email_qsdverified": true
 }
-`);
+`,
+    '',
+);

@@ -8,9 +8,9 @@ import * as rest from 'restify';
 import { OK, getStatusText, CREATED } from 'http-status-codes';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import Login from '../services/auth/Login';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
+import Auth0Service from 'src/api/services/auth/Auth0Service';
 
 class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -22,12 +22,12 @@ class MessageCtrl extends RootCtrl {
 
     constructor(
         errorHandler: ErrorHandler,
-        loginService: Login,
+        auth0Service: Auth0Service,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryInMemory,
         messageFactory: MessageFactory,
     ) {
-        super(errorHandler, loginService);
+        super(errorHandler, auth0Service);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;

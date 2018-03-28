@@ -19,12 +19,13 @@ import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
 import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 
 describe('MessageCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
     let resMoq: TypeMoq.IMock<rest.Response>;
     let nextMoq: TypeMoq.IMock<rest.Next>;
-    let loginServiceMoq: TypeMoq.IMock<Login>;
+    let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let hotspotRepositoryMoq: TypeMoq.IMock<HotspotRepositoryInMemory>;
     let messageRepositoryMoq: TypeMoq.IMock<MessageRepositoryInMemory>;
     let messageFactoryMoq: TypeMoq.IMock<MessageFactory>;
@@ -40,20 +41,20 @@ describe('MessageCtrl', () => {
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
-        loginServiceMoq = TypeMoq.Mock.ofType<Login>();
+        auth0ServiceMoq = TypeMoq.Mock.ofType<Auth0Service>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         messageRepositoryMoq = TypeMoq.Mock.ofType<MessageRepositoryInMemory>();
         messageFactoryMoq = TypeMoq.Mock.ofType<MessageFactory>();
 
         reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
 
-        loginServiceMoq
-            .setup(x => x.auth0UserInfo('my authorisation'))
+        auth0ServiceMoq
+            .setup(x => x.getUserInfo('my authorisation'))
             .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
         messageCtrl = new MessageCtrl(
             errorHandlerMoq.object,
-            loginServiceMoq.object,
+            auth0ServiceMoq.object,
             hotspotRepositoryMoq.object,
             messageRepositoryMoq.object,
             messageFactoryMoq.object,
@@ -128,8 +129,8 @@ describe('MessageCtrl', () => {
         beforeEach(async () => {
             reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
 
-            loginServiceMoq
-                .setup(x => x.auth0UserInfo('my authorisation'))
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
 
             await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -186,8 +187,8 @@ describe('MessageCtrl', () => {
         beforeEach(async () => {
             reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
 
-            loginServiceMoq
-                .setup(x => x.auth0UserInfo('my authorisation'))
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
 
             await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
@@ -242,8 +243,8 @@ describe('MessageCtrl', () => {
         beforeEach(async () => {
             reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
 
-            loginServiceMoq
-                .setup(x => x.auth0UserInfo('my authorisation'))
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
 
             await messageCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);

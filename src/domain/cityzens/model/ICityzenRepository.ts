@@ -1,3 +1,3 @@
 export default interface ICityzenRepository {
-    updateFavoritesHotspots(data : any) : void;
+    updateFavoritesHotspots(data: any, accessToken: string) : void;
 }
