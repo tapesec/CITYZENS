@@ -30,6 +30,8 @@ import {
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../domain/cityLife/model/hotspot/MemberList';
+import VoterList from '../domain/cityLife/model/hotspot/VoterList';
+import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 const request = require('request');
 const slug = require('slug');
 
@@ -83,16 +85,34 @@ class HotspotFactory {
 
     private createAlertHotspot = (data: any): AlertHotspot => {
         let message: AlertMessage;
+        let voterList: VoterList;
+        let pertinenceScore: PertinenceScore;
 
         // data from database
         if (data && data.message.content) {
             message = new AlertMessage(data.message.content, data.message.updatedAt);
+            voterList = new VoterList(data.voterList);
+            if (data.pertinence !== undefined) {
+                pertinenceScore = new PertinenceScore(
+                    data.pertinence.agree,
+                    data.pertinence.disagree,
+                );
+            } else {
+                pertinenceScore = new PertinenceScore(0, 0);
+            }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
+            voterList = new VoterList();
+            pertinenceScore = new PertinenceScore(0, 0);
         }
-        return new AlertHotspot(this.createHotspotBuilder(data), message);
+        return new AlertHotspot(
+            this.createHotspotBuilder(data),
+            message,
+            pertinenceScore,
+            voterList,
+        );
     };
 
     private createHotspotBuilder = (data: any): HotspotBuilder => {

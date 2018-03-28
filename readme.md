@@ -43,6 +43,9 @@ Liste des plugins
 *   Typescript hero
 *   Move Ts
 *   TSlint
+*   Prettier
+*   line-counter
+*   DotENV
 
 ### .vscode
 
