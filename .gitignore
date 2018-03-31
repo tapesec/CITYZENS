@@ -5,4 +5,4 @@ build
 .DS_Store
 .env
 pm2.dev.config.js
-loki.json
+loki/loki.json
