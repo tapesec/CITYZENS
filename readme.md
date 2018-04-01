@@ -1,6 +1,8 @@
 # citizens-api
 
-let's the party begin !
+[![CircleCI](https://circleci.com/gh/tapesec/CITYZENS.svg?style=svg&circle-token=a7ff76bc71957fa198d448488e63f96a31280911)](https://circleci.com/gh/tapesec/CITYZENS)
+
+Let the party begin !
 
 ### Prérequis
 

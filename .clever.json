@@ -1,0 +1,11 @@
+{
+    "apps": [
+        {
+            "app_id": "app_f777f246-bd57-4701-be22-3cdf852279a7",
+            "deploy_url":
+                "https://push-par-clevercloud-customers.services.clever-cloud.com/app_f777f246-bd57-4701-be22-3cdf852279a7.git",
+            "name": "CITYZENS-API",
+            "alias": "cityzens-api"
+        }
+    ]
+}
