@@ -1,1 +1,11 @@
-{"apps":[{"app_id":"app_96f0711e-9553-4519-8771-aab0516a0468","deploy_url":"https://github.com/tapesec/CITYZENS.git","name":"CITYZENS","alias":"cityzens"}]}
+{
+    "apps": [
+        {
+            "app_id": "app_f777f246-bd57-4701-be22-3cdf852279a7",
+            "deploy_url":
+                "https://push-par-clevercloud-customers.services.clever-cloud.com/app_f777f246-bd57-4701-be22-3cdf852279a7.git",
+            "name": "CITYZENS-API",
+            "alias": "cityzens-api"
+        }
+    ]
+}
