@@ -291,11 +291,14 @@ describe('HotspotCtrl', () => {
             hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
+
             hotspotRepositoryMoq.verify(
                 x => x.findById(jsonParams.hotspotId),
                 TypeMoq.Times.once(),
             );
+
             hotspotRepositoryMoq.verify(x => x.update(hotspot.object), TypeMoq.Times.once());
+
             hotspot.verify(
                 x => x.addMember(new CityzenId(jsonBody.memberId)),
                 TypeMoq.Times.once(),

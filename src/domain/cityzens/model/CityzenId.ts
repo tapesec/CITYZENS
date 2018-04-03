@@ -15,6 +15,10 @@ class CityzenId implements ValueObject {
     public isEqual(other: CityzenId) {
         return lodash.isEqual(this, other);
     }
+
+    public toJson() {
+        return this._id;
+    }
 }
 
 export default CityzenId;

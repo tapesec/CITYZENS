@@ -21,7 +21,7 @@ class Author {
     toJSON() {
         return {
             pseudo: this._pseudo,
-            id: this._id,
+            id: this._id.toJson(),
         };
     }
 

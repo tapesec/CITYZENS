@@ -5,6 +5,7 @@ import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
 import { expect } from 'chai';
 import { HotspotIconType, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
+import Author from '../../../src/domain/cityLife/model/author/Author';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {
@@ -15,10 +16,7 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            author: {
-                pseudo: CityzenSample.ELODIE.pseudo,
-                id: CityzenSample.ELODIE.id.id,
-            },
+            cityzen: CityzenSample.ELODIE.toJSON(),
             scope: 'private',
             address: {
                 name: '4 rue Blanc',
@@ -28,9 +26,6 @@ describe('HotspotFactory', () => {
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
         };
-
-        fakeDataFromRequestPost.cityzen = CityzenSample.ELODIE;
-        fakeDataFromRequestPost.cityzen._id = CityzenSample.ELODIE.id.id;
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromRequestPost);
@@ -47,6 +42,7 @@ describe('HotspotFactory', () => {
 
     it('should build a WallHotspot with data from database', () => {
         // Arrange
+
         const fakeDataFromDatabase: any = {
             id: 'fake-id',
             title: 'new title',
@@ -55,11 +51,7 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            cityzen: CityzenSample.ELODIE,
-            author: {
-                pseudo: CityzenSample.ELODIE.pseudo,
-                id: CityzenSample.ELODIE.id.id,
-            },
+            cityzen: CityzenSample.ELODIE.toJSON(),
             scope: 'private',
             address: {
                 name: '4 rue Blanc',
@@ -69,7 +61,6 @@ describe('HotspotFactory', () => {
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
         };
-        fakeDataFromDatabase.cityzen._id = CityzenSample.ELODIE.id.id;
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
@@ -108,9 +99,6 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any): void => {
         .to.have.property('author')
         .to.have.property('pseudo')
         .to.be.equal('Princesse');
-
-    console.log(fakeNewHotspot.author.id);
-    console.log(CityzenSample.ELODIE.id);
     expect(fakeNewHotspot)
         .to.have.property('author')
         .to.have.property('id')

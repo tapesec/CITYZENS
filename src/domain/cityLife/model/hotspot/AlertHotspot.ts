@@ -3,6 +3,7 @@ import HotspotBuilder from '../../factories/HotspotBuilder';
 import Hotspot from './Hotspot';
 import PertinenceScore from './PertinenceScore';
 import VoterList from './VoterList';
+import CityzenId from '../../../cityzens/model/CityzenId';
 
 class AlertHotspot extends Hotspot {
     constructor(
@@ -14,7 +15,7 @@ class AlertHotspot extends Hotspot {
         super(hotpotBuilder);
     }
 
-    public addVoter(voterId: string, doAgree: boolean) {
+    public addVoter(voterId: CityzenId, doAgree: boolean) {
         doAgree ? this._pertinence.agree() : this._pertinence.disagree();
         this._voterList.add(voterId, doAgree);
     }

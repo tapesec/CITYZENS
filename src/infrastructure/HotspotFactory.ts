@@ -92,7 +92,11 @@ class HotspotFactory {
         // data from database
         if (data && data.message.content) {
             message = new AlertMessage(data.message.content, data.message.updatedAt);
-            voterList = new VoterList(data.voterList);
+            if (data.voterList) {
+                voterList = new VoterList(data.voterList.map((x: string) => new CityzenId(x)));
+            } else {
+                voterList = new VoterList();
+            }
             if (data.pertinence !== undefined) {
                 pertinenceScore = new PertinenceScore(
                     data.pertinence.agree,
@@ -135,8 +139,7 @@ class HotspotFactory {
         }
         // data from both database or user
         if (data.cityzen) {
-            const cityzenId = new CityzenId(data.cityzen.id);
-            author = new Author(data.cityzen.pseudo, cityzenId);
+            author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
         }
         // new hotspot posted by user
         if (!data.id) {
