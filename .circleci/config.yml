@@ -5,6 +5,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - master
     docker:
       # specify the version you desire here
       - image: circleci/node:8.9.4
@@ -40,4 +43,4 @@ jobs:
           name: clever deploy
           command: |
             git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
-            git push -u clever master
+            git push --force -u clever master
