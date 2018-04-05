@@ -65,7 +65,7 @@ class Cityzen {
 
     toJSON() {
         return {
-            id: this.id.toJson(),
+            id: this.id.toString(),
             email: this.email,
             pseudo: this.pseudo,
             isAdmin: this.isAdmin,
