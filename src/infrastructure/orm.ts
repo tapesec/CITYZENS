@@ -53,6 +53,7 @@ const hotspotUpdate = (data: any) => {
     if (data.dateEnd) hotspot.dateEnd = data.dateEnd;
     if (data.description) hotspot.description = data.description;
     if (data.message) hotspot.message = data.message;
+    if (data.voterList) hotspot.voterList = data.voterList;
     hotspotCollection.update(hotspot);
 };
 
