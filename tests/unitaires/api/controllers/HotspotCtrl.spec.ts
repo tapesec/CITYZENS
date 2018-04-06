@@ -150,7 +150,6 @@ describe('HotspotCtrl', () => {
 
         it('should create a new hotspot, post it to algolia, and return it with 200 OK', () => {
             const fakeNewHotspot = new HotspotFactory().build(factoryData);
-
             // Arrange
             algoliaMoq
                 .setup(x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object))

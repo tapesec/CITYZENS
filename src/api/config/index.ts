@@ -10,6 +10,8 @@ const env = process.env.NODE_ENV;
 const algoliaAppId = process.env.ALGOLIA_APP_ID;
 const algoliaApiKey = process.env.ALGOLIA_API_KEY;
 const algoliaEnv = process.env.ALGOLIA_ENV;
+const defaultWallIcon = process.env.DEFAULT_WALL_ICON;
+const defaultEventIcon = process.env.DEFAULT_EVENT_ICON;
 
 export default {
     server: {
@@ -34,5 +36,9 @@ export default {
     },
     slack: {
         slackWebhookErrorUrl,
+    },
+    avatarIcon: {
+        defaultWallIcon,
+        defaultEventIcon,
     },
 };

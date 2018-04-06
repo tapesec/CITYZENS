@@ -56,13 +56,28 @@ class HotspotFactory {
     };
 
     private createWallHotspot = (data: any): WallHotspot => {
-        return new WallHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
+        let avatarIconUrl;
+        if (!data.avatarIconUrl) {
+            avatarIconUrl = config.avatarIcon.defaultWallIcon;
+        } else {
+            avatarIconUrl = data.avatarIconUrl;
+        }
+
+        const buildData = {
+            ...data,
+            avatarIconUrl,
+        };
+
+        return new WallHotspot(
+            this.createHotspotBuilder(buildData),
+            this.createMediaBuilder(buildData),
+        );
     };
 
     private createEventHotspot = (data: any): EventHotspot => {
         let dateEnd: Date;
         let description: EventDescription;
-
+        let avatarIconUrl;
         if (data && data.dateEnd) {
             dateEnd = new Date(data.dateEnd);
         }
@@ -76,10 +91,20 @@ class HotspotFactory {
         if (data && data.description && typeof data.description === 'string') {
             description = new EventDescription(data.description);
         }
+        if (!data.avatarIconUrl) {
+            avatarIconUrl = config.avatarIcon.defaultWallIcon;
+        } else {
+            avatarIconUrl = data.avatarIconUrl;
+        }
+
+        const buildData = {
+            ...data,
+            avatarIconUrl,
+        };
 
         return new EventHotspot(
-            this.createHotspotBuilder(data),
-            this.createMediaBuilder(data),
+            this.createHotspotBuilder(buildData),
+            this.createMediaBuilder(buildData),
             dateEnd,
             description,
         );
