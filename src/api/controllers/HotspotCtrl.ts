@@ -208,7 +208,7 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
 
-            hotspot.addMember(new CityzenId(req.body.memberId));
+            hotspot.addMember(memberId);
             this.hotspotRepository.update(hotspot);
             res.json(OK, hotspot);
         } catch (err) {
