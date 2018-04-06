@@ -2,6 +2,7 @@ import Hotspot, { HotspotType, HotspotScope } from '../../../domain/cityLife/mod
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 import Author from '../../../domain/cityLife/model/author/Author';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
+import CityzenId from '../../../domain/cityzens/model/CityzenId';
 
 class HotspotReducer {
     constructor(
@@ -36,7 +37,7 @@ class HotspotReducer {
         return this;
     };
 
-    public pickHotspotMemberShip = (cityzenId: string): HotspotReducer => {
+    public pickHotspotMemberShip = (cityzenId: CityzenId): HotspotReducer => {
         if (cityzenId) {
             const hotspotMemberShip = this.hotspotCollection.filter((hotspot: Hotspot) => {
                 if (hotspot instanceof MediaHotspot) {

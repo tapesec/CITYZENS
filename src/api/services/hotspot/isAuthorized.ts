@@ -10,7 +10,7 @@ const toSeeHotspot = (hotspot: Hotspot, member?: Cityzen) => {
     if (member.isAdmin) return true;
 
     const authorized = hotspot.members;
-    return hotspot.author.id === member.id || authorized.has(member.id);
+    return hotspot.author.id.isEqual(member.id) || authorized.has(member.id);
 };
 
 const toSeeMessages = (Hotspot: Hotspot, member?: Cityzen) => {
@@ -21,21 +21,21 @@ const toAddMember = (hotspot: Hotspot, cityzen?: Cityzen) => {
     if (!cityzen) return false;
     if (cityzen.isAdmin) return true;
 
-    return hotspot.author.id === cityzen.id;
+    return hotspot.author.id.isEqual(cityzen.id);
 };
 
 const toPostMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
     if (!cityzen) return false;
     if (cityzen.isAdmin) return true;
 
-    return hotspot.author.id === cityzen.id;
+    return hotspot.author.id.isEqual(cityzen.id);
 };
 
 const toPatchHotspot = (hotspot: Hotspot, cityzen?: Cityzen) => {
     if (!cityzen) return false;
     if (cityzen.isAdmin) return true;
 
-    return hotspot.author.id === cityzen.id;
+    return hotspot.author.id.isEqual(cityzen.id);
 };
 
 const toPatchMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
@@ -46,14 +46,14 @@ const toPatchMessage = (hotspot: Hotspot, message: Message, cityzen?: Cityzen) =
     if (!cityzen) return false;
     if (cityzen.isAdmin) return true;
 
-    return toPatchHotspot(hotspot, cityzen) && message.author.id === cityzen.id;
+    return toPatchHotspot(hotspot, cityzen) && message.author.id.isEqual(cityzen.id);
 };
 
 const toRemoveHotspot = (hotspot: Hotspot, cityzen?: Cityzen) => {
     if (!cityzen) return false;
     if (cityzen.isAdmin) return true;
 
-    return hotspot.author.id === cityzen.id;
+    return hotspot.author.id.isEqual(cityzen.id);
 };
 
 const toRemoveMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {

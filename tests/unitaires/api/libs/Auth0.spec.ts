@@ -1,14 +1,14 @@
 import { ApiManagementCredentials, Auth0 } from '../../../../src/api/libs/Auth0';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 
 describe('Auth0Sdk', () => {
-
-    let credentials : ApiManagementCredentials;
-    let userId : string;
-    let request : any;
-    let dataToUpdate : any;
-    let auth0Sdk : Auth0;
+    let credentials: ApiManagementCredentials;
+    let userId: CityzenId;
+    let request: any;
+    let dataToUpdate: any;
+    let auth0Sdk: Auth0;
 
     before(() => {
         credentials = {
@@ -17,7 +17,7 @@ describe('Auth0Sdk', () => {
             clientId: 'a-random-client-id',
             clientSecret: 'a-random-client-secret',
         };
-        userId = 'auth0|fake-user-id';
+        userId = new CityzenId('auth0|fake-user-id');
         request = sinon.stub();
         auth0Sdk = new Auth0(credentials, request);
     });
@@ -31,8 +31,7 @@ describe('Auth0Sdk', () => {
     });
 
     describe('updateUserMetadataById', () => {
-
-        it ('should perform an http request with corrects options', () => {
+        it('should perform an http request with corrects options', () => {
             // Arrange
             const dataToUpdate = { aUserAttribute: 'bar' };
             // Act
@@ -44,7 +43,7 @@ describe('Auth0Sdk', () => {
                 headers: {
                     'content-type': 'application/json',
                     // tslint:disable-next-line:object-literal-key-quotes
-                    'Authorization': `Bearer ${credentials.token}`,
+                    Authorization: `Bearer ${credentials.token}`,
                 },
                 body: { user_metadata: dataToUpdate },
                 json: true,
@@ -54,8 +53,7 @@ describe('Auth0Sdk', () => {
     });
 
     describe('getAuthenticationRefreshToken', () => {
-
-        it ('should perform an http request with corrects options', () => {
+        it('should perform an http request with corrects options', () => {
             // Arrange
             const dataToUpdate = { aUserAttribute: 'bar' };
             const refreshToken = 'refresh.jwt.token';
@@ -68,17 +66,16 @@ describe('Auth0Sdk', () => {
                 headers: {
                     'content-type': 'application/json',
                     // tslint:disable-next-line:object-literal-key-quotes
-                    'Authorization': `Bearer ${credentials.token}`,
+                    Authorization: `Bearer ${credentials.token}`,
                 },
                 body: {
-                    grant_type : 'refresh_token',
-                    client_id : credentials.clientId,
-                    client_secret : credentials.clientSecret,
-                    refresh_token : refreshToken,
+                    grant_type: 'refresh_token',
+                    client_id: credentials.clientId,
+                    client_secret: credentials.clientSecret,
+                    refresh_token: refreshToken,
                 },
                 json: true,
             });
         });
-
     });
 });

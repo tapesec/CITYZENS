@@ -1,15 +1,16 @@
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import DecodedJwtPayload from '../auth/DecodedJwtPayload';
+import CityzenId from '../../../domain/cityzens/model/CityzenId';
 
 const cityzenFromJwt = (payload: DecodedJwtPayload): Cityzen => {
-    let id: string;
+    let id: CityzenId;
     let email: string;
     let pseudo: string;
     let favoritesHotspots: Set<string>;
     let description: string;
     let isAdmin = false;
 
-    if (payload.sub) id = payload.sub;
+    if (payload.sub) id = new CityzenId(payload.sub);
     else throw new InvalidPayloadError('no subject found in jwt decoded payload');
     if (payload.email) email = payload.email;
     else throw new InvalidPayloadError('no email found in jwt decoded payload');
@@ -26,14 +27,7 @@ const cityzenFromJwt = (payload: DecodedJwtPayload): Cityzen => {
         description = payload.userMetadata.description;
     }
 
-    const cityzen = new Cityzen(
-        payload.sub,
-        payload.email,
-        payload.nickname,
-        isAdmin,
-        favoritesHotspots,
-        description,
-    );
+    const cityzen = new Cityzen(id, email, pseudo, isAdmin, favoritesHotspots, description);
 
     return cityzen;
 };

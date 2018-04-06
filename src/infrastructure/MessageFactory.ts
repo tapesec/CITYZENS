@@ -2,6 +2,7 @@ import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import Author from './../domain/cityLife/model/author/Author';
 import Message from '../domain/cityLife/model/messages/Message';
 import { v4 } from 'uuid';
+import CityzenId from '../domain/cityzens/model/CityzenId';
 
 class MessageFactory {
     public createMessage = (data: any): Message => {
@@ -16,11 +17,13 @@ class MessageFactory {
         }
         // data coming from database
         if (data.author) {
-            author = new Author(data.author.pseudo, data.author.id);
+            const cityzenId = new CityzenId(data.author.id);
+            author = new Author(data.author.pseudo, cityzenId);
         }
         // data coming from the api user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo, data.cityzen.id);
+            const cityzenId = new CityzenId(data.cityzen.id);
+            author = new Author(data.cityzen.pseudo, cityzenId);
         }
 
         if (data.pinned) {

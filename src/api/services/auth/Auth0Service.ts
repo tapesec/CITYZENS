@@ -2,6 +2,7 @@ import MemoryCache from '../cache/MemoryCache';
 import UserInfoAuth0 from './UserInfoAuth0';
 import ErrorHandler from '../errors/ErrorHandler';
 import auth0, { Auth0 } from '../../libs/Auth0';
+import CityzenId from '../../../domain/cityzens/model/CityzenId';
 const request = require('request');
 
 class Auth0Service {
@@ -15,7 +16,7 @@ class Auth0Service {
         this.cache = new MemoryCache<string>();
     }
 
-    public async updateMetadata(id: string, accessToken: string, data: any) {
+    public async updateMetadata(id: CityzenId, accessToken: string, data: any) {
         return new Promise<any>(async (resolve, reject) => {
             this.auth0
                 .updateUserMetadataById(id, data)
