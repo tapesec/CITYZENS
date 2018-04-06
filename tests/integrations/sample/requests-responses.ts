@@ -26,6 +26,7 @@ export const createHotspotBody = {
     scope: HotspotScope.Private,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: 'a testing url :) zeaazoekjhazdoiajdiojazdi',
 };
 
 export const newHotspotResponse = () => {

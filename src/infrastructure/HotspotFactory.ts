@@ -33,6 +33,7 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
+import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
 const request = require('request');
 const slug = require('slug');
 
@@ -200,7 +201,9 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
+        let avatarIconUrl: AvatarIconUrl;
         const members = new MemberList();
+
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
             hotspotSlug = new HotspotSlug(slug(data.title + ' ' + v4().slice(0, 4)));
@@ -216,7 +219,10 @@ class HotspotFactory {
                 members.add(new CityzenId(m));
             });
         }
-        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members);
+        if (data.avatarIconUrl) {
+            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
+        }
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, avatarIconUrl);
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

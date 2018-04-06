@@ -4,6 +4,7 @@ import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
+import AvatarIconUrl from './../../model/hotspot/AvatarIconUrl';
 
 const slug = require('slug');
 
@@ -13,6 +14,7 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Mairie de Martignas')),
         HotspotScope.Public,
         new MemberList(),
+        new AvatarIconUrl(''),
     );
 
     public static SCHOOL_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(

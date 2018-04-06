@@ -1,3 +1,4 @@
 export const TITLE_MAX_LENGTH = 100;
 export const MESSAGE_BODY_MAX_LENGTH = 1000;
 export const ALERT_MESSAGE_MAX_LENGTH = 100;
+export const AVATAR_ICON_URL_MAX_LENGTH = 1000;
