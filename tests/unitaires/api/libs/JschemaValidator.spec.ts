@@ -7,22 +7,18 @@ import {
 } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import * as ajv from 'ajv';
 import { expect } from 'chai';
-import {
-    patchMessageSchema,
-    getHotspots,
-} from '../../../../src/api/requestValidation/schema';
+import { patchMessageSchema, getHotspots } from '../../../../src/api/requestValidation/schema';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
 
 describe('JschemaValidator', () => {
-
-    let validator : ajv.Ajv;
+    let validator: ajv.Ajv;
 
     before(() => {
         validator = new ajv();
     });
 
-    it ('should validate a WallHotspot schema', () => {
+    it('should validate a WallHotspot schema', () => {
         // Arrange
         const body = {
             title: 'my new hotspot',
@@ -42,7 +38,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate a GET /hotspots by area', () => {
+    it('should validate a GET /hotspots by area', () => {
         // Arrange
         const queryStrings = {
             north: 12.123345,
@@ -57,7 +53,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate a GET /hotspots by insee', () => {
+    it('should validate a GET /hotspots by insee', () => {
         // Arrange
         const queryStrings = {
             insee: '33273',
@@ -69,7 +65,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should not validate different querystrings combination', () => {
+    it('should not validate different querystrings combination', () => {
         // Arrange
         const queryStrings = {
             insee: '33273',
@@ -81,7 +77,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should not validate incomplete querystrings', () => {
+    it('should not validate incomplete querystrings', () => {
         // Arrange
         const queryStrings = {
             north: 22.23232,
@@ -92,7 +88,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should not validate valid querystrings plus additionnal property', () => {
+    it('should not validate valid querystrings plus additionnal property', () => {
         // Arrange
         const queryStrings = {
             insee: '33273',
@@ -104,7 +100,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should validate a message patch body with all properties to update', () => {
+    it('should validate a message patch body with all properties to update', () => {
         // Arrange
         const body = {
             title: 'test title',
@@ -118,7 +114,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate a message patch body with only one property to update', () => {
+    it('should validate a message patch body with only one property to update', () => {
         // Arrange
         const body = {
             title: 'test title',
@@ -130,7 +126,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should reject a message patch body with no given required property', () => {
+    it('should reject a message patch body with no given required property', () => {
         // Arrange
         const body = {
             foo: 'bar',
@@ -141,7 +137,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should validate WallHotspot data with schema built with merge mecanism', () => {
+    it('should validate WallHotspot data with schema built with merge mecanism', () => {
         // Arrange
         const body = {
             title: 'my new hotspot',
@@ -160,8 +156,28 @@ describe('JschemaValidator', () => {
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
+    it('should validate WallHotspot complete set of data with schema built with merge mecanism', () => {
+        // Arrange
+        const body = {
+            title: 'my new hotspot',
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            scope: 'private',
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            avatarIconUrl: 'url',
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
 
-    it ('should validate EventHotspot data with schema built with merge mecanism', () => {
+    it('should validate EventHotspot data with schema built with merge mecanism', () => {
         // Arrange
         const body = {
             title: 'my new hotspot',
@@ -182,8 +198,30 @@ describe('JschemaValidator', () => {
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
+    it('should validate EventHotspot completa set of data with schema built with merge mecanism', () => {
+        // Arrange
+        const body = {
+            title: 'my new hotspot',
+            position: {
+                latitude: 12.23323,
+                longitude: 22.1112221,
+            },
+            cityId: '33273',
+            scope: 'private',
+            type: HotspotType.Event,
+            iconType: HotspotIconType.Event,
+            dateEnd: new Date().toISOString(),
+            description: 'lorem ipsum dolor',
+            avatarIconUrl: 'url',
+        };
+        // Act
+        const isValid = validator.validate(getCreateHotspotSchema(), body);
+        // Assert
+        expect(validator.errorsText()).to.be.equal('No errors');
+        expect(isValid).to.be.true;
+    });
 
-    it ('should validate AlertHotspot data with schema built with merge mecanism', () => {
+    it('should validate AlertHotspot data with schema built with merge mecanism', () => {
         // Arrange
         const body = {
             position: {
@@ -202,7 +240,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should\'nt validate if type is not the same as the body properties', () => {
+    it("should'nt validate if type is not the same as the body properties", () => {
         // Arrange
         const body = {
             position: {
@@ -220,7 +258,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it ('should validate AlertHotspot update with corresponding schema', () => {
+    it('should validate AlertHotspot update with corresponding schema', () => {
         // Arrange
         const body = {
             message: 'the message was updated',
@@ -232,11 +270,12 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate WallHotspot update with corresponding schema', () => {
+    it('should validate WallHotspot update with corresponding schema', () => {
         // Arrange
         const body = {
             title: 'an edited title',
             scope: 'private',
+            avatarIconUrl: 'new url',
         };
         // Act
         const isValid = validator.validate(getUpdateHotspotSchema(), body);
@@ -245,13 +284,14 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should validate EventHotspot update with corresponding schema', () => {
+    it('should validate EventHotspot update with corresponding schema', () => {
         // Arrange
         const body = {
             title: 'an edited title',
             scope: 'private',
             dateEnd: new Date().toISOString(),
             description: 'an edited description',
+            avatarIconUrl: 'new url',
         };
         // Act
         const isValid = validator.validate(getUpdateHotspotSchema(), body);
@@ -260,7 +300,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it ('should\'nt validate anything if no body is provided', () => {
+    it("should'nt validate anything if no body is provided", () => {
         // Arrange
         const body = {};
         // Act

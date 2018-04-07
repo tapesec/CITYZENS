@@ -2,11 +2,12 @@ import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/W
 import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../../../src/domain/cityzens/model/Cityzen';
 import { expect } from 'chai';
+import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
 
 describe('Cityzens entity', () => {
     it('Should have correct properties set by constructor', () => {
         // Arrange
-        const id = 'auth0|fake-id1';
+        const id = new CityzenId('auth0|fake-id1');
         const email: string = 'mail@mailbox.com';
         const pseudo: string = 'kenny';
         const favoritsHotspots = new Set<string>(['fake-id', 'fake-id-2']);
@@ -39,5 +40,33 @@ describe('Cityzens entity', () => {
         // Assert
         expect(elodie.favoritesHotspots.size).to.be.equal(1);
         expect(elodie.favoritesHotspots.has(favoritHotspotId)).to.be.true;
+    });
+
+    it('Should parse and stringify correctly.', () => {
+        const elodie: Cityzen = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
+
+        expect(elodie)
+            .to.have.property('description')
+            .to.be.equal(elodie.description);
+
+        expect(elodie)
+            .to.have.property('email')
+            .to.be.equal(elodie.email);
+
+        expect(elodie)
+            .to.have.property('favoritesHotspots')
+            .to.be.equal(elodie.favoritesHotspots);
+
+        expect(elodie)
+            .to.have.property('id')
+            .to.be.equal(elodie.id);
+
+        expect(elodie)
+            .to.have.property('isAdmin')
+            .to.be.equal(elodie.isAdmin);
+
+        expect(elodie)
+            .to.have.property('pseudo')
+            .to.be.equal(elodie.pseudo);
     });
 });

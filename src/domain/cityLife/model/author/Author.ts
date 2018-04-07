@@ -26,7 +26,7 @@ class Author {
     }
 
     public isEqual(other: Author) {
-        return other.id === this.id;
+        return other.id.isEqual(this.id);
     }
 }
 
