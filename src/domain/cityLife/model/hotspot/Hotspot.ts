@@ -27,7 +27,6 @@ export enum HotspotIconType {
 }
 
 abstract class Hotspot {
-
     protected _uid: HotspotId;
     protected _position: Position;
     protected _author: Author;
@@ -48,23 +47,23 @@ abstract class Hotspot {
         this._iconType = builder.iconType;
     }
 
-    get id() : string {
+    get id(): string {
         return this._uid.toString();
     }
 
-    get position() : Position {
+    get position(): Position {
         return this._position;
     }
 
-    get author() : Author {
+    get author(): Author {
         return this._author;
     }
 
-    get cityId() : string {
+    get cityId(): string {
         return this._cityId.toString();
     }
 
-    get address() : Address {
+    get address(): Address {
         return this._address;
     }
 
@@ -84,11 +83,11 @@ abstract class Hotspot {
         this._views = new ViewsCount(this._views.toString() + 1);
     }
 
-    moveTo(newLat : number, newLng : number) : void {
+    moveTo(newLat: number, newLng: number): void {
         this._position = new Position(newLat, newLng);
     }
 
-    changeAddress(newAddress : string) : void {
+    changeAddress(newAddress: string): void {
         this._address = new Address(newAddress, this._address.city);
     }
 
@@ -96,7 +95,7 @@ abstract class Hotspot {
         return {
             id: this.id,
             position: this.position,
-            author: this.author,
+            author: this.author.toString(),
             cityId: this.cityId,
             address: this.address,
             views: this.views,

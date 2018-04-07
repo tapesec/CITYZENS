@@ -163,9 +163,14 @@ class HotspotFactory {
         if (data.address) {
             address = new Address(data.address.name, data.address.city);
         }
-        // data from both database or user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
+            if (data.cityzen.id instanceof CityzenId) {
+                // data from user
+                author = new Author(data.cityzen.pseudo, data.cityzen.id);
+            } else {
+                // data from database
+                author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
+            }
         }
         // new hotspot posted by user
         if (!data.id) {
