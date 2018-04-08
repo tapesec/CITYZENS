@@ -5,7 +5,6 @@ import Message from '../messages/Message';
 import { v4 } from 'uuid';
 
 class MessageSample {
-
     public static MARTIGNAS_CHURCH_MESSAGE = new Message(
         v4(),
         'Messe tous les dimanches',
@@ -17,10 +16,15 @@ class MessageSample {
         Why don't they know? If they don't know, that means we never told anyone.
         And if we never told anyone it means we never made it back. Hence we die down here.
         Just as a matter of deductive logic.`,
-        AuthorSample.LOUISE, true, new HotspotId(WallHotspotSample.CHURCH.id), new Date());
+        AuthorSample.LOUISE,
+        true,
+        new HotspotId(WallHotspotSample.CHURCH.id),
+        new Date(),
+    );
 
     public static MARTIGNAS_SCHOOL_MESSAGE = new Message(
-        v4(), 'Recherche volontaires pour la kermess',
+        v4(),
+        'Recherche volontaires pour la kermess',
         `Pour cette nouvelle édition de la kermess de l'école,
         nous cherchons des volontaires pour tenir les stands.
         Nous avons besoins aussi d'une friteuse et d'une machine à barbapapa.\n\n
@@ -29,11 +33,16 @@ class MessageSample {
          Il était une fois un marchand de foie qui vendait du foie dans la ville de Foix,
          il se dit mafois c'est bien la première et la dernière fois que je vendrai du foie
          dans la ville de Foix.`,
-        AuthorSample.MARTIN, false, new HotspotId(WallHotspotSample.SCHOOL.id),
-        new Date(), new Date());
+        AuthorSample.MARTIN,
+        false,
+        new HotspotId(WallHotspotSample.SCHOOL.id),
+        new Date(),
+        new Date(),
+    );
 
     public static MARTIGNAS_TOWNHALL_MESSAGE = new Message(
-        v4(), 'Horraires d\'ouverture',
+        v4(),
+        "Horraires d'ouverture",
         `Your bones don't break, mine do. That's clear.
         Your cells react to bacteria and viruses differently than mine.
         You don't get sick, I do. That's also clear.
@@ -42,10 +51,15 @@ class MessageSample {
         However unreal it may seem, we are connected, you and I.
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
-        false, new HotspotId(WallHotspotSample.TOWNHALL.id), new Date(), new Date());
+        false,
+        new HotspotId(WallHotspotSample.TOWNHALL.id),
+        new Date(),
+        new Date(),
+    );
 
     public static SIMCITY_TOEDIT_MESSAGE = new Message(
-        v4(), 'A title that will be edit',
+        '07066d2a-8fbf-4c01-9ff8-9958239b56e0',
+        'A title that will be edit',
         `Your bones don't break, mine do. That's clear.
         Your cells react to bacteria and viruses differently than mine.
         You don't get sick, I do. That's also clear.
@@ -54,7 +68,11 @@ class MessageSample {
         However unreal it may seem, we are connected, you and I.
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
-        false, new HotspotId(WallHotspotSample.TOEDIT.id), new Date(), new Date());
+        false,
+        new HotspotId(WallHotspotSample.TOEDIT.id),
+        new Date(),
+        new Date(),
+    );
 }
 
 export default MessageSample;

@@ -152,7 +152,7 @@ describe('HotspotCtrl', () => {
             const fakeNewHotspot = new HotspotFactory().build(factoryData);
             // Arrange
             algoliaMoq
-                .setup(x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object))
+                .setup(x => x.addHotspot(fakeNewHotspot))
                 .returns(() => Promise.resolve<any>({}));
 
             reqMoq.setup((x: rest.Request) => x.body).returns(() => jsonBody);
@@ -166,10 +166,7 @@ describe('HotspotCtrl', () => {
             hotspotFactoryMoq.verify(x => x.build(jsonBody), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.store(fakeNewHotspot), TypeMoq.Times.once());
             resMoq.verify(x => x.json(201, fakeNewHotspot), TypeMoq.Times.once());
-            algoliaMoq.verify(
-                x => x.addHotspot(fakeNewHotspot, hotspotRepositoryMoq.object),
-                TypeMoq.Times.once(),
-            );
+            algoliaMoq.verify(x => x.addHotspot(fakeNewHotspot), TypeMoq.Times.once());
         });
     });
 

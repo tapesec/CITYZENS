@@ -12,10 +12,7 @@ class Algolia {
         this.algolia.initIndex('hotspots');
     }
 
-    public addHotspot<T extends Hotspot>(
-        hotspot: T,
-        repository: HotspotRepositoryInMemory,
-    ): Promise<any> {
+    public addHotspot<T extends Hotspot>(hotspot: T): Promise<any> {
         const data: any = {
             address: hotspot.address.name,
             cityId: hotspot.cityId,
@@ -27,6 +24,7 @@ class Algolia {
         } else if (hotspot instanceof EventHotspot || hotspot instanceof WallHotspot) {
             data.title = hotspot.title;
             data.slug = hotspot.slug;
+            data.avatarIconUrl = hotspot.avatarIconUrl.toString();
         }
 
         return this.algolia.sendObject('hotspots', data, hotspot.id);

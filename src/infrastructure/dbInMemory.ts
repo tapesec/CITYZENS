@@ -32,6 +32,7 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.TOWNHALL.avatarIconUrl.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {

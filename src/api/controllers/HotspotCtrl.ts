@@ -123,15 +123,15 @@ class HotspotCtrl extends RootCtrl {
             this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
             this.algolia
-                .addHotspot(newHotspot, this.hotspotRepository)
-                .then(v => {
+                .addHotspot(newHotspot)
+                .then(() => {
                     this.hotspotRepository.cacheAlgolia(newHotspot, true);
                 })
-                .catch(r => {
+                .catch(error => {
                     this.hotspotRepository.cacheAlgolia(newHotspot, false);
                     this.errorHandler.logSlack(
                         `POST ${req.path()}`,
-                        `Algolia fail. \n${JSON.stringify(r)}`,
+                        `Algolia fail. \n${JSON.stringify(error)}`,
                     );
                 });
         } catch (err) {
@@ -291,6 +291,18 @@ class HotspotCtrl extends RootCtrl {
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
+            this.algolia
+                .addHotspot(hotspotToUpdate)
+                .then(() => {
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, true);
+                })
+                .catch(error => {
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, false);
+                    this.errorHandler.logSlack(
+                        `PATCH ${req.path()}`,
+                        `Algolia fail. \n${JSON.stringify(error)}`,
+                    );
+                });
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
         }
