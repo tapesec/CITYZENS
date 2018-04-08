@@ -291,18 +291,7 @@ class HotspotCtrl extends RootCtrl {
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
-            this.algolia
-                .addHotspot(hotspotToUpdate)
-                .then(() => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, true);
-                })
-                .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, false);
-                    this.errorHandler.logSlack(
-                        `PATCH ${req.path()}`,
-                        `Algolia fail. \n${JSON.stringify(error)}`,
-                    );
-                });
+            // TODO: add updateHotspot method to algolia
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
         }

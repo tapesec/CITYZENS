@@ -14,6 +14,7 @@ import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
+import config from './../../src/api/config';
 
 let hotspotCollection: any;
 let messageCollection: any;
@@ -190,10 +191,15 @@ const databaseInitialize = () => {
     }
 };
 
-const db = new loki('loki/loki.json', {
+const isInTest = config.server.env === 'test';
+const lokiDevPath = 'loki/dev.json';
+const lokiTestPath = 'loki/test.json';
+const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
+
+const db = new loki(lokiPath, {
     autoload: true,
     autoloadCallback: databaseInitialize,
-    autosave: true,
+    autosave: !isInTest,
     autosaveInterval: 4000,
 });
 

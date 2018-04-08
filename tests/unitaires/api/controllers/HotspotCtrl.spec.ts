@@ -38,7 +38,8 @@ import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
 import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
-import { OK } from 'http-status-codes';
+import { OK, getStatusText } from 'http-status-codes';
+import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified';
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -51,7 +52,7 @@ describe('HotspotCtrl', () => {
     let hotspotCtrl: HotspotCtrl;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
 
-    beforeEach(async () => {
+    before(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
@@ -63,12 +64,6 @@ describe('HotspotCtrl', () => {
 
         algoliaMoq.setup(x => x.initHotspots()).returns(() => {});
 
-        reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
-
-        auth0ServiceMoq
-            .setup(x => x.getUserInfo('my authorisation'))
-            .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
-
         hotspotCtrl = new HotspotCtrl(
             errorHandlerMoq.object,
             auth0ServiceMoq.object,
@@ -76,8 +71,16 @@ describe('HotspotCtrl', () => {
             hotspotFactoryMoq.object,
             algoliaMoq.object,
         );
-        // appel du middleware de control d'acces de l'utilsateur
-        await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+    });
+    afterEach(() => {
+        reqMoq.reset();
+        resMoq.reset();
+        nextMoq.reset();
+        errorHandlerMoq.reset();
+        auth0ServiceMoq.reset();
+        hotspotRepositoryMoq.reset();
+        hotspotFactoryMoq.reset();
+        algoliaMoq.reset();
     });
 
     describe('hotspots', () => {
@@ -95,6 +98,14 @@ describe('HotspotCtrl', () => {
             east = -2.1111;
             repositoryResult = [WallHotspotSample.CHURCH, WallHotspotSample.SCHOOL];
             queryStrings = { north, south, east, west };
+        });
+
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
         it(`should respond with 200 and a list of hotspot
@@ -146,6 +157,13 @@ describe('HotspotCtrl', () => {
                 ...jsonBody,
                 cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
             };
+        });
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
         it('should create a new hotspot, post it to algolia, and return it with 200 OK', () => {
@@ -199,6 +217,14 @@ describe('HotspotCtrl', () => {
             errorHandlerMoq
                 .setup(x => x.logAndCreateUnautorized(`GET path`, HotspotCtrl.HOTSPOT_PRIVATE))
                 .returns(() => errorUnauthorized);
+        });
+
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
         it('Should return 200 on valid call', () => {
@@ -268,6 +294,14 @@ describe('HotspotCtrl', () => {
             };
         });
 
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+        });
+
         it('should add new member to hotspot on validcall', () => {
             hotspot
                 .setup(x => x.author)
@@ -315,11 +349,13 @@ describe('HotspotCtrl', () => {
             params = {
                 hotspotId: 'hotspotId',
             };
+        });
 
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
             auth0ServiceMoq
                 .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
-
             await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
@@ -352,6 +388,254 @@ describe('HotspotCtrl', () => {
 
             resMoq.verify(x => x.json(OK, TypeMoq.It.isAny()), TypeMoq.Times.once());
             Chai.expect(hotspot.pertinence.nDisagree).to.be.greaterThan(0);
+        });
+    });
+
+    describe('patchHotspot', () => {
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+        });
+
+        afterEach(() => {
+            reqMoq.reset();
+            resMoq.reset();
+            nextMoq.reset();
+            hotspotRepositoryMoq.reset();
+            errorHandlerMoq.reset();
+        });
+
+        it('Should not validate query.', () => {
+            const body = {
+                garbage: true,
+                isInvalid: 'totallllly',
+            };
+            reqMoq.setup(x => x.body).returns(() => body);
+            errorHandlerMoq
+                .setup(x => x.logAndCreateBadRequest(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+
+            reqMoq.verify(x => x.body, TypeMoq.Times.once());
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
+        });
+
+        it('Should return not found.', () => {
+            const body = {
+                title: 'new title',
+            };
+            const params = {
+                hotspotId: 'idid',
+            };
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => false);
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateNotFound(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+
+            reqMoq.verify(x => x.body, TypeMoq.Times.once());
+            reqMoq.verify(x => x.params, TypeMoq.Times.once());
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
+        });
+
+        it('Should return unauthorized.', () => {
+            const body = {
+                title: 'new title',
+            };
+            const params = {
+                hotspotId: 'idid',
+            };
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateUnautorized(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
+        });
+
+        it('Should return succesfully.', async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+
+            const body = {
+                title: 'new title',
+            };
+            const params = {
+                hotspotId: 'idid',
+            };
+            const hotspot = new WallHotspot(
+                HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
+                MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
+            );
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+
+            const updatedHotspot = actAsSpecified(hotspot, body);
+
+            resMoq.verify(x => x.json(OK, updatedHotspot), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(updatedHotspot), TypeMoq.Times.once());
+        });
+
+        it('Should return internal error.', () => {
+            const body = {
+                title: 'new title',
+            };
+            const params = {
+                hotspotId: 'idid',
+            };
+            const hotspot = new WallHotspot(
+                HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
+                MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
+            );
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
+                throw new Error('message');
+            });
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .returns(() => 'error');
+
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
+        });
+    });
+
+    describe('removeHotspot', () => {
+        beforeEach(async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_ADMIN_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+        });
+
+        afterEach(() => {
+            reqMoq.reset();
+            resMoq.reset();
+            nextMoq.reset();
+            hotspotRepositoryMoq.reset();
+            errorHandlerMoq.reset();
+        });
+
+        it('Should remove.', () => {
+            const params = {
+                hotspotId: 'id',
+            };
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            resMoq.verify(x => x.json(OK, getStatusText(OK)), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.once());
+        });
+
+        it('Should return not found.', () => {
+            const params = {
+                hotspotId: 'id',
+            };
+
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => false);
+            errorHandlerMoq
+                .setup(x => x.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND))
+                .returns(() => 'error');
+
+            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.never());
+        });
+
+        it('Should return unauthorized.', async () => {
+            reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+            auth0ServiceMoq
+                .setup(x => x.getUserInfo('my authorisation'))
+                .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
+            await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
+
+            const params = {
+                hotspotId: 'id',
+            };
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            errorHandlerMoq
+                .setup(x => x.logAndCreateUnautorized(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.never());
+        });
+
+        it('Should return internal error.', async () => {
+            const params = {
+                hotspotId: 'id',
+            };
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
+                throw new Error('message');
+            });
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .returns(() => 'error');
+
+            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.never());
         });
     });
 });
