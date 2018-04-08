@@ -73,6 +73,10 @@ const WallHotspotSchema = {
             type: 'string',
             enum: [HotspotIconType.Wall],
         },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
+        },
     },
     additionalProperties: false,
 };
@@ -110,6 +114,10 @@ const EventHotspotSchema = {
         iconType: {
             type: 'string',
             enum: [HotspotIconType.Event],
+        },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
         },
     },
     additionalProperties: false,

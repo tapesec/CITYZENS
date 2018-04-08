@@ -18,7 +18,7 @@ class Author {
         return this._id;
     }
 
-    toJSON() {
+    toString() {
         return {
             pseudo: this._pseudo,
             id: this._id.toString(),
@@ -26,7 +26,7 @@ class Author {
     }
 
     public isEqual(other: Author) {
-        return other.id === this.id;
+        return other.id.isEqual(this.id);
     }
 }
 

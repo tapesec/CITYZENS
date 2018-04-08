@@ -4,68 +4,68 @@ import * as validation from './constant';
 // tslint:disable:trailing-comma
 export default () => {
     return {
-        "title": "PATCH /hotspots body validation",
-        "type": "object",
-        "anyOf": [
-            WallHotspotSchema,
-            EventHotspotSchema,
-            AlertHotspotSchema,
-        ]
+        title: 'PATCH /hotspots body validation',
+        type: 'object',
+        anyOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
     };
 };
 
 const WallHotspotSchema = {
-    "anyOf": [
-        { "required": ["title"] },
-        { "required": ["scope"] },
-    ],
-    "properties": {
-        "scope": {
-            "type": "string",
-            "enum": ["public", "private"]
+    anyOf: [{ required: ['title'] }, { required: ['scope'] }, { required: ['avatarIconUrl'] }],
+    properties: {
+        scope: {
+            type: 'string',
+            enum: ['public', 'private'],
         },
-        "title": {
-            "type": "string",
-            "maxLength": validation.TITLE_MAX_LENGTH
-        }
+        title: {
+            type: 'string',
+            maxLength: validation.TITLE_MAX_LENGTH,
+        },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };
 
 const EventHotspotSchema = {
-    "anyOf": [
-        { "required": ["title"] },
-        { "required": ["scope"] },
-        { "required": ["dateEnd"] },
-        { "required": ["description"] },
+    anyOf: [
+        { required: ['title'] },
+        { required: ['scope'] },
+        { required: ['dateEnd'] },
+        { required: ['description'] },
+        { required: ['avatarIconUrl'] },
     ],
-    "properties": {
-        "scope": {
-            "type": "string",
-            "enum": ["public", "private"]
+    properties: {
+        scope: {
+            type: 'string',
+            enum: ['public', 'private'],
         },
-        "title": {
-            "type": "string",
-            "maxLength": validation.TITLE_MAX_LENGTH
+        title: {
+            type: 'string',
+            maxLength: validation.TITLE_MAX_LENGTH,
         },
-        "dateEnd": {
-            "type": "string",
+        dateEnd: {
+            type: 'string',
         },
-        "description": {
-            "type": "string"
-        }
+        description: {
+            type: 'string',
+        },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };
 
 const AlertHotspotSchema = {
-    "anyOf": [
-        { "required": ["message"] },
-    ],
-    "properties": {
-        "message": {
-            "type": "string"
-        }
+    anyOf: [{ required: ['message'] }],
+    properties: {
+        message: {
+            type: 'string',
+        },
     },
-    "additionalProperties": false
+    additionalProperties: false,
 };

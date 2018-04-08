@@ -33,6 +33,7 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
+import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
 const request = require('request');
 const slug = require('slug');
 
@@ -55,13 +56,28 @@ class HotspotFactory {
     };
 
     private createWallHotspot = (data: any): WallHotspot => {
-        return new WallHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
+        let avatarIconUrl;
+        if (!data.avatarIconUrl) {
+            avatarIconUrl = config.avatarIcon.defaultWallIcon;
+        } else {
+            avatarIconUrl = data.avatarIconUrl;
+        }
+
+        const buildData = {
+            ...data,
+            avatarIconUrl,
+        };
+
+        return new WallHotspot(
+            this.createHotspotBuilder(buildData),
+            this.createMediaBuilder(buildData),
+        );
     };
 
     private createEventHotspot = (data: any): EventHotspot => {
         let dateEnd: Date;
         let description: EventDescription;
-
+        let avatarIconUrl;
         if (data && data.dateEnd) {
             dateEnd = new Date(data.dateEnd);
         }
@@ -75,10 +91,20 @@ class HotspotFactory {
         if (data && data.description && typeof data.description === 'string') {
             description = new EventDescription(data.description);
         }
+        if (!data.avatarIconUrl) {
+            avatarIconUrl = config.avatarIcon.defaultWallIcon;
+        } else {
+            avatarIconUrl = data.avatarIconUrl;
+        }
+
+        const buildData = {
+            ...data,
+            avatarIconUrl,
+        };
 
         return new EventHotspot(
-            this.createHotspotBuilder(data),
-            this.createMediaBuilder(data),
+            this.createHotspotBuilder(buildData),
+            this.createMediaBuilder(buildData),
             dateEnd,
             description,
         );
@@ -137,9 +163,14 @@ class HotspotFactory {
         if (data.address) {
             address = new Address(data.address.name, data.address.city);
         }
-        // data from both database or user
         if (data.cityzen) {
-            author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
+            if (data.cityzen.id instanceof CityzenId) {
+                // data from user
+                author = new Author(data.cityzen.pseudo, data.cityzen.id);
+            } else {
+                // data from database
+                author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
+            }
         }
         // new hotspot posted by user
         if (!data.id) {
@@ -200,7 +231,9 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
+        let avatarIconUrl: AvatarIconUrl;
         const members = new MemberList();
+
         if (data.title) {
             hotspotTitle = new HotspotTitle(data.title);
             hotspotSlug = new HotspotSlug(slug(data.title + ' ' + v4().slice(0, 4)));
@@ -216,7 +249,10 @@ class HotspotFactory {
                 members.add(new CityzenId(m));
             });
         }
-        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members);
+        if (data.avatarIconUrl) {
+            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
+        }
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, avatarIconUrl);
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

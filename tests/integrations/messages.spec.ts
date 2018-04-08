@@ -12,10 +12,8 @@ import {
 } from './sample/requests-responses';
 import { username } from './sample/granted-cityzen';
 
-const messagesEndpointsTests = (state : any) => {
-
+const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
-
         let hotspotId: string;
 
         beforeEach(() => {
@@ -23,78 +21,74 @@ const messagesEndpointsTests = (state : any) => {
         });
 
         describe('GET /hotspots/{hotspotId}/messages', async () => {
-
-            it ('should return a collection of message for a given hotspot', async () => {
+            it('should return a collection of message for a given hotspot', async () => {
                 // Act
                 const response = await request(server)
-                .get(`/hotspots/${hotspotId}/messages`)
-                .set('Accept', 'application/json')
-                .expect(200);
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .set('Accept', 'application/json')
+                    .expect(200);
 
                 expect(response.body).to.have.lengthOf(1);
             });
 
-            it ('should return 404 if hotspot doesn\'t exist', async () => {
+            it("should return 404 if hotspot doesn't exist", async () => {
                 // Act
                 const hotspotId = 'not-found-id';
                 const response = await request(server)
-                .get(`/hotspots/${hotspotId}/messages`)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(404);
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(404);
             });
         });
 
         describe('POST /hotspots/{hotspotId}/messages', async () => {
-
-            it (
-                'should create a new message and return 201 and the new message',
-                async () => {
-                    // Arrange
-                    const body = createMessageBody;
-                    // Act
-                    const response = await request(server)
+            it('should create a new message and return 201 and the new message', async () => {
+                // Arrange
+                const body = createMessageBody;
+                // Act
+                const response = await request(server)
                     .post(`/hotspots/${hotspotId}/messages`)
                     .send(body)
                     .set('Authorization', `Bearer ${state.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(201);
 
-                    expect(response.body.title).to.equal(newMessageResponse(hotspotId).title);
-                    expect(response.body.body).to.equal(newMessageResponse(hotspotId).body);
-                    expect(response.body.author).to.have.property('pseudo').to.eql(username);
-                    expect(response.body.pinned).to.equal(false);
-                },
-            );
+                expect(response.body.title).to.equal(newMessageResponse(hotspotId).title);
+                expect(response.body.body).to.equal(newMessageResponse(hotspotId).body);
+                expect(response.body.author)
+                    .to.have.property('pseudo')
+                    .to.eql(username);
+                expect(response.body.pinned).to.equal(false);
+            });
 
-            it ('should return 404 if hotspot doesn\'t exist', async () => {
+            it("should return 404 if hotspot doesn't exist", async () => {
                 // Arrange
                 hotspotId = 'not-found-id';
                 const body = createMessageBody;
                 // Act
                 const response = await request(server)
-                .post(`/hotspots/${hotspotId}/messages`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(404);
+                    .post(`/hotspots/${hotspotId}/messages`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(404);
             });
 
-            it ('should return 401 if request body is invalid', async () => {
+            it('should return 401 if request body is invalid', async () => {
                 // Arrange
                 const body = { foo: 'bar' };
                 // Act
                 const response = await request(server)
-                .post(`/hotspots/${hotspotId}/messages`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(400);
+                    .post(`/hotspots/${hotspotId}/messages`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(400);
             });
         });
 
         describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', async () => {
-
             let messageId: string;
             let hotspotId: string;
 
@@ -103,36 +97,36 @@ const messagesEndpointsTests = (state : any) => {
                 hotspotId = WallHotspotSample.TOEDIT.id;
             });
 
-            it ('should patch a message and respond 200', async () => {
+            it('should patch a message and respond 200', async () => {
                 // Arrange
                 const body = patchMessageBody;
                 // Act
                 const response = await request(server)
-                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(200);
+                    .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(200);
 
                 expect(response.body.title).to.eql(editedMessageResponse().title);
                 expect(response.body.body).to.eql(editedMessageResponse().body);
                 expect(response.body.pinned).to.eql(editedMessageResponse().pinned);
             });
 
-            it ('should return 404 if invalid messageId is provided', async () => {
+            it('should return 404 if invalid messageId is provided', async () => {
                 // Arrange
                 const body = patchMessageBody;
                 messageId = 'fake-message-id';
                 // Act
                 const response = await request(server)
-                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(404);
+                    .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(404);
             });
 
-            it ('should return 400 if patch request body is incorrect', async () => {
+            it('should return 400 if patch request body is incorrect', async () => {
                 // Arrange
                 const body = {
                     foo: 'bar',
@@ -140,11 +134,11 @@ const messagesEndpointsTests = (state : any) => {
                 messageId = 'fake-message-id';
                 // Act
                 const response = await request(server)
-                .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
-                .send(body)
-                .set('Authorization', `Bearer ${state.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(400);
+                    .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Accept', 'application/json')
+                    .expect(400);
             });
         });
     });

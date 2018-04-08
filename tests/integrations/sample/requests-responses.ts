@@ -7,6 +7,11 @@ import { username, password } from './granted-cityzen';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import MessageFactory from '../../../src/infrastructure/MessageFactory';
 import {
+    FAKE_USER_INFO_AUTH0,
+    FAKE_ADMIN_USER_INFO_AUTH0,
+} from './../../unitaires/api/services/samples';
+import cityzenFromAuth0 from './../../../src/api/services/cityzen/cityzenFromAuth0';
+import {
     HotspotIconType,
     HotspotScope,
     HotspotType,
@@ -26,10 +31,15 @@ export const createHotspotBody = {
     scope: HotspotScope.Private,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: 'a testing url :) zeaazoekjhazdoiajdiojazdi',
 };
 
 export const newHotspotResponse = () => {
-    const body = createHotspotBody;
+    const body = {
+        ...createHotspotBody,
+        cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
+    };
+
     const newHotspot = new HotspotFactory().build(body);
     return JSON.parse(JSON.stringify(newHotspot));
 };
@@ -42,8 +52,11 @@ export const createMessageBody = {
 };
 // response
 export const newMessageResponse = (hotspotId: string) => {
-    const body: any = createMessageBody;
-    body.hotspotId = new HotspotId(hotspotId);
+    const body: any = {
+        ...createMessageBody,
+        cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
+        hotspotId: new HotspotId(hotspotId),
+    };
     const message = new MessageFactory().createMessage(body);
     return JSON.parse(JSON.stringify(message));
 };

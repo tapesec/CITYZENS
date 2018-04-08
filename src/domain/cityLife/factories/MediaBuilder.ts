@@ -2,6 +2,7 @@ import HotspotTitle from '../model/hotspot/HotspotTitle';
 import { HotspotScope } from '../model/hotspot/Hotspot';
 import HotspotSlug from 'src/domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../model/hotspot/MemberList';
+import AvatarIconUrl from '../model/hotspot/AvatarIconUrl';
 
 class MediaBuilder {
     constructor(
@@ -9,7 +10,12 @@ class MediaBuilder {
         protected _slug: HotspotSlug,
         protected _scope: HotspotScope,
         protected _members: MemberList,
+        protected _avatarIconUrl?: AvatarIconUrl,
     ) {}
+
+    get avatarIconUrl() {
+        return this._avatarIconUrl;
+    }
 
     get scope(): HotspotScope {
         return this._scope;

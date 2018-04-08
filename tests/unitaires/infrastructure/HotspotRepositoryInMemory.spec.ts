@@ -17,16 +17,15 @@ import {
 } from '../../../src/infrastructure/dbInMemory';
 
 describe('HotspotRepositoryInMemory', () => {
-
-    let hotspotRepository : HotspotRepositoryInMemory;
-    let fakeTownHall : any;
-    let fakeChurch : any;
-    let fakeSchool : any;
-    let orm : any = {};
-    let findStub : any;
-    let findOneStub : any;
-    let removeStub : any;
-    let saveStub : any;
+    let hotspotRepository: HotspotRepositoryInMemory;
+    let fakeTownHall: any;
+    let fakeChurch: any;
+    let fakeSchool: any;
+    let orm: any = {};
+    let findStub: any;
+    let findOneStub: any;
+    let removeStub: any;
+    let saveStub: any;
 
     beforeEach(() => {
         fakeTownHall = HOTSPOT_MARTIGNAS_TOWNHALL;
@@ -73,9 +72,8 @@ describe('HotspotRepositoryInMemory', () => {
     });
 
     it('should store a new hotspot in memory', () => {
-
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
@@ -86,7 +84,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should remove an hotspot from memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory​​(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
         hotspotRepository.remove(WallHotspotSample.SCHOOL.id);
         // Expect
@@ -97,27 +95,29 @@ describe('HotspotRepositoryInMemory', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
-        const north : number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
-        const west : number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
-        const south : number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
-        const east : number = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
+        const north: number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
+        const west: number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
+        const south: number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
+        const east: number = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
         // Act
-        const hotspots : Hotspot[] = hotspotRepository.findInArea(north, west, south, east);
+        const hotspots: Hotspot[] = hotspotRepository.findInArea(north, west, south, east);
         // Assert
-        expect(findStub.calledWith({
-            byArea: [north, west, south, east],
-            removed: false,
-        })).to.be.true;
+        expect(
+            findStub.calledWith({
+                byArea: [north, west, south, east],
+                removed: false,
+            }),
+        ).to.be.true;
         expect(findStub.calledOnce).to.be.true;
         expect(hotspots).to.have.lengthOf(3);
     });
 
-    it('should\'nt match hotspot in the specified area', () => {
+    it("should'nt match hotspot in the specified area", () => {
         // Arrange
         findStub.returns([]);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
-        const hotspots : Hotspot[] = hotspotRepository.findInArea(
+        const hotspots: Hotspot[] = hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
             PositionSample.MARTIGNAS_NORTH_OUEST.longitude,
             PositionSample.MARTIGNAS_SOUTH_EST.latitude,
@@ -128,13 +128,13 @@ describe('HotspotRepositoryInMemory', () => {
         expect(hotspots).to.be.eql([]);
     });
 
-    it ('should retrieve hotspot by given city insee code', () => {
+    it('should retrieve hotspot by given city insee code', () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
-        const hotspots : Hotspot[] = hotspotRepository.findByCodeCommune(insee);
+        const hotspots: Hotspot[] = hotspotRepository.findByCodeCommune(insee);
         // Assert
         expect(hotspots).to.have.lengthOf(3);
     });

@@ -9,6 +9,7 @@ import CityId from '../../../../src/domain/cityLife/model/city/CityId';
 import Author from '../../../../src/domain/cityLife/model/author/Author';
 
 import * as Chai from 'chai';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {
@@ -37,8 +38,17 @@ describe('ValueObject', () => {
         });
 
         it('MemberList', () => {
-            const memberList = new MemberList(['111', '222', '3333', '111']);
-            const memberList2 = new MemberList(['111', '3333', '111']);
+            const memberList = new MemberList([
+                new CityzenId('111'),
+                new CityzenId('222'),
+                new CityzenId('3333'),
+                new CityzenId('111'),
+            ]);
+            const memberList2 = new MemberList([
+                new CityzenId('111'),
+                new CityzenId('3333'),
+                new CityzenId('111'),
+            ]);
 
             Chai.expect(memberList.isEqual(memberList)).to.be.true;
             Chai.expect(memberList.isEqual(memberList2)).to.be.false;
@@ -61,9 +71,9 @@ describe('ValueObject', () => {
         });
 
         it('Author', () => {
-            const author = new Author('pseudopseudo', 'idid');
-            const author2 = new Author('pseudopseudochanged', 'idid');
-            const author3 = new Author('pseudopseudochanged', 'idid2');
+            const author = new Author('pseudopseudo', new CityzenId('idid'));
+            const author2 = new Author('pseudopseudochanged', new CityzenId('idid'));
+            const author3 = new Author('pseudopseudochanged', new CityzenId('idid2'));
 
             Chai.expect(author.isEqual(author2)).to.be.true;
             Chai.expect(author.isEqual(author3)).to.be.false;
@@ -83,6 +93,14 @@ describe('ValueObject', () => {
 
             Chai.expect(address.isEqual(address)).to.be.true;
             Chai.expect(address.isEqual(address2)).to.be.false;
+        });
+
+        it('CityzenId', () => {
+            const cityzenId1 = new CityzenId('id id 1');
+            const cityzenId2 = new CityzenId('id id 2');
+
+            Chai.expect(cityzenId1.isEqual(cityzenId1)).to.be.true;
+            Chai.expect(cityzenId1.isEqual(cityzenId2)).to.be.false;
         });
     });
 });

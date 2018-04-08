@@ -46,6 +46,7 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.CHURCH.avatarIconUrl.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
@@ -60,6 +61,7 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.SCHOOL.avatarIconUrl.toString(),
     removed: false,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
@@ -74,6 +76,7 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     scope: HotspotScope.Public,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.MERIGNAC.avatarIconUrl.toString(),
     removed: false,
 };
 
@@ -89,6 +92,7 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     scope: HotspotScope.Private,
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.TOEDIT.avatarIconUrl.toString(),
     removed: false,
 };
 
@@ -120,6 +124,7 @@ export const EVENT_MATCH = {
     iconType: HotspotIconType.Event,
     description: EventHotspotSample.MATCH_EVENT.description,
     dateEnd: EventHotspotSample.MATCH_EVENT.dateEnd,
+    avatarIconUrl: EventHotspotSample.MATCH_EVENT.avatarIconUrl.toString(),
     removed: false,
 };
 
