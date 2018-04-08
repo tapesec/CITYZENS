@@ -92,7 +92,7 @@ class HotspotFactory {
             description = new EventDescription(data.description);
         }
         if (!data.avatarIconUrl) {
-            avatarIconUrl = config.avatarIcon.defaultWallIcon;
+            avatarIconUrl = config.avatarIcon.defaultEventIcon;
         } else {
             avatarIconUrl = data.avatarIconUrl;
         }
