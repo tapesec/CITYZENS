@@ -53,14 +53,15 @@ jobs:
             git push -u clever master
 
 workflows:
-    build_and_deploy:
+  version: 2
+  build_and_deploy:
 
-      jobs:
-        - build
+    jobs:
+      - build
 
-        - deploy:
-            requires:
-              - build
-            filters:
-              branches:
-                only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
