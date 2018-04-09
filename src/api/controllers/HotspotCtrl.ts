@@ -240,7 +240,7 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        const cityzenId = this.cityzenIfAuthenticated.id;
+        const cityzenId: CityzenId = this.cityzenIfAuthenticated.id;
         if (hotspot.voterList.has(cityzenId)) {
             return next(
                 this.errorHandler.logAndCreateBadRequest(
