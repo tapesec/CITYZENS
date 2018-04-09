@@ -14,7 +14,7 @@ import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
-import config from './../../src/api/config';
+import config from './../api/config';
 
 let hotspotCollection: any;
 let messageCollection: any;

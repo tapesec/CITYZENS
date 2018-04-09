@@ -302,6 +302,15 @@ describe('HotspotCtrl', () => {
             await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
+        afterEach(() => {
+            reqMoq.reset();
+            resMoq.reset();
+            nextMoq.reset();
+            hotspotRepositoryMoq.reset();
+            errorHandlerMoq.reset();
+            algoliaMoq.reset();
+        });
+
         it('should add new member to hotspot on validcall', () => {
             hotspot
                 .setup(x => x.author)
@@ -335,6 +344,29 @@ describe('HotspotCtrl', () => {
             );
             resMoq.verify(x => x.json(200, hotspot.object), TypeMoq.Times.once());
         });
+
+        it('Should return internal error.', () => {
+            hotspot
+                .setup(x => x.author)
+                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+
+            reqMoq.setup((x: rest.Request) => x.body).returns(() => jsonBody);
+
+            reqMoq.setup((x: rest.Request) => x.params).returns(() => jsonParams);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(jsonParams.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(jsonParams.hotspotId)).returns(() => {
+                throw new Error('message');
+            });
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .returns(() => 'error');
+
+            hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
     });
 
     describe('PostPertinence', () => {
@@ -359,8 +391,73 @@ describe('HotspotCtrl', () => {
             await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
 
+        afterEach(() => {
+            reqMoq.reset();
+            resMoq.reset();
+            nextMoq.reset();
+            hotspotRepositoryMoq.reset();
+            errorHandlerMoq.reset();
+        });
+
+        it('Should return not found.', () => {
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => false);
+            errorHandlerMoq
+                .setup(x => x.logAndCreateNotFound(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
+
+        it('Should return bad request on hotspot different than Alert.', () => {
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateBadRequest(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
+
+        it('Should return internal error.', () => {
+            const hotspot = WallHotspotSample.SCHOOL;
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
+                throw new Error('message');
+            });
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .returns(() => 'error');
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
+
         it('Should agree on the pertinence of an hotspot', () => {
-            const hotspot = AlertHotspotSample.ACCIDENT;
+            const hotspot = new AlertHotspot(
+                HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
+                AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.pertinence,
+                new VoterList(),
+            );
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -374,9 +471,43 @@ describe('HotspotCtrl', () => {
             Chai.expect(hotspot.pertinence.nAgree).to.be.greaterThan(0);
         });
 
+        it('Should return bad request already voted', () => {
+            const hotspot = new AlertHotspot(
+                HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
+                AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.pertinence,
+                new VoterList(),
+            );
+            hotspot.addVoter(cityzenFromAuth0(FAKE_ADMIN_USER_INFO_AUTH0).id, true);
+
+            reqMoq.setup(x => x.body).returns(() => body);
+            reqMoq.setup(x => x.params).returns(() => params);
+
+            hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
+            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+
+            errorHandlerMoq
+                .setup(x =>
+                    x.logAndCreateBadRequest(
+                        TypeMoq.It.isAny(),
+                        HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
+                    ),
+                )
+                .returns(() => 'error');
+
+            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
+
         it('Should disagree on the pertinence of an hotspot', () => {
             body = { agree: false };
-            const hotspot = AlertHotspotSample.ACCIDENT;
+            const hotspot = new AlertHotspot(
+                HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
+                AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.pertinence,
+                new VoterList(),
+            );
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -406,6 +537,7 @@ describe('HotspotCtrl', () => {
             nextMoq.reset();
             hotspotRepositoryMoq.reset();
             errorHandlerMoq.reset();
+            algoliaMoq.reset();
         });
 
         it('Should not validate query.', () => {
@@ -492,6 +624,13 @@ describe('HotspotCtrl', () => {
                 HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
                 MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
             );
+            const updatedHotspot = actAsSpecified(
+                new WallHotspot(
+                    HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
+                    MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
+                ),
+                body,
+            );
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -499,9 +638,11 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
             hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
 
-            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+            algoliaMoq
+                .setup(x => x.addHotspot(updatedHotspot))
+                .returns(() => Promise.resolve<any>({}));
 
-            const updatedHotspot = actAsSpecified(hotspot, body);
+            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(OK, updatedHotspot), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.update(updatedHotspot), TypeMoq.Times.once());

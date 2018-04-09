@@ -229,30 +229,34 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
-        if (!(hotspot instanceof AlertHotspot)) {
-            return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
-                    HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
-                ),
-            );
+        try {
+            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+            if (!(hotspot instanceof AlertHotspot)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
+                    ),
+                );
+            }
+
+            const cityzenId = this.cityzenIfAuthenticated.id;
+            if (hotspot.voterList.has(cityzenId)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
+                    ),
+                );
+            }
+
+            hotspot.addVoter(cityzenId, req.body.agree as boolean);
+            this.hotspotRepository.update(hotspot);
+
+            res.json(OK, hotspot);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
         }
-
-        const cityzenId = this.cityzenIfAuthenticated.id;
-        if (hotspot.voterList.has(cityzenId)) {
-            return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
-                    HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
-                ),
-            );
-        }
-
-        hotspot.addVoter(cityzenId, req.body.agree as boolean);
-        this.hotspotRepository.update(hotspot);
-
-        res.json(OK, hotspot);
     };
 
     // method=PATCH url=/hotspots/{hotspotId}
@@ -291,7 +295,18 @@ class HotspotCtrl extends RootCtrl {
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
-            // TODO: add updateHotspot method to algolia
+            this.algolia
+                .addHotspot(hotspotToUpdate)
+                .then(() => {
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, true);
+                })
+                .catch(error => {
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, false);
+                    this.errorHandler.logSlack(
+                        `PATCH ${req.path()}`,
+                        `Algolia fail. \n${JSON.stringify(error)}`,
+                    );
+                });
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
         }

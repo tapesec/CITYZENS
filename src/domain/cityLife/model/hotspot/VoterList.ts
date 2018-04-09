@@ -17,7 +17,12 @@ class VoterList implements ValueObject {
     }
 
     public has(id: CityzenId) {
-        this._list.has(id);
+        let flag = false;
+        this._list.forEach((_, k) => {
+            if (flag) return;
+            if (k.isEqual(id)) flag = true;
+        });
+        return flag;
     }
 
     public didAgree(id: CityzenId) {
