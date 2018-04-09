@@ -51,7 +51,7 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = null;
     });
 
-    it.only('should find an hostpsot by id if id is provided (indeed)', () => {
+    it('should find an hostpsot by id if id is provided (indeed)', () => {
         // Arrange
         findOneStub.returns(fakeSchool);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
@@ -64,7 +64,7 @@ describe('HotspotRepositoryInMemory', () => {
         expect(school).to.be.eql(WallHotspotSample.SCHOOL);
     });
 
-    it.only("should find an hostpsot by slug if id's format is slug", () => {
+    it("should find an hostpsot by slug if id's format is slug", () => {
         // Arrange
         findOneStub.returns(fakeSchool);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
