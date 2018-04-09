@@ -158,7 +158,7 @@
         description: Quelque chose a mal tourné.
 /hotspots/{hotspotId}:
   get:
-    description: Retourne l'hotspot correspondant a l'id. Si l'hotspot est privé, retourne unauthorized, si il est introuvé, retourne 404. Peut passer en header un access_token si le hotspot recherché est privé.
+    description: Retourne l'hotspot correspondant a l'id (l'id peut être un uuid v4 ou un slug). Si l'hotspot est privé, retourne unauthorized, si il est introuvé, retourne 404. Peut passer en header un access_token si le hotspot recherché est privé.
     tags:
       - Hotspots
     parameters:
@@ -169,7 +169,7 @@
           type: string
       - name: hotspotId
         in: path
-        description: L'uuid de l'hotspot.
+        description: L'uuid ou le slug de l'hotspot.
         required: true
         type: string
     produces:

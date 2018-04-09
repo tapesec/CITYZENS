@@ -4,6 +4,7 @@ import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import HotspotFactory from './HotspotFactory';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
+import { isUuid } from './../api/helpers';
 
 class HotspotRepositoryInMemory implements IHotspotRepository {
     protected hotspots: Map<string, Hotspot> = new Map();
@@ -22,7 +23,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
 
     public findById = (id: string): WallHotspot | EventHotspot | AlertHotspot => {
         let hotspot: WallHotspot | EventHotspot | AlertHotspot;
-        const data = this.orm.hotspot.findOne({ id, removed: false });
+        const data = this.orm.hotspot.findOne(this.buildRequestBySlugOrId(id));
         const factory = new HotspotFactory();
         if (data) {
             hotspot = factory.build(data);
@@ -31,7 +32,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     };
 
     public isSet(id: string): boolean {
-        const data = this.orm.hotspot.findOne({ id, removed: false });
+        const data = this.orm.hotspot.findOne(this.buildRequestBySlugOrId(id));
         return !!data;
     }
 
@@ -70,6 +71,20 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     public cacheAlgolia<T extends Hotspot>(hotspot: T, v = true): void {
         this.orm.hotspot.cacheAlgolia(hotspot.id, v);
     }
+
+    private buildRequestBySlugOrId = (id: string) => {
+        const isId = isUuid(id);
+        if (isId) {
+            return {
+                id,
+                removed: false,
+            };
+        }
+        return {
+            slug: id,
+            removed: false,
+        };
+    };
 }
 
 export default HotspotRepositoryInMemory;

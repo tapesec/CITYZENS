@@ -78,6 +78,7 @@ class HotspotCtrl extends RootCtrl {
         }
     };
 
+    // method=GET url=/hotspots/{hotspotId or id}
     public getHotspot = (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.hotspotRepository.isSet(req.params.id)) {
             return next(
