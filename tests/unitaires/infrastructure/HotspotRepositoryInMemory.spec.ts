@@ -51,13 +51,28 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = null;
     });
 
-    it('should find an hostpsot by id', () => {
+    it('should find an hostpsot by id if id is provided (indeed)', () => {
         // Arrange
         findOneStub.returns(fakeSchool);
         hotspotRepository = new HotspotRepositoryInMemory(orm);
         // Act
-        const school = hotspotRepository.findById(WallHotspotSample.SCHOOL.id);
+        const school = hotspotRepository.findById('362fd2aa-d838-4bc2-b088-7e27921c4780');
         // Expect
+        expect(
+            findOneStub.calledWith({ id: '362fd2aa-d838-4bc2-b088-7e27921c4780', removed: false }),
+        ).to.be.true;
+        expect(school).to.be.eql(WallHotspotSample.SCHOOL);
+    });
+
+    it("should find an hostpsot by slug if id's format is slug", () => {
+        // Arrange
+        findOneStub.returns(fakeSchool);
+        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        // Act
+        const school = hotspotRepository.findById(WallHotspotSample.SCHOOL.slug);
+        // Expect
+        expect(findOneStub.calledWith({ slug: WallHotspotSample.SCHOOL.slug, removed: false })).to
+            .be.true;
         expect(school).to.be.eql(WallHotspotSample.SCHOOL);
     });
 
