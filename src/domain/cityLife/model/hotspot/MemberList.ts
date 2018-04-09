@@ -27,6 +27,9 @@ class MemberList implements ValueObject {
     public delete(cityzenId: CityzenId) {
         if (this.has(cityzenId)) this._memberSet.delete(cityzenId);
     }
+    public get size() {
+        return this._memberSet.size;
+    }
 
     public isEqual(other: MemberList) {
         return lodash.isEqual(this, other);

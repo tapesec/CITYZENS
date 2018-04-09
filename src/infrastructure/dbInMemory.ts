@@ -98,6 +98,22 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     removed: false,
 };
 
+export const HOTSPOT_DOCTOR = {
+    id: WallHotspotSample.DOCTOR.id,
+    title: WallHotspotSample.DOCTOR.title,
+    position: JSON.parse(JSON.stringify(PositionSample.DOCTOR)),
+    authorId: JSON.parse(JSON.stringify(CityzenSample.LIONNEL2.id.toString())),
+    slug: slug(WallHotspotSample.DOCTOR.title),
+    cityId: CitySample.MARTIGNAS.insee,
+    address: JSON.parse(JSON.stringify(AddressSample.DOCTOR_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
+    scope: HotspotScope.Private,
+    type: HotspotType.WallMessage,
+    iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.DOCTOR.avatarIconUrl.toString(),
+    removed: false,
+};
+
 export const ALERT_ACCIDENT = {
     id: AlertHotspotSample.ACCIDENT.id,
     message: AlertHotspotSample.ACCIDENT.message,
@@ -150,6 +166,7 @@ const databaseInitialize = () => {
         hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
         hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
         hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
+        hotspotCollection.insert(HOTSPOT_DOCTOR);
         hotspotCollection.insert(ALERT_ACCIDENT);
         hotspotCollection.insert(EVENT_MATCH);
     }
