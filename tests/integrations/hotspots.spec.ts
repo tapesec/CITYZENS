@@ -184,7 +184,7 @@ const hotspotsEndpointsTests = (state: any) => {
         });
 
         describe('POST /hotspots/{hotspotId}/pertinence.', () => {
-            it('Should return 200 and count one view.', async () => {
+            it('Should return 200.', async () => {
                 const hotspotId = AlertHotspotSample.ACCIDENT.id;
                 const body = { agree: true };
 

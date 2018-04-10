@@ -125,6 +125,22 @@ export const ALERT_ACCIDENT = {
     scope: HotspotScope.Public,
     type: HotspotType.Alert,
     iconType: HotspotIconType.Accident,
+    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.ACCIDENT.voterList)),
+    removed: false,
+};
+
+export const CAMELOT = {
+    id: AlertHotspotSample.TOEDIT_CAMELOT.id,
+    message: AlertHotspotSample.TOEDIT_CAMELOT.message,
+    position: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.position)),
+    authorId: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.author.id.toString())),
+    cityId: AlertHotspotSample.TOEDIT_CAMELOT.cityId,
+    address: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.address)),
+    views: AlertHotspotSample.TOEDIT_CAMELOT.views,
+    scope: HotspotScope.Public,
+    type: HotspotType.Alert,
+    iconType: HotspotIconType.Destruction,
+    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.voterList)),
     removed: false,
 };
 
@@ -174,6 +190,7 @@ const databaseInitialize = () => {
         hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
         hotspotCollection.insert(HOTSPOT_DOCTOR);
         hotspotCollection.insert(ALERT_ACCIDENT);
+        hotspotCollection.insert(CAMELOT);
         hotspotCollection.insert(EVENT_MATCH);
     }
     messageCollection = db.getCollection('messages');

@@ -6,6 +6,7 @@ import citiesEndpointTests from './cities.spec';
 import messagesEndpointsTests from './messages.spec';
 import { loginBody } from './sample/requests-responses';
 import * as LoginSample from './sample/LoginSample';
+import { votingPath } from './Voting.spec';
 
 describe('/auth endpoint', () => {
     const state: any = { admin: {}, standard: {} };
@@ -53,4 +54,7 @@ describe('/auth endpoint', () => {
     citiesEndpointTests(state);
     // /hotspots/id/messages suite
     messagesEndpointsTests(state);
+
+    // Start scenario of users interactions
+    votingPath(state);
 });

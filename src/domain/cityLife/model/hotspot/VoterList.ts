@@ -36,6 +36,10 @@ class VoterList implements ValueObject {
     public isEqual(other: VoterList) {
         return lodash.isEqual(this, other);
     }
+
+    public toJSON() {
+        return Array.from(this.list);
+    }
 }
 
 export default VoterList;
