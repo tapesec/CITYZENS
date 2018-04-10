@@ -112,16 +112,16 @@ class HotspotFactory {
 
     private createAlertHotspot = (data: any): AlertHotspot => {
         let message: AlertMessage;
-        let voterList: VoterList;
+        let voterList = new VoterList();
         let pertinenceScore: PertinenceScore;
 
         // data from database
         if (data && data.message.content) {
             message = new AlertMessage(data.message.content, data.message.updatedAt);
             if (data.voterList) {
-                voterList = new VoterList(data.voterList.map((x: string) => new CityzenId(x)));
-            } else {
-                voterList = new VoterList();
+                for (let i = 0; i < data.voterList.length; i += 1) {
+                    voterList.add(new CityzenId(data.voterList[i][0]), data.voterList[i][1]);
+                }
             }
             if (data.pertinence !== undefined) {
                 pertinenceScore = new PertinenceScore(

@@ -156,6 +156,12 @@ export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 export const CITYZEN_LUCA_GOOGLE = JSON.parse(JSON.stringify(CityzenSample.LUCA_GOOGLE));
 
+const env: string = config.server.env;
+const isInTest = env === 'test';
+const lokiDevPath = 'loki/dev.json';
+const lokiTestPath = 'loki/test.json';
+const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
+
 const databaseInitialize = () => {
     hotspotCollection = db.getCollection('hotspots');
     if (hotspotCollection === null) {
@@ -207,11 +213,6 @@ const databaseInitialize = () => {
         cityzenCollection.insert(CITYZEN_LUCA_GOOGLE);
     }
 };
-
-const isInTest = config.server.env === 'test';
-const lokiDevPath = 'loki/dev.json';
-const lokiTestPath = 'loki/test.json';
-const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
 
 const db = new loki(lokiPath, {
     autoload: true,

@@ -11,7 +11,7 @@ import {
     FAKE_ADMIN_USER_INFO_AUTH0,
 } from './../../unitaires/api/services/samples';
 import cityzenFromAuth0 from './../../../src/api/services/cityzen/cityzenFromAuth0';
-import {
+import Hotspot, {
     HotspotIconType,
     HotspotScope,
     HotspotType,
@@ -75,4 +75,10 @@ export const editedMessageResponse = () => {
     message.editBody(patchMessageBody.body);
     message.togglePinMode();
     return JSON.parse(JSON.stringify(message));
+};
+
+// PATCH url=/hotspots/{hotspotId}
+
+export const patchHotspotBody = {
+    title: 'new title',
 };

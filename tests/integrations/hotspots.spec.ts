@@ -2,9 +2,14 @@ import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
-import { createHotspotBody, newHotspotResponse } from './sample/requests-responses';
+import {
+    createHotspotBody,
+    newHotspotResponse,
+    patchHotspotBody,
+} from './sample/requests-responses';
 import { username } from './sample/granted-cityzen';
 import WallHotspotSample from '../../src/domain/cityLife/model/sample/WallHotspotSample';
+import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
 
 const hotspotsEndpointsTests = (state: any) => {
     describe('/hotspots endpoint', () => {
@@ -73,7 +78,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 // Act
                 const response = await request(server)
                     .post('/hotspots')
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .send(createHotspotBody)
                     .set('Accept', 'application/json')
                     .expect(201);
@@ -101,13 +106,15 @@ const hotspotsEndpointsTests = (state: any) => {
                     .to.eql(expectedRes.position.longitude);
                 expect(response.body.scope).to.eql(expectedRes.scope);
                 expect(response.body.idCity).to.eql(expectedRes.idCity);
+
+                state.newHotspot = { id: response.body.id };
             });
 
             it('should return 400 if bad request body format', async () => {
                 // Act
                 const response = await request(server)
                     .post('/hotspots')
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .send({ foo: 'bar' })
                     .set('Accept', 'application/json')
                     .expect(400);
@@ -140,7 +147,7 @@ const hotspotsEndpointsTests = (state: any) => {
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .send(body)
                     .expect(200);
 
@@ -157,8 +164,144 @@ const hotspotsEndpointsTests = (state: any) => {
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .send(body)
+                    .expect(404);
+            });
+
+            it('Should return 401 non authorized.', async () => {
+                const body = {
+                    memberId: 'new id',
+                };
+                const hotspotId = WallHotspotSample.CHURCH.id;
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/members`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(body)
+                    .expect(401);
+            });
+        });
+
+        describe('POST /hotspots/{hotspotId}/pertinence.', () => {
+            it('Should return 200 and count one view.', async () => {
+                const hotspotId = AlertHotspotSample.ACCIDENT.id;
+                const body = { agree: true };
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(body)
+                    .expect(200);
+            });
+
+            it('Should return 404.', async () => {
+                const hotspotId = 'fake';
+                const body = { agree: true };
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(body)
+                    .expect(404);
+            });
+
+            it('Should return 400 on double vote.', async () => {
+                const hotspotId = AlertHotspotSample.ACCIDENT.id;
+                const body = { agree: true };
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(body)
+                    .expect(400);
+            });
+            it('Should return 400 on invalid request.', async () => {
+                const hotspotId = AlertHotspotSample.ACCIDENT.id;
+                const body = { agree: 'Oui.', non: true };
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(body)
+                    .expect(400);
+            });
+        });
+
+        describe('PATCH url=/hotspots/{hotspotId}.', () => {
+            it('Should return 200 and edit title.', async () => {
+                const hotspotId = state.newHotspot.id;
+
+                const response = await request(server)
+                    .patch(`/hotspots/${hotspotId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(patchHotspotBody)
+                    .expect(200);
+
+                expect(response.body)
+                    .to.have.property('title')
+                    .to.be.equal(patchHotspotBody.title);
+            });
+
+            it('Should return 404.', async () => {
+                const hotspotId = 'fake';
+                const response = await request(server)
+                    .patch(`/hotspots/${hotspotId}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .send(patchHotspotBody)
+                    .expect(404);
+            });
+
+            it('Should return 401.', async () => {
+                const hotspotId = state.newHotspot.id;
+
+                const response = await request(server)
+                    .patch(`/hotspots/${hotspotId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(patchHotspotBody)
+                    .expect(200);
+            });
+
+            it('Should return 400 on bad request.', async () => {
+                const badBody = { ...patchHotspotBody, trash: ':(' };
+                const hotspotId = state.newHotspot.id;
+
+                const response = await request(server)
+                    .patch(`/hotspots/${hotspotId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(badBody)
+                    .expect(400);
+            });
+        });
+
+        describe('DELETE /hotspots/{hotspotId}.', () => {
+            after(() => {
+                delete state.newHotspot;
+            });
+
+            it('Should return 401.', async () => {
+                const id = state.newHotspot.id;
+
+                const response = await request(server)
+                    .delete(`/hotspots/${id}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
+                    .expect(401);
+            });
+
+            it('Should return 200 and delete hotspot.', async () => {
+                const id = state.newHotspot.id;
+
+                const response = await request(server)
+                    .delete(`/hotspots/${id}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .expect(200);
+            });
+
+            it('Should return 404.', async () => {
+                const id = state.newHotspot.id;
+                const response = await request(server)
+                    .delete(`/hotspots/${id}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .expect(404);
             });
         });

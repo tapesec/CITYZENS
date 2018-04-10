@@ -36,7 +36,7 @@ const messagesEndpointsTests = (state: any) => {
                 const hotspotId = 'not-found-id';
                 const response = await request(server)
                     .get(`/hotspots/${hotspotId}/messages`)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(404);
             });
@@ -50,7 +50,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/messages`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(201);
 
@@ -70,7 +70,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/messages`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(404);
             });
@@ -82,7 +82,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/messages`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(400);
             });
@@ -104,7 +104,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(200);
 
@@ -121,7 +121,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(404);
             });
@@ -136,7 +136,7 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                     .send(body)
-                    .set('Authorization', `Bearer ${state.access_token}`)
+                    .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(400);
             });
