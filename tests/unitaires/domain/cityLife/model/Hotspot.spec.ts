@@ -272,11 +272,9 @@ describe('WallHotspot entity', () => {
             slug: 'Docteur-Maboul',
             members: ['auth0|fake-id3', 'auth0|fake-id2'],
             avatarIconUrl: config.avatarIcon.defaultWallIcon,
-            dateEnd: '2038-12-30T14:42:02.000Z',
             description: {
                 content:
                     'Un matche va se dérouler entre Oberyn et La Montagne pour décider du destin de tyrion',
-                updatedAt: '2017-12-25T11:00:00.000Z',
             },
         });
     });
