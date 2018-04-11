@@ -1,7 +1,7 @@
 import { use, expect } from 'chai';
 import { v4 } from 'uuid';
 use(require('chai-shallow-deep-equal'));
-
+import config from './../../../../../src/api/config';
 import Hotspot, {
     HotspotScope,
     HotspotType,
@@ -230,7 +230,7 @@ describe('WallHotspot entity', () => {
             title: 'Ecole Flora Tristan',
             slug: 'Ecole-Flora-Tristan',
             members: [],
-            avatarIconUrl: 'https://cdn.filestackcontent.com/uiFagz6oSQiX8TTcAQAC',
+            avatarIconUrl: config.avatarIcon.defaultWallIcon,
         });
     });
 
@@ -271,7 +271,7 @@ describe('WallHotspot entity', () => {
             title: 'Docteur Maboul',
             slug: 'Docteur-Maboul',
             members: ['auth0|fake-id3', 'auth0|fake-id2'],
-            avatarIconUrl: 'https://cdn.filestackcontent.com/uiFagz6oSQiX8TTcAQAC',
+            avatarIconUrl: config.avatarIcon.defaultWallIcon,
             dateEnd: '2038-12-30T14:42:02.000Z',
             description: {
                 content:
