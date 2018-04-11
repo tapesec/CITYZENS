@@ -22,13 +22,15 @@ class RootCtrl {
         this.userInfo = undefined;
         this.cityzenIfAuthenticated = undefined;
 
-        if (!req.header('Authorization')) {
+        const headerAuthorization = req.header('Authorization');
+
+        if (!headerAuthorization) {
             return next(
                 this.errorHandler.logAndCreateUnautorized(req.path(), 'Token must be provided'),
             );
         }
 
-        const access_token = req.header('Authorization').slice(7);
+        const access_token = headerAuthorization.slice(7);
         try {
             this.userInfo = await this.auth0Service.getUserInfo(access_token);
             this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
@@ -42,9 +44,10 @@ class RootCtrl {
         this.userInfo = undefined;
         this.cityzenIfAuthenticated = undefined;
 
-        if (!req.header('Authorization')) return next();
+        const headerAuthorization = req.header('Authorization');
+        if (!headerAuthorization) return next();
 
-        const access_token = req.header('Authorization').slice(7);
+        const access_token = headerAuthorization.slice(7);
         if (access_token === '') return next();
         try {
             this.userInfo = await this.auth0Service.getUserInfo(access_token);

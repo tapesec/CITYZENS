@@ -14,6 +14,7 @@ import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
+import config from './../api/config';
 
 let hotspotCollection: any;
 let messageCollection: any;
@@ -97,6 +98,22 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     removed: false,
 };
 
+export const HOTSPOT_DOCTOR = {
+    id: WallHotspotSample.DOCTOR.id,
+    title: WallHotspotSample.DOCTOR.title,
+    position: JSON.parse(JSON.stringify(PositionSample.DOCTOR)),
+    authorId: JSON.parse(JSON.stringify(CityzenSample.LIONNEL2.id.toString())),
+    slug: slug(WallHotspotSample.DOCTOR.title),
+    cityId: CitySample.MARTIGNAS.insee,
+    address: JSON.parse(JSON.stringify(AddressSample.DOCTOR_ADDRESS)),
+    views: HOTSPOT_INITIAL_VIEWS,
+    scope: HotspotScope.Private,
+    type: HotspotType.WallMessage,
+    iconType: HotspotIconType.Wall,
+    avatarIconUrl: WallHotspotSample.DOCTOR.avatarIconUrl.toString(),
+    removed: false,
+};
+
 export const ALERT_ACCIDENT = {
     id: AlertHotspotSample.ACCIDENT.id,
     message: AlertHotspotSample.ACCIDENT.message,
@@ -108,6 +125,22 @@ export const ALERT_ACCIDENT = {
     scope: HotspotScope.Public,
     type: HotspotType.Alert,
     iconType: HotspotIconType.Accident,
+    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.ACCIDENT.voterList)),
+    removed: false,
+};
+
+export const CAMELOT = {
+    id: AlertHotspotSample.TOEDIT_CAMELOT.id,
+    message: AlertHotspotSample.TOEDIT_CAMELOT.message,
+    position: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.position)),
+    authorId: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.author.id.toString())),
+    cityId: AlertHotspotSample.TOEDIT_CAMELOT.cityId,
+    address: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.address)),
+    views: AlertHotspotSample.TOEDIT_CAMELOT.views,
+    scope: HotspotScope.Public,
+    type: HotspotType.Alert,
+    iconType: HotspotIconType.Destruction,
+    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.voterList)),
     removed: false,
 };
 
@@ -139,6 +172,12 @@ export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 export const CITYZEN_LUCA_GOOGLE = JSON.parse(JSON.stringify(CityzenSample.LUCA_GOOGLE));
 
+const env: string = config.server.env;
+const isInTest = env === 'test';
+const lokiDevPath = 'loki/dev.json';
+const lokiTestPath = 'loki/test.json';
+const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
+
 const databaseInitialize = () => {
     hotspotCollection = db.getCollection('hotspots');
     if (hotspotCollection === null) {
@@ -149,7 +188,9 @@ const databaseInitialize = () => {
         hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
         hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
         hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
+        hotspotCollection.insert(HOTSPOT_DOCTOR);
         hotspotCollection.insert(ALERT_ACCIDENT);
+        hotspotCollection.insert(CAMELOT);
         hotspotCollection.insert(EVENT_MATCH);
     }
     messageCollection = db.getCollection('messages');
@@ -190,10 +231,10 @@ const databaseInitialize = () => {
     }
 };
 
-const db = new loki('loki/loki.json', {
+const db = new loki(lokiPath, {
     autoload: true,
     autoloadCallback: databaseInitialize,
-    autosave: true,
+    autosave: !isInTest,
     autosaveInterval: 4000,
 });
 

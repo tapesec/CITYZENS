@@ -14,7 +14,7 @@ import WallHotspot from '../../domain/cityLife/model/hotspot/WallHotspot';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import { getHotspots, postMemberSchema } from '../requestValidation/schema';
+import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { strToNumQSProps } from '../helpers/';
@@ -200,6 +200,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
+
             if (!isAuthorized.toAddMember(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
                     this.errorHandler.logAndCreateUnautorized(
@@ -221,6 +222,15 @@ class HotspotCtrl extends RootCtrl {
 
     // method=POST url=/hotspots/{hotspotId}/pertinence
     public postPertinence = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.schemaValidator.validate(postPertinenceSchema, req.body)) {
+            return next(
+                this.errorHandler.logAndCreateBadRequest(
+                    `POST postPertinence ${req.path()}`,
+                    HotspotCtrl.BAD_REQUEST_MESSAGE,
+                ),
+            );
+        }
+
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
@@ -230,30 +240,34 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
-        if (!(hotspot instanceof AlertHotspot)) {
-            return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
-                    HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
-                ),
-            );
+        try {
+            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+            if (!(hotspot instanceof AlertHotspot)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
+                    ),
+                );
+            }
+
+            const cityzenId: CityzenId = this.cityzenIfAuthenticated.id;
+            if (hotspot.voterList.has(cityzenId)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
+                    ),
+                );
+            }
+
+            hotspot.addVoter(cityzenId, req.body.agree as boolean);
+            this.hotspotRepository.update(hotspot);
+
+            res.json(OK, hotspot);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
         }
-
-        const cityzenId: CityzenId = this.cityzenIfAuthenticated.id;
-        if (hotspot.voterList.has(cityzenId)) {
-            return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
-                    HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
-                ),
-            );
-        }
-
-        hotspot.addVoter(cityzenId, req.body.agree as boolean);
-        this.hotspotRepository.update(hotspot);
-
-        res.json(OK, hotspot);
     };
 
     // method=PATCH url=/hotspots/{hotspotId}

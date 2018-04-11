@@ -11,6 +11,13 @@ class AlertHotspotSample {
         new PertinenceScore(0, 0),
         new VoterList(),
     );
+
+    public static TOEDIT_CAMELOT: AlertHotspot = new AlertHotspot(
+        HotspotBuilderSample.TOEDIT_CAMELOT_HOTSTPOT_BUILDER,
+        AlertMessageSample.CAMELOT_MESSAGE,
+        new PertinenceScore(58420, 1754),
+        new VoterList([['Karadoc', true], ['Perceval', false]]),
+    );
 }
 
 export default AlertHotspotSample;
