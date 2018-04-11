@@ -63,6 +63,17 @@ class HotspotBuilderSample {
         HotspotIconType.Wall,
     );
 
+    public static TOEDIT_CAMELOT_HOTSTPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('4cd2c107-5173-40bc-a7a1-335c6b2f83c7'),
+        PositionSample.CAMELOT,
+        AuthorSample.LOUISE,
+        new CityId('Glastonbury'),
+        AddressSample.CAMELOT_ADRESS,
+        new ViewsCount(1),
+        HotspotType.Alert,
+        HotspotIconType.Destruction,
+    );
+
     public static ACCIDENT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
         new HotspotId('d0568142-23f4-427d-83f3-e84443cc3643'),
         PositionSample.ACCIDENT,

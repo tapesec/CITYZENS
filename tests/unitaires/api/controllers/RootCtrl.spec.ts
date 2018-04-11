@@ -44,7 +44,7 @@ describe('RootCtrl', () => {
             const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());
             auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.once());
             nextMoq.verify(x => x(), TypeMoq.Times.once());
         });
@@ -87,7 +87,7 @@ describe('RootCtrl', () => {
             const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());
             auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
@@ -105,7 +105,7 @@ describe('RootCtrl', () => {
             const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
             await rootCtrl.optInAuthenticateUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
-            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(2));
+            reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());
             auth0ServiceMoq.verify(x => x.getUserInfo(token), TypeMoq.Times.exactly(1));
             nextMoq.verify(x => x(), TypeMoq.Times.once());
         });

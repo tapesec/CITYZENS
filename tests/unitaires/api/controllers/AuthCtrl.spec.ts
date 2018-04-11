@@ -74,5 +74,25 @@ describe('AuthCtrl', () => {
             // Assert
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
+
+        it(`Should try to log user and return a 401 http response with error description`, async () => {
+            // Arrange
+            const fakeError = {
+                message: 'an error occured',
+            };
+            auth0ServiceMoq
+                .setup(x => x.login(username, password))
+                .returns(() => Promise.reject(fakeError));
+
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal('DELETE path', fakeError.message))
+                .returns(() => 'error');
+
+            // Act
+            const authCtrl = new AuthCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
+            await authCtrl.login(reqMoq.object, resMoq.object, nextMoq.object);
+            // Assert
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
     });
 });

@@ -5,12 +5,16 @@
     "main": "server.js",
     "scripts": {
         "start": "tsc && node --require dotenv/config build/api/server.js",
-        "test":
-            "set NODE_ENV=test && mocha --exit --recursive --opts tests/mocha.opts -r ts-node/register \"tests/**/*.spec.ts\"",
+        "test": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
+        "test:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
         "test:unit":
-            "set NODE_ENV=test && mocha --exit --recursive --opts tests/mocha.opts -r ts-node/register \"tests/unitaires/**/*.spec.ts\"",
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
+        "test:unit:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
         "test:integration":
-            "set NODE_ENV=test && mocha --exit --recursive --opts tests/mocha.opts -r ts-node/register \"tests/integrations/**/*.spec.ts\"",
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
+        "test:integration:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
         "tslint": "tslint -p ./tsconfig.json -c ./tslint.json src/**/*.ts",
         "tslint-check": "tslint-config-prettier-check ./tslint.json"
     },
@@ -51,7 +55,9 @@
         "chai": "^4.1.2",
         "cross-env": "^5.1.3",
         "mocha": "^5.0.1",
+        "nyc": "^11.6.0",
         "prettier": "^1.11.1",
+        "source-map-support": "^0.5.4",
         "supertest": "^3.0.0",
         "ts-node": "^5.0.1",
         "tslint": "^5.9.1",
@@ -60,5 +66,11 @@
     },
     "engines": {
         "node": ">=8.9.3"
+    },
+    "nyc": {
+        "extension": [".ts", ".tsx"],
+        "exclude": ["**/*.d.ts", "**/*.spec.ts", "**/*.js", "tests/*"],
+        "reporter": ["text"],
+        "all": true
     }
 }
