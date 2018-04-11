@@ -3,7 +3,11 @@ import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
 import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
 import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
 import { expect } from 'chai';
-import { HotspotIconType, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import {
+    HotspotIconType,
+    HotspotType,
+    HotspotScope,
+} from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import Author from '../../../src/domain/cityLife/model/author/Author';
 
@@ -30,14 +34,12 @@ describe('HotspotFactory', () => {
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromRequestPost);
         // Assert
-        expect(fakeNewHotspot).to.have.property('id');
-        expect(fakeNewHotspot)
-            .to.have.property('title')
-            .and.to.be.equal('new title');
-        expect(fakeNewHotspot)
-            .to.have.property('scope')
-            .and.to.be.equal('private');
-        commonHotspotPropertiesAssertion(fakeNewHotspot);
+
+        commonHotspotPropertiesAssertion(fakeNewHotspot, {
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            scope: HotspotScope.Private,
+        });
     });
 
     it('should build a WallHotspot with data from database', () => {
@@ -52,7 +54,7 @@ describe('HotspotFactory', () => {
                 longitude: 47.12345,
             },
             cityzen: CityzenSample.ELODIE.toJSON(),
-            scope: 'private',
+            scope: HotspotScope.Private,
             address: {
                 name: '4 rue Blanc',
                 city: 'Martignas sur Jalles',
@@ -66,24 +68,65 @@ describe('HotspotFactory', () => {
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
         // Assert
         expect(fakeNewHotspot)
-            .to.have.property('id')
-            .and.to.be.equal('fake-id');
-        expect(fakeNewHotspot)
-            .to.have.property('title')
-            .and.to.be.equal('new title');
-        expect(fakeNewHotspot)
-            .to.have.property('scope')
-            .and.to.be.equal('private');
-        expect(fakeNewHotspot)
             .to.have.property('members')
             .and.to.deep.equal(
                 new MemberList([new CityzenId('fake-member-id'), new CityzenId('fake-member-id2')]),
             );
-        commonHotspotPropertiesAssertion(fakeNewHotspot);
+        commonHotspotPropertiesAssertion(fakeNewHotspot, {
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            id: 'fake-id',
+            title: 'new title',
+            scope: HotspotScope.Private,
+        });
+    });
+
+    it('should build an alertHotspot with data from database', () => {
+        // Arrange
+
+        const fakeDataFromDatabase: any = {
+            id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
+            position: {
+                latitude: 12.25632,
+                longitude: 47.12345,
+            },
+            cityzen: CityzenSample.ELODIE.toJSON(),
+            address: {
+                name: '4 rue Blanc',
+                city: 'Martignas sur Jalles',
+            },
+            cityId: '34345',
+            type: HotspotType.Alert,
+            iconType: HotspotIconType.Accident,
+            voterList: [['auth0|1jks2kdz2dqziq', true]],
+            message: {
+                content: 'a fake content for test purpose',
+                updatedAt: '2018-04-09T04:36:54.450Z',
+            },
+        };
+        const hotspotFactory = new HotspotFactory();
+        // Act
+        const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
+        // Assert
+        commonHotspotPropertiesAssertion(fakeNewHotspot, {
+            iconType: HotspotIconType.Accident,
+            type: HotspotType.Alert,
+            id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
+        });
     });
 });
 
-const commonHotspotPropertiesAssertion = (fakeNewHotspot: any): void => {
+const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificProperties): void => {
+    if (specificProperties.id !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('id')
+            .and.to.be.equal(specificProperties.id);
+    }
+    if (specificProperties.title !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('title')
+            .and.to.be.equal(specificProperties.title);
+    }
     expect(fakeNewHotspot)
         .to.have.property('cityId')
         .and.to.be.equal('34345');
@@ -115,10 +158,19 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any): void => {
         .to.have.property('address')
         .to.have.property('city')
         .to.be.equal('Martignas sur Jalles');
-    expect(fakeNewHotspot)
-        .to.have.property('type')
-        .to.be.equal(HotspotType.WallMessage);
-    expect(fakeNewHotspot)
-        .to.have.property('iconType')
-        .to.be.equal(HotspotIconType.Wall);
+    if (specificProperties.scope !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('scope')
+            .and.to.be.equal(specificProperties.scope);
+    }
+    if (specificProperties.type !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('type')
+            .to.be.equal(specificProperties.type);
+    }
+    if (specificProperties.iconType !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('iconType')
+            .to.be.equal(specificProperties.iconType);
+    }
 };
