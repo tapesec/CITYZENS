@@ -5,7 +5,8 @@ import PositionSample from './../../src/domain/cityLife/model/sample/PositionSam
 import {
     createHotspotBody,
     newHotspotResponse,
-    patchHotspotBody,
+    patchHotspotBodyTitle,
+    patchHotspotBodyScope,
 } from './sample/requests-responses';
 import { username } from './sample/granted-cityzen';
 import WallHotspotSample from '../../src/domain/cityLife/model/sample/WallHotspotSample';
@@ -193,6 +194,12 @@ const hotspotsEndpointsTests = (state: any) => {
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .send(body)
                     .expect(200);
+
+                expect(response.body)
+                    .to.have.property('voterList')
+                    .to.be.length(1);
+                expect(response.body.voterList[0]).to.be.length(2);
+                expect(response.body.voterList[0][1]).to.be.true;
             });
 
             it('Should return 404.', async () => {
@@ -235,12 +242,26 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}`)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .send(patchHotspotBody)
+                    .send(patchHotspotBodyTitle)
                     .expect(200);
 
                 expect(response.body)
                     .to.have.property('title')
-                    .to.be.equal(patchHotspotBody.title);
+                    .to.be.equal(patchHotspotBodyTitle.title);
+            });
+
+            it('Should return 200 and edit scope.', async () => {
+                const hotspotId = state.newHotspot.id;
+
+                const response = await request(server)
+                    .patch(`/hotspots/${hotspotId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(patchHotspotBodyScope)
+                    .expect(200);
+
+                expect(response.body)
+                    .to.have.property('scope')
+                    .to.be.equal(patchHotspotBodyScope.scope);
             });
 
             it('Should return 404.', async () => {
@@ -248,7 +269,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .send(patchHotspotBody)
+                    .send(patchHotspotBodyTitle)
                     .expect(404);
             });
 
@@ -258,12 +279,12 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}`)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .send(patchHotspotBody)
+                    .send(patchHotspotBodyTitle)
                     .expect(200);
             });
 
             it('Should return 400 on bad request.', async () => {
-                const badBody = { ...patchHotspotBody, trash: ':(' };
+                const badBody = { ...patchHotspotBodyTitle, trash: ':(' };
                 const hotspotId = state.newHotspot.id;
 
                 const response = await request(server)

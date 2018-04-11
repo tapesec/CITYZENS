@@ -79,6 +79,10 @@ export const editedMessageResponse = () => {
 
 // PATCH url=/hotspots/{hotspotId}
 
-export const patchHotspotBody = {
+export const patchHotspotBodyTitle = {
     title: 'new title',
+};
+
+export const patchHotspotBodyScope = {
+    scope: HotspotScope.Private,
 };
