@@ -1,3 +1,7 @@
+import { use, expect } from 'chai';
+import { v4 } from 'uuid';
+use(require('chai-shallow-deep-equal'));
+
 import Hotspot, {
     HotspotScope,
     HotspotType,
@@ -6,9 +10,6 @@ import Hotspot, {
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
-
-import { expect } from 'chai';
-import { v4 } from 'uuid';
 import MediaHotspot from '../../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
 import HotspotBuilder from '../../../../../src/domain/cityLife/factories/HotspotBuilder';
 import CityId from '../../../../../src/domain/cityLife/model/city/CityId';
@@ -21,6 +22,8 @@ import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/Hotspo
 import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
 import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
 import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import EventHotspotSample from '../../../../../src/domain/cityLife/model/sample/EventHotspotSample';
 
 const slug = require('slug');
 
@@ -214,75 +217,67 @@ describe('WallHotspot entity', () => {
     it('Should parse and stringify correctly WallHotspot.', () => {
         const hotspot = WallHotspotSample.SCHOOL;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
+        expect(jsonHotspot).to.shallowDeepEqual({
+            id: 'c28e94ef-ad1d-4260-8452-89a2b7bf298e',
+            position: { latitude: 44.84665782, longitude: -0.76560438 },
+            author: { pseudo: 'Louisounette', id: 'auth0|fake-id2' },
+            cityId: '33273',
+            address: { name: '4 rue Louis Blanc', city: 'Martignas-sur-Jalle' },
+            views: 1,
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            scope: HotspotScope.Public,
+            title: 'Ecole Flora Tristan',
+            slug: 'Ecole-Flora-Tristan',
+            members: [],
+            avatarIconUrl: 'https://cdn.filestackcontent.com/uiFagz6oSQiX8TTcAQAC',
+        });
+    });
 
-        expect(jsonHotspot)
-            .to.have.property('address')
-            .to.have.property('city')
-            .to.be.equal(hotspot.address.city);
+    it('should stringify and parse correctly an AlertHotspot', () => {
+        const hotspot = AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU;
+        const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
+        expect(jsonHotspot).to.shallowDeepEqual({
+            id: 'd0568142-23f4-427d-83f3-e84443cc3643',
+            position: { latitude: 44.841633, longitude: -0.776771 },
+            author: { pseudo: 'lucabrx', id: 'auth0|5a1e6928f96aa12d71333e0e' },
+            cityId: '33273',
+            address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
+            views: 1,
+            type: HotspotType.Alert,
+            iconType: HotspotIconType.Accident,
+            message: {
+                content:
+                    'Un accident est survenue entre un 4x4 et une smart, des debris son encore présent.',
+            },
+            voterList: [['Karadoc', true], ['Perceval', false]],
+            pertinence: { agree: 58420, disagree: 1754 },
+        });
+    });
 
-        expect(jsonHotspot)
-            .to.have.property('address')
-            .to.have.property('name')
-            .to.be.equal(hotspot.address.name);
-
-        expect(jsonHotspot)
-            .to.have.property('author')
-            .to.have.property('id')
-            .to.be.equal(hotspot.author.id.toString());
-
-        expect(jsonHotspot)
-            .to.have.property('author')
-            .to.have.property('pseudo')
-            .to.be.equal(hotspot.author.pseudo);
-
-        expect(jsonHotspot)
-            .to.have.property('avatarIconUrl')
-            .to.be.equal(hotspot.avatarIconUrl.url);
-
-        expect(jsonHotspot)
-            .to.have.property('cityId')
-            .to.be.equal(hotspot.cityId);
-
-        expect(jsonHotspot)
-            .to.have.property('iconType')
-            .to.be.equal(hotspot.iconType);
-
-        expect(jsonHotspot)
-            .to.have.property('id')
-            .to.be.equal(hotspot.id);
-
-        expect(jsonHotspot)
-            .to.have.property('members')
-            .to.be.deep.equal(hotspot.members.toArray());
-
-        expect(jsonHotspot)
-            .to.have.property('position')
-            .to.have.property('latitude')
-            .to.be.equal(hotspot.position.latitude);
-
-        expect(jsonHotspot)
-            .to.have.property('position')
-            .to.have.property('longitude')
-            .to.be.equal(hotspot.position.longitude);
-
-        expect(jsonHotspot)
-            .to.have.property('scope')
-            .to.be.equal(hotspot.scope);
-
-        expect(jsonHotspot)
-            .to.have.property('slug')
-            .to.be.equal(hotspot.slug);
-
-        expect(jsonHotspot)
-            .to.have.property('title')
-            .to.be.equal(hotspot.title);
-
-        expect(jsonHotspot)
-            .to.have.property('type')
-            .to.be.equal(hotspot.type);
-
-        expect(jsonHotspot)
-            .to.have.property('views')
-            .to.be.equal(hotspot.views);
+    it('should stringify and parse correctly an EventHotspot', () => {
+        const hotspot = EventHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST;
+        const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
+        expect(jsonHotspot).to.shallowDeepEqual({
+            id: '19eab732-1a3f-4bfb-abb0-1d0dde8a3669',
+            position: { latitude: 44.84181, longitude: -0.64759 },
+            author: { pseudo: 'Princesse', id: 'auth0|fake-id3' },
+            cityId: '33281',
+            address: { name: "12 rue de l'Aubépine", city: 'Merignac' },
+            views: 1,
+            type: HotspotType.WallMessage,
+            iconType: HotspotIconType.Wall,
+            scope: HotspotScope.Private,
+            title: 'Docteur Maboul',
+            slug: 'Docteur-Maboul',
+            members: ['auth0|fake-id3', 'auth0|fake-id2'],
+            avatarIconUrl: 'https://cdn.filestackcontent.com/uiFagz6oSQiX8TTcAQAC',
+            dateEnd: '2038-12-30T14:42:02.000Z',
+            description: {
+                content:
+                    'Un matche va se dérouler entre Oberyn et La Montagne pour décider du destin de tyrion',
+                updatedAt: '2017-12-25T11:00:00.000Z',
+            },
+        });
     });
 });

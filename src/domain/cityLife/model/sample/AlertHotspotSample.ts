@@ -18,6 +18,13 @@ class AlertHotspotSample {
         new PertinenceScore(58420, 1754),
         new VoterList([['Karadoc', true], ['Perceval', false]]),
     );
+
+    public static TO_READ_ALERT_HOTSPOT_FOR_TU: AlertHotspot = new AlertHotspot(
+        HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
+        AlertMessageSample.ACCIDENT_MESSAGE,
+        new PertinenceScore(58420, 1754),
+        new VoterList([['Karadoc', true], ['Perceval', false]]),
+    );
 }
 
 export default AlertHotspotSample;
