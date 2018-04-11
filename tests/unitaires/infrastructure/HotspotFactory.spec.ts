@@ -81,7 +81,7 @@ describe('HotspotFactory', () => {
         });
     });
 
-    it('should build an alertHotspot with data from database', () => {
+    it.only('should build an alertHotspot with data from database', () => {
         // Arrange
 
         const fakeDataFromDatabase: any = {
@@ -112,6 +112,7 @@ describe('HotspotFactory', () => {
             iconType: HotspotIconType.Accident,
             type: HotspotType.Alert,
             id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
+            voterList: ['auth0|1jks2kdz2dqziq', true],
         });
     });
 });
@@ -158,6 +159,11 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
         .to.have.property('address')
         .to.have.property('city')
         .to.be.equal('Martignas sur Jalles');
+    if (specificProperties.voterList !== undefined) {
+        expect(fakeNewHotspot.voterList.has(new CityzenId(specificProperties.voterList[0]))).to.be
+            .true;
+        expect(fakeNewHotspot).to.have.property('voterList');
+    }
     if (specificProperties.scope !== undefined) {
         expect(fakeNewHotspot)
             .to.have.property('scope')
