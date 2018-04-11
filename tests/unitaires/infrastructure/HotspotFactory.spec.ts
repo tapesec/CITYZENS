@@ -81,7 +81,7 @@ describe('HotspotFactory', () => {
         });
     });
 
-    it.only('should build an alertHotspot with data from database', () => {
+    it('should build an alertHotspot with data from database', () => {
         // Arrange
 
         const fakeDataFromDatabase: any = {
