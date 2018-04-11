@@ -199,6 +199,7 @@ const hotspotsEndpointsTests = (state: any) => {
                     .to.have.property('voterList')
                     .to.be.length(1);
                 expect(response.body.voterList[0]).to.be.length(2);
+                expect(response.body.voterList[0][0]).to.be.equal(state.standard.auth0id);
                 expect(response.body.voterList[0][1]).to.be.true;
             });
 

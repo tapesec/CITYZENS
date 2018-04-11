@@ -7,6 +7,7 @@ import messagesEndpointsTests from './messages.spec';
 import { loginBody } from './sample/requests-responses';
 import * as LoginSample from './sample/LoginSample';
 import { votingPath } from './Voting.spec';
+import config from './../../src/api/config';
 
 describe('/auth endpoint', () => {
     const state: any = { admin: {}, standard: {} };
@@ -46,6 +47,7 @@ describe('/auth endpoint', () => {
             state.standard.id_token = responseStandard.body.id_token;
             state.standard.refresh_token = responseStandard.body.refresh_token;
             state.standard.access_token = responseStandard.body.access_token;
+            state.standard.auth0id = config.test.standardAuth0id;
         });
     });
     // /hotspots tests suite

@@ -51,4 +51,7 @@ export default {
         defaultWallIcon,
         defaultEventIcon,
     },
+    test: {
+        standardAuth0id: 'auth0|5accbb899ebc00546acf1e9b',
+    },
 };
