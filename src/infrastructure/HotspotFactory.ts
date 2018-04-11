@@ -119,9 +119,9 @@ class HotspotFactory {
         if (data && data.message.content) {
             message = new AlertMessage(data.message.content, data.message.updatedAt);
             if (data.voterList) {
-                for (let i = 0; i < data.voterList.length; i += 1) {
-                    voterList.add(new CityzenId(data.voterList[i][0]), data.voterList[i][1]);
-                }
+                data.voterList.forEach((currentVote, currentIndex) => {
+                    voterList.add(new CityzenId(currentVote[0]), currentVote[1]);
+                });
             }
             if (data.pertinence !== undefined) {
                 pertinenceScore = new PertinenceScore(
