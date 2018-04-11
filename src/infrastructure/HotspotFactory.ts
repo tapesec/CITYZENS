@@ -119,7 +119,7 @@ class HotspotFactory {
         if (data && data.message.content) {
             message = new AlertMessage(data.message.content, data.message.updatedAt);
             if (data.voterList) {
-                data.voterList.forEach((currentVote, currentIndex) => {
+                data.voterList.forEach((currentVote: any, currentIndex: any) => {
                     voterList.add(new CityzenId(currentVote[0]), currentVote[1]);
                 });
             }
