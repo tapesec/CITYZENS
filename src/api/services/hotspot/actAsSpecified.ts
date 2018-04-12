@@ -25,5 +25,8 @@ export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody:
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);
     }
+    if (requestBody.alertHotspotImgLocation) {
+        (<AlertHotspot>hotspot).addImageDescription(requestBody.alertHotspotImgLocation);
+    }
     return hotspot;
 };

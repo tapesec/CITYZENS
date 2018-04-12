@@ -75,7 +75,7 @@ const WallHotspotSchema = {
         },
         avatarIconUrl: {
             type: 'string',
-            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
     },
     additionalProperties: false,
@@ -117,7 +117,7 @@ const EventHotspotSchema = {
         },
         avatarIconUrl: {
             type: 'string',
-            maxLength: validation.AVATAR_ICON_URL_MAX_LENGTH,
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
     },
     additionalProperties: false,
@@ -136,6 +136,10 @@ const AlertHotspotSchema = {
         type: {
             type: 'string',
             enum: [HotspotType.Alert],
+        },
+        alertHotspotImgLocation: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
         iconType: {
             type: 'string',
