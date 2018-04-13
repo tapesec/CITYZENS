@@ -3,17 +3,13 @@ import MediaHotspot from './MediaHotspot';
 import HotspotBuilder from '../../factories/HotspotBuilder';
 
 class WallHotspot extends MediaHotspot {
-
-    constructor(
-        hotpotBuilder: HotspotBuilder,
-        MediaBuilder: MediaBuilder,
-    ) {
+    constructor(hotpotBuilder: HotspotBuilder, MediaBuilder: MediaBuilder) {
         super(hotpotBuilder, MediaBuilder);
     }
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
         };
     }
 }

@@ -35,6 +35,13 @@ class PertinenceScore implements ValueObject {
     public isEqual(other: PertinenceScore) {
         return lodash.isEqual(this, other);
     }
+
+    public toJSON() {
+        return {
+            agree: this._agree,
+            disagree: this._disagree,
+        };
+    }
 }
 
 export default PertinenceScore;

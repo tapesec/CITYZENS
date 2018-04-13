@@ -35,7 +35,7 @@ class MemberList implements ValueObject {
         return lodash.isEqual(this, other);
     }
 
-    public toString(): string[] {
+    public toJSON(): string[] {
         return this.toArray().map(x => x.toString());
     }
 }

@@ -33,7 +33,11 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
+import ImageUrl from '../domain/cityLife/model/ImageUrl';
+import Widget, { WidgetType } from '../domain/cityLife/model/hotspot/widget/Widget';
+import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
+import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
+import WidgetList from '../domain/cityLife/model/hotspot/widget/WidgetList';
 const request = require('request');
 const slug = require('slug');
 
@@ -231,7 +235,8 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        let avatarIconUrl: AvatarIconUrl;
+        let avatarIconUrl: ImageUrl;
+        const widgetsList = new WidgetList([]);
         const members = new MemberList();
 
         if (data.title) {
@@ -250,9 +255,21 @@ class HotspotFactory {
             });
         }
         if (data.avatarIconUrl) {
-            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
+            avatarIconUrl = new ImageUrl(data.avatarIconUrl);
         }
-        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, avatarIconUrl);
+        if (data.widgets) {
+            data.widgets.forEach((x: any) => {
+                widgetsList.insert(this.createWidget(x));
+            });
+        }
+        return new MediaBuilder(
+            hotspotTitle,
+            hotspotSlug,
+            scope,
+            members,
+            widgetsList,
+            avatarIconUrl,
+        );
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {
@@ -268,5 +285,20 @@ class HotspotFactory {
             }
         });
     };
+
+    public createWidget(data: any) {
+        const id = new WidgetId(data.id);
+        const author = new Author(data.author.pseudo, new CityzenId(data.author.id));
+
+        switch (data.type) {
+            case WidgetType.SLIDE_SHOW: {
+                const images = data.images.map((x: [string, number]) => {
+                    [new ImageUrl(x[0]), x[1]];
+                });
+
+                return new SlideShow(id, author, images);
+            }
+        }
+    }
 }
 export default HotspotFactory;

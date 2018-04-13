@@ -24,6 +24,7 @@ import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberL
 import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import EventHotspotSample from '../../../../../src/domain/cityLife/model/sample/EventHotspotSample';
+import WidgetList from '../../../../../src/domain/cityLife/model/hotspot/widget/WidgetList';
 
 const slug = require('slug');
 
@@ -49,6 +50,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList([new CityzenId('fake-id1'), new CityzenId('fake-id2')]),
+                new WidgetList([]),
             ),
         );
         // Assert
@@ -85,6 +87,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList([new CityzenId('fake-id1'), new CityzenId('fake-id2')]),
+                new WidgetList([]),
             ),
         );
 
@@ -112,6 +115,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList(),
+                new WidgetList([]),
             ),
         );
         // Act
@@ -145,6 +149,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList(),
+                new WidgetList([]),
             ),
         );
         // Act
@@ -176,6 +181,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList(),
+                new WidgetList([]),
             ),
         );
         // Act
@@ -206,6 +212,7 @@ describe('WallHotspot entity', () => {
                 new HotspotSlug(slug(title)),
                 HotspotScope.Public,
                 new MemberList(),
+                new WidgetList([]),
             ),
         );
         // Act

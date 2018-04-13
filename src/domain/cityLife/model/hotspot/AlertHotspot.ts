@@ -36,13 +36,10 @@ class AlertHotspot extends Hotspot {
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
-            pertinence: {
-                agree: this.pertinence.nAgree,
-                disagree: this.pertinence.nDisagree,
-            },
+            pertinence: this._pertinence.toJSON(),
         };
     }
 }

@@ -4,8 +4,9 @@ import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
-import AvatarIconUrl from './../../model/hotspot/AvatarIconUrl';
+import ImageUrl from './../../model/ImageUrl';
 import config from './../../../../api/config';
+import WidgetList from '../hotspot/widget/WidgetList';
 
 const slug = require('slug');
 
@@ -15,7 +16,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Mairie de Martignas')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 
     public static SCHOOL_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -23,7 +25,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Ecole Flora Tristan')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 
     public static CHURCH_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -31,7 +34,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Eglise de Martignas')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 
     public static MERIGNAC_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -39,7 +43,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Merignac centre')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 
     public static TOEDIT_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -47,7 +52,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('toEdit')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 
     public static MATCH_MEDIA_BUILDER = new MediaBuilder(
@@ -55,7 +61,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Matche football')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultEventIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultEventIcon),
     );
 
     public static DOCTOR_MEDIA_BUILDER = new MediaBuilder(
@@ -63,7 +70,8 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Docteur Maboul')),
         HotspotScope.Private,
         new MemberList([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new WidgetList([]),
+        new ImageUrl(config.avatarIcon.defaultWallIcon),
     );
 }
 
