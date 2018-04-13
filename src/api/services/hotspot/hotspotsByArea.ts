@@ -2,10 +2,9 @@ import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepository
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 
 const hotspotsByArea = (
-    queryStrings : any,
-    hotspotRepository : HotspotRepositoryInMemory,
-) : Hotspot[] => {
-
+    queryStrings: any,
+    hotspotRepository: HotspotRepositoryInMemory,
+): Hotspot[] => {
     return hotspotRepository.findInArea(
         queryStrings.north,
         queryStrings.west,

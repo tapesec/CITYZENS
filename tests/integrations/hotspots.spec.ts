@@ -44,6 +44,20 @@ const hotspotsEndpointsTests = (state: any) => {
 
                 expect(response.body).to.have.lengthOf(5);
             });
+
+            it('should return 400 bad request', async () => {
+                //
+                const north = 'PositionSample.MARTIGNAS_NORTH_OUEST.latitude';
+                const west = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
+                const south = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
+                const east = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
+                // Act
+                const response = await request(server)
+                    .get('/hotspots')
+                    .query({ north, west, south, east })
+                    .set('Accept', 'application/json')
+                    .expect(400);
+            });
         });
 
         describe('GET /hotspot/{hotspotId}', () => {

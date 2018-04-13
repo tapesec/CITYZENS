@@ -7,6 +7,7 @@ import ViewsCount from '../../../../src/domain/cityLife/model/hotspot/ViewsCount
 import Address from '../../../../src/domain/cityLife/model/hotspot/Address';
 import CityId from '../../../../src/domain/cityLife/model/city/CityId';
 import Author from '../../../../src/domain/cityLife/model/author/Author';
+import ImageLocation from '../../../../src/domain/cityLife/model/hotspot/ImageLocation';
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
@@ -101,6 +102,15 @@ describe('ValueObject', () => {
 
             Chai.expect(cityzenId1.isEqual(cityzenId1)).to.be.true;
             Chai.expect(cityzenId1.isEqual(cityzenId2)).to.be.false;
+        });
+
+        it('ImageLocation', () => {
+            const imgLocation = new ImageLocation('fake-url');
+            const otherImgLocation = new ImageLocation('fake-url');
+            const againImgLocation = new ImageLocation('fake-url-trap');
+
+            Chai.expect(imgLocation.isEqual(otherImgLocation)).to.be.true;
+            Chai.expect(imgLocation.isEqual(againImgLocation)).to.be.false;
         });
     });
 });

@@ -128,12 +128,45 @@ describe('HotspotCtrl', () => {
             // Arrange
             queryStrings.north = 'bad format';
             reqMoq.setup((x: rest.Request) => x.query).returns(() => queryStrings);
+            errorHandlerMoq
+                .setup(x => x.logAndCreateBadRequest(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+                .returns(() => 'error');
 
             // Act
             hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
             resMoq.verify(x => x.json(200, []), TypeMoq.Times.never());
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
+        });
+
+        it('Should return 500 if internal error.', () => {
+            // Arrange
+            queryStrings.north = 1.234;
+            const errorMessage = 'error';
+
+            reqMoq.setup(x => x.query).returns(() => queryStrings);
+
+            hotspotRepositoryMoq
+                .setup(x =>
+                    x.findInArea(
+                        queryStrings.north,
+                        queryStrings.west,
+                        queryStrings.south,
+                        queryStrings.east,
+                    ),
+                )
+                .returns(() => {
+                    throw new Error(errorMessage);
+                });
+            errorHandlerMoq
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), errorMessage))
+                .returns(() => 'error');
+
+            // Act
+            hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
+            // Assert
+            nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
     });
 
@@ -455,6 +488,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
@@ -475,6 +509,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
@@ -505,6 +540,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );

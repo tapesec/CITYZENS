@@ -55,8 +55,8 @@ const hotspotUpdate = (data: any) => {
     if (data.message) hotspot.message = data.message;
     if (data.voterList) hotspot.voterList = data.voterList;
     if (data.avatarIconUrl) hotspot.avatarIconUrl = data.avatarIconUrl;
-    if (data.alertHotspotImgLocation) {
-        hotspot.alertHotspotImgLocation = data.alertHotspotImgLocation;
+    if (data.imageDescriptionLocation) {
+        hotspot.imageDescriptionLocation = data.imageDescriptionLocation;
     }
     hotspotCollection.update(hotspot);
 };

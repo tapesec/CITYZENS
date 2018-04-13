@@ -49,7 +49,9 @@ class AlertHotspot extends Hotspot {
             ...super.toString(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
-            imageDescriptionLocation: this.imageDescriptionLocation,
+            imageDescriptionLocation: this.imageDescriptionLocation
+                ? this.imageDescriptionLocation.toString()
+                : undefined,
             pertinence: {
                 agree: this.pertinence.nAgree,
                 disagree: this.pertinence.nDisagree,
