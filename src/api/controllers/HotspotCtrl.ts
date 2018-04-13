@@ -74,7 +74,7 @@ class HotspotCtrl extends RootCtrl {
             );
             res.json(OK, visibleHotspots);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
         }
     };
 
@@ -103,7 +103,7 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
         }
     };
 
@@ -136,7 +136,7 @@ class HotspotCtrl extends RootCtrl {
                     );
                 });
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
         }
     };
 
@@ -156,9 +156,7 @@ class HotspotCtrl extends RootCtrl {
             this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
-            return next(
-                this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err.message),
-            );
+            return next(this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err));
         }
     };
 
@@ -215,7 +213,7 @@ class HotspotCtrl extends RootCtrl {
             res.json(OK, hotspot);
         } catch (err) {
             return next(
-                this.errorHandler.logAndCreateInternal(`POST addMember ${req.path()}`, err.message),
+                this.errorHandler.logAndCreateInternal(`POST addMember ${req.path()}`, err),
             );
         }
     };
@@ -266,7 +264,7 @@ class HotspotCtrl extends RootCtrl {
 
             res.json(OK, hotspot);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
         }
     };
 
@@ -319,7 +317,7 @@ class HotspotCtrl extends RootCtrl {
                     );
                 });
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
     };
 
@@ -342,9 +340,7 @@ class HotspotCtrl extends RootCtrl {
 
             this.hotspotRepository.remove(req.params.hotspotId);
         } catch (err) {
-            return next(
-                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
-            );
+            return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }
         res.json(OK, getStatusText(OK));
     };

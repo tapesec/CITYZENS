@@ -85,7 +85,7 @@ describe('AuthCtrl', () => {
                 .returns(() => Promise.reject(fakeError));
 
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal('DELETE path', fakeError.message))
+                .setup(x => x.logAndCreateInternal('DELETE path', fakeError))
                 .returns(() => 'error');
 
             // Act

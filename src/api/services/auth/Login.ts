@@ -95,7 +95,7 @@ class Login {
 
             const callback = (error: any, response: any, body: any) => {
                 if (error) {
-                    reject(this.errorHandler.logAndCreateInternal('GET auth', error));
+                    reject(error);
                 } else {
                     resolve(body);
                 }

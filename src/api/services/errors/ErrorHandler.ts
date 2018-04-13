@@ -61,15 +61,15 @@ class ErrorHandler {
         return error;
     }
 
-    logAndCreateInternal(route: string, err?: any) {
-        const error = new this.resitfyErrors.InternalServerError(err !== undefined ? err : '');
+    logAndCreateInternal(route: string, err: Error) {
+        const error = new this.resitfyErrors.InternalServerError(err.message);
 
-        const errorToLog = err !== undefined ? JSON.stringify(err, undefined, 4) : err;
+        const errorToLog = JSON.stringify(err.message, undefined, 4);
 
         if (errorToLog !== undefined) this.httpLogger.info(errorToLog);
         this.slackHook.alert(
             `Error 500 on ${route} \n ${errorToLog !== undefined ? errorToLog : ''} \n
-             Call trace: ${error.stack}`,
+             Call trace: ${err.stack ? err.stack : 'not available'}`,
         );
         return error;
     }

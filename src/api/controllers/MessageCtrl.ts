@@ -63,7 +63,7 @@ class MessageCtrl extends RootCtrl {
             );
             res.json(OK, hotspotContent);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
         }
     };
 
@@ -112,7 +112,7 @@ class MessageCtrl extends RootCtrl {
             this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
         }
     };
 
@@ -142,7 +142,7 @@ class MessageCtrl extends RootCtrl {
         try {
             message = this.messageRepository.findById(req.params.messageId);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
         if (!message) {
             return next(
@@ -175,7 +175,7 @@ class MessageCtrl extends RootCtrl {
             }
             this.messageRepository.update(message);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
         res.json(OK, message);
     };
@@ -213,9 +213,7 @@ class MessageCtrl extends RootCtrl {
         try {
             this.messageRepository.delete(req.params.messageId);
         } catch (err) {
-            return next(
-                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
-            );
+            return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }
         res.json(OK, getStatusText(OK));
     };

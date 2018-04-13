@@ -143,7 +143,7 @@ describe('HotspotCtrl', () => {
         it('Should return 500 if internal error.', () => {
             // Arrange
             queryStrings.north = 1.234;
-            const errorMessage = 'error';
+            const error = new Error('error');
 
             reqMoq.setup(x => x.query).returns(() => queryStrings);
 
@@ -157,10 +157,10 @@ describe('HotspotCtrl', () => {
                     ),
                 )
                 .returns(() => {
-                    throw new Error(errorMessage);
+                    throw error;
                 });
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), errorMessage))
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), error))
                 .returns(() => 'error');
 
             // Act
@@ -379,6 +379,8 @@ describe('HotspotCtrl', () => {
         });
 
         it('Should return internal error.', () => {
+            const error = new Error('message');
+
             hotspot
                 .setup(x => x.author)
                 .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
@@ -389,11 +391,11 @@ describe('HotspotCtrl', () => {
 
             hotspotRepositoryMoq.setup(x => x.isSet(jsonParams.hotspotId)).returns(() => true);
             hotspotRepositoryMoq.setup(x => x.findById(jsonParams.hotspotId)).returns(() => {
-                throw new Error('message');
+                throw error;
             });
 
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), error))
                 .returns(() => 'error');
 
             hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
@@ -466,17 +468,18 @@ describe('HotspotCtrl', () => {
 
         it('Should return internal error.', () => {
             const hotspot = WallHotspotSample.SCHOOL;
+            const error = new Error('message');
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
             hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
-                throw new Error('message');
+                throw error;
             });
 
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), error))
                 .returns(() => 'error');
 
             hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
@@ -692,17 +695,18 @@ describe('HotspotCtrl', () => {
                 HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
                 MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
             );
+            const error = new Error('message');
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
             hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
-                throw new Error('message');
+                throw error;
             });
 
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), error))
                 .returns(() => 'error');
 
             hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
@@ -795,15 +799,16 @@ describe('HotspotCtrl', () => {
                 hotspotId: 'id',
             };
             const hotspot = WallHotspotSample.SCHOOL;
+            const error = new Error('message');
 
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
             hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => {
-                throw new Error('message');
+                throw error;
             });
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), 'message'))
+                .setup(x => x.logAndCreateInternal(TypeMoq.It.isAny(), error))
                 .returns(() => 'error');
 
             hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
