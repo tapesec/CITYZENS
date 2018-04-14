@@ -3,13 +3,13 @@ import AlertMessageSample from './../../../../domain/cityLife/model/sample/Alert
 import HotspotBuilderSample from './HotspotBuilderSample';
 import PertinenceScore from './../../model/hotspot/PertinenceScore';
 import VoterList from './../../model/hotspot/VoterList';
-import ImageLocation from '../hotspot/ImageLocation';
+import ImageUrl from '../ImageLocation';
 
 class AlertHotspotSample {
     public static ACCIDENT: AlertHotspot = new AlertHotspot(
         HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
         AlertMessageSample.ACCIDENT_MESSAGE,
-        new ImageLocation('https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1'),
+        new ImageUrl('https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1'),
         new PertinenceScore(0, 0),
         new VoterList(),
     );
@@ -17,7 +17,7 @@ class AlertHotspotSample {
     public static TOEDIT_CAMELOT: AlertHotspot = new AlertHotspot(
         HotspotBuilderSample.TOEDIT_CAMELOT_HOTSTPOT_BUILDER,
         AlertMessageSample.CAMELOT_MESSAGE,
-        new ImageLocation(),
+        new ImageUrl(),
         new PertinenceScore(58420, 1754),
         new VoterList([['Karadoc', true], ['Perceval', false]]),
     );
@@ -25,7 +25,7 @@ class AlertHotspotSample {
     public static TO_READ_ALERT_HOTSPOT_FOR_TU: AlertHotspot = new AlertHotspot(
         HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
         AlertMessageSample.ACCIDENT_MESSAGE,
-        new ImageLocation('https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1'),
+        new ImageUrl('https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1'),
         new PertinenceScore(58420, 1754),
         new VoterList([['Karadoc', true], ['Perceval', false]]),
     );

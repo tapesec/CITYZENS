@@ -60,6 +60,13 @@ const toRemoveMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
     return toRemoveHotspot(hotspot, cityzen);
 };
 
+const toPostWidget = (hotspot: Hotspot, cityzen?: Cityzen) => {
+    if (!cityzen) return false;
+    if (cityzen.isAdmin) return true;
+
+    return hotspot.author.id.isEqual(cityzen.id);
+};
+
 export {
     toSeeHotspot,
     toAddMember,
@@ -70,4 +77,5 @@ export {
     toPatchMessages,
     toRemoveMessages,
     toPostMessages,
+    toPostWidget,
 };

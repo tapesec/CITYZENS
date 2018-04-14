@@ -7,10 +7,10 @@ import ViewsCount from '../../../../src/domain/cityLife/model/hotspot/ViewsCount
 import Address from '../../../../src/domain/cityLife/model/hotspot/Address';
 import CityId from '../../../../src/domain/cityLife/model/city/CityId';
 import Author from '../../../../src/domain/cityLife/model/author/Author';
-import ImageLocation from '../../../../src/domain/cityLife/model/hotspot/ImageLocation';
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import ImageLocation from '../../../../src/domain/cityLife/model/ImageLocation';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {

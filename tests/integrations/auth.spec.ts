@@ -11,6 +11,7 @@ import { loginBody } from './sample/requests-responses';
 import * as LoginSample from './sample/LoginSample';
 import { votingPath } from './Voting.spec';
 import config from './../../src/api/config';
+import { widgetPath } from './Widget.spec';
 
 describe('/auth endpoint', () => {
     const state: any = { admin: {}, standard: {} };
@@ -65,4 +66,5 @@ describe('/auth endpoint', () => {
 
     // Start scenario of users interactions
     votingPath(state);
+    widgetPath(state);
 });

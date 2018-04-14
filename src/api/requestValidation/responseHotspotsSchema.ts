@@ -101,6 +101,12 @@ const WallHotspotSchema = {
                 type: 'string',
             },
         },
+        widgets: {
+            type: 'array',
+            items: {
+                type: 'object',
+            },
+        },
     },
     additionalProperties: false,
 };
@@ -162,6 +168,12 @@ const EventHotspotSchema = {
             type: 'array',
             items: {
                 type: 'string',
+            },
+        },
+        widgets: {
+            type: 'array',
+            items: {
+                type: 'object',
             },
         },
     },

@@ -10,6 +10,7 @@ import { expect } from 'chai';
 import { patchMessageSchema, getHotspots } from '../../../../src/api/requestValidation/schema';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
+import * as postWidgetSchema from '../../../../src/api/requestValidation/postWidgetSchema';
 
 describe('JschemaValidator', () => {
     let validator: ajv.Ajv;
@@ -307,5 +308,62 @@ describe('JschemaValidator', () => {
         const isValid = validator.validate(getUpdateHotspotSchema(), body);
         // Assert
         expect(isValid).to.be.false;
+    });
+
+    describe('Widget validation.', () => {
+        it('Should validate SlideShow.', () => {
+            const body = {
+                type: 0,
+                images: [['url', 'desc']],
+            };
+
+            const isValid = validator.validate(postWidgetSchema.postSlideShow, body);
+            expect(isValid).to.be.true;
+        });
+        it("Should'nt validate SlideShow.", () => {
+            const bodies = [
+                {
+                    type: 0,
+                    images: [['url', 'desc', 0]],
+                },
+                {
+                    type: 0,
+                    images: [['url', 0]],
+                },
+                {
+                    images: [['url', 'desc']],
+                },
+                {
+                    type: 1,
+                },
+                {
+                    type: 'truc',
+                    images: [['url', 'desc']],
+                },
+            ];
+
+            bodies.forEach((body, i) => {
+                const isValid = validator.validate(postWidgetSchema.postSlideShow, body);
+                expect(isValid, i.toString()).to.be.false;
+            });
+        });
+
+        it('Should validate widget.', () => {
+            const body = {
+                type: 0,
+                images: [['url', 'desc']],
+            };
+
+            const isValid = validator.validate(postWidgetSchema.postSlideShow, body);
+            expect(isValid).to.be.true;
+        });
+        it("Should'nt validate widget.", () => {
+            const body = {
+                type: 0,
+            };
+
+            const isValid = validator.validate(postWidgetSchema.postSlideShow, body);
+            expect(isValid).to.be.false;
+        });
     });
 });

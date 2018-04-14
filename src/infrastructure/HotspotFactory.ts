@@ -33,8 +33,12 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
-import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
+import ImageLocation from '../domain/cityLife/model/ImageLocation';
+import Widget, { WidgetType } from '../domain/cityLife/model/hotspot/widget/Widget';
+import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
+import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
+import WidgetList from '../domain/cityLife/model/hotspot/widget/WidgetList';
+import WidgetFactory from './WidgetFactory';
 const request = require('request');
 const slug = require('slug');
 
@@ -141,7 +145,7 @@ class HotspotFactory {
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
-            imageLocation = new ImageLocation();
+            imageLocation = new ImageLocation(undefined);
             pertinenceScore = new PertinenceScore(0, 0);
         }
         return new AlertHotspot(
@@ -238,7 +242,8 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        let avatarIconUrl: AvatarIconUrl;
+        let avatarIconUrl: ImageLocation;
+        const widgetsList = new WidgetList([]);
         const members = new MemberList();
 
         if (data.title) {
@@ -257,9 +262,22 @@ class HotspotFactory {
             });
         }
         if (data.avatarIconUrl) {
-            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
+            avatarIconUrl = new ImageLocation(data.avatarIconUrl);
         }
-        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, avatarIconUrl);
+        if (data.widgets) {
+            data.widgets.forEach((x: any) => {
+                const type = x.type as WidgetType;
+                widgetsList.insert(WidgetFactory.build(type, x));
+            });
+        }
+        return new MediaBuilder(
+            hotspotTitle,
+            hotspotSlug,
+            scope,
+            members,
+            widgetsList,
+            avatarIconUrl,
+        );
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

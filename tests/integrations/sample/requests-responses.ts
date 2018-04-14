@@ -95,3 +95,8 @@ export const WallHotspotPostBody = {
     iconType: HotspotIconType.Wall,
     avatarIconUrl: 'an-url-fake',
 };
+
+export const postSlideShow = {
+    type: 0,
+    images: [['url', 'desc']],
+};

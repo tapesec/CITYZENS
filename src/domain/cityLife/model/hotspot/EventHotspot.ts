@@ -4,13 +4,11 @@ import HotspotBuilder from '../../factories/HotspotBuilder';
 import EventDescription from './EventDescription';
 
 class EventHotspot extends MediaHotspot {
-
     constructor(
         hotpotBuilder: HotspotBuilder,
         mediaBuilder: MediaBuilder,
         protected _date_end: Date,
         protected _description: EventDescription,
-
     ) {
         super(hotpotBuilder, mediaBuilder);
     }
@@ -33,7 +31,7 @@ class EventHotspot extends MediaHotspot {
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
             dateEnd: this.dateEnd,
             description: this.description,
         };

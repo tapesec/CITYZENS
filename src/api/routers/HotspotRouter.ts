@@ -1,6 +1,12 @@
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import * as restify from 'restify';
-import { HOTSPOT_ENDPOINT, VIEWS_ENDPOINT, ALERT_PERTINENCE, MEMBER_ENDPOINT } from './constants';
+import {
+    HOTSPOT_ENDPOINT,
+    VIEWS_ENDPOINT,
+    ALERT_PERTINENCE,
+    MEMBER_ENDPOINT,
+    WIDGET_ENDPOINT,
+} from './constants';
 
 class HotspotRouter {
     private ctrl: HotspotCtrl;
@@ -18,7 +24,18 @@ class HotspotRouter {
             this.ctrl.getHotspot,
         );
 
+        server.get(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + WIDGET_ENDPOINT + '/:widgetType',
+            this.ctrl.optInAuthenticateUser,
+            this.ctrl.getWidgets,
+        );
+
         server.post(HOTSPOT_ENDPOINT, this.ctrl.loadAuthenticatedUser, this.ctrl.postHotspots);
+        server.post(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + WIDGET_ENDPOINT,
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.postWidget,
+        );
 
         server.post(
             HOTSPOT_ENDPOINT + '/:hotspotId' + VIEWS_ENDPOINT,

@@ -6,7 +6,9 @@ import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug
 import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
 import CityzenId from '../../../cityzens/model/CityzenId';
-import AvatarIconUrl from './AvatarIconUrl';
+import ImageLocation from '../ImageLocation';
+import Widget from './widget/Widget';
+import WidgetList from './widget/WidgetList';
 const slug = require('slug');
 
 class MediaHotspot extends Hotspot {
@@ -14,7 +16,8 @@ class MediaHotspot extends Hotspot {
     protected _title: HotspotTitle;
     protected _slug: HotspotSlug;
     protected _members: MemberList;
-    protected _avatarIconUrl?: AvatarIconUrl;
+    protected _widgets: WidgetList;
+    protected _avatarIconUrl?: ImageLocation;
 
     constructor(hotpotBuilder: HotspotBuilder, mediaBuilder: MediaBuilder) {
         super(hotpotBuilder);
@@ -22,6 +25,7 @@ class MediaHotspot extends Hotspot {
         this._title = mediaBuilder.title;
         this._slug = mediaBuilder.slug;
         this._members = mediaBuilder.members;
+        this._widgets = mediaBuilder.widgets;
         this._avatarIconUrl = mediaBuilder.avatarIconUrl;
     }
 
@@ -39,6 +43,10 @@ class MediaHotspot extends Hotspot {
 
     get members(): MemberList {
         return this._members;
+    }
+
+    get widgets() {
+        return this._widgets;
     }
 
     public addMember(member: CityzenId) {
@@ -61,17 +69,18 @@ class MediaHotspot extends Hotspot {
         this._scope = status;
     }
 
-    public changeAvatarIconurl(avatarIconUrl: AvatarIconUrl) {
+    public changeAvatarIconurl(avatarIconUrl: ImageLocation) {
         this._avatarIconUrl = avatarIconUrl;
     }
 
-    toString() {
+    toJSON() {
         const stringed: any = {
-            ...super.toString(),
+            ...super.toJSON(),
             scope: this._scope,
             title: this._title.toString(),
             slug: this._slug.toString(),
-            members: this._members.toString(),
+            members: this._members.toJSON(),
+            widgets: this._widgets.toJSON(),
         };
         if (this.avatarIconUrl) {
             stringed.avatarIconUrl = this._avatarIconUrl.toString();

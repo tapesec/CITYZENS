@@ -1,14 +1,14 @@
-import ValueObject from './../../../interface/ValueObject';
+import ValueObject from '../../interface/ValueObject';
 import * as lodash from 'lodash';
 
-class AvatarIconUrl {
-    constructor(private _url: string) {}
+class ImageUrl implements ValueObject {
+    constructor(private _url?: string) {}
 
     public get url() {
         return this._url;
     }
 
-    public isEqual(other: AvatarIconUrl) {
+    public isEqual(other: ImageUrl) {
         return lodash.isEqual(this, other);
     }
 
@@ -17,4 +17,4 @@ class AvatarIconUrl {
     }
 }
 
-export default AvatarIconUrl;
+export default ImageUrl;

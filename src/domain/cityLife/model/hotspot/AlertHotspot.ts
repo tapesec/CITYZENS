@@ -4,13 +4,13 @@ import Hotspot from './Hotspot';
 import PertinenceScore from './PertinenceScore';
 import VoterList from './VoterList';
 import CityzenId from '../../../cityzens/model/CityzenId';
-import ImageLocation from './ImageLocation';
+import ImageUrl from '../ImageLocation';
 
 class AlertHotspot extends Hotspot {
     constructor(
         hotpotBuilder: HotspotBuilder,
         protected _message: AlertMessage,
-        protected _imageDescriptionLocation: ImageLocation,
+        protected _imageDescriptionLocation: ImageUrl,
         protected _pertinence: PertinenceScore,
         protected _voterList: VoterList,
     ) {
@@ -22,12 +22,12 @@ class AlertHotspot extends Hotspot {
         this._voterList.add(voterId, doAgree);
     }
 
-    public get imageDescriptionLocation(): ImageLocation {
+    public get imageDescriptionLocation(): ImageUrl {
         return this._imageDescriptionLocation;
     }
 
     public addImageDescription(url: string): void {
-        this._imageDescriptionLocation = new ImageLocation(url);
+        this._imageDescriptionLocation = new ImageUrl(url);
     }
 
     public editMessage(newMessage: string): void {
@@ -46,16 +46,13 @@ class AlertHotspot extends Hotspot {
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
             imageDescriptionLocation: this.imageDescriptionLocation
                 ? this.imageDescriptionLocation.toString()
                 : undefined,
-            pertinence: {
-                agree: this.pertinence.nAgree,
-                disagree: this.pertinence.nDisagree,
-            },
+            pertinence: this.pertinence.toJSON(),
         };
     }
 }

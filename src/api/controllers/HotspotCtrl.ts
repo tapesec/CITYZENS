@@ -22,6 +22,11 @@ import { CREATED, OK, getStatusText } from 'http-status-codes';
 import Author from '../../domain/cityLife/model/author/Author';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
+import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
+import { postSlideShow, anyOnePostWidget } from '../requestValidation/postWidgetSchema';
+import HotspotTitle from '../../domain/cityLife/model/hotspot/HotspotTitle';
+import WidgetFactory from '../../infrastructure/WidgetFactory';
+import { WidgetType } from '../../domain/cityLife/model/hotspot/widget/Widget';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -107,6 +112,45 @@ class HotspotCtrl extends RootCtrl {
         }
     };
 
+    // method=GET url=/hotspots/${hotspotId}/widgets/${widgetType}
+    public getWidgets = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        try {
+            const hotspotId = req.params.hotspotId;
+            const widgetType = +req.params.widgetType;
+
+            if (!this.hotspotRepository.isSet(hotspotId)) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            const hotspot = this.hotspotRepository.findById(hotspotId);
+            if (!(hotspot instanceof MediaHotspot)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.BAD_REQUEST_MESSAGE,
+                    ),
+                );
+            }
+            if (!isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_PRIVATE,
+                    ),
+                );
+            }
+
+            res.json(OK, hotspot.widgets.allOf(widgetType));
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
+        }
+    };
+
     // method=POST url=/hotspots
     public postHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
@@ -137,6 +181,63 @@ class HotspotCtrl extends RootCtrl {
                 });
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+        }
+    };
+
+    public postWidget = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        try {
+            const hotspotId = req.params.hotspotId;
+
+            if (!this.schemaValidator.validate(anyOnePostWidget, req.body)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+
+            const type = req.body.type as WidgetType;
+
+            if (!this.hotspotRepository.isSet(hotspotId)) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            const hotspot = this.hotspotRepository.findById(hotspotId);
+            if (!(hotspot instanceof MediaHotspot)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `POST ${req.path()}`,
+                        'Operation only valid on MediaHotspot.',
+                    ),
+                );
+            }
+
+            if (!isAuthorized.toPostWidget(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_PRIVATE,
+                    ),
+                );
+            }
+
+            req.body.author = new Author(
+                this.cityzenIfAuthenticated.pseudo,
+                this.cityzenIfAuthenticated.id,
+            );
+            const widget = WidgetFactory.build(type, req.body);
+            hotspot.widgets.insert(widget);
+            this.hotspotRepository.update(hotspot);
+
+            res.json(OK, hotspot);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
         }
     };
 
