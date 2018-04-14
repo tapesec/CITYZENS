@@ -55,7 +55,7 @@ class ProfileCtrl extends RootCtrl {
                 );
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
         }
         try {
             const currentCityzen: Cityzen = cityzenFromAuth0(this.userInfo);
@@ -67,7 +67,7 @@ class ProfileCtrl extends RootCtrl {
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
         }
     };
 }
