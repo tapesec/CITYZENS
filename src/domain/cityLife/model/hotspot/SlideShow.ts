@@ -20,7 +20,7 @@ class SlideShow implements ValueObject {
     }
 
     public toJSON() {
-        return this._list;
+        return this._list.map(x => x.url);
     }
 }
 

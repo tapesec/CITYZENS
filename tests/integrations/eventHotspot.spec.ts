@@ -17,6 +17,7 @@ const eventHotspotsTests = (state: any) => {
         let dateEnd;
         let description;
         let avatarIconUrl;
+        let slideShow;
 
         it('Should create an EventHotspot and return it with status 201', async () => {
             // Act
@@ -52,6 +53,7 @@ const eventHotspotsTests = (state: any) => {
             dateEnd = '0650-05-31T21:00:00.000Z';
             description = 'an updated description';
             avatarIconUrl = 'new-url';
+            slideShow = ['slide(-1)', 'slide(sqrt(5) + 1)'];
 
             const response = await request(server)
                 .patch(`/hotspots/${newPostHotspot.id}`)
@@ -59,6 +61,7 @@ const eventHotspotsTests = (state: any) => {
                 .send({
                     avatarIconUrl,
                     description,
+                    slideShow,
                     dateEnd,
                     scope: hotspotScope,
                     title: hotspotTitle,
@@ -84,6 +87,9 @@ const eventHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('title')
                 .to.equal(hotspotTitle);
+            expect(response.body)
+                .to.have.property('slideShow')
+                .to.be.deep.equal(slideShow);
         });
 
         it('Should get previously updated EventHotspot with GET request by id', async () => {
@@ -113,6 +119,9 @@ const eventHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('title')
                 .to.equal(hotspotTitle);
+            expect(response.body)
+                .to.have.property('slideShow')
+                .to.be.deep.equal(slideShow);
         });
     });
 };

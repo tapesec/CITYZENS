@@ -71,6 +71,9 @@ class MediaHotspot extends Hotspot {
     public get slideShow() {
         return this._slideShow;
     }
+    public changeSlideShow(slideShow: SlideShow) {
+        this._slideShow = slideShow;
+    }
 
     toString() {
         const stringed: any = {

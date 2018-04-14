@@ -5,6 +5,8 @@ import * as ajv from 'ajv';
 import { WallHotspotPostBody } from './sample/requests-responses';
 import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
 import { wallHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
+import SlideShow from '../../src/domain/cityLife/model/hotspot/SlideShow';
+import ImageLocation from '../../src/domain/cityLife/model/hotspot/ImageLocation';
 
 const wallHotspotsTests = (state: any) => {
     describe('WallHotspot behavior', () => {
@@ -15,6 +17,7 @@ const wallHotspotsTests = (state: any) => {
         let hotspotScope;
         let hotspotTitle;
         let avatarIconUrl;
+        let slideShow;
 
         it('Should create a WallHotspot and return it with status 201', async () => {
             // Act
@@ -48,11 +51,13 @@ const wallHotspotsTests = (state: any) => {
             hotspotScope = HotspotScope.Private;
             hotspotTitle = 'an updated title';
             avatarIconUrl = 'new-url';
+            slideShow = ['slide1', 'slide2'];
 
             const response = await request(server)
                 .patch(`/hotspots/${newPostHotspot.id}`)
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send({
+                    slideShow,
                     avatarIconUrl,
                     scope: hotspotScope,
                     title: hotspotTitle,
@@ -61,7 +66,7 @@ const wallHotspotsTests = (state: any) => {
                 .expect(200);
 
             const isValid = validator.validate(wallHotspotSchema, response.body);
-            expect(isValid).to.be.true;
+            expect(isValid, validator.errorsText()).to.be.true;
             expect(response.body)
                 .to.have.property('avatarIconUrl')
                 .to.equal(avatarIconUrl);
@@ -71,6 +76,9 @@ const wallHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('title')
                 .to.equal(hotspotTitle);
+            expect(response.body)
+                .to.have.property('slideShow')
+                .to.be.deep.equal(slideShow);
         });
 
         it('Should get previously updated WallHotspot with GET request by id', async () => {
@@ -93,6 +101,9 @@ const wallHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('title')
                 .to.equal(hotspotTitle);
+            expect(response.body)
+                .to.have.property('slideShow')
+                .to.be.deep.equal(slideShow);
         });
     });
 };
