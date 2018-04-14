@@ -2,7 +2,7 @@ import HotspotTitle from '../model/hotspot/HotspotTitle';
 import { HotspotScope } from '../model/hotspot/Hotspot';
 import HotspotSlug from 'src/domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../model/hotspot/MemberList';
-import ImageUrl from '../model/ImageUrl';
+import ImageUrl from '../model/ImageLocation';
 import Widget from '../model/hotspot/widget/Widget';
 import WidgetList from '../model/hotspot/widget/WidgetList';
 

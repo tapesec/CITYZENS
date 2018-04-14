@@ -3,7 +3,7 @@ import EventHotspot from '../../../domain/cityLife/model/hotspot/EventHotspot';
 import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
-import ImageUrl from './../../../domain/cityLife/model/ImageUrl';
+import ImageUrl from '../../../domain/cityLife/model/ImageLocation';
 
 export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody: any): Hotspot => {
     if (requestBody.title) {
@@ -24,6 +24,9 @@ export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody:
     }
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);
+    }
+    if (requestBody.alertHotspotImgLocation) {
+        (<AlertHotspot>hotspot).addImageDescription(requestBody.alertHotspotImgLocation);
     }
     return hotspot;
 };

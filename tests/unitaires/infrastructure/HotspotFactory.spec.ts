@@ -12,7 +12,7 @@ import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import Author from '../../../src/domain/cityLife/model/author/Author';
 import SlideShow from '../../../src/domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../../../src/domain/cityLife/model/hotspot/widget/WidgetId';
-import ImageUrl from '../../../src/domain/cityLife/model/ImageUrl';
+import ImageUrl from '../../../src/domain/cityLife/model/ImageLocation';
 import WidgetList from '../../../src/domain/cityLife/model/hotspot/widget/WidgetList';
 
 describe('HotspotFactory', () => {
@@ -110,6 +110,7 @@ describe('HotspotFactory', () => {
             type: HotspotType.Alert,
             iconType: HotspotIconType.Accident,
             voterList: [['auth0|1jks2kdz2dqziq', true]],
+            imageDescriptionLocation: 'fake-url',
             message: {
                 content: 'a fake content for test purpose',
                 updatedAt: '2018-04-09T04:36:54.450Z',
@@ -124,6 +125,7 @@ describe('HotspotFactory', () => {
             type: HotspotType.Alert,
             id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
             voterList: ['auth0|1jks2kdz2dqziq', true],
+            alertHotspotImgLocation: 'fake-url',
         });
     });
 });
@@ -194,5 +196,11 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
         expect(fakeNewHotspot)
             .to.have.property('widgets')
             .to.be.deep.equal(specificProperties.widgets);
+    }
+    if (specificProperties.alertHotspotImgLocation !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('imageDescriptionLocation')
+            .to.have.property('url')
+            .to.be.equal('fake-url');
     }
 };

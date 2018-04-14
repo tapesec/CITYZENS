@@ -1,8 +1,8 @@
-import ValueObject from './../../interface/ValueObject';
+import ValueObject from '../../interface/ValueObject';
 import * as lodash from 'lodash';
 
-class ImageUrl {
-    constructor(private _url: string) {}
+class ImageUrl implements ValueObject {
+    constructor(private _url?: string) {}
 
     public get url() {
         return this._url;

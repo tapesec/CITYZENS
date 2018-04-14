@@ -33,7 +33,7 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import ImageUrl from '../domain/cityLife/model/ImageUrl';
+import ImageUrl from '../domain/cityLife/model/ImageLocation';
 import Widget, { WidgetType } from '../domain/cityLife/model/hotspot/widget/Widget';
 import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
@@ -119,6 +119,7 @@ class HotspotFactory {
         let message: AlertMessage;
         let voterList = new VoterList();
         let pertinenceScore: PertinenceScore;
+        let imageLocation: ImageUrl;
 
         // data from database
         if (data && data.message.content) {
@@ -136,16 +137,21 @@ class HotspotFactory {
             } else {
                 pertinenceScore = new PertinenceScore(0, 0);
             }
+            if (data.imageDescriptionLocation) {
+                imageLocation = new ImageUrl(data.imageDescriptionLocation);
+            }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
+            imageLocation = new ImageUrl(undefined);
             pertinenceScore = new PertinenceScore(0, 0);
         }
         return new AlertHotspot(
             this.createHotspotBuilder(data),
             message,
+            imageLocation,
             pertinenceScore,
             voterList,
         );

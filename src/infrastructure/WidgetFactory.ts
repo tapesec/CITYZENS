@@ -3,7 +3,7 @@ import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
 import Author from '../domain/cityLife/model/author/Author';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import ImageUrl from '../domain/cityLife/model/ImageUrl';
+import ImageUrl from '../domain/cityLife/model/ImageLocation';
 import * as uuid from 'uuid';
 
 class WidgetFactory {

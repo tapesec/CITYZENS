@@ -125,6 +125,7 @@ export const ALERT_ACCIDENT = {
     scope: HotspotScope.Public,
     type: HotspotType.Alert,
     iconType: HotspotIconType.Accident,
+    imageDescriptionLocation: AlertHotspotSample.ACCIDENT.imageDescriptionLocation.toString(),
     voterList: JSON.parse(JSON.stringify(AlertHotspotSample.ACCIDENT.voterList)),
     removed: false,
 };

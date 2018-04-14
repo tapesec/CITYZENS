@@ -1,5 +1,5 @@
 import { Url } from 'url';
-import ImageUrl from '../../ImageUrl';
+import ImageUrl from '../../ImageLocation';
 import Widget, { WidgetType } from './Widget';
 import Author from '../../author/Author';
 import WidgetId from './WidgetId';

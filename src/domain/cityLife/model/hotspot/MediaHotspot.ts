@@ -6,7 +6,7 @@ import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug
 import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
 import CityzenId from '../../../cityzens/model/CityzenId';
-import ImageUrl from './../ImageUrl';
+import ImageUrl from '../ImageLocation';
 import Widget from './widget/Widget';
 import WidgetList from './widget/WidgetList';
 const slug = require('slug');

@@ -4,7 +4,7 @@ import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
-import ImageUrl from './../../model/ImageUrl';
+import ImageUrl from '../ImageLocation';
 import config from './../../../../api/config';
 import WidgetList from '../hotspot/widget/WidgetList';
 

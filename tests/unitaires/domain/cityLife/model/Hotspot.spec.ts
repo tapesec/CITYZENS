@@ -253,6 +253,7 @@ describe('WallHotspot entity', () => {
             views: 1,
             type: HotspotType.Alert,
             iconType: HotspotIconType.Accident,
+            imageDescriptionLocation: 'https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1',
             message: {
                 content:
                     'Un accident est survenue entre un 4x4 et une smart, des debris son encore présent.',

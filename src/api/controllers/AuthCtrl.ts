@@ -21,9 +21,7 @@ class AuthCtrl extends RootCtrl {
             }
             res.json(body);
         } catch (err) {
-            return next(
-                this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err.message),
-            );
+            return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }
     };
 }

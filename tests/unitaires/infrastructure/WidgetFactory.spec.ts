@@ -2,7 +2,7 @@ import WidgetFactory from '../../../src/infrastructure/WidgetFactory';
 import * as Chai from 'chai';
 import Widget, { WidgetType } from '../../../src/domain/cityLife/model/hotspot/widget/Widget';
 import SlideShow from '../../../src/domain/cityLife/model/hotspot/widget/SlideShow';
-import ImageUrl from '../../../src/domain/cityLife/model/ImageUrl';
+import ImageUrl from '../../../src/domain/cityLife/model/ImageLocation';
 import CityzenId from '../../../src/domain/cityzens/model/CityzenId';
 import WidgetId from '../../../src/domain/cityLife/model/hotspot/widget/WidgetId';
 

@@ -37,7 +37,7 @@ class CityCtrl extends RootCtrl {
                 );
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err.message));
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
         }
     };
 }
