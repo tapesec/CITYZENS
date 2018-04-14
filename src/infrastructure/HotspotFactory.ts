@@ -34,6 +34,7 @@ import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
+import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
 const request = require('request');
 const slug = require('slug');
 
@@ -114,6 +115,7 @@ class HotspotFactory {
         let message: AlertMessage;
         let voterList = new VoterList();
         let pertinenceScore: PertinenceScore;
+        let imageLocation: ImageLocation;
 
         // data from database
         if (data && data.message.content) {
@@ -131,16 +133,21 @@ class HotspotFactory {
             } else {
                 pertinenceScore = new PertinenceScore(0, 0);
             }
+            if (data.imageDescriptionLocation) {
+                imageLocation = new ImageLocation(data.imageDescriptionLocation);
+            }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
+            imageLocation = new ImageLocation();
             pertinenceScore = new PertinenceScore(0, 0);
         }
         return new AlertHotspot(
             this.createHotspotBuilder(data),
             message,
+            imageLocation,
             pertinenceScore,
             voterList,
         );

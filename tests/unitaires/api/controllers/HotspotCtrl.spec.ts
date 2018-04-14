@@ -144,7 +144,6 @@ describe('HotspotCtrl', () => {
             // Arrange
             queryStrings.north = 1.234;
             const error = new Error('error');
-
             reqMoq.setup(x => x.query).returns(() => queryStrings);
 
             hotspotRepositoryMoq
@@ -157,6 +156,7 @@ describe('HotspotCtrl', () => {
                     ),
                 )
                 .returns(() => {
+
                     throw error;
                 });
             errorHandlerMoq
@@ -491,6 +491,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
@@ -511,6 +512,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
@@ -541,6 +543,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
+                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );

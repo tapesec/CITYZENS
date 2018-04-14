@@ -198,7 +198,7 @@ describe('JschemaValidator', () => {
         expect(validator.errorsText()).to.be.equal('No errors');
         expect(isValid).to.be.true;
     });
-    it('should validate EventHotspot completa set of data with schema built with merge mecanism', () => {
+    it('should validate EventHotspot complete set of data with schema built with merge mecanism', () => {
         // Arrange
         const body = {
             title: 'my new hotspot',
@@ -258,7 +258,7 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.false;
     });
 
-    it('should validate AlertHotspot update with corresponding schema', () => {
+    it('should validate AlertHotspot message update with corresponding schema', () => {
         // Arrange
         const body = {
             message: 'the message was updated',
