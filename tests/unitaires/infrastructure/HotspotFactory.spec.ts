@@ -12,7 +12,7 @@ import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import Author from '../../../src/domain/cityLife/model/author/Author';
 import SlideShow from '../../../src/domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../../../src/domain/cityLife/model/hotspot/widget/WidgetId';
-import ImageUrl from '../../../src/domain/cityLife/model/ImageLocation';
+import ImageLocation from '../../../src/domain/cityLife/model/ImageLocation';
 import WidgetList from '../../../src/domain/cityLife/model/hotspot/widget/WidgetList';
 
 describe('HotspotFactory', () => {
@@ -51,7 +51,7 @@ describe('HotspotFactory', () => {
         const slideShow = new SlideShow(
             new WidgetId('id id'),
             new Author('pseudo', new CityzenId('id id 2')),
-            [[new ImageUrl('url'), 'desc']],
+            [[new ImageLocation('url'), 'desc']],
         );
 
         const fakeDataFromDatabase: any = {

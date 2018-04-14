@@ -4,7 +4,7 @@ import { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug';
 import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
-import ImageUrl from '../ImageLocation';
+import ImageLocation from '../ImageLocation';
 import config from './../../../../api/config';
 import WidgetList from '../hotspot/widget/WidgetList';
 
@@ -17,7 +17,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 
     public static SCHOOL_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -26,7 +26,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 
     public static CHURCH_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -35,7 +35,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 
     public static MERIGNAC_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -44,7 +44,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 
     public static TOEDIT_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -53,7 +53,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 
     public static MATCH_MEDIA_BUILDER = new MediaBuilder(
@@ -62,7 +62,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultEventIcon),
+        new ImageLocation(config.avatarIcon.defaultEventIcon),
     );
 
     public static DOCTOR_MEDIA_BUILDER = new MediaBuilder(
@@ -71,7 +71,7 @@ class MediaBuilderSample {
         HotspotScope.Private,
         new MemberList([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
         new WidgetList([]),
-        new ImageUrl(config.avatarIcon.defaultWallIcon),
+        new ImageLocation(config.avatarIcon.defaultWallIcon),
     );
 }
 

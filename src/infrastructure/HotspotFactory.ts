@@ -33,7 +33,7 @@ import MemberList from '../domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
 import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import ImageUrl from '../domain/cityLife/model/ImageLocation';
+import ImageLocation from '../domain/cityLife/model/ImageLocation';
 import Widget, { WidgetType } from '../domain/cityLife/model/hotspot/widget/Widget';
 import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
@@ -119,7 +119,7 @@ class HotspotFactory {
         let message: AlertMessage;
         let voterList = new VoterList();
         let pertinenceScore: PertinenceScore;
-        let imageLocation: ImageUrl;
+        let imageLocation: ImageLocation;
 
         // data from database
         if (data && data.message.content) {
@@ -138,14 +138,14 @@ class HotspotFactory {
                 pertinenceScore = new PertinenceScore(0, 0);
             }
             if (data.imageDescriptionLocation) {
-                imageLocation = new ImageUrl(data.imageDescriptionLocation);
+                imageLocation = new ImageLocation(data.imageDescriptionLocation);
             }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
-            imageLocation = new ImageUrl(undefined);
+            imageLocation = new ImageLocation(undefined);
             pertinenceScore = new PertinenceScore(0, 0);
         }
         return new AlertHotspot(
@@ -242,7 +242,7 @@ class HotspotFactory {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        let avatarIconUrl: ImageUrl;
+        let avatarIconUrl: ImageLocation;
         const widgetsList = new WidgetList([]);
         const members = new MemberList();
 
@@ -262,7 +262,7 @@ class HotspotFactory {
             });
         }
         if (data.avatarIconUrl) {
-            avatarIconUrl = new ImageUrl(data.avatarIconUrl);
+            avatarIconUrl = new ImageLocation(data.avatarIconUrl);
         }
         if (data.widgets) {
             data.widgets.forEach((x: any) => {

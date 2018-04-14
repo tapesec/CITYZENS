@@ -3,7 +3,7 @@ import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
 import Author from '../domain/cityLife/model/author/Author';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import ImageUrl from '../domain/cityLife/model/ImageLocation';
+import ImageLocation from '../domain/cityLife/model/ImageLocation';
 import * as uuid from 'uuid';
 
 class WidgetFactory {
@@ -32,7 +32,7 @@ class WidgetFactory {
 
     private static buildSlideShow(id: WidgetId, author: Author, data: any): SlideShow {
         const images = data.images.map((x: [string, number]) => {
-            return [new ImageUrl(x[0]), x[1]];
+            return [new ImageLocation(x[0]), x[1]];
         });
 
         return new SlideShow(id, author, images);

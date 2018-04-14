@@ -2,7 +2,7 @@ import WidgetFactory from '../../../src/infrastructure/WidgetFactory';
 import * as Chai from 'chai';
 import Widget, { WidgetType } from '../../../src/domain/cityLife/model/hotspot/widget/Widget';
 import SlideShow from '../../../src/domain/cityLife/model/hotspot/widget/SlideShow';
-import ImageUrl from '../../../src/domain/cityLife/model/ImageLocation';
+import ImageLocation from '../../../src/domain/cityLife/model/ImageLocation';
 import CityzenId from '../../../src/domain/cityzens/model/CityzenId';
 import WidgetId from '../../../src/domain/cityLife/model/hotspot/widget/WidgetId';
 
@@ -34,9 +34,9 @@ describe('Widget factory.', () => {
         Chai.expect(widget instanceof SlideShow).to.be.true;
         Chai.expect(widget as SlideShow).to.have.property('images');
         Chai.expect((widget as SlideShow).images).to.have.lengthOf(2);
-        Chai.expect((widget as SlideShow).images[0][0]).to.be.deep.equal(new ImageUrl('url'));
+        Chai.expect((widget as SlideShow).images[0][0]).to.be.deep.equal(new ImageLocation('url'));
         Chai.expect((widget as SlideShow).images[0][1]).to.be.equal('desc');
-        Chai.expect((widget as SlideShow).images[1][0]).to.be.deep.equal(new ImageUrl('url2'));
+        Chai.expect((widget as SlideShow).images[1][0]).to.be.deep.equal(new ImageLocation('url2'));
         Chai.expect((widget as SlideShow).images[1][1]).to.be.equal('desc2');
     });
 
@@ -70,9 +70,9 @@ describe('Widget factory.', () => {
         Chai.expect(widget instanceof SlideShow).to.be.true;
         Chai.expect(widget as SlideShow).to.have.property('images');
         Chai.expect((widget as SlideShow).images).to.have.lengthOf(2);
-        Chai.expect((widget as SlideShow).images[0][0]).to.be.deep.equal(new ImageUrl('url'));
+        Chai.expect((widget as SlideShow).images[0][0]).to.be.deep.equal(new ImageLocation('url'));
         Chai.expect((widget as SlideShow).images[0][1]).to.be.equal('desc');
-        Chai.expect((widget as SlideShow).images[1][0]).to.be.deep.equal(new ImageUrl('url2'));
+        Chai.expect((widget as SlideShow).images[1][0]).to.be.deep.equal(new ImageLocation('url2'));
         Chai.expect((widget as SlideShow).images[1][1]).to.be.equal('desc2');
     });
 });

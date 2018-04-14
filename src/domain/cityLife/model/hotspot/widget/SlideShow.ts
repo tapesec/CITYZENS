@@ -1,15 +1,15 @@
 import { Url } from 'url';
-import ImageUrl from '../../ImageLocation';
+import ImageLocation from '../../ImageLocation';
 import Widget, { WidgetType } from './Widget';
 import Author from '../../author/Author';
 import WidgetId from './WidgetId';
 
 class SlideShow extends Widget {
-    constructor(_id: WidgetId, _author: Author, private _images: [ImageUrl, string][]) {
+    constructor(_id: WidgetId, _author: Author, private _images: [ImageLocation, string][]) {
         super(WidgetType.SLIDE_SHOW, _id, _author);
     }
 
-    public insertInPlace(url: ImageUrl, description: string, index: number) {
+    public insertInPlace(url: ImageLocation, description: string, index: number) {
         if (
             this._images.find((image, i, obj) => {
                 return url.isEqual(image[0]);
@@ -20,10 +20,10 @@ class SlideShow extends Widget {
 
         this._images.splice(index, 0, [url, description]);
     }
-    public insert(url: ImageUrl, description: string) {
+    public insert(url: ImageLocation, description: string) {
         this.insertInPlace(url, description, this._images.length);
     }
-    public remove(url: ImageUrl) {
+    public remove(url: ImageLocation) {
         for (let i = 0; i < this._images.length; i += 1) {
             if (this._images[i][0].isEqual(url)) {
                 this._images.splice(i, 1);
@@ -31,7 +31,7 @@ class SlideShow extends Widget {
             }
         }
     }
-    public makeNth(url: ImageUrl, n: number) {
+    public makeNth(url: ImageLocation, n: number) {
         let index = -1;
         let image;
 

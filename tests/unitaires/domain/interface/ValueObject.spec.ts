@@ -10,7 +10,7 @@ import Author from '../../../../src/domain/cityLife/model/author/Author';
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
-import ImageUrl from '../../../../src/domain/cityLife/model/ImageLocation';
+import ImageLocation from '../../../../src/domain/cityLife/model/ImageLocation';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {
@@ -104,10 +104,10 @@ describe('ValueObject', () => {
             Chai.expect(cityzenId1.isEqual(cityzenId2)).to.be.false;
         });
 
-        it('ImageUrl', () => {
-            const imgLocation = new ImageUrl('fake-url');
-            const otherImgLocation = new ImageUrl('fake-url');
-            const againImgLocation = new ImageUrl('fake-url-trap');
+        it('ImageLocation', () => {
+            const imgLocation = new ImageLocation('fake-url');
+            const otherImgLocation = new ImageLocation('fake-url');
+            const againImgLocation = new ImageLocation('fake-url-trap');
 
             Chai.expect(imgLocation.isEqual(otherImgLocation)).to.be.true;
             Chai.expect(imgLocation.isEqual(againImgLocation)).to.be.false;

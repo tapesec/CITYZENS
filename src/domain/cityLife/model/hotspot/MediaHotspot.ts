@@ -6,7 +6,7 @@ import HotspotSlug from './../../../../domain/cityLife/model/hotspot/HotspotSlug
 import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
 import CityzenId from '../../../cityzens/model/CityzenId';
-import ImageUrl from '../ImageLocation';
+import ImageLocation from '../ImageLocation';
 import Widget from './widget/Widget';
 import WidgetList from './widget/WidgetList';
 const slug = require('slug');
@@ -17,7 +17,7 @@ class MediaHotspot extends Hotspot {
     protected _slug: HotspotSlug;
     protected _members: MemberList;
     protected _widgets: WidgetList;
-    protected _avatarIconUrl?: ImageUrl;
+    protected _avatarIconUrl?: ImageLocation;
 
     constructor(hotpotBuilder: HotspotBuilder, mediaBuilder: MediaBuilder) {
         super(hotpotBuilder);
@@ -69,7 +69,7 @@ class MediaHotspot extends Hotspot {
         this._scope = status;
     }
 
-    public changeAvatarIconurl(avatarIconUrl: ImageUrl) {
+    public changeAvatarIconurl(avatarIconUrl: ImageLocation) {
         this._avatarIconUrl = avatarIconUrl;
     }
 
