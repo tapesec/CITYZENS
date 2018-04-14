@@ -293,9 +293,8 @@ const hotspotsEndpointsTests = (state: any) => {
 
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}`)
-                    .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .send(patchHotspotBodyTitle)
-                    .expect(200);
+                    .expect(401);
             });
 
             it('Should return 400 on bad request.', async () => {

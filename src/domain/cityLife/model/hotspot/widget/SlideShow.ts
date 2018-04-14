@@ -51,6 +51,10 @@ class SlideShow extends Widget {
         this.insertInPlace(image[0], image[1], n);
     }
 
+    public get images() {
+        return this._images;
+    }
+
     public toJSON() {
         return {
             ...super.toJSON(),

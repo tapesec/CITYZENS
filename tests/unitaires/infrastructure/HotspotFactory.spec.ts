@@ -10,6 +10,10 @@ import {
 } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import Author from '../../../src/domain/cityLife/model/author/Author';
+import SlideShow from '../../../src/domain/cityLife/model/hotspot/widget/SlideShow';
+import WidgetId from '../../../src/domain/cityLife/model/hotspot/widget/WidgetId';
+import ImageUrl from '../../../src/domain/cityLife/model/ImageUrl';
+import WidgetList from '../../../src/domain/cityLife/model/hotspot/widget/WidgetList';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {
@@ -44,6 +48,11 @@ describe('HotspotFactory', () => {
 
     it('should build a WallHotspot with data from database', () => {
         // Arrange
+        const slideShow = new SlideShow(
+            new WidgetId('id id'),
+            new Author('pseudo', new CityzenId('id id 2')),
+            [[new ImageUrl('url'), 'desc']],
+        );
 
         const fakeDataFromDatabase: any = {
             id: 'fake-id',
@@ -62,6 +71,7 @@ describe('HotspotFactory', () => {
             cityId: '34345',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
+            widgets: [slideShow.toJSON()],
         };
         const hotspotFactory = new HotspotFactory();
         // Act
@@ -78,6 +88,7 @@ describe('HotspotFactory', () => {
             id: 'fake-id',
             title: 'new title',
             scope: HotspotScope.Private,
+            widgets: new WidgetList([slideShow]),
         });
     });
 
@@ -178,5 +189,10 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
         expect(fakeNewHotspot)
             .to.have.property('iconType')
             .to.be.equal(specificProperties.iconType);
+    }
+    if (specificProperties.widgets !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('widgets')
+            .to.be.deep.equal(specificProperties.widgets);
     }
 };

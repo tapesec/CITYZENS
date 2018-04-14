@@ -1,8 +1,8 @@
-export const postSlideShow = {
-    title: 'Post SlideShow.',
+export const slideShow = {
+    title: 'SlideShow schema.',
     type: 'object',
-    required: ['images', 'type'],
-    properties: {
+    required: ['type', 'images'],
+    propreties: {
         type: {
             type: 'number',
         },
@@ -11,23 +11,29 @@ export const postSlideShow = {
             items: [
                 {
                     type: 'array',
-                    minItems: 2,
                     items: [{ type: 'string' }, { type: 'string' }],
-                    additionalItems: false,
                 },
             ],
         },
     },
 };
 
-export const anyOnePostWidget = {
-    title: 'AnyOnePostWidget.',
+export const widget = {
+    title: 'Widget base schema.',
     type: 'object',
     required: ['type'],
-    oneOf: [postSlideShow],
-    properties: {
+    oneOf: [slideShow],
+    propreties: {
         type: {
             type: 'number',
         },
+    },
+};
+
+export const widgetsResponse = {
+    title: 'response from GET /hotspots/${hotspotId}/wdigets/${type}.',
+    type: 'array',
+    items: {
+        ...widget,
     },
 };

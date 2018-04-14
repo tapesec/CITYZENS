@@ -12,6 +12,14 @@ class Widget {
         return this._type;
     }
 
+    get id() {
+        return this._id;
+    }
+
+    get author() {
+        return this._author;
+    }
+
     public toJSON() {
         return {
             type: this._type.valueOf(),

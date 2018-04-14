@@ -86,3 +86,8 @@ export const patchHotspotBodyTitle = {
 export const patchHotspotBodyScope = {
     scope: HotspotScope.Private,
 };
+
+export const postSlideShow = {
+    type: 0,
+    images: [['url', 'desc']],
+};
