@@ -3,6 +3,7 @@ import { HotspotScope } from '../model/hotspot/Hotspot';
 import HotspotSlug from 'src/domain/cityLife/model/hotspot/HotspotSlug';
 import MemberList from '../model/hotspot/MemberList';
 import AvatarIconUrl from '../model/hotspot/AvatarIconUrl';
+import SlideShow from '../model/hotspot/SlideShow';
 
 class MediaBuilder {
     constructor(
@@ -11,6 +12,7 @@ class MediaBuilder {
         protected _scope: HotspotScope,
         protected _members: MemberList,
         protected _avatarIconUrl?: AvatarIconUrl,
+        protected _slideShow?: SlideShow,
     ) {}
 
     get avatarIconUrl() {
@@ -31,6 +33,10 @@ class MediaBuilder {
 
     get members(): MemberList {
         return this._members;
+    }
+
+    get slideShow(): SlideShow {
+        return this._slideShow;
     }
 }
 export default MediaBuilder;

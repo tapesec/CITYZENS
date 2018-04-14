@@ -10,6 +10,8 @@ import {
 } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import Author from '../../../src/domain/cityLife/model/author/Author';
+import ImageLocation from '../../../src/domain/cityLife/model/hotspot/ImageLocation';
+import SlideShow from '../../../src/domain/cityLife/model/hotspot/SlideShow';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {
@@ -62,6 +64,7 @@ describe('HotspotFactory', () => {
             cityId: '34345',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
+            slideShow: ['url1', 'url2'],
         };
         const hotspotFactory = new HotspotFactory();
         // Act
@@ -78,6 +81,7 @@ describe('HotspotFactory', () => {
             id: 'fake-id',
             title: 'new title',
             scope: HotspotScope.Private,
+            slideShow: new SlideShow([new ImageLocation('url1'), new ImageLocation('url2')]),
         });
     });
 
@@ -186,5 +190,10 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
             .to.have.property('imageDescriptionLocation')
             .to.have.property('url')
             .to.be.equal('fake-url');
+    }
+    if (specificProperties.slideShow !== undefined) {
+        expect(fakeNewHotspot)
+            .to.have.property('slideShow')
+            .to.be.deep.equal(specificProperties.slideShow);
     }
 };

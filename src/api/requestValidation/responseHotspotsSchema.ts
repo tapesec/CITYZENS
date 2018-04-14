@@ -66,6 +66,7 @@ const requiredWallHotspotProperties = [
     'title',
     'scope',
     'avatarIconUrl',
+    'slideShow',
 ];
 
 const WallHotspotSchema = {
@@ -101,6 +102,12 @@ const WallHotspotSchema = {
                 type: 'string',
             },
         },
+        slideShow: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     additionalProperties: false,
 };
@@ -114,6 +121,7 @@ const requiredEventHotspotProperties = [
     'avatarIconUrl',
     'slug',
     'members',
+    'slideShow',
 ];
 
 const EventHotspotSchema = {
@@ -159,6 +167,12 @@ const EventHotspotSchema = {
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
         members: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+        slideShow: {
             type: 'array',
             items: {
                 type: 'string',
