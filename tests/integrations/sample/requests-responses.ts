@@ -1,7 +1,3 @@
-import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
-import AddressSample from '../../../src/domain/cityLife/model/sample/AddressSample';
-import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
 import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
 import { username, password } from './granted-cityzen';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
@@ -20,28 +16,6 @@ import Hotspot, {
 export const loginBody = {
     password,
     username: `${username}@gmail.com`,
-};
-
-// POST /hotspots
-export const createHotspotBody = {
-    title: 'a testing new hotspot',
-    cityId: CitySample.SIMCITY.insee,
-    position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
-    address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
-    scope: HotspotScope.Private,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: 'a testing url :) zeaazoekjhazdoiajdiojazdi',
-};
-
-export const newHotspotResponse = () => {
-    const body = {
-        ...createHotspotBody,
-        cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
-    };
-
-    const newHotspot = new HotspotFactory().build(body);
-    return JSON.parse(JSON.stringify(newHotspot));
 };
 
 // POST /hotspots/{hotspotId}/messages
@@ -77,12 +51,47 @@ export const editedMessageResponse = () => {
     return JSON.parse(JSON.stringify(message));
 };
 
-// PATCH url=/hotspots/{hotspotId}
+// according to createhotspotSchema.ts
+const CITY_ID = '12345';
 
-export const patchHotspotBodyTitle = {
-    title: 'new title',
+/**
+ * Base new hotspot payload
+ */
+const createHotspotBody = {
+    cityId: CITY_ID,
+    position: {
+        // fake-values
+        latitude: 10.84032108,
+        longitude: -2.77510476,
+    },
+    address: {
+        name: '2 rue du succès',
+        city: 'Kaamelott',
+    },
 };
 
-export const patchHotspotBodyScope = {
-    scope: HotspotScope.Private,
+export const AlertHotspotPostBody = {
+    ...createHotspotBody,
+    message: 'this is a message alert',
+    type: HotspotType.Alert,
+    iconType: HotspotIconType.Accident,
+};
+
+export const EventHotspotPostBody = {
+    ...createHotspotBody,
+    scope: HotspotScope.Public,
+    title: 'A simple title for a cool event',
+    description: 'Here is a lorem ipsum kind of stuff',
+    dateEnd: '0650-05-31T22:00:00.000Z',
+    type: HotspotType.Event,
+    iconType: HotspotIconType.Event,
+};
+
+export const WallHotspotPostBody = {
+    ...createHotspotBody,
+    scope: HotspotScope.Public,
+    title: 'A simple title for a cool event',
+    type: HotspotType.WallMessage,
+    iconType: HotspotIconType.Wall,
+    avatarIconUrl: 'an-url-fake',
 };
