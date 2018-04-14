@@ -271,6 +271,72 @@
         description: Jeton d'authentification invalide.
       500:
         description: Quelque chose à mal tourné.
+/hotspots/{hotspotId}/widgets:
+  post:
+    description: Ajoute un widget sur un MediaHotspot.
+    tags:
+      - Hotspots
+      - Widgets
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: widget
+        schema:
+          type: object
+          example:
+            - type: 0
+            - images:
+              - type: string
+              - type: string
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Hotspot modifié et retourné.
+      400:
+        descritpion: Mauvaise requete, verifiez que l'hotspot est un MediaHotspot.
+      401:
+        description: Hotspot privé.
+
+/hotspots/{hotspotId}/widgets/{widgetType}:
+  get:
+    description: Retourne tout les widgets d'un certain type d'un hotspot.
+    tags:
+      - Hotspots
+      - Widgets
+    parameters:
+      - name: Authorization
+        in: header
+        required: false
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: L'uuid ou le slug de l'hotspot.
+        required: true
+        type: string
+      - name: widgetType
+        in: path
+        description: Le type de widget à recuperer.
+        required: true
+        type: number
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Les widgets de l'hotspot demandé.
+      404:
+        description: Hotspot introuvable.
+      401:
+        description: Hotspot privé.
 /hotspots/{hotspotId}/views:
   post:
     description: Ajoute une vue a un hotspot. Retourne 200 si tout s'est bien passé, 404 si l'hotspot ne peut pas etre trouvé.

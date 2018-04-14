@@ -8,6 +8,10 @@ enum WidgetType {
 class Widget {
     constructor(protected _type: WidgetType, protected _id: WidgetId, protected _author: Author) {}
 
+    get type() {
+        return this._type;
+    }
+
     public toJSON() {
         return {
             type: this._type.valueOf(),

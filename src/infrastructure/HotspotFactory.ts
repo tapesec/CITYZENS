@@ -38,6 +38,7 @@ import Widget, { WidgetType } from '../domain/cityLife/model/hotspot/widget/Widg
 import SlideShow from '../domain/cityLife/model/hotspot/widget/SlideShow';
 import WidgetId from '../domain/cityLife/model/hotspot/widget/WidgetId';
 import WidgetList from '../domain/cityLife/model/hotspot/widget/WidgetList';
+import WidgetFactory from './WidgetFactory';
 const request = require('request');
 const slug = require('slug');
 
@@ -259,7 +260,8 @@ class HotspotFactory {
         }
         if (data.widgets) {
             data.widgets.forEach((x: any) => {
-                widgetsList.insert(this.createWidget(x));
+                const type = x.type as WidgetType;
+                widgetsList.insert(WidgetFactory.build(type, x));
             });
         }
         return new MediaBuilder(
@@ -285,20 +287,5 @@ class HotspotFactory {
             }
         });
     };
-
-    public createWidget(data: any) {
-        const id = new WidgetId(data.id);
-        const author = new Author(data.author.pseudo, new CityzenId(data.author.id));
-
-        switch (data.type) {
-            case WidgetType.SLIDE_SHOW: {
-                const images = data.images.map((x: [string, number]) => {
-                    [new ImageUrl(x[0]), x[1]];
-                });
-
-                return new SlideShow(id, author, images);
-            }
-        }
-    }
 }
 export default HotspotFactory;
