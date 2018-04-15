@@ -4,6 +4,8 @@ import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 import AvatarIconUrl from './../../../domain/cityLife/model/hotspot/AvatarIconUrl';
+import SlideShow from '../../../domain/cityLife/model/hotspot/SlideShow';
+import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
 
 export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody: any): Hotspot => {
     if (requestBody.title) {
@@ -14,6 +16,12 @@ export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody:
     }
     if (requestBody.avatarIconUrl) {
         (<MediaHotspot>hotspot).changeAvatarIconurl(new AvatarIconUrl(requestBody.avatarIconUrl));
+    }
+
+    if (requestBody.slideShow !== undefined) {
+        (<MediaHotspot>hotspot).changeSlideShow(
+            new SlideShow(requestBody.slideShow.map((x: string) => new ImageLocation(x))),
+        );
     }
 
     if (requestBody.dateEnd) {

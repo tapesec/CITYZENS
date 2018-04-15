@@ -6,6 +6,7 @@ import CityzenSample from '../../../cityzens/model/CityzenSample';
 import MemberList from '../../model/hotspot/MemberList';
 import AvatarIconUrl from './../../model/hotspot/AvatarIconUrl';
 import config from './../../../../api/config';
+import SlideShow from '../hotspot/SlideShow';
 
 const slug = require('slug');
 
@@ -16,6 +17,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 
     public static SCHOOL_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -24,6 +26,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 
     public static CHURCH_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -32,6 +35,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 
     public static MERIGNAC_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -40,6 +44,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 
     public static TOEDIT_MEDIA_BUILDER: MediaBuilder = new MediaBuilder(
@@ -48,6 +53,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 
     public static MATCH_MEDIA_BUILDER = new MediaBuilder(
@@ -56,6 +62,7 @@ class MediaBuilderSample {
         HotspotScope.Public,
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultEventIcon),
+        new SlideShow(),
     );
 
     public static DOCTOR_MEDIA_BUILDER = new MediaBuilder(
@@ -64,6 +71,7 @@ class MediaBuilderSample {
         HotspotScope.Private,
         new MemberList([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
+        new SlideShow(),
     );
 }
 

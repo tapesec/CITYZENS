@@ -58,6 +58,7 @@ const hotspotUpdate = (data: any) => {
     if (data.imageDescriptionLocation) {
         hotspot.imageDescriptionLocation = data.imageDescriptionLocation;
     }
+    if (data.slideShow) hotspot.slideShow = data.slideShow;
     hotspotCollection.update(hotspot);
 };
 

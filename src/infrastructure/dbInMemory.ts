@@ -34,6 +34,7 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.TOWNHALL.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.TOWNHALL.slideShow.toJSON(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {
@@ -49,6 +50,7 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.CHURCH.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.CHURCH.slideShow.toJSON(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
@@ -64,6 +66,7 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.SCHOOL.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.SCHOOL.slideShow.toJSON(),
     removed: false,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
@@ -79,6 +82,7 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.MERIGNAC.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.MERIGNAC.slideShow.toJSON(),
     removed: false,
 };
 
@@ -95,6 +99,7 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.TOEDIT.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.TOEDIT.slideShow.toJSON(),
     removed: false,
 };
 
@@ -111,6 +116,7 @@ export const HOTSPOT_DOCTOR = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: WallHotspotSample.DOCTOR.avatarIconUrl.toString(),
+    slideShow: WallHotspotSample.DOCTOR.slideShow.toJSON(),
     removed: false,
 };
 
@@ -160,6 +166,7 @@ export const EVENT_MATCH = {
     description: EventHotspotSample.MATCH_EVENT.description,
     dateEnd: EventHotspotSample.MATCH_EVENT.dateEnd,
     avatarIconUrl: EventHotspotSample.MATCH_EVENT.avatarIconUrl.toString(),
+    slideShow: EventHotspotSample.MATCH_EVENT.slideShow.toJSON(),
     removed: false,
 };
 

@@ -11,7 +11,12 @@ export default () => {
 };
 
 const WallHotspotSchema = {
-    anyOf: [{ required: ['title'] }, { required: ['scope'] }, { required: ['avatarIconUrl'] }],
+    anyOf: [
+        { required: ['title'] },
+        { required: ['scope'] },
+        { required: ['slideShow'] },
+        { required: ['avatarIconUrl'] },
+    ],
     properties: {
         scope: {
             type: 'string',
@@ -25,6 +30,12 @@ const WallHotspotSchema = {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
+        slideShow: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     additionalProperties: false,
 };
@@ -34,6 +45,7 @@ const EventHotspotSchema = {
         { required: ['title'] },
         { required: ['scope'] },
         { required: ['dateEnd'] },
+        { required: ['slideShow'] },
         { required: ['description'] },
         { required: ['avatarIconUrl'] },
     ],
@@ -55,6 +67,12 @@ const EventHotspotSchema = {
         avatarIconUrl: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
+        },
+        slideShow: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
         },
     },
     additionalProperties: false,

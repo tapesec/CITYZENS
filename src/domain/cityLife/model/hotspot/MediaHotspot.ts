@@ -7,6 +7,7 @@ import Cityzen from './../../../../domain/cityzens/model/Cityzen';
 import MemberList from './MemberList';
 import CityzenId from '../../../cityzens/model/CityzenId';
 import AvatarIconUrl from './AvatarIconUrl';
+import SlideShow from './SlideShow';
 const slug = require('slug');
 
 class MediaHotspot extends Hotspot {
@@ -15,6 +16,7 @@ class MediaHotspot extends Hotspot {
     protected _slug: HotspotSlug;
     protected _members: MemberList;
     protected _avatarIconUrl?: AvatarIconUrl;
+    protected _slideShow?: SlideShow;
 
     constructor(hotpotBuilder: HotspotBuilder, mediaBuilder: MediaBuilder) {
         super(hotpotBuilder);
@@ -23,6 +25,7 @@ class MediaHotspot extends Hotspot {
         this._slug = mediaBuilder.slug;
         this._members = mediaBuilder.members;
         this._avatarIconUrl = mediaBuilder.avatarIconUrl;
+        this._slideShow = mediaBuilder.slideShow;
     }
 
     get avatarIconUrl() {
@@ -65,6 +68,13 @@ class MediaHotspot extends Hotspot {
         this._avatarIconUrl = avatarIconUrl;
     }
 
+    public get slideShow() {
+        return this._slideShow;
+    }
+    public changeSlideShow(slideShow: SlideShow) {
+        this._slideShow = slideShow;
+    }
+
     toString() {
         const stringed: any = {
             ...super.toString(),
@@ -73,8 +83,11 @@ class MediaHotspot extends Hotspot {
             slug: this._slug.toString(),
             members: this._members.toString(),
         };
-        if (this.avatarIconUrl) {
+        if (this.avatarIconUrl !== undefined) {
             stringed.avatarIconUrl = this._avatarIconUrl.toString();
+        }
+        if (this.slideShow !== undefined) {
+            stringed.slideShow = this._slideShow.toJSON();
         }
         return stringed;
     }

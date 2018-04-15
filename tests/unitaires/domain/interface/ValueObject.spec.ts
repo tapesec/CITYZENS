@@ -11,6 +11,7 @@ import ImageLocation from '../../../../src/domain/cityLife/model/hotspot/ImageLo
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import SlideShow from '../../../../src/domain/cityLife/model/hotspot/SlideShow';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {
@@ -111,6 +112,15 @@ describe('ValueObject', () => {
 
             Chai.expect(imgLocation.isEqual(otherImgLocation)).to.be.true;
             Chai.expect(imgLocation.isEqual(againImgLocation)).to.be.false;
+        });
+
+        it('SlideShow.', () => {
+            const slideShow = new SlideShow([new ImageLocation('fake-url')]);
+            const otherSlideShow = new SlideShow([new ImageLocation('fake-url')]);
+            const againSlideShow = new SlideShow([new ImageLocation('fake-url-trap')]);
+
+            Chai.expect(slideShow.isEqual(otherSlideShow)).to.be.true;
+            Chai.expect(slideShow.isEqual(againSlideShow)).to.be.false;
         });
     });
 });
