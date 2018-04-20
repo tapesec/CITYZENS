@@ -1,4 +1,7 @@
 import { hotspotCollection, cityzenCollection, messageCollection } from './dbInMemory';
+import Cityzen from '../domain/cityzens/model/Cityzen';
+import CityzenId from '../domain/cityzens/model/CityzenId';
+import * as pg from 'pg';
 
 const hotspotFind = (requestParams: any) => {
     let hotspotsResults: any;
@@ -102,6 +105,24 @@ const messageDelete = (id: string) => {
     messageCollection.update(message);
 };
 
+const cityzenFindById = (postgre: pg.Client, id: CityzenId) => {
+    return new Promise<Cityzen>((resolve, reject) => {
+        postgre.query(
+            'SELECT * from cityzens WHERE user_id = $1',
+            [id.toString()],
+            (err, results) => {
+                if (err !== undefined || results.rowCount === 0) {
+                    reject(err);
+                } else {
+                    const data = results.rows[0];
+
+                    resolve(this.cityzenFactory.build(data));
+                }
+            },
+        );
+    });
+};
+
 export default {
     hotspot: {
         findAll: hotspotFind,
@@ -117,5 +138,8 @@ export default {
         save: messageSave,
         update: messageUpdate,
         delete: messageDelete,
+    },
+    cityzen: {
+        findById: cityzenFindById,
     },
 };
