@@ -33,7 +33,6 @@ describe('HotspotRepositoryInMemory', () => {
         fakeChurch = HOTSPOT_MARTIGNAS_CHURCH;
         fakeChurch.cityzen = CITYZEN_MARTIN;
         fakeSchool = HOTSPOT_MARTIGNAS_SCHOOL;
-        fakeSchool.cityzen = CITYZEN_LOUISE;
         findStub = sinon.stub();
         findOneStub = sinon.stub();
         removeStub = sinon.stub();

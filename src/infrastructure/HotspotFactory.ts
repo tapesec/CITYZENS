@@ -172,13 +172,11 @@ class HotspotFactory {
             address = new Address(data.address.name, data.address.city);
         }
         if (data.cityzen) {
-            if (data.cityzen.id instanceof CityzenId) {
-                // data from user
-                author = new Author(data.cityzen.pseudo, data.cityzen.id);
-            } else {
-                // data from database
-                author = new Author(data.cityzen.pseudo, new CityzenId(data.cityzen.id));
-            }
+            // Data from user
+            author = new Author(data.cityzen.pseudo, data.cityzen.id);
+        } else {
+            // Data from loki
+            author = new Author(data.author.pseudo, new CityzenId(data.author.id));
         }
         // new hotspot posted by user
         if (!data.id) {

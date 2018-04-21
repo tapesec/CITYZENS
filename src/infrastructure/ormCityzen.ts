@@ -12,21 +12,21 @@ const findById = (postgre: PostgreSQL, id: CityzenId) => {
 
             const data = results.rows[0];
 
-            return this.cityzenFactory.build(data) as Cityzen;
+            return data;
         });
 };
-const updateFavortiesHotspots = (postgre: PostgreSQL, data: string[], id: CityzenId) => {
+const updateFavoritesHotspots = (postgre: PostgreSQL, data: string[], id: CityzenId) => {
     return postgre.query('UPDATE cityzens SET favorites_hotspots = $1 WHERE user_id = $2', [
         data,
         id,
     ]);
 };
 
-const orm = {
+const ormCityzen = {
     findById,
-    updateFavortiesHotspots,
+    updateFavoritesHotspots,
 };
 
-export default orm;
+export default ormCityzen;
 
-export type Orm = typeof orm;
+export type Orm = typeof ormCityzen;

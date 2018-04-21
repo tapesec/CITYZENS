@@ -54,10 +54,7 @@ class ProfileCtrl extends RootCtrl {
                     ),
                 );
             }
-        } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
-        }
-        try {
+
             const currentCityzen: Cityzen = cityzenFromAuth0(this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(

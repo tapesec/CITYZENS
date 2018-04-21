@@ -18,30 +18,15 @@ const hotspotFind = (requestParams: any) => {
     } else {
         hotspotsResults = hotspotCollection.find(requestParams);
     }
-    const authorIds = hotspotsResults.map((hotspot: any) => hotspot.authorId);
-    const cityzensList = cityzenCollection.find({ id: { $in: authorIds } });
-    const cityzenObject: any = {};
-    cityzensList.forEach((cityzen: any) => {
-        cityzenObject[cityzen.id] = cityzen;
-    });
-    const structuredData = hotspotsResults.map((hotspot: any) => {
-        hotspot.cityzen = cityzenObject[hotspot.authorId];
-        return hotspot;
-    });
-    return structuredData;
+    return hotspotsResults;
 };
 
 const hotspotFindOne = (requestParams: any) => {
     const hotspotsResult: any = hotspotCollection.findOne(requestParams);
-    if (hotspotsResult) {
-        hotspotsResult.cityzen = cityzenCollection.findOne({ id: hotspotsResult.authorId });
-    }
     return hotspotsResult;
 };
 
 const hotspotSave = (data: any) => {
-    data.authorId = data.author.id;
-    delete data.author;
     hotspotCollection.insert(data);
 };
 

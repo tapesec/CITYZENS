@@ -3,20 +3,23 @@ import EventHotspot from './EventHotspot';
 import AlertHotspot from './AlertHotspot';
 import Hotspot from './Hotspot';
 
-interface IHotspotRepository​​ {
+interface IHotspotRepository {
+    findById(id: string): WallHotspot | EventHotspot | AlertHotspot;
 
-    findById(id : string): WallHotspot|EventHotspot|AlertHotspot;
+    findInArea(
+        north: number,
+        west: number,
+        south: number,
+        east: number,
+    ): (WallHotspot | EventHotspot | AlertHotspot)[];
 
-    findInArea(north : number, west : number, south : number, east : number):
-    (WallHotspot|EventHotspot|AlertHotspot)[];
+    findByCodeCommune(insee: string): (WallHotspot | EventHotspot | AlertHotspot)[];
 
-    findByCodeCommune(insee : string): (WallHotspot|EventHotspot|AlertHotspot)[];
+    isSet(id: string): boolean;
 
-    isSet(id : string) : boolean;
+    store(hotspot: Hotspot): void;
 
-    store(hotspot : Hotspot) : void;
-
-    remove(id : string) : void;
+    remove(id: string): void;
 }
 
 export default IHotspotRepository;

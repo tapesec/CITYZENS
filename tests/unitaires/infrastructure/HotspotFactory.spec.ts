@@ -22,7 +22,7 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            cityzen: CityzenSample.ELODIE.toJSON(),
+            cityzen: CityzenSample.ELODIE,
             scope: 'private',
             address: {
                 name: '4 rue Blanc',
@@ -55,7 +55,10 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            cityzen: CityzenSample.ELODIE.toJSON(),
+            author: {
+                id: CityzenSample.ELODIE.id.toString(),
+                pseudo: CityzenSample.ELODIE.pseudo,
+            },
             scope: HotspotScope.Private,
             address: {
                 name: '4 rue Blanc',
@@ -94,7 +97,10 @@ describe('HotspotFactory', () => {
                 latitude: 12.25632,
                 longitude: 47.12345,
             },
-            cityzen: CityzenSample.ELODIE.toJSON(),
+            author: {
+                id: CityzenSample.ELODIE.id.toString(),
+                pseudo: CityzenSample.ELODIE.pseudo,
+            },
             address: {
                 name: '4 rue Blanc',
                 city: 'Martignas sur Jalles',
