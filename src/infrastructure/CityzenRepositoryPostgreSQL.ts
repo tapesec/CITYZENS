@@ -1,20 +1,15 @@
-import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
+import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import Cityzen from '../domain/cityzens/model/Cityzen';
-import * as pg from 'pg';
-import CityzenFactory from './CityzenFactory';
+import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
+import { Orm } from './../infrastructure/ormCityzen';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
-    constructor(
-        protected orm: any,
-        protected postgre: pg.Client,
-        protected cityzenFactory: CityzenFactory,
-    ) {}
+    constructor(protected orm: Orm, protected postgre: PostgreSQL) {}
 
-    updateFavoritesHotspots(data: any, accessToken: string): void {
-        throw new Error('Method not implemented.');
+    updateFavoritesHotspots(data: string[], id: CityzenId) {
+        return this.orm.updateFavortiesHotspots(this.postgre, data, id).then(() => {});
     }
     findById(id: CityzenId) {
-        return this.orm.cityzen.findById(id);
+        return this.orm.findById(this.postgre, id);
     }
 }

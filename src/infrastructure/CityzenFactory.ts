@@ -3,6 +3,7 @@ import Cityzen from '../domain/cityzens/model/Cityzen';
 export default class CityzenFactory {
     constructor() {}
 
+    // data _must_ be from PostgreSQL db.
     public build(data: any): Cityzen {
         return new Cityzen(
             data.user_id,

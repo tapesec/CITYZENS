@@ -1,31 +1,32 @@
+import * as AlgoliaSearch from 'algoliasearch';
+import * as restify from 'restify';
+import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
+import HotspotFactory from '../../infrastructure/HotspotFactory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import messageRepositoryInMemory from '../../infrastructure/MessageRepositoryInMemory';
-import MessageCtrl from '../controllers/MessageCtrl';
-import MessageRouter from './MessageRouter';
-import HotspotFactory from '../../infrastructure/HotspotFactory';
-import ProfileRouter from './ProfileRouter';
-import ProfileCtrl from '../controllers/ProfileCtrl';
-import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
-import CityCtrl from '../controllers/CityCtrl';
-import CityRouter from './CityRouter';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import AuthRouter from './AuthRouter';
 import AuthCtrl from '../controllers/AuthCtrl';
-import * as restify from 'restify';
-import HotspotRouter from './HotspotRouter';
-import SwaggerRouter from './SwaggerRouter';
+import CityCtrl from '../controllers/CityCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
-import Login from './../services/auth/Login';
-import config from './../config';
+import MessageCtrl from '../controllers/MessageCtrl';
+import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
-import ErrorHandler from './../services/errors/ErrorHandler';
-import SlackWebhook from './../libs/SlackWebhook';
-import orm from './../../infrastructure/orm';
-import AlgoliaApi from './../libs/AlgoliaAPI';
-import Algolia from './../services/algolia/Algolia';
-import * as AlgoliaSearch from 'algoliasearch';
 import Auth0Service from '../services/auth/Auth0Service';
-import CityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository';
+import PostgreSQL from '../services/postgreSQL/postgreSQL';
+import orm from './../../infrastructure/orm';
+import ormCityzen from './../../infrastructure/ormCityzen';
+import config from './../config';
+import AlgoliaApi from './../libs/AlgoliaAPI';
+import SlackWebhook from './../libs/SlackWebhook';
+import Algolia from './../services/algolia/Algolia';
+import ErrorHandler from './../services/errors/ErrorHandler';
+import AuthRouter from './AuthRouter';
+import CityRouter from './CityRouter';
+import HotspotRouter from './HotspotRouter';
+import MessageRouter from './MessageRouter';
+import ProfileRouter from './ProfileRouter';
+import SwaggerRouter from './SwaggerRouter';
 
 // const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -49,7 +50,9 @@ const errorHandler = new ErrorHandler(
 
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 
-const cityzenAuth0Repository = new CityzenAuth0Repository(auth0Service);
+const postgreSql = new PostgreSQL(config.postgreSQL);
+
+const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen, postgreSql);
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
 
 // const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
@@ -63,7 +66,7 @@ export const init = (server: restify.Server) => {
             new ProfileCtrl(
                 errorHandler,
                 auth0Service,
-                cityzenAuth0Repository,
+                cityzenRepositoryPostgreSQL,
                 auth0Sdk,
                 hotspotRepositoryInMemory,
             ),
