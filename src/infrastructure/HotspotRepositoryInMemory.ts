@@ -23,6 +23,8 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         insee: string,
     ): Promise<(WallHotspot | EventHotspot | AlertHotspot)[]> {
         const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
+        if (data === []) return Promise.resolve([]);
+
         const authorsId = Array.from(
             new Set(data.map((entry: any) => new CityzenId(entry.authorId))),
         );
@@ -46,6 +48,8 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         let hotspot: WallHotspot | EventHotspot | AlertHotspot;
 
         const data = this.orm.hotspot.findOne(this.buildRequestBySlugOrId(id));
+        if (data === undefined) return Promise.resolve(undefined);
+
         const authorsId = [new CityzenId(data.authorId)];
 
         const author = (await this.ormCityzen.getAllAuthors(this.postgre, authorsId))[0];
@@ -76,6 +80,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             byArea: [north, west, south, east],
             removed: false,
         });
+        if (data === []) return Promise.resolve([]);
 
         const authorsId = Array.from(
             new Set(data.map((entry: any) => new CityzenId(entry.authorId))),
@@ -91,7 +96,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             formedData.author = authors.find((v, __, ___) => v.id === formedData.authorId);
             delete formedData.authorId;
 
-            hotspotsArray.push(factory.build(entry));
+            hotspotsArray.push(factory.build(formedData));
         });
         return hotspotsArray;
     }

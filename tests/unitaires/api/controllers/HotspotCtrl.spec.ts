@@ -40,6 +40,7 @@ import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHot
 import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
 import { OK, getStatusText } from 'http-status-codes';
 import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified';
+import EventHotspot from '../../../../src/domain/cityLife/model/hotspot/EventHotspot';
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -109,7 +110,7 @@ describe('HotspotCtrl', () => {
         });
 
         it(`should respond with 200 and a list of hotspot
-        if queryStrings contains valid coords`, () => {
+        if queryStrings contains valid coords`, async () => {
             // Arrange
             reqMoq.setup((x: rest.Request) => x.query).returns(() => queryStrings);
 
@@ -118,7 +119,7 @@ describe('HotspotCtrl', () => {
                 .returns(() => Promise.resolve(repositoryResult));
 
             // Act
-            hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             resMoq.verify(x => x.json(200, repositoryResult), TypeMoq.Times.once());
         });
@@ -258,40 +259,39 @@ describe('HotspotCtrl', () => {
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
             await hotspotCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
         });
-
-        it('Should return 200 on valid call', () => {
+        it('Should return 200 on valid call', async () => {
             hotspotRepositoryMoq.setup(x => x.isSet(id)).returns(() => true);
 
-            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => hotspot);
+            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
         });
 
-        it('Should return 404 on unfondable call', () => {
+        it('Should return 404 on unfondable call', async () => {
             hotspotRepositoryMoq.setup(x => x.isSet(id)).returns(() => false);
 
-            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => hotspot);
+            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x(errorNotfound), TypeMoq.Times.once());
         });
 
-        it('Should return 401 on private call and wrong id', () => {
+        it('Should return 401 on private call and wrong id', async () => {
             hotspot.changeScope(HotspotScope.Private);
 
             hotspotRepositoryMoq.setup(x => x.isSet(id)).returns(() => true);
 
-            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => hotspot);
+            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x(errorUnauthorized), TypeMoq.Times.once());
         });
 
-        it('Should return 200 on private call with right id', () => {
+        it('Should return 200 on private call with right id', async () => {
             const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
 
             hotspotMoq.setup(x => x.scope).returns(() => HotspotScope.Private);
@@ -302,20 +302,21 @@ describe('HotspotCtrl', () => {
                 .setup(x => x.author)
                 .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
 
+            const hotspot = Object.assign({}, hotspotMoq.object);
+
             hotspotRepositoryMoq.setup(x => x.isSet(id)).returns(() => true);
 
-            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => hotspotMoq.object);
+            hotspotRepositoryMoq.setup(x => x.findById(id)).returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.getHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
-            resMoq.verify(x => x.json(200, hotspotMoq.object), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
         });
     });
 
     describe('addMember', () => {
         let jsonBody: any;
         let jsonParams: any;
-        const hotspot = TypeMoq.Mock.ofType<WallHotspot>();
 
         before(() => {
             jsonBody = {
@@ -343,10 +344,14 @@ describe('HotspotCtrl', () => {
             algoliaMoq.reset();
         });
 
-        it('should add new member to hotspot on validcall', () => {
-            hotspot
+        it('should add new member to hotspot on validcall', async () => {
+            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
+            hotspotMoq
                 .setup(x => x.author)
                 .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+            hotspotMoq.setup(x => x.addMember).returns(() => {
+                return () => {};
+            });
 
             reqMoq.setup((x: rest.Request) => x.body).returns(() => jsonBody);
 
@@ -354,12 +359,14 @@ describe('HotspotCtrl', () => {
 
             hotspotRepositoryMoq.setup(x => x.isSet(jsonParams.hotspotId)).returns(() => true);
 
+            const hotspot = Object.assign({}, hotspotMoq.object);
+
             hotspotRepositoryMoq
                 .setup(x => x.findById(jsonParams.hotspotId))
-                .returns(() => hotspot.object);
+                .returns(() => Promise.resolve(hotspot));
 
             // Act
-            hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.addMember(reqMoq.object, resMoq.object, nextMoq.object);
 
             // Assert
 
@@ -368,19 +375,16 @@ describe('HotspotCtrl', () => {
                 TypeMoq.Times.once(),
             );
 
-            hotspotRepositoryMoq.verify(x => x.update(hotspot.object), TypeMoq.Times.once());
+            hotspotRepositoryMoq.verify(x => x.update(hotspot), TypeMoq.Times.once());
 
-            hotspot.verify(
-                x => x.addMember(new CityzenId(jsonBody.memberId)),
-                TypeMoq.Times.once(),
-            );
-            resMoq.verify(x => x.json(200, hotspot.object), TypeMoq.Times.once());
+            resMoq.verify(x => x.json(200, hotspot), TypeMoq.Times.once());
         });
 
         it('Should return internal error.', () => {
             const error = new Error('message');
+            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
 
-            hotspot
+            hotspotMoq
                 .setup(x => x.author)
                 .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
 
@@ -447,20 +451,22 @@ describe('HotspotCtrl', () => {
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
 
-        it('Should return bad request on hotspot different than Alert.', () => {
+        it('Should return bad request on hotspot different than Alert.', async () => {
             const hotspot = WallHotspotSample.SCHOOL;
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
             errorHandlerMoq
                 .setup(x => x.logAndCreateBadRequest(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
                 .returns(() => 'error');
 
-            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
@@ -486,7 +492,7 @@ describe('HotspotCtrl', () => {
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
 
-        it('Should agree on the pertinence of an hotspot', () => {
+        it('Should agree on the pertinence of an hotspot', async () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
@@ -499,15 +505,17 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(OK, TypeMoq.It.isAny()), TypeMoq.Times.once());
             Chai.expect(hotspot.pertinence.nAgree).to.be.greaterThan(0);
         });
 
-        it('Should return bad request already voted', () => {
+        it('Should return bad request already voted', async () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
@@ -521,7 +529,9 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
             errorHandlerMoq
                 .setup(x =>
@@ -532,12 +542,12 @@ describe('HotspotCtrl', () => {
                 )
                 .returns(() => 'error');
 
-            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
         });
 
-        it('Should disagree on the pertinence of an hotspot', () => {
+        it('Should disagree on the pertinence of an hotspot', async () => {
             body = { agree: false };
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
@@ -551,9 +561,11 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.postPertinence(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(OK, TypeMoq.It.isAny()), TypeMoq.Times.once());
             Chai.expect(hotspot.pertinence.nDisagree).to.be.greaterThan(0);
@@ -620,7 +632,7 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
         });
 
-        it('Should return unauthorized.', () => {
+        it('Should return unauthorized.', async () => {
             const body = {
                 title: 'new title',
             };
@@ -633,13 +645,15 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
             errorHandlerMoq
                 .setup(x => x.logAndCreateUnautorized(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
                 .returns(() => 'error');
 
-            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.update(TypeMoq.It.isAny()), TypeMoq.Times.never());
@@ -674,13 +688,15 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
             algoliaMoq
                 .setup(x => x.addHotspot(updatedHotspot))
                 .returns(() => Promise.resolve<any>({}));
 
-            hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.patchHotspots(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(OK, updatedHotspot), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.update(updatedHotspot), TypeMoq.Times.once());
@@ -735,7 +751,7 @@ describe('HotspotCtrl', () => {
             errorHandlerMoq.reset();
         });
 
-        it('Should remove.', () => {
+        it('Should remove.', async () => {
             const params = {
                 hotspotId: 'id',
             };
@@ -744,9 +760,11 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
 
-            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
             resMoq.verify(x => x.json(OK, getStatusText(OK)), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.once());
@@ -785,12 +803,14 @@ describe('HotspotCtrl', () => {
             reqMoq.setup(x => x.params).returns(() => params);
 
             hotspotRepositoryMoq.setup(x => x.isSet(params.hotspotId)).returns(() => true);
-            hotspotRepositoryMoq.setup(x => x.findById(params.hotspotId)).returns(() => hotspot);
+            hotspotRepositoryMoq
+                .setup(x => x.findById(params.hotspotId))
+                .returns(() => Promise.resolve(hotspot));
             errorHandlerMoq
                 .setup(x => x.logAndCreateUnautorized(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
                 .returns(() => 'error');
 
-            hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
+            await hotspotCtrl.removeHotspot(reqMoq.object, resMoq.object, nextMoq.object);
 
             nextMoq.verify(x => x('error'), TypeMoq.Times.once());
             hotspotRepositoryMoq.verify(x => x.remove(params.hotspotId), TypeMoq.Times.never());

@@ -1,15 +1,13 @@
-import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHotspotSample';
-import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
-import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import { expect } from 'chai';
-import { v4 } from 'uuid';
-import orm from '../../../src/infrastructure/orm';
 import * as sinon from 'sinon';
+import { v4 } from 'uuid';
+import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
+import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
+import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import {
     CITYZEN_ELODIE,
-    CITYZEN_LOUISE,
     CITYZEN_MARTIN,
     HOTSPOT_MARTIGNAS_CHURCH,
     HOTSPOT_MARTIGNAS_SCHOOL,
@@ -27,6 +25,9 @@ describe('HotspotRepositoryInMemory', () => {
     let removeStub: any;
     let saveStub: any;
 
+    let postgreStub: sinon.SinonStub;
+    let ormCityzen: any = {};
+
     beforeEach(() => {
         fakeTownHall = HOTSPOT_MARTIGNAS_TOWNHALL;
         fakeTownHall.cityzen = CITYZEN_ELODIE;
@@ -43,6 +44,10 @@ describe('HotspotRepositoryInMemory', () => {
             save: saveStub,
             remove: removeStub,
         };
+        ormCityzen = {
+            getAllAuthors: sinon.stub(),
+        };
+        postgreStub = sinon.stub();
     });
 
     afterEach(() => {
@@ -50,44 +55,73 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = null;
     });
 
-    it('should find an hostpsot by id if id is provided (indeed)', () => {
+    it('should find an hostpsot by id if id is provided (indeed)', async () => {
         // Arrange
+        const hotspotToGet = WallHotspotSample.SCHOOL;
+
         findOneStub.returns(fakeSchool);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        ormCityzen.getAllAuthors.returns(
+            Promise.resolve([
+                { id: hotspotToGet.author.id.toString(), pseudo: hotspotToGet.author.pseudo },
+            ]),
+        );
+
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         // Act
-        const school = hotspotRepository.findById('362fd2aa-d838-4bc2-b088-7e27921c4780');
+        const school = await hotspotRepository.findById(hotspotToGet.id);
         // Expect
-        expect(
-            findOneStub.calledWith({ id: '362fd2aa-d838-4bc2-b088-7e27921c4780', removed: false }),
-        ).to.be.true;
-        expect(school).to.be.eql(WallHotspotSample.SCHOOL);
+        expect(findOneStub.calledWith({ id: hotspotToGet.id, removed: false })).to.be.true;
+        expect(school).to.be.eql(hotspotToGet);
     });
 
-    it("should find an hostpsot by slug if id's format is slug", () => {
+    it("should find an hostpsot by slug if id's format is slug", async () => {
+        const hotspotToGet = WallHotspotSample.SCHOOL;
+
         // Arrange
         findOneStub.returns(fakeSchool);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        ormCityzen.getAllAuthors.returns(
+            Promise.resolve([
+                { id: hotspotToGet.author.id.toString(), pseudo: hotspotToGet.author.pseudo },
+            ]),
+        );
+
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         // Act
-        const school = hotspotRepository.findById(WallHotspotSample.SCHOOL.slug);
+        const school = await hotspotRepository.findById(hotspotToGet.slug);
         // Expect
-        expect(findOneStub.calledWith({ slug: WallHotspotSample.SCHOOL.slug, removed: false })).to
-            .be.true;
-        expect(school).to.be.eql(WallHotspotSample.SCHOOL);
+        expect(findOneStub.calledWith({ slug: hotspotToGet.slug, removed: false })).to.be.true;
+        expect(school).to.be.eql(hotspotToGet);
     });
 
-    it('should return undefined if no hotspot found', () => {
+    it('should return undefined if no hotspot found', async () => {
         // Arrange
         findOneStub.returns(undefined);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         // Act
-        const nomatch = hotspotRepository.findById(v4());
+        const nomatch = await hotspotRepository.findById(v4());
         // Expect
         expect(nomatch).to.be.undefined;
     });
 
     it('should store a new hotspot in memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
@@ -98,23 +132,38 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should remove an hotspot from memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         // Act
         hotspotRepository.remove(WallHotspotSample.SCHOOL.id);
         // Expect
         expect(removeStub.calledWith(WallHotspotSample.SCHOOL.id)).to.be.true;
     });
 
-    it('should retrieve hotspots spoted in the provided area', () => {
+    it('should retrieve hotspots spoted in the provided area', async () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        ormCityzen.getAllAuthors.returns(
+            Promise.resolve([
+                { id: fakeTownHall.authorId, pseudo: 'fake' },
+                { id: fakeChurch.authorId, pseudo: 'two' },
+                { id: fakeSchool.authorId, pseudo: 'three' },
+            ]),
+        );
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         const north: number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
         const west: number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
         const south: number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
         const east: number = PositionSample.MARTIGNAS_SOUTH_EST.longitude;
         // Act
-        const hotspots: Hotspot[] = hotspotRepository.findInArea(north, west, south, east);
+        const hotspots: Hotspot[] = await hotspotRepository.findInArea(north, west, south, east);
         // Assert
         expect(
             findStub.calledWith({
@@ -126,12 +175,16 @@ describe('HotspotRepositoryInMemory', () => {
         expect(hotspots).to.have.lengthOf(3);
     });
 
-    it("should'nt match hotspot in the specified area", () => {
+    it("should'nt match hotspot in the specified area", async () => {
         // Arrange
         findStub.returns([]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         // Act
-        const hotspots: Hotspot[] = hotspotRepository.findInArea(
+        const hotspots: Hotspot[] = await hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
             PositionSample.MARTIGNAS_NORTH_OUEST.longitude,
             PositionSample.MARTIGNAS_SOUTH_EST.latitude,
@@ -142,13 +195,24 @@ describe('HotspotRepositoryInMemory', () => {
         expect(hotspots).to.be.eql([]);
     });
 
-    it('should retrieve hotspot by given city insee code', () => {
+    it('should retrieve hotspot by given city insee code', async () => {
         // Arrange
         findStub.returns([fakeTownHall, fakeChurch, fakeSchool]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm);
+        ormCityzen.getAllAuthors.returns(
+            Promise.resolve([
+                { id: fakeTownHall.authorId, pseudo: 'fake' },
+                { id: fakeChurch.authorId, pseudo: 'two' },
+                { id: fakeSchool.authorId, pseudo: 'three' },
+            ]),
+        );
+        hotspotRepository = new HotspotRepositoryInMemory(
+            postgreStub as any,
+            orm,
+            ormCityzen as any,
+        );
         const insee = CitySample.MARTIGNAS.insee;
         // Act
-        const hotspots: Hotspot[] = hotspotRepository.findByCodeCommune(insee);
+        const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(insee);
         // Assert
         expect(hotspots).to.have.lengthOf(3);
     });
