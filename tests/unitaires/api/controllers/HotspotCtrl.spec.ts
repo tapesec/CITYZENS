@@ -115,7 +115,7 @@ describe('HotspotCtrl', () => {
 
             hotspotRepositoryMoq
                 .setup(x => x.findInArea(north, west, south, east))
-                .returns(() => repositoryResult);
+                .returns(() => Promise.resolve(repositoryResult));
 
             // Act
             hotspotCtrl.hotspots(reqMoq.object, resMoq.object, nextMoq.object);
@@ -156,7 +156,6 @@ describe('HotspotCtrl', () => {
                     ),
                 )
                 .returns(() => {
-
                     throw error;
                 });
             errorHandlerMoq

@@ -53,7 +53,7 @@ const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 const postgreSql = new PostgreSQL(config.postgreSQL);
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen, postgreSql);
-const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
+const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(postgreSql, orm, ormCityzen);
 
 // const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 

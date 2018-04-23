@@ -1,16 +1,16 @@
+import * as ajv from 'ajv';
+import { cityzensDbSchema } from '../api/requestValidation/schema';
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
-import { Orm } from './../infrastructure/ormCityzen';
+import { OrmCityzen } from './../infrastructure/ormCityzen';
 import CityzenFactory from './CityzenFactory';
-import * as ajv from 'ajv';
-import { cityzensDbSchema } from '../api/requestValidation/schema';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     private cityzenFactory: CityzenFactory;
     private validator: ajv.Ajv = new ajv();
 
-    constructor(protected orm: Orm, protected postgre: PostgreSQL) {
+    constructor(protected orm: OrmCityzen, protected postgre: PostgreSQL) {
         this.cityzenFactory = new CityzenFactory();
     }
 

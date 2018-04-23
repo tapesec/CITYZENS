@@ -3,7 +3,7 @@ import CityzenId from './CityzenId';
 
 class CityzenSample {
     public static MARTIN: Cityzen = new Cityzen(
-        new CityzenId('auth0|fake-id1'),
+        new CityzenId('auth0|postgre|4'),
         'martin@cityzen.com',
         'Martinus',
         false,
@@ -11,7 +11,7 @@ class CityzenSample {
         'Jeune enfant',
     );
     public static LOUISE: Cityzen = new Cityzen(
-        new CityzenId('auth0|fake-id2'),
+        new CityzenId('auth0|postgre|5'),
         'louise@cityzen.com',
         'Louisounette',
         false,
@@ -19,7 +19,7 @@ class CityzenSample {
         'Jeune écolière',
     );
     public static ELODIE: Cityzen = new Cityzen(
-        new CityzenId('auth0|fake-id3'),
+        new CityzenId('auth0|postgre|6'),
         'elodie@cityzen.com',
         'Princesse',
         false,
@@ -28,7 +28,7 @@ class CityzenSample {
     );
 
     public static LIONNEL: Cityzen = new Cityzen(
-        new CityzenId('auth0|59f989805c12313f24aae17b'),
+        new CityzenId('auth0|postgre|7'),
         'lionel.dupouy@gmail.com',
         'Lasalle',
         true,
@@ -37,7 +37,7 @@ class CityzenSample {
     );
 
     public static LIONNEL2: Cityzen = new Cityzen(
-        new CityzenId('auth0|59f836a23f551143a6964889'),
+        new CityzenId('auth0|postgre|8'),
         'lionel.dupouy@gmail.com',
         'lionel.dupouy',
         true,
@@ -46,7 +46,7 @@ class CityzenSample {
     );
 
     public static LUCA: Cityzen = new Cityzen(
-        new CityzenId('auth0|5a1e6928f96aa12d71333e0e'),
+        new CityzenId('auth0|postgre|9'),
         'lucabrx@gmail.com',
         'lucabrx',
         true,
@@ -55,7 +55,7 @@ class CityzenSample {
     );
 
     public static LUCA_GOOGLE: Cityzen = new Cityzen(
-        new CityzenId('google-oauth2|102733031473233157543'),
+        new CityzenId('google-oauth2|postgre|10'),
         'lucabrx@gmail.com',
         'lucabrx',
         true,

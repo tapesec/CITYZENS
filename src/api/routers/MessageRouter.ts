@@ -1,5 +1,5 @@
-import MessageCtrl from '../controllers/MessageCtrl';
 import * as restify from 'restify';
+import MessageCtrl from '../controllers/MessageCtrl';
 import { HOTSPOT_ENDPOINT, MESSAGE_ENDPOINT } from './constants';
 
 class MessageRouter {
@@ -10,7 +10,11 @@ class MessageRouter {
     }
 
     bind(server: restify.Server) {
-        server.get(HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT, this.ctrl.getMessages);
+        server.get(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT,
+            this.ctrl.optInAuthenticateUser,
+            this.ctrl.getMessages,
+        );
 
         server.post(
             HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT,

@@ -1,16 +1,15 @@
-import MessageFactory from '../../infrastructure/MessageFactory';
-import Message from './../../domain/cityLife/model/messages/Message';
-import { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import RootCtrl from './RootCtrl';
-import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
+import { CREATED, OK, getStatusText } from 'http-status-codes';
 import * as rest from 'restify';
-import { OK, getStatusText, CREATED } from 'http-status-codes';
-import ErrorHandler from '../services/errors/ErrorHandler';
-import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import * as isAuthorized from '../services/hotspot/isAuthorized';
-import HotspotCtrl from './HotspotCtrl';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import MessageFactory from '../../infrastructure/MessageFactory';
+import { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
+import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import * as isAuthorized from '../services/hotspot/isAuthorized';
+import Message from './../../domain/cityLife/model/messages/Message';
+import HotspotCtrl from './HotspotCtrl';
+import RootCtrl from './RootCtrl';
 
 class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
@@ -34,12 +33,12 @@ class MessageCtrl extends RootCtrl {
     }
 
     // method=GET url=/hotspots/{hotspotId}/messages
-    public getMessages = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+    public getMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
         }
         try {
-            const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
             if (!hotspot) {
                 return next(
                     this.errorHandler.logAndCreateNotFound(
@@ -68,7 +67,7 @@ class MessageCtrl extends RootCtrl {
     };
 
     // method=POST url=/hotspots/{hotspotId}/messages
-    public postMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+    public postMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(createMessageSchema, req.body)) {
             return next(
                 this.errorHandler.logAndCreateBadRequest(
@@ -86,7 +85,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
@@ -117,7 +116,7 @@ class MessageCtrl extends RootCtrl {
     };
 
     // method=PATCH url=/hotspots/{hotspotId}/messages/{messageId}
-    public patchMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+    public patchMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         let message: Message;
 
         if (!this.schemaValidator.validate(patchMessageSchema, req.body)) {
@@ -129,7 +128,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
@@ -181,7 +180,7 @@ class MessageCtrl extends RootCtrl {
     };
 
     // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
-    public removeMessage = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+    public removeMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.messageRepository.isSet(req.params.messageId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
@@ -191,7 +190,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        const hotspot = this.hotspotRepository.findById(req.params.hotspotId);
+        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
             return next(
                 this.errorHandler.logAndCreateNotFound(

@@ -1,16 +1,19 @@
 import * as pg from 'pg';
 
 export default class PostgreSQL {
-    private client: pg.Client;
-
-    constructor(opts: any) {
-        this.client = new pg.Client(opts);
-    }
+    constructor(private opts: pg.ClientConfig) {}
 
     public async query(queryString: string, values: any[]) {
-        await this.client.connect();
-        const result = await this.client.query(queryString, values);
-        await this.client.end();
-        return result;
+        const client = new pg.Client(this.opts);
+
+        await client.connect();
+        try {
+            const result = await client.query(queryString, values);
+            await client.end();
+            return result;
+        } catch (err) {
+            await client.end();
+            throw err;
+        }
     }
 }

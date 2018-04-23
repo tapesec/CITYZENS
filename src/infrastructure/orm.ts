@@ -1,7 +1,7 @@
 import { hotspotCollection, cityzenCollection, messageCollection } from './dbInMemory';
 
 const hotspotFind = (requestParams: any) => {
-    let hotspotsResults: any;
+    let hotspotsResults: any[];
     if (requestParams.byArea) {
         const north = requestParams.byArea[0];
         const south = requestParams.byArea[2];
@@ -27,6 +27,8 @@ const hotspotFindOne = (requestParams: any) => {
 };
 
 const hotspotSave = (data: any) => {
+    data.authorId = data.author.id;
+    delete data.author;
     hotspotCollection.insert(data);
 };
 
@@ -87,7 +89,7 @@ const messageDelete = (id: string) => {
     messageCollection.update(message);
 };
 
-export default {
+const orm = {
     hotspot: {
         findAll: hotspotFind,
         findOne: hotspotFindOne,
@@ -104,3 +106,6 @@ export default {
         delete: messageDelete,
     },
 };
+export default orm;
+
+export type Orm = typeof orm;
