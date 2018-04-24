@@ -26,6 +26,8 @@ import Algolia from './../services/algolia/Algolia';
 import * as AlgoliaSearch from 'algoliasearch';
 import Auth0Service from '../services/auth/Auth0Service';
 import CityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository';
+import FilestackService from '../services/filestack/FilestackService';
+import SlideshowService from '../services/widgets/SlideshowService';
 
 // const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -48,6 +50,9 @@ const errorHandler = new ErrorHandler(
 );
 
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
+
+const filestackService = new FilestackService(request);
+const slideshowService = new SlideshowService(filestackService);
 
 const cityzenAuth0Repository = new CityzenAuth0Repository(auth0Service);
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm);
@@ -78,6 +83,7 @@ export const init = (server: restify.Server) => {
                 hotspotRepositoryInMemory,
                 new HotspotFactory(),
                 algolia,
+                slideshowService,
             ),
         ),
     );

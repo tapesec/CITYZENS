@@ -10,6 +10,10 @@ const env = process.env.NODE_ENV.trim();
 const algoliaAppId = process.env.ALGOLIA_APP_ID;
 const algoliaApiKey = process.env.ALGOLIA_API_KEY;
 const algoliaEnv = process.env.ALGOLIA_ENV;
+const filestackApiKey = process.env.FILE_STACK_API_KEY;
+const filestackApiUrl = process.env.FILE_STACK_API_URL;
+const filestackPolicy = process.env.FILE_STACK_POLICY;
+const filestackSignature = process.env.FILE_STACK_SIGNATURE;
 const defaultWallIcon = process.env.DEFAULT_WALL_ICON;
 const defaultEventIcon = process.env.DEFAULT_EVENT_ICON;
 const adminUsername = process.env.ADMIN_USERNAME;
@@ -50,6 +54,15 @@ export default {
     avatarIcon: {
         defaultWallIcon,
         defaultEventIcon,
+    },
+    filestack: {
+        apiKey: filestackApiKey,
+        apiUrl: filestackApiUrl,
+        security: {
+            // expire on april 2020, all right
+            policy: filestackPolicy,
+            signature: filestackSignature,
+        },
     },
     test: {
         standardAuth0id: 'auth0|5accbb899ebc00546acf1e9b',

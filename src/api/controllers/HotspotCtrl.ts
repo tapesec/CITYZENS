@@ -22,11 +22,14 @@ import { CREATED, OK, getStatusText } from 'http-status-codes';
 import Author from '../../domain/cityLife/model/author/Author';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
+import SlideshowService from '../services/widgets/SlideshowService';
+import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
 
 class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
     private algolia: Algolia;
     private hotspotFactory: HotspotFactory;
+    private slideshowService: SlideshowService;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
@@ -41,12 +44,14 @@ class HotspotCtrl extends RootCtrl {
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
+        slideshowService: SlideshowService,
     ) {
         super(errorHandler, auth0Service);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
         this.algolia.initHotspots();
+        this.slideshowService = slideshowService;
     }
 
     // method=GET url=/hotspots
@@ -269,7 +274,7 @@ class HotspotCtrl extends RootCtrl {
     };
 
     // method=PATCH url=/hotspots/{hotspotId}
-    public patchHotspots = (req: rest.Request, res: rest.Response, next: rest.Next) => {
+    public patchHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body)) {
             return next(
                 this.errorHandler.logAndCreateBadRequest(
@@ -300,7 +305,12 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-
+            if (req.body.slideShow) {
+                await this.slideshowService.removeImage(
+                    (<MediaHotspot>hotspot).slideShow.toJSON(),
+                    req.body.slideShow,
+                );
+            }
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
