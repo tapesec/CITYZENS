@@ -66,11 +66,7 @@ describe('HotspotRepositoryInMemory', () => {
             ]),
         );
 
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
         const school = await hotspotRepository.findById(hotspotToGet.id);
         // Expect
@@ -89,11 +85,7 @@ describe('HotspotRepositoryInMemory', () => {
             ]),
         );
 
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
         const school = await hotspotRepository.findById(hotspotToGet.slug);
         // Expect
@@ -104,11 +96,7 @@ describe('HotspotRepositoryInMemory', () => {
     it('should return undefined if no hotspot found', async () => {
         // Arrange
         findOneStub.returns(undefined);
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
         const nomatch = await hotspotRepository.findById(v4());
         // Expect
@@ -117,11 +105,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should store a new hotspot in memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
@@ -132,11 +116,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should remove an hotspot from memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
         hotspotRepository.remove(WallHotspotSample.SCHOOL.id);
         // Expect
@@ -153,11 +133,7 @@ describe('HotspotRepositoryInMemory', () => {
                 { id: fakeSchool.authorId, pseudo: 'three' },
             ]),
         );
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         const north: number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
         const west: number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
         const south: number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
@@ -178,11 +154,7 @@ describe('HotspotRepositoryInMemory', () => {
     it("should'nt match hotspot in the specified area", async () => {
         // Arrange
         findStub.returns([]);
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
         const hotspots: Hotspot[] = await hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
@@ -205,11 +177,7 @@ describe('HotspotRepositoryInMemory', () => {
                 { id: fakeSchool.authorId, pseudo: 'three' },
             ]),
         );
-        hotspotRepository = new HotspotRepositoryInMemory(
-            postgreStub as any,
-            orm,
-            ormCityzen as any,
-        );
+        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
         const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(insee);

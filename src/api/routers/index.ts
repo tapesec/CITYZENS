@@ -15,7 +15,7 @@ import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
 import PostgreSQL from '../services/postgreSQL/postgreSQL';
 import orm from './../../infrastructure/orm';
-import ormCityzen from './../../infrastructure/ormCityzen';
+import OrmCityzen from './../../infrastructure/ormCityzen';
 import config from './../config';
 import AlgoliaApi from './../libs/AlgoliaAPI';
 import SlackWebhook from './../libs/SlackWebhook';
@@ -52,8 +52,10 @@ const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 
 const postgreSql = new PostgreSQL(config.postgreSQL);
 
-const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen, postgreSql);
-const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(postgreSql, orm, ormCityzen);
+const ormCityzen = new OrmCityzen(postgreSql);
+
+const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
+const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, ormCityzen);
 
 // const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
 

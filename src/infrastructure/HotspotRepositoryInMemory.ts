@@ -8,16 +8,12 @@ import CityzenId from '../domain/cityzens/model/CityzenId';
 import { isUuid } from './../api/helpers';
 import HotspotFactory from './HotspotFactory';
 import { Orm } from './orm';
-import { OrmCityzen } from './ormCityzen';
+import OrmCityzen from './ormCityzen';
 
 class HotspotRepositoryInMemory implements IHotspotRepository {
     protected hotspots: Map<string, Hotspot> = new Map();
 
-    constructor(
-        protected postgre: PostgreSQL,
-        protected orm: Orm,
-        protected ormCityzen: OrmCityzen,
-    ) {}
+    constructor(protected orm: Orm, protected ormCityzen: OrmCityzen) {}
 
     public async findByCodeCommune(
         insee: string,
@@ -29,7 +25,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             new Set(data.map((entry: any) => new CityzenId(entry.authorId))),
         );
 
-        const authors = await this.ormCityzen.getAllAuthors(this.postgre, authorsId);
+        const authors = await this.ormCityzen.getAllAuthors(authorsId);
 
         const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
         const factory = new HotspotFactory();
@@ -52,7 +48,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
 
         const authorsId = [new CityzenId(data.authorId)];
 
-        const author = (await this.ormCityzen.getAllAuthors(this.postgre, authorsId))[0];
+        const author = (await this.ormCityzen.getAllAuthors(authorsId))[0];
         const factory = new HotspotFactory();
         if (data) {
             const formedData = { ...data };
@@ -86,7 +82,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             new Set(data.map((entry: any) => new CityzenId(entry.authorId))),
         );
 
-        const authors = await this.ormCityzen.getAllAuthors(this.postgre, authorsId);
+        const authors = await this.ormCityzen.getAllAuthors(authorsId);
 
         const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
         const factory = new HotspotFactory();

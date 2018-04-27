@@ -1,2 +1,1 @@
-export const username = 'lionel.dupouy';
-export const password = 'MW6DPzxspBdb';
+export const username = 'lucabrx';
