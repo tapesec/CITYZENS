@@ -13,6 +13,7 @@ import MessageCtrl from '../controllers/MessageCtrl';
 import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
+import CheckAndCreateTable from '../services/postgreSQL/checkAndCreateTables';
 import PostgreSQL from '../services/postgreSQL/postgreSQL';
 import orm from './../../infrastructure/orm';
 import OrmCityzen from './../../infrastructure/ormCityzen';
@@ -51,6 +52,7 @@ const errorHandler = new ErrorHandler(
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 
 const postgreSql = new PostgreSQL(config.postgreSQL);
+CheckAndCreateTable.cityzens(postgreSql);
 
 const ormCityzen = new OrmCityzen(postgreSql);
 

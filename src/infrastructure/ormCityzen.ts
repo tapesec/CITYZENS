@@ -18,11 +18,13 @@ class OrmCityzen {
             });
     };
     getAllAuthors = (ids: CityzenId[]) => {
+        if (ids.length === 0) return Promise.resolve<{ id: string; pseudo: string }[]>([]);
+
         let queryString = 'SELECT user_id, nickname from cityzens WHERE user_id IN (';
-        ids.forEach((_, i, __) => {
-            queryString += `$${i + 1}${i + 1 === ids.length ? '' : ','}`;
-        });
-        queryString += ')';
+        for (let i = 0; i + 1 < ids.length; i += 1) {
+            queryString += `${i}, `;
+        }
+        queryString += `${ids[ids.length - 1]})`;
 
         const processedIds = ids.map(i => i.toInt());
 
