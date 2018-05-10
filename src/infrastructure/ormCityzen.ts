@@ -22,9 +22,10 @@ class OrmCityzen {
 
         let queryString = 'SELECT user_id, nickname from cityzens WHERE user_id IN (';
         for (let i = 0; i + 1 < ids.length; i += 1) {
-            queryString += `${i}, `;
+            queryString += `$${i + 1}, `;
         }
-        queryString += `${ids[ids.length - 1]})`;
+        // i don't want to add the final comma.
+        queryString += `$${ids.length})`;
 
         const processedIds = ids.map(i => i.toInt());
 

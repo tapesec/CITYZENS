@@ -14,8 +14,10 @@ const defaultWallIcon = process.env.DEFAULT_WALL_ICON;
 const defaultEventIcon = process.env.DEFAULT_EVENT_ICON;
 const adminUsername = process.env.ADMIN_USERNAME;
 const adminPassword = process.env.ADMIN_PASSWORD;
+const adminAccessToken = process.env.ETERNAL_ADMIN_ACCESS_TOKEN;
 const standardUsername = process.env.STANDARD_USERNAME;
 const standardPassword = process.env.STANDARD_PASSWORD;
+const standardAccessToken = process.env.ETERNAL_STANDARD_ACCESS_TOKEN;
 const postgreSQLUser = process.env.POSTGRESQL_USER;
 const postgreSQLHost = process.env.POSTGRESQL_HOST;
 const postgreSQLDatabase = process.env.POSTGRESQL_DATABASE;
@@ -38,8 +40,10 @@ export default {
     credentials: {
         adminUsername,
         adminPassword,
+        adminAccessToken,
         standardUsername,
         standardPassword,
+        standardAccessToken,
     },
     auth: {
         auth0url,
@@ -57,7 +61,7 @@ export default {
         defaultEventIcon,
     },
     test: {
-        standardAuth0id: 'auth0|5accbb899ebc00546acf1e9b',
+        standardAuth0id: 'auth0|postgre|13',
     },
     postgreSQL: {
         user: postgreSQLUser,

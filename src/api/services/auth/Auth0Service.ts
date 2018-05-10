@@ -56,10 +56,11 @@ class Auth0Service {
                 .login(username, password)
                 .then(r => resolve(r))
                 .catch(err => {
-                    reject(this.errorHandler.logAndCreateInternal('GET auth', err));
+                    const error = new Error(err.error + " \n" + err.error_description);
+                    reject(this.errorHandler.logAndCreateInternal('GET auth', error));
                 });
         });
     }
-}
+}   
 
 export default Auth0Service;

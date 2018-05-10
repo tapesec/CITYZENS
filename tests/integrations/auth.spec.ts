@@ -7,7 +7,6 @@ import alertHotspotsTests from './alertHotspot.spec';
 import hotspotsEndpointsTests from './hotspots.spec';
 import citiesEndpointTests from './cities.spec';
 import messagesEndpointsTests from './messages.spec';
-import { loginBody } from './sample/requests-responses';
 import * as LoginSample from './sample/LoginSample';
 import { votingPath } from './Voting.spec';
 import config from './../../src/api/config';
@@ -15,44 +14,10 @@ import config from './../../src/api/config';
 describe('/auth endpoint', () => {
     const state: any = { admin: {}, standard: {} };
 
-    describe('GET /auth/token', () => {
-        it('should return jwt token after received credentials', async () => {
-            const loginBody = {
-                username: LoginSample.adminSample.username,
-                password: LoginSample.adminSample.password,
-            };
+    state.admin.access_token = config.credentials.adminAccessToken;
+    state.standard.access_token = config.credentials.standardAccessToken;
+    state.standard.auth0id = config.test.standardAuth0id;
 
-            // Act
-            const responseAdmin = await request(server)
-                .get('/auth/token')
-                .query(loginBody)
-                .set('Accept', 'application/json')
-                .expect(200);
-
-            loginBody.username = LoginSample.standardSample.username;
-            loginBody.password = LoginSample.standardSample.password;
-
-            const responseStandard = await request(server)
-                .get('/auth/token')
-                .query(loginBody)
-                .set('Accept', 'application/json')
-                .expect(200);
-            // Assert
-            expect(responseAdmin.body).to.have.property('access_token');
-            expect(responseAdmin.body).to.have.property('id_token');
-            expect(responseAdmin.body).to.have.property('refresh_token');
-            // Finaly
-
-            state.admin.id_token = responseAdmin.body.id_token;
-            state.admin.refresh_token = responseAdmin.body.refresh_token;
-            state.admin.access_token = responseAdmin.body.access_token;
-
-            state.standard.id_token = responseStandard.body.id_token;
-            state.standard.refresh_token = responseStandard.body.refresh_token;
-            state.standard.access_token = responseStandard.body.access_token;
-            state.standard.auth0id = config.test.standardAuth0id;
-        });
-    });
     wallHotspotsTests(state);
     eventHotspotsTests(state);
     alertHotspotsTests(state);

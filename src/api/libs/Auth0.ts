@@ -45,7 +45,6 @@ class Auth0 {
                 scope: 'openid offline_access',
                 client_id: this.opts.clientId,
                 client_secret: this.opts.clientSecret,
-                connection: 'Cityzens',
             },
             json: true,
         };

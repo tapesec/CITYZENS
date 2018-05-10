@@ -5,6 +5,7 @@
     "main": "server.js",
     "scripts": {
         "start": "tsc && node --require dotenv/config build/api/server.js",
+        "build": "tsc",
         "test": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
         "test:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
         "test:unit": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
