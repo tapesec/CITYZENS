@@ -18,6 +18,10 @@ class Algolia {
             cityId: hotspot.cityId,
             type: hotspot.type,
             iconType: hotspot.iconType,
+            _geoloc: {
+                lat: hotspot.position.latitude,
+                lng: hotspot.position.longitude,
+            },
         };
         if (hotspot instanceof AlertHotspot) {
             data.message = hotspot.message;
