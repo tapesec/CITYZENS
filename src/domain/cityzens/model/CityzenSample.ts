@@ -36,31 +36,13 @@ class CityzenSample {
         'Hipster',
     );
 
-    public static LIONNEL2: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|8'),
-        'lionel.dupouy@gmail.com',
-        'lionel.dupouy',
-        true,
-        undefined,
-        'Casu',
-    );
-
     public static LUCA: Cityzen = new Cityzen(
         new CityzenId('auth0|postgre|9'),
-        'lucabrx@gmail.com',
+        'lucabrx@hotmail.fr',
         'lucabrx',
         true,
         undefined,
         'Hipster',
-    );
-
-    public static LUCA_GOOGLE: Cityzen = new Cityzen(
-        new CityzenId('google-oauth2|postgre|10'),
-        'lucabrx@gmail.com',
-        'lucabrx',
-        true,
-        undefined,
-        'Hipster Go',
     );
 }
 

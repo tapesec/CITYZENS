@@ -107,7 +107,7 @@ export const HOTSPOT_DOCTOR = {
     id: WallHotspotSample.DOCTOR.id,
     title: WallHotspotSample.DOCTOR.title,
     position: JSON.parse(JSON.stringify(PositionSample.DOCTOR)),
-    authorId: CityzenSample.LIONNEL2.id.toString(),
+    authorId: WallHotspotSample.DOCTOR.author.id.toString(),
     slug: slug(WallHotspotSample.DOCTOR.title),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.DOCTOR_ADDRESS)),
@@ -176,9 +176,7 @@ export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
 export const CITYZEN_LOUISE = JSON.parse(JSON.stringify(CityzenSample.LOUISE));
 export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
 export const CITYZEN_LIONNEL = JSON.parse(JSON.stringify(CityzenSample.LIONNEL));
-export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2));
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
-export const CITYZEN_LUCA_GOOGLE = JSON.parse(JSON.stringify(CityzenSample.LUCA_GOOGLE));
 
 const env: string = config.server.env;
 const isInTest = env === 'test';
@@ -233,9 +231,7 @@ const databaseInitialize = () => {
         cityzenCollection.insert(CITYZEN_LOUISE);
         cityzenCollection.insert(CITYZEN_MARTIN);
         cityzenCollection.insert(CITYZEN_LIONNEL);
-        cityzenCollection.insert(CITYZEN_LIONNEL2);
         cityzenCollection.insert(CITYZEN_LUCA);
-        cityzenCollection.insert(CITYZEN_LUCA_GOOGLE);
     }
 };
 

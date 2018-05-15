@@ -99,7 +99,7 @@ class HotspotBuilderSample {
     public static DOCTOR_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
         new HotspotId('a8524155-caa5-408b-b92f-65b4679a1fed'),
         PositionSample.DOCTOR,
-        AuthorSample.LIONNEL2,
+        AuthorSample.LIONNEL,
         new CityId('33273'),
         AddressSample.DOCTOR_ADDRESS,
         new ViewsCount(1),

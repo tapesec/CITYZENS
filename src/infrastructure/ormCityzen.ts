@@ -20,25 +20,23 @@ class OrmCityzen {
     getAllAuthors = (ids: CityzenId[]) => {
         if (ids.length === 0) return Promise.resolve<{ id: string; pseudo: string }[]>([]);
 
-        let queryString = 'SELECT user_id, nickname from cityzens WHERE user_id IN (';
+        let queryString = 'SELECT user_id, pseudo from cityzens WHERE user_id IN (';
         for (let i = 0; i + 1 < ids.length; i += 1) {
             queryString += `$${i + 1}, `;
         }
         // i don't want to add the final comma.
         queryString += `$${ids.length})`;
 
-        const processedIds = ids.map(i => i.toInt());
-
-        return this.postgre.query(queryString, processedIds).then(results => {
+        return this.postgre.query(queryString, ids.map(i => i.toString())).then(results => {
             if (results.rowCount === 0) {
-                return undefined;
+                return [];
             }
 
             const data = results.rows as any[];
             return data.map(e => {
                 return {
-                    id: `auth0|postgre|${e.user_id}`,
-                    pseudo: e.nickname,
+                    id: e.user_id,
+                    pseudo: e.pseudo,
                 };
             });
         });

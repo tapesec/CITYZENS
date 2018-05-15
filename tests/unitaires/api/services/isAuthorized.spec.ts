@@ -8,6 +8,7 @@ import * as Chai from 'chai';
 import Message from '../../../../src/domain/cityLife/model/messages/Message';
 import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 
 describe("isAuthorized's functions.", () => {
     it('toSeeHotspots', () => {
@@ -24,7 +25,7 @@ describe("isAuthorized's functions.", () => {
             CityzenSample.LIONNEL,
             CityzenSample.LUCA,
         ];
-        const unauthorizedCityzens = [new Cityzen('', '', '', false), undefined];
+        const unauthorizedCityzens = [new Cityzen(new CityzenId(''), '', '', false), undefined];
 
         authorizedHotspots.forEach(hotspot => {
             authorizedCityzens.forEach(cityzen => {
@@ -59,7 +60,7 @@ describe("isAuthorized's functions.", () => {
             CityzenSample.LIONNEL,
             CityzenSample.LUCA,
         ];
-        const unauthorizedCityzens = [new Cityzen('', '', '', false), undefined];
+        const unauthorizedCityzens = [new Cityzen(new CityzenId(''), '', '', false), undefined];
 
         authorizedHotspots.forEach(hotspot => {
             authorizedCityzens.forEach(cityzen => {
@@ -88,7 +89,7 @@ describe("isAuthorized's functions.", () => {
         // the author and the one and only god of all cityzens, the one whose name should be sanctify, his reign will comme.
         const authorizedCityzens = [CityzenSample.ELODIE, CityzenSample.LIONNEL];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -117,9 +118,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -148,9 +149,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -179,9 +180,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -210,9 +211,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -252,9 +253,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];
@@ -283,9 +284,9 @@ describe("isAuthorized's functions.", () => {
 
         const privateHotspots = [WallHotspotSample.TOEDIT];
 
-        const authorizedCityzens = [CityzenSample.LIONNEL2, CityzenSample.ELODIE];
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
-            new Cityzen('', '', '', false),
+            new Cityzen(new CityzenId(''), '', '', false),
             undefined,
             CityzenSample.MARTIN,
         ];

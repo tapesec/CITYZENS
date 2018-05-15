@@ -14,9 +14,39 @@ import config from './../../src/api/config';
 describe('/auth endpoint', () => {
     const state: any = { admin: {}, standard: {} };
 
-    state.admin.access_token = config.credentials.adminAccessToken;
-    state.standard.access_token = config.credentials.standardAccessToken;
-    state.standard.auth0id = config.test.standardAuth0id;
+    describe('GET /auth/token', () => {
+        it('should return jwt token after received credentials', async () => {
+            const loginBody = {
+                username: LoginSample.adminSample.username,
+                password: LoginSample.adminSample.password,
+            };
+
+            // Act
+            const responseAdmin = await request(server)
+                .get('/auth/token')
+                .query(loginBody)
+                .set('Accept', 'application/json')
+                .expect(200);
+
+            loginBody.username = LoginSample.standardSample.username;
+            loginBody.password = LoginSample.standardSample.password;
+
+            const responseStandard = await request(server)
+                .get('/auth/token')
+                .query(loginBody)
+                .set('Accept', 'application/json')
+                .expect(200);
+            // Assert
+            expect(responseAdmin.body).to.have.property('access_token');
+            expect(responseAdmin.body).to.have.property('id_token');
+            expect(responseAdmin.body).to.have.property('refresh_token');
+            // Finaly
+
+            state.admin.access_token = responseAdmin.body.access_token;
+            state.standard.access_token = responseStandard.body.access_token;
+            state.standard.auth0id = config.test.standardAuth0id;
+        });
+    });
 
     wallHotspotsTests(state);
     eventHotspotsTests(state);
