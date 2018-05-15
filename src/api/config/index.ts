@@ -61,7 +61,7 @@ export default {
         defaultEventIcon,
     },
     test: {
-        standardAuth0id: 'auth0|postgre|13',
+        standardAuth0id: 'auth0|6',
     },
     postgreSQL: {
         user: postgreSQLUser,

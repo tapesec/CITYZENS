@@ -44,7 +44,7 @@ const cityzens = async (postgre: PostgreSQL) => {
                 })
                 .then(async v => {
                     await new Promise((resolve, reject) => {
-                        setTimeout(resolve, 10000);
+                        setTimeout(resolve, 500);
                     });
                 });
         });

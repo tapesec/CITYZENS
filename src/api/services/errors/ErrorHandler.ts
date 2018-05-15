@@ -67,10 +67,12 @@ class ErrorHandler {
         const errorToLog = JSON.stringify(err.message, undefined, 4);
 
         if (errorToLog !== undefined) this.httpLogger.info(errorToLog);
-        this.slackHook.alert(
-            `Error 500 on ${route} \n ${errorToLog !== undefined ? errorToLog : ''} \n
-             Call trace: ${err.stack ? err.stack : 'not available'}`,
-        );
+        this.slackHook
+            .alert(
+                `Error 500 on ${route} \n ${errorToLog !== undefined ? errorToLog : ''} \n
+                Call trace: ${err.stack ? err.stack : 'not available'}`,
+            )
+            .catch(r => {});
         return error;
     }
 }

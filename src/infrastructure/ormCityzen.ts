@@ -44,7 +44,7 @@ class OrmCityzen {
     updateFavoritesHotspots = (data: string[], id: CityzenId) => {
         return this.postgre.query(
             'UPDATE cityzens SET favorites_hotspots = $1 WHERE user_id = $2',
-            [data, id],
+            [data, id.toString()],
         );
     };
 }

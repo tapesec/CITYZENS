@@ -3,7 +3,7 @@ import CityzenId from './CityzenId';
 
 class CityzenSample {
     public static MARTIN: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|4'),
+        new CityzenId('auth0|4'),
         'martin@cityzen.com',
         'Martinus',
         false,
@@ -11,7 +11,7 @@ class CityzenSample {
         'Jeune enfant',
     );
     public static LOUISE: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|5'),
+        new CityzenId('auth0|5'),
         'louise@cityzen.com',
         'Louisounette',
         false,
@@ -19,7 +19,7 @@ class CityzenSample {
         'Jeune écolière',
     );
     public static ELODIE: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|6'),
+        new CityzenId('auth0|6'),
         'elodie@cityzen.com',
         'Princesse',
         false,
@@ -28,7 +28,7 @@ class CityzenSample {
     );
 
     public static LIONNEL: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|7'),
+        new CityzenId('auth0|7'),
         'lionel.dupouy@gmail.com',
         'Lasalle',
         true,
@@ -37,7 +37,7 @@ class CityzenSample {
     );
 
     public static LUCA: Cityzen = new Cityzen(
-        new CityzenId('auth0|postgre|9'),
+        new CityzenId('auth0|9'),
         'lucabrx@hotmail.fr',
         'lucabrx',
         true,

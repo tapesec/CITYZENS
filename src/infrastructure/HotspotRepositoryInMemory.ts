@@ -32,7 +32,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         data.forEach((entry: any) => {
             const formedData = { ...entry };
 
-            formedData.author = authors.find((v, __, ___) => v.id === formedData.authorId);
+            formedData.author = authors.find(v => v.id === formedData.authorId);
             delete formedData.authorId;
 
             hotspotsArray.push(factory.build(formedData));
