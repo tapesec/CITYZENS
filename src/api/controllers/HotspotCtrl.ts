@@ -3,6 +3,7 @@ import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
+import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
@@ -14,6 +15,7 @@ import ErrorHandler from '../services/errors/ErrorHandler';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
+import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
 import HotspotReducer from './../services/hotspot/HotspotReducer';
 import * as isAuthorized from './../services/hotspot/isAuthorized';
@@ -23,6 +25,7 @@ class HotspotCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
     private algolia: Algolia;
     private hotspotFactory: HotspotFactory;
+    private slideshowService: SlideshowService;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
@@ -37,12 +40,14 @@ class HotspotCtrl extends RootCtrl {
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
+        slideshowService: SlideshowService,
     ) {
         super(errorHandler, auth0Service);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
         this.algolia.initHotspots();
+        this.slideshowService = slideshowService;
     }
 
     // method=GET url=/hotspots
@@ -296,7 +301,12 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-
+            if (req.body.slideShow) {
+                await this.slideshowService.removeImage(
+                    (<MediaHotspot>hotspot).slideShow.toJSON(),
+                    req.body.slideShow,
+                );
+            }
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
             this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);

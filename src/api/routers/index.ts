@@ -13,7 +13,9 @@ import MessageCtrl from '../controllers/MessageCtrl';
 import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
+import FilestackService from '../services/filestack/FilestackService';
 import PostgreSQL from '../services/postgreSQL/postgreSQL';
+import SlideshowService from '../services/widgets/SlideshowService';
 import orm from './../../infrastructure/orm';
 import OrmCityzen from './../../infrastructure/ormCityzen';
 import config from './../config';
@@ -27,6 +29,7 @@ import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
 import SwaggerRouter from './SwaggerRouter';
+import CheckAndCreateTable from '../services/postgreSQL/checkAndCreateTables';
 
 // const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -57,7 +60,15 @@ const ormCityzen = new OrmCityzen(postgreSql);
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, ormCityzen);
 
+const filestackService = new FilestackService(request);
+const slideshowService = new SlideshowService(filestackService);
+
 // const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
+
+export const initDB = async (server: restify.Server) => {
+    console.log('Trying to connect');
+    await CheckAndCreateTable.cityzens(postgreSql);
+};
 
 export const init = (server: restify.Server) => {
     const routers = [];
@@ -83,6 +94,7 @@ export const init = (server: restify.Server) => {
                 hotspotRepositoryInMemory,
                 new HotspotFactory(),
                 algolia,
+                slideshowService,
             ),
         ),
     );

@@ -8,10 +8,14 @@
         "build": "tsc",
         "test": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
         "test:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
-        "test:unit": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
-        "test:unit:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
-        "test:integration": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
-        "test:integration:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
+        "test:unit":
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
+        "test:unit:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
+        "test:integration":
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
+        "test:integration:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
         "tslint": "tslint -p ./tsconfig.json -c ./tslint.json src/**/*.ts",
         "tslint-check": "tslint-config-prettier-check ./tslint.json"
     },
@@ -70,19 +74,9 @@
         "node": ">=8.9.3"
     },
     "nyc": {
-        "extension": [
-            ".ts",
-            ".tsx"
-        ],
-        "exclude": [
-            "**/*.d.ts",
-            "**/*.spec.ts",
-            "**/*.js",
-            "tests/*"
-        ],
-        "reporter": [
-            "text"
-        ],
+        "extension": [".ts", ".tsx"],
+        "exclude": ["**/*.d.ts", "**/*.spec.ts", "**/*.js", "tests/*"],
+        "reporter": ["text"],
         "all": true
     }
 }
