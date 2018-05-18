@@ -1,8 +1,11 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
+import CheckAndCreateTable from '../api/services/postgreSQL/checkAndCreateTables';
 
 class OrmCityzen {
-    constructor(private postgre: PostgreSQL) {}
+    constructor(private postgre: PostgreSQL) {
+        CheckAndCreateTable.cityzens(postgre);
+    }
 
     findById = (id: CityzenId) => {
         return this.postgre

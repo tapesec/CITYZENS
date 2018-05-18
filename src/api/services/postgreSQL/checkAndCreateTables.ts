@@ -1,15 +1,23 @@
 import PostgreSQL from './postgreSQL';
-import { CITYZEN_TABLE_NAME, CITYZEN_TABLE_SCHEMA } from './constants';
+import { CITYZEN_TABLE_NAME } from './constants';
 import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 
 const cityzens = async (postgre: PostgreSQL) => {
     try {
         const exist = await postgre.tableExist(CITYZEN_TABLE_NAME);
+        console.log('Connected to the database.');
         if (exist) return;
 
-        let promise = Promise.resolve();
-        await postgre.createTable(CITYZEN_TABLE_SCHEMA);
+        const createTable = `CREATE TABLE cityzens (
+            user_id text NOT NULL UNIQUE PRIMARY KEY,
+            password text, email text NOT NULL UNIQUE,
+            pseudo text,
+            picture text,
+            is_admin boolean DEFAULT FALSE,
+            favorites_hotspots text[]
+        )`;
+        await postgre.query(createTable);
 
         const cityzens: [Cityzen, string][] = [
             [CityzenSample.ELODIE, '$2a$10$soIZ/r/5MU1IUqTwM2aGfuNu6RSEifpd4PVuwWRoeV3h/ocscwXI6'],
@@ -19,7 +27,7 @@ const cityzens = async (postgre: PostgreSQL) => {
             [CityzenSample.MARTIN, '$2a$10$yeKNJMuyDe6xo7mCc2wJe.ENH7hJnBYArUZwJYneNoEeC9IWMgVPq'],
         ];
 
-        cityzens.forEach(entry => {
+        for (const entry of cityzens) {
             const cityzen = entry[0];
             const password = entry[1];
 
@@ -31,28 +39,22 @@ const cityzens = async (postgre: PostgreSQL) => {
                 cityzen.favoritesHotspots !== undefined
                     ? Array.from(cityzen.favoritesHotspots)
                     : [];
-            promise = promise
-                .then(async v => {
-                    await postgre.query(query, [
-                        cityzen.id.toString(),
-                        password,
-                        cityzen.email,
-                        cityzen.pseudo,
-                        cityzen.isAdmin,
-                        favorites,
-                    ]);
-                })
-                .then(async v => {
-                    await new Promise((resolve, reject) => {
-                        setTimeout(resolve, 500);
-                    });
-                });
-        });
-        // i need to chain the promises instead of parallelizing them
-        // because of rate limiting in sql.
-        await promise;
+            await postgre.query(query, [
+                cityzen.id.toString(),
+                password,
+                cityzen.email,
+                cityzen.pseudo,
+                cityzen.isAdmin,
+                favorites,
+            ]);
+
+            await new Promise((resolve, reject) => {
+                setTimeout(resolve, 500);
+            });
+        }
     } catch (error) {
-        console.log(error);
+        console.log("Can't connect to database.\n", error);
+        process.exit(1);
     }
 };
 
