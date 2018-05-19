@@ -11,12 +11,15 @@ export {
 };
 
 const hotspotSchema = {
-    required: ['id', 'cityId', 'position', 'type', 'iconType', 'views', 'address'],
+    required: ['id', 'cityId', 'position', 'type', 'iconType', 'views', 'address', 'createdAt'],
     properties: {
         id: {
             type: 'string',
         },
         cityId: {
+            type: 'string',
+        },
+        createdAt: {
             type: 'string',
         },
         author: {

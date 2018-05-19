@@ -163,6 +163,7 @@ class HotspotFactory {
         let views: ViewsCount;
         let type: HotspotType;
         let icon: HotspotIconType;
+        let createdAt: Date;
         // data from both database or user
         if (data.position) {
             position = new Position(data.position.latitude, data.position.longitude);
@@ -171,6 +172,10 @@ class HotspotFactory {
         if (data.address) {
             address = new Address(data.address.name, data.address.city);
         }
+        if (data.createdAt) {
+            createdAt = new Date(data.createdAt);
+        }
+
         if (data.cityzen) {
             // Data from user
             author = new Author(data.cityzen.pseudo, data.cityzen.id);
@@ -205,7 +210,17 @@ class HotspotFactory {
             throw new InvalidArgumentError(error.message);
         }
 
-        return new HotspotBuilder(hotspotId, position, author, cityId, address, views, type, icon);
+        return new HotspotBuilder(
+            hotspotId,
+            position,
+            author,
+            cityId,
+            address,
+            views,
+            type,
+            icon,
+            createdAt,
+        );
     };
 
     private setIconType = (iconType: any) => {

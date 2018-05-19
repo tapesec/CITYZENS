@@ -74,6 +74,9 @@ class MediaHotspot extends Hotspot {
     public changeSlideShow(slideShow: SlideShow) {
         this._slideShow = slideShow;
     }
+    public changeCreatedAt(date: Date) {
+        this._createdAt = date;
+    }
 
     toString() {
         const stringed: any = {

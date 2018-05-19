@@ -28,8 +28,13 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
+            address: {
+                city: 'Isengard',
+                name: 'Tower of Saruman',
+            },
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -145,10 +150,15 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Minas Tirith',
+                name: 'Devant les portes',
+            },
             cityId: '33273',
             scope: 'private',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -164,11 +174,16 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Minas Tirith',
+                name: 'Forum',
+            },
             cityId: '33273',
             scope: 'private',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
             avatarIconUrl: 'url',
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -185,12 +200,17 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Comté',
+                name: 'Cul de sac',
+            },
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Event,
             iconType: HotspotIconType.Event,
             dateEnd: new Date().toISOString(),
             description: 'lorem ipsum dolor',
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -206,6 +226,10 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: "Je n'ai plus de nom",
+                name: 'Peu importe',
+            },
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Event,
@@ -213,6 +237,7 @@ describe('JschemaValidator', () => {
             dateEnd: new Date().toISOString(),
             description: 'lorem ipsum dolor',
             avatarIconUrl: 'url',
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -228,10 +253,15 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Gondor',
+                name: "La tombe de Boromir (le fleuve en vrai parcequ'il n'a pas de tombe",
+            },
             cityId: '33273',
             type: HotspotType.Alert,
             iconType: HotspotIconType.Accident,
             message: 'lorem ipsum dolor',
+            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);

@@ -19,8 +19,23 @@ export {
 };
 
 const hotspotSchema = {
-    required: ['cityId', 'position', 'type', 'iconType'],
+    required: ['cityId', 'position', 'type', 'iconType', 'address', 'createdAt'],
     properties: {
+        address: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
+                },
+                city: {
+                    type: 'string',
+                },
+            },
+            required: ['name', 'city'],
+        },
+        createdAt: {
+            type: 'string',
+        },
         cityId: {
             type: 'string',
         },
@@ -35,18 +50,6 @@ const hotspotSchema = {
                 },
             },
             required: ['latitude', 'longitude'],
-        },
-        address: {
-            type: 'object',
-            properties: {
-                name: {
-                    type: 'string',
-                },
-                city: {
-                    type: 'string',
-                },
-            },
-            required: ['name', 'city'],
         },
     },
 };

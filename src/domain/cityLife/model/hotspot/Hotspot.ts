@@ -35,6 +35,7 @@ abstract class Hotspot {
     protected _views: ViewsCount;
     protected _type: HotspotType;
     protected _iconType: HotspotIconType;
+    protected _createdAt: Date;
 
     constructor(builder: HotspotBuilder) {
         this._uid = builder.id;
@@ -45,6 +46,7 @@ abstract class Hotspot {
         this._views = builder.views;
         this._type = builder.type;
         this._iconType = builder.iconType;
+        this._createdAt = builder.createdAt;
     }
 
     get id(): string {
@@ -79,6 +81,10 @@ abstract class Hotspot {
         return this._iconType;
     }
 
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+
     countOneMoreView(): void {
         this._views = new ViewsCount(this._views.toString() + 1);
     }
@@ -101,6 +107,7 @@ abstract class Hotspot {
             views: this.views,
             type: this.type,
             iconType: this.iconType,
+            createdAt: this.createdAt.toJSON(),
         };
     }
 }

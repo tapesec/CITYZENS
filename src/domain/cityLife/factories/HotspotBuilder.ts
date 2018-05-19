@@ -6,9 +6,7 @@ import HotspotId from '../model/hotspot/HotspotId';
 import { HotspotType, HotspotIconType } from '../model/hotspot/Hotspot';
 import Position from './../model/hotspot/Position';
 
-
 class HotspotBuilder {
-
     constructor(
         protected _uid: HotspotId,
         protected _position: Position,
@@ -18,6 +16,7 @@ class HotspotBuilder {
         protected _views: ViewsCount,
         protected _type: HotspotType,
         protected _iconType: HotspotIconType,
+        protected _createdAt: Date,
     ) {}
 
     get id(): HotspotId {
@@ -52,5 +51,8 @@ class HotspotBuilder {
         return this._views;
     }
 
+    get createdAt(): Date {
+        return this._createdAt;
+    }
 }
 export default HotspotBuilder;

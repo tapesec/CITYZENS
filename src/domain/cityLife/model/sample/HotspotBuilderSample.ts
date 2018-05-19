@@ -17,6 +17,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 
     public static SCHOOL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -28,6 +29,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 
     public static CHURCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -39,6 +41,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 
     public static MERIGNAC_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -50,6 +53,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 
     public static TOEDIT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -61,6 +65,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 
     public static TOEDIT_CAMELOT_HOTSTPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -72,6 +77,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.Alert,
         HotspotIconType.Destruction,
+        new Date(),
     );
 
     public static ACCIDENT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -83,6 +89,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.Alert,
         HotspotIconType.Accident,
+        new Date(),
     );
 
     public static MATCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -94,6 +101,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.Event,
         HotspotIconType.Event,
+        new Date(),
     );
 
     public static DOCTOR_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -105,6 +113,7 @@ class HotspotBuilderSample {
         new ViewsCount(1),
         HotspotType.WallMessage,
         HotspotIconType.Wall,
+        new Date(),
     );
 }
 

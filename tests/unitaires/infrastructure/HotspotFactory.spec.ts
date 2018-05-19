@@ -31,6 +31,7 @@ describe('HotspotFactory', () => {
             cityId: '34345',
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
+            createdAt: new Date().toJSON(),
         };
         const hotspotFactory = new HotspotFactory();
         // Act
@@ -68,6 +69,7 @@ describe('HotspotFactory', () => {
             type: HotspotType.WallMessage,
             iconType: HotspotIconType.Wall,
             slideShow: ['url1', 'url2'],
+            createdAt: new Date().toJSON(),
         };
         const hotspotFactory = new HotspotFactory();
         // Act
@@ -114,6 +116,7 @@ describe('HotspotFactory', () => {
                 content: 'a fake content for test purpose',
                 updatedAt: '2018-04-09T04:36:54.450Z',
             },
+            createdAt: new Date().toJSON(),
         };
         const hotspotFactory = new HotspotFactory();
         // Act

@@ -41,6 +41,7 @@ import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
 import { OK, getStatusText } from 'http-status-codes';
 import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified';
 import EventHotspot from '../../../../src/domain/cityLife/model/hotspot/EventHotspot';
+import SlideshowService from '../../../../src/api/services/widgets/SlideshowService';
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -51,6 +52,7 @@ describe('HotspotCtrl', () => {
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let hotspotCtrl: HotspotCtrl;
+    let slideshowServiceMoq: TypeMoq.IMock<SlideshowService>;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
 
     before(async () => {
@@ -62,6 +64,7 @@ describe('HotspotCtrl', () => {
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         algoliaMoq = TypeMoq.Mock.ofType<Algolia>();
+        slideshowServiceMoq = TypeMoq.Mock.ofType<SlideshowService>();
 
         algoliaMoq.setup(x => x.initHotspots()).returns(() => {});
 
@@ -71,6 +74,7 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.object,
             hotspotFactoryMoq.object,
             algoliaMoq.object,
+            slideshowServiceMoq.object,
         );
     });
     afterEach(() => {
@@ -181,10 +185,15 @@ describe('HotspotCtrl', () => {
                     latitude: 12.23323,
                     longitude: 22.1112221,
                 },
+                address: {
+                    city: 'Fondcombe',
+                    name: "Maison d'Elround",
+                },
                 cityId: '33273',
                 scope: 'private',
                 type: HotspotType.WallMessage,
                 iconType: HotspotIconType.Wall,
+                createdAt: 'An trois de la terre du millieu',
             };
             factoryData = {
                 ...jsonBody,

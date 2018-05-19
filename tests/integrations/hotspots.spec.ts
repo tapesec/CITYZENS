@@ -36,7 +36,7 @@ const hotspotsEndpointsTests = (state: any) => {
                     .set('Accept', 'application/json')
                     .expect(200);
 
-                expect(response.body).to.have.lengthOf(5);
+                expect(response.body).to.have.lengthOf(6);
             });
 
             it('should return 400 bad request', async () => {

@@ -32,6 +32,7 @@ describe('WallHotspot entity', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -43,6 +44,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -58,6 +60,7 @@ describe('WallHotspot entity', () => {
         expect(hotspot.slug).to.be.equal(slug(title));
         expect(hotspot.author).to.be.equal(AuthorSample.LOUISE);
         expect(hotspot.type).to.be.equal(HotspotType.WallMessage);
+        expect(hotspot.createdAt).to.be.equal(date);
         expect(hotspot.members.toArray()).to.deep.equal([
             new CityzenId('fake-id1'),
             new CityzenId('fake-id2'),
@@ -68,6 +71,7 @@ describe('WallHotspot entity', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -79,6 +83,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -95,6 +100,7 @@ describe('WallHotspot entity', () => {
         // Arrange
         const id: string = v4();
         const title: string = 'Mairie';
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -106,6 +112,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -128,6 +135,7 @@ describe('WallHotspot entity', () => {
         const id: string = v4();
         const title: string = 'Mairie';
         const newTitle: string = 'New Mairie';
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -139,6 +147,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -159,6 +168,7 @@ describe('WallHotspot entity', () => {
         const id: string = v4();
         const title: string = 'Mairie';
         const newAddress = 'New address';
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -170,6 +180,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -189,6 +200,7 @@ describe('WallHotspot entity', () => {
         const id: string = v4();
         const title: string = 'Mairie';
         const newScope = HotspotScope.Private;
+        const date = new Date();
         // Act
         const hotspot: WallHotspot = new WallHotspot(
             new HotspotBuilder(
@@ -200,6 +212,7 @@ describe('WallHotspot entity', () => {
                 new ViewsCount(0),
                 HotspotType.WallMessage,
                 HotspotIconType.Wall,
+                date,
             ),
             new MediaBuilder(
                 new HotspotTitle(title),
@@ -212,6 +225,39 @@ describe('WallHotspot entity', () => {
         hotspot.changeScope(newScope);
         // assert
         expect(hotspot.scope).to.be.equal(newScope);
+    });
+
+    it('should change createdAt', () => {
+        // Arrange
+        const id: string = v4();
+        const title: string = 'Mairie';
+        const newScope = HotspotScope.Private;
+        const date = new Date(1337);
+        const newDate = new Date(42);
+        // Act
+        const hotspot: WallHotspot = new WallHotspot(
+            new HotspotBuilder(
+                new HotspotId(id),
+                PositionSample.MARTIGNAS_NORTH_OUEST,
+                AuthorSample.LOUISE,
+                new CityId('33273'),
+                AddressSample.TOWNHALL_ADDRESS,
+                new ViewsCount(0),
+                HotspotType.WallMessage,
+                HotspotIconType.Wall,
+                date,
+            ),
+            new MediaBuilder(
+                new HotspotTitle(title),
+                new HotspotSlug(slug(title)),
+                HotspotScope.Public,
+                new MemberList(),
+            ),
+        );
+        // Act
+        hotspot.changeCreatedAt(newDate);
+        // assert
+        expect(hotspot.createdAt).to.be.equal(newDate);
     });
 
     it('Should parse and stringify correctly WallHotspot.', () => {

@@ -68,6 +68,7 @@ const createHotspotBody = {
 export const AlertHotspotPostBody = {
     ...createHotspotBody,
     message: 'this is a message alert',
+    createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Alert,
     iconType: HotspotIconType.Accident,
 };
@@ -78,6 +79,7 @@ export const EventHotspotPostBody = {
     title: 'A simple title for a cool event',
     description: 'Here is a lorem ipsum kind of stuff',
     dateEnd: '0650-05-31T22:00:00.000Z',
+    createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Event,
     iconType: HotspotIconType.Event,
 };
@@ -89,4 +91,5 @@ export const WallHotspotPostBody = {
     type: HotspotType.WallMessage,
     iconType: HotspotIconType.Wall,
     avatarIconUrl: 'an-url-fake',
+    createdAt: '0650-05-31T22:00:00.000Z',
 };
