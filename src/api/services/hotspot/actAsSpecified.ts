@@ -1,5 +1,4 @@
 import WallHotspot from '../../../domain/cityLife/model/hotspot/WallHotspot';
-import EventHotspot from '../../../domain/cityLife/model/hotspot/EventHotspot';
 import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
@@ -7,12 +6,12 @@ import AvatarIconUrl from './../../../domain/cityLife/model/hotspot/AvatarIconUr
 import SlideShow from '../../../domain/cityLife/model/hotspot/SlideShow';
 import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
 
-export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody: any): Hotspot => {
+export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot => {
     if (requestBody.title) {
-        (<WallHotspot | EventHotspot>hotspot).changeTitle(requestBody.title);
+        (<MediaHotspot>hotspot).changeTitle(requestBody.title);
     }
     if (requestBody.scope) {
-        (<WallHotspot | EventHotspot>hotspot).changeScope(requestBody.scope);
+        (<MediaHotspot>hotspot).changeScope(requestBody.scope);
     }
     if (requestBody.avatarIconUrl) {
         (<MediaHotspot>hotspot).changeAvatarIconurl(new AvatarIconUrl(requestBody.avatarIconUrl));
@@ -25,10 +24,7 @@ export default (hotspot: WallHotspot | EventHotspot | AlertHotspot, requestBody:
     }
 
     if (requestBody.dateEnd) {
-        (<EventHotspot>hotspot).reportDateEnd(requestBody.dateEnd);
-    }
-    if (requestBody.description) {
-        (<EventHotspot>hotspot).editDescription(requestBody.description);
+        (<MediaHotspot>hotspot).reportDateEnd(new Date(requestBody.dateEnd));
     }
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);

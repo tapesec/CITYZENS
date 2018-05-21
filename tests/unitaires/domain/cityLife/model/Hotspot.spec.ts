@@ -17,7 +17,7 @@ import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHo
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
-import EventHotspotSample from '../../../../../src/domain/cityLife/model/sample/EventHotspotSample';
+import MediaHotspotSample from '../../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
 import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
@@ -302,8 +302,8 @@ describe('WallHotspot entity', () => {
         });
     });
 
-    it('should stringify and parse correctly an EventHotspot', () => {
-        const hotspot = EventHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST;
+    it('should stringify and parse correctly a MediaHotspot', () => {
+        const hotspot = MediaHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
         expect(jsonHotspot).to.shallowDeepEqual({
             id: '19eab732-1a3f-4bfb-abb0-1d0dde8a3669',
@@ -317,14 +317,12 @@ describe('WallHotspot entity', () => {
             scope: HotspotScope.Private,
             title: 'Docteur Maboul',
             slug: 'Docteur-Maboul',
-            members: EventHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST.members
+            createdAt: hotspot.createdAt.toJSON(),
+            members: MediaHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST.members
                 .toArray()
                 .map(x => x.toString()),
             avatarIconUrl: config.avatarIcon.defaultWallIcon,
-            description: {
-                content:
-                    'Un matche va se dérouler entre Oberyn et La Montagne pour décider du destin de tyrion',
-            },
+            slideShow: hotspot.slideShow.toJSON(),
         });
     });
 });

@@ -1,6 +1,5 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
 import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
@@ -9,6 +8,7 @@ import { isUuid } from './../api/helpers';
 import HotspotFactory from './HotspotFactory';
 import { Orm } from './orm';
 import OrmCityzen from './ormCityzen';
+import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 
 class HotspotRepositoryInMemory implements IHotspotRepository {
     protected hotspots: Map<string, Hotspot> = new Map();
@@ -17,7 +17,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
 
     public async findByCodeCommune(
         insee: string,
-    ): Promise<(WallHotspot | EventHotspot | AlertHotspot)[]> {
+    ): Promise<(WallHotspot | MediaHotspot | AlertHotspot)[]> {
         const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
         if (data === []) return Promise.resolve([]);
 
@@ -27,7 +27,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
 
         const authors = await this.ormCityzen.getAllAuthors(authorsId);
 
-        const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
+        const hotspotsArray: (WallHotspot | MediaHotspot | AlertHotspot)[] = [];
         const factory = new HotspotFactory();
         data.forEach((entry: any) => {
             const formedData = { ...entry };
@@ -40,8 +40,8 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         return hotspotsArray;
     }
 
-    public async findById(id: string): Promise<WallHotspot | EventHotspot | AlertHotspot> {
-        let hotspot: WallHotspot | EventHotspot | AlertHotspot;
+    public async findById(id: string): Promise<WallHotspot | MediaHotspot | AlertHotspot> {
+        let hotspot: WallHotspot | MediaHotspot | AlertHotspot;
 
         const data = this.orm.hotspot.findOne(this.buildRequestBySlugOrId(id));
         if (data === undefined) return Promise.resolve(undefined);
@@ -71,7 +71,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         west: number,
         south: number,
         east: number,
-    ): Promise<(WallHotspot | EventHotspot | AlertHotspot)[]> {
+    ): Promise<(WallHotspot | MediaHotspot | AlertHotspot)[]> {
         const data = this.orm.hotspot.findAll({
             byArea: [north, west, south, east],
             removed: false,
@@ -84,7 +84,7 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
 
         const authors = await this.ormCityzen.getAllAuthors(authorsId);
 
-        const hotspotsArray: (WallHotspot | EventHotspot | AlertHotspot)[] = [];
+        const hotspotsArray: (WallHotspot | MediaHotspot | AlertHotspot)[] = [];
         const factory = new HotspotFactory();
         data.forEach((entry: any) => {
             const formedData = { ...entry };

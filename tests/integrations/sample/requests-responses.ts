@@ -73,11 +73,10 @@ export const AlertHotspotPostBody = {
     iconType: HotspotIconType.Accident,
 };
 
-export const EventHotspotPostBody = {
+export const MediaHotspotPostBody = {
     ...createHotspotBody,
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
-    description: 'Here is a lorem ipsum kind of stuff',
     dateEnd: '0650-05-31T22:00:00.000Z',
     createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Event,

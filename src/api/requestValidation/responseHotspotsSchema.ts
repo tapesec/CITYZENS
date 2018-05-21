@@ -6,7 +6,7 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 
 export {
     requiredWallHotspotProperties,
-    requiredEventHotspotProperties,
+    requiredMediaHotspotProperties,
     requiredAlertHotspotProperties,
 };
 
@@ -115,20 +115,18 @@ const WallHotspotSchema = {
     additionalProperties: false,
 };
 
-const requiredEventHotspotProperties = [
+const requiredMediaHotspotProperties = [
     ...hotspotSchema.required,
     'title',
     'scope',
-    'dateEnd',
-    'description',
     'avatarIconUrl',
     'slug',
     'members',
     'slideShow',
 ];
 
-const EventHotspotSchema = {
-    required: requiredEventHotspotProperties,
+const MediaHotspotSchema = {
+    required: requiredMediaHotspotProperties,
     properties: {
         ...hotspotSchema.properties,
         scope: {
@@ -141,18 +139,6 @@ const EventHotspotSchema = {
         },
         slug: {
             type: 'string',
-        },
-        description: {
-            type: 'object',
-            properties: {
-                content: {
-                    type: 'string',
-                },
-                updatedAt: {
-                    type: 'string',
-                },
-            },
-            required: ['content'],
         },
         dateEnd: {
             type: 'string',
@@ -261,8 +247,8 @@ export const alertHotspotSchema = {
     type: 'object',
 };
 
-export const eventHotspotSchema = {
-    ...EventHotspotSchema,
+export const mediaHotspotSchema = {
+    ...MediaHotspotSchema,
     type: 'object',
 };
 

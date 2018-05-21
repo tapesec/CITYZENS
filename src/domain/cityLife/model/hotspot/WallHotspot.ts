@@ -9,7 +9,7 @@ class WallHotspot extends MediaHotspot {
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
         };
     }
 }

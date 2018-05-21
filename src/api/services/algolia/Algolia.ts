@@ -1,9 +1,8 @@
 import AlgoliaAPI from './../../../api/libs/AlgoliaAPI';
 import Hotspot from './../../../domain/cityLife/model/hotspot/Hotspot';
-import WallHotspot from './../../../domain/cityLife/model/hotspot/WallHotspot';
-import EventHotspot from './../../../domain/cityLife/model/hotspot/EventHotspot';
 import HotspotRepositoryInMemory from './../../../infrastructure/HotspotRepositoryInMemory';
 import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
+import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 
 class Algolia {
     constructor(protected algolia: AlgoliaAPI) {}
@@ -25,7 +24,7 @@ class Algolia {
         };
         if (hotspot instanceof AlertHotspot) {
             data.message = hotspot.message;
-        } else if (hotspot instanceof EventHotspot || hotspot instanceof WallHotspot) {
+        } else if (hotspot instanceof MediaHotspot) {
             data.title = hotspot.title;
             data.slug = hotspot.slug;
             data.avatarIconUrl = hotspot.avatarIconUrl.toString();

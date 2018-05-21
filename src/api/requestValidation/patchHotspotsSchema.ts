@@ -6,7 +6,7 @@ export default () => {
     return {
         title: 'PATCH /hotspots body validation',
         type: 'object',
-        anyOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
+        anyOf: [WallHotspotSchema, MediaHotspotSchema, AlertHotspotSchema],
     };
 };
 
@@ -40,13 +40,12 @@ const WallHotspotSchema = {
     additionalProperties: false,
 };
 
-const EventHotspotSchema = {
+const MediaHotspotSchema = {
     anyOf: [
         { required: ['title'] },
         { required: ['scope'] },
         { required: ['dateEnd'] },
         { required: ['slideShow'] },
-        { required: ['description'] },
         { required: ['avatarIconUrl'] },
     ],
     properties: {
@@ -59,9 +58,6 @@ const EventHotspotSchema = {
             maxLength: validation.TITLE_MAX_LENGTH,
         },
         dateEnd: {
-            type: 'string',
-        },
-        description: {
             type: 'string',
         },
         avatarIconUrl: {

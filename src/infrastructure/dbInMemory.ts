@@ -13,9 +13,9 @@ import CityzenSample from '../domain/cityzens/model/CityzenSample';
 import PositionSample from './../domain/cityLife/model/sample/PositionSample';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
-import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
+import MediaHotspotSample from './../domain/cityLife/model/sample/MediaHotspotSample';
 import config from './../api/config';
-import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
+import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 
 let hotspotCollection: any;
 let messageCollection: any;
@@ -68,8 +68,8 @@ export const CAMELOT = {
 };
 
 export const EVENT_MATCH = {
-    ...EventHotspotSample.MATCH_EVENT.toJSON(),
-    authorId: EventHotspotSample.MATCH_EVENT.author.id.toString(),
+    ...MediaHotspotSample.MATCH_EVENT.toJSON(),
+    authorId: MediaHotspotSample.MATCH_EVENT.author.id.toString(),
     removed: false,
 };
 

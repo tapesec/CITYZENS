@@ -8,13 +8,13 @@ export default () => {
     return {
         title: 'POST /hotspots body validation',
         type: 'object',
-        oneOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
+        oneOf: [WallHotspotSchema, MediaHotspotSchema, AlertHotspotSchema],
     };
 };
 
 export {
     requiredWallHotspotProperties,
-    requiredEventHotspotProperties,
+    requiredMediaHotspotProperties,
     requiredAlertHotspotProperties,
 };
 
@@ -84,16 +84,10 @@ const WallHotspotSchema = {
     additionalProperties: false,
 };
 
-const requiredEventHotspotProperties = [
-    ...hotspotSchema.required,
-    'title',
-    'scope',
-    'dateEnd',
-    'description',
-];
+const requiredMediaHotspotProperties = [...hotspotSchema.required, 'title', 'scope', 'dateEnd'];
 
-const EventHotspotSchema = {
-    required: requiredEventHotspotProperties,
+const MediaHotspotSchema = {
+    required: requiredMediaHotspotProperties,
     properties: {
         ...hotspotSchema.properties,
         scope: {
@@ -104,19 +98,16 @@ const EventHotspotSchema = {
             type: 'string',
             maxLength: validation.TITLE_MAX_LENGTH,
         },
-        description: {
-            type: 'string',
-        },
         dateEnd: {
             type: 'string',
         },
         type: {
             type: 'string',
-            enum: [HotspotType.Event],
+            enum: [HotspotType.Event, HotspotType.WallMessage],
         },
         iconType: {
             type: 'string',
-            enum: [HotspotIconType.Event],
+            enum: [HotspotIconType.Event, HotspotIconType.Wall],
         },
         avatarIconUrl: {
             type: 'string',

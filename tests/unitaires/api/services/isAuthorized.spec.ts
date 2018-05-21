@@ -1,6 +1,6 @@
 import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import EventHotspotSample from '../../../../src/domain/cityLife/model/sample/EventHotspotSample';
+import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import * as isAuthorized from './../../../../src/api/services/hotspot/isAuthorized';
@@ -15,7 +15,7 @@ describe("isAuthorized's functions.", () => {
         const authorizedHotspots = [
             WallHotspotSample.SCHOOL,
             AlertHotspotSample.ACCIDENT,
-            EventHotspotSample.MATCH_EVENT,
+            MediaHotspotSample.MATCH_EVENT,
         ];
 
         const privateHotspots = [WallHotspotSample.DOCTOR];
@@ -50,7 +50,7 @@ describe("isAuthorized's functions.", () => {
         const authorizedHotspots = [
             WallHotspotSample.SCHOOL,
             AlertHotspotSample.ACCIDENT,
-            EventHotspotSample.MATCH_EVENT,
+            MediaHotspotSample.MATCH_EVENT,
         ];
 
         const privateHotspots = [WallHotspotSample.DOCTOR];

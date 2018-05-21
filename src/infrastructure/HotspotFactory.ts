@@ -1,11 +1,9 @@
 import SlackWebhook from '../api/libs/SlackWebhook';
 import { format } from 'util';
 import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
-import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
 import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
-import EventDescription from '../domain/cityLife/model/hotspot/EventDescription';
 import {
     HotspotIconType,
     HotspotScope,
@@ -24,7 +22,7 @@ import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
 import {
     requiredWallHotspotProperties,
-    requiredEventHotspotProperties,
+    requiredMediaHotspotProperties,
     requiredAlertHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
@@ -36,20 +34,21 @@ import CityzenId from '../domain/cityzens/model/CityzenId';
 import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
 import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
 import SlideShow from '../domain/cityLife/model/hotspot/SlideShow';
+import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 const request = require('request');
 const slug = require('slug');
 
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
-    public build = (data: any): WallHotspot | EventHotspot | AlertHotspot => {
+    public build = (data: any): WallHotspot | MediaHotspot | AlertHotspot => {
         if (data.type === HotspotType.WallMessage) {
             this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);
             return this.createWallHotspot(data);
         }
         if (data.type === HotspotType.Event) {
-            this.throwErrorIfRequiredAndUndefined(data, requiredEventHotspotProperties);
-            return this.createEventHotspot(data);
+            this.throwErrorIfRequiredAndUndefined(data, requiredMediaHotspotProperties);
+            return this.createMediaHotspot(data);
         }
         if (data.type === HotspotType.Alert) {
             this.throwErrorIfRequiredAndUndefined(data, requiredAlertHotspotProperties);
@@ -76,40 +75,8 @@ class HotspotFactory {
         );
     };
 
-    private createEventHotspot = (data: any): EventHotspot => {
-        let dateEnd: Date;
-        let description: EventDescription;
-        let avatarIconUrl;
-        if (data && data.dateEnd) {
-            dateEnd = new Date(data.dateEnd);
-        }
-        // data from db
-        if (data && data.description.content) {
-            const content = data.description.content;
-            const updatedAt = data.description.updatedAt;
-            description = new EventDescription(content, updatedAt);
-        }
-        // data from http POST request
-        if (data && data.description && typeof data.description === 'string') {
-            description = new EventDescription(data.description);
-        }
-        if (!data.avatarIconUrl) {
-            avatarIconUrl = config.avatarIcon.defaultEventIcon;
-        } else {
-            avatarIconUrl = data.avatarIconUrl;
-        }
-
-        const buildData = {
-            ...data,
-            avatarIconUrl,
-        };
-
-        return new EventHotspot(
-            this.createHotspotBuilder(buildData),
-            this.createMediaBuilder(buildData),
-            dateEnd,
-            description,
-        );
+    private createMediaHotspot = (data: any): MediaHotspot => {
+        return new MediaHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
     };
 
     private createAlertHotspot = (data: any): AlertHotspot => {
@@ -254,6 +221,7 @@ class HotspotFactory {
         let scope: HotspotScope;
         let avatarIconUrl: AvatarIconUrl;
         let slideShow = new SlideShow();
+        let dateEnd: Date = undefined;
         const members = new MemberList();
 
         if (data.title) {
@@ -271,11 +239,26 @@ class HotspotFactory {
                 members.add(new CityzenId(m));
             });
         }
-        if (data.avatarIconUrl) {
+
+        if (!data.avatarIconUrl) {
+            switch (data.type) {
+                case HotspotType.Event:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultEventIcon);
+                    break;
+                case HotspotType.WallMessage:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultWallIcon);
+                    break;
+                default:
+                    throw new Error('Unknow type: ' + data.type);
+            }
+        } else {
             avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
         }
         if (data.slideShow) {
             slideShow = new SlideShow(data.slideShow.map((x: string) => new ImageLocation(x)));
+        }
+        if (data.dateEnd) {
+            dateEnd = new Date(data.dateEnd);
         }
         return new MediaBuilder(
             hotspotTitle,
@@ -284,6 +267,7 @@ class HotspotFactory {
             members,
             avatarIconUrl,
             slideShow,
+            dateEnd,
         );
     };
 

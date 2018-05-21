@@ -17,6 +17,7 @@ class MediaHotspot extends Hotspot {
     protected _members: MemberList;
     protected _avatarIconUrl?: AvatarIconUrl;
     protected _slideShow?: SlideShow;
+    protected _dateEnd: Date;
 
     constructor(hotpotBuilder: HotspotBuilder, mediaBuilder: MediaBuilder) {
         super(hotpotBuilder);
@@ -26,6 +27,7 @@ class MediaHotspot extends Hotspot {
         this._members = mediaBuilder.members;
         this._avatarIconUrl = mediaBuilder.avatarIconUrl;
         this._slideShow = mediaBuilder.slideShow;
+        this._dateEnd = mediaBuilder.dateEnd;
     }
 
     get avatarIconUrl() {
@@ -78,7 +80,15 @@ class MediaHotspot extends Hotspot {
         this._createdAt = date;
     }
 
-    toString() {
+    public get dateEnd(): Date {
+        return this._dateEnd;
+    }
+
+    public reportDateEnd(newDate: Date): void {
+        this._dateEnd = newDate;
+    }
+
+    toJSON() {
         const stringed: any = {
             ...super.toString(),
             scope: this._scope,
@@ -91,6 +101,9 @@ class MediaHotspot extends Hotspot {
         }
         if (this.slideShow !== undefined) {
             stringed.slideShow = this._slideShow.toJSON();
+        }
+        if (this.dateEnd !== undefined) {
+            stringed.dateEnd = this.dateEnd.toJSON();
         }
         return stringed;
     }

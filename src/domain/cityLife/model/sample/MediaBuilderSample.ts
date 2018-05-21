@@ -63,6 +63,7 @@ class MediaBuilderSample {
         new MemberList(),
         new AvatarIconUrl(config.avatarIcon.defaultEventIcon),
         new SlideShow(),
+        new Date('December 30, 2038 15:42:02'),
     );
 
     public static DOCTOR_MEDIA_BUILDER = new MediaBuilder(
@@ -72,6 +73,7 @@ class MediaBuilderSample {
         new MemberList([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
         new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
+        new Date('December 30, 2038 15:42:02'),
     );
 }
 

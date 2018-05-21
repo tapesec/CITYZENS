@@ -2,7 +2,7 @@ import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import wallHotspotsTests from './wallHotspot.spec';
-import eventHotspotsTests from './eventHotspot.spec';
+import mediaHotspotsTests from './mediaHotspot.spec';
 import alertHotspotsTests from './alertHotspot.spec';
 import hotspotsEndpointsTests from './hotspots.spec';
 import citiesEndpointTests from './cities.spec';
@@ -49,7 +49,7 @@ describe('/auth endpoint', () => {
     });
 
     wallHotspotsTests(state);
-    eventHotspotsTests(state);
+    mediaHotspotsTests(state);
     alertHotspotsTests(state);
     // /hotspots tests suite
     hotspotsEndpointsTests(state);

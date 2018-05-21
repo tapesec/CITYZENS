@@ -209,7 +209,6 @@ describe('JschemaValidator', () => {
             type: HotspotType.Event,
             iconType: HotspotIconType.Event,
             dateEnd: new Date().toISOString(),
-            description: 'lorem ipsum dolor',
             createdAt: '0 00 0000',
         };
         // Act
@@ -235,7 +234,6 @@ describe('JschemaValidator', () => {
             type: HotspotType.Event,
             iconType: HotspotIconType.Event,
             dateEnd: new Date().toISOString(),
-            description: 'lorem ipsum dolor',
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
         };
@@ -314,13 +312,12 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it('should validate EventHotspot update with corresponding schema', () => {
+    it('should validate MediaHotspot update with corresponding schema', () => {
         // Arrange
         const body = {
             title: 'an edited title',
             scope: 'private',
             dateEnd: new Date().toISOString(),
-            description: 'an edited description',
             avatarIconUrl: 'new url',
         };
         // Act
