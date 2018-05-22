@@ -11,15 +11,14 @@ import {
 import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
 import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
 import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
+import MediaHotspot from '../../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
 import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
-import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
 import MediaHotspotSample from '../../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
-import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
 import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 import config from './../../../../../src/api/config';
@@ -34,7 +33,7 @@ describe('WallHotspot entity', () => {
         const title: string = 'Mairie';
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -73,7 +72,7 @@ describe('WallHotspot entity', () => {
         const title: string = 'Mairie';
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -102,7 +101,7 @@ describe('WallHotspot entity', () => {
         const title: string = 'Mairie';
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -137,7 +136,7 @@ describe('WallHotspot entity', () => {
         const newTitle: string = 'New Mairie';
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -170,7 +169,7 @@ describe('WallHotspot entity', () => {
         const newAddress = 'New address';
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -202,7 +201,7 @@ describe('WallHotspot entity', () => {
         const newScope = HotspotScope.Private;
         const date = new Date();
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -235,7 +234,7 @@ describe('WallHotspot entity', () => {
         const date = new Date(1337);
         const newDate = new Date(42);
         // Act
-        const hotspot: WallHotspot = new WallHotspot(
+        const hotspot: MediaHotspot = new MediaHotspot(
             new HotspotBuilder(
                 new HotspotId(id),
                 PositionSample.MARTIGNAS_NORTH_OUEST,
@@ -261,7 +260,7 @@ describe('WallHotspot entity', () => {
     });
 
     it('Should parse and stringify correctly WallHotspot.', () => {
-        const hotspot = WallHotspotSample.SCHOOL;
+        const hotspot = MediaHotspotSample.SCHOOL;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
         expect(jsonHotspot).to.shallowDeepEqual({
             id: 'c28e94ef-ad1d-4260-8452-89a2b7bf298e',

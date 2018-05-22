@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import * as request from 'supertest';
 import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
 import { WallHotspotPostBody } from './sample/requests-responses';
-import WallHotspotSample from '../../src/domain/cityLife/model/sample/WallHotspotSample';
+import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
 
 const hotspotsEndpointsTests = (state: any) => {
@@ -59,8 +59,8 @@ const hotspotsEndpointsTests = (state: any) => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = WallHotspotSample.CHURCH.id;
-                const originalMembers = WallHotspotSample.CHURCH.members;
+                const hotspotId = MediaHotspotSample.CHURCH.id;
+                const originalMembers = MediaHotspotSample.CHURCH.members;
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
@@ -94,7 +94,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = WallHotspotSample.CHURCH.id;
+                const hotspotId = MediaHotspotSample.CHURCH.id;
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
@@ -166,7 +166,7 @@ const hotspotsEndpointsTests = (state: any) => {
             });
 
             it('Should return 401 non authorized.', async () => {
-                const id = WallHotspotSample.DOCTOR.id;
+                const id = MediaHotspotSample.DOCTOR.id;
 
                 const response = await request(server)
                     .get(`/hotspots/${id}`)

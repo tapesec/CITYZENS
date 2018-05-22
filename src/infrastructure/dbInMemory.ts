@@ -1,21 +1,11 @@
 const slug = require('slug');
-import MessageSample from '../domain/cityLife/model/sample/MessageSample';
-import WallHotspotSample from '../domain/cityLife/model/sample/WallHotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
-import AddressSample from '../domain/cityLife/model/sample/AddressSample';
-import {
-    HotspotScope,
-    HotspotType,
-    HotspotIconType,
-} from '../domain/cityLife/model/hotspot/Hotspot';
-const loki = require('lokijs');
+import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
-import PositionSample from './../domain/cityLife/model/sample/PositionSample';
-import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
+import config from './../api/config';
 import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
 import MediaHotspotSample from './../domain/cityLife/model/sample/MediaHotspotSample';
-import config from './../api/config';
-import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+const loki = require('lokijs');
 
 let hotspotCollection: any;
 let messageCollection: any;
@@ -23,35 +13,35 @@ let cityCollection: any;
 let cityzenCollection: any;
 
 export const HOTSPOT_MARTIGNAS_TOWNHALL = {
-    ...WallHotspotSample.TOWNHALL.toJSON(),
-    authorId: WallHotspotSample.TOWNHALL.author.id.toString(),
+    ...MediaHotspotSample.TOWNHALL.toJSON(),
+    authorId: MediaHotspotSample.TOWNHALL.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {
-    ...WallHotspotSample.CHURCH.toJSON(),
-    authorId: WallHotspotSample.CHURCH.author.id.toString(),
+    ...MediaHotspotSample.CHURCH.toJSON(),
+    authorId: MediaHotspotSample.CHURCH.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
-    ...WallHotspotSample.SCHOOL.toJSON(),
-    authorId: WallHotspotSample.SCHOOL.author.id.toString(),
+    ...MediaHotspotSample.SCHOOL.toJSON(),
+    authorId: MediaHotspotSample.SCHOOL.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
-    ...WallHotspotSample.MERIGNAC.toJSON(),
-    authorId: WallHotspotSample.MERIGNAC.author.id.toString(),
+    ...MediaHotspotSample.MERIGNAC.toJSON(),
+    authorId: MediaHotspotSample.MERIGNAC.author.id.toString(),
     removed: false,
 };
 
 export const HOTSPOT_SIMCITY_TOEDIT = {
-    ...WallHotspotSample.TOEDIT.toJSON(),
-    authorId: WallHotspotSample.TOEDIT.author.id.toString(),
+    ...MediaHotspotSample.TOEDIT.toJSON(),
+    authorId: MediaHotspotSample.TOEDIT.author.id.toString(),
     removed: false,
 };
 
 export const HOTSPOT_DOCTOR = {
-    ...WallHotspotSample.DOCTOR.toJSON(),
-    authorId: WallHotspotSample.DOCTOR.author.id.toString(),
+    ...MediaHotspotSample.DOCTOR.toJSON(),
+    authorId: MediaHotspotSample.DOCTOR.author.id.toString(),
     removed: false,
 };
 

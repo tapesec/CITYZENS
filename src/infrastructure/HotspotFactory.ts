@@ -1,6 +1,5 @@
 import SlackWebhook from '../api/libs/SlackWebhook';
 import { format } from 'util';
-import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
 import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
@@ -21,7 +20,6 @@ import config from '../api/config/';
 import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
 import {
-    requiredWallHotspotProperties,
     requiredMediaHotspotProperties,
     requiredAlertHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
@@ -41,12 +39,8 @@ const slug = require('slug');
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
-    public build = (data: any): WallHotspot | MediaHotspot | AlertHotspot => {
-        if (data.type === HotspotType.WallMessage) {
-            this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);
-            return this.createWallHotspot(data);
-        }
-        if (data.type === HotspotType.Event) {
+    public build = (data: any): MediaHotspot | AlertHotspot => {
+        if (data.type === HotspotType.Event || data.type === HotspotType.WallMessage) {
             this.throwErrorIfRequiredAndUndefined(data, requiredMediaHotspotProperties);
             return this.createMediaHotspot(data);
         }
@@ -54,25 +48,6 @@ class HotspotFactory {
             this.throwErrorIfRequiredAndUndefined(data, requiredAlertHotspotProperties);
             return this.createAlertHotspot(data);
         }
-    };
-
-    private createWallHotspot = (data: any): WallHotspot => {
-        let avatarIconUrl;
-        if (!data.avatarIconUrl) {
-            avatarIconUrl = config.avatarIcon.defaultWallIcon;
-        } else {
-            avatarIconUrl = data.avatarIconUrl;
-        }
-
-        const buildData = {
-            ...data,
-            avatarIconUrl,
-        };
-
-        return new WallHotspot(
-            this.createHotspotBuilder(buildData),
-            this.createMediaBuilder(buildData),
-        );
     };
 
     private createMediaHotspot = (data: any): MediaHotspot => {

@@ -1,4 +1,3 @@
-import WallHotspot from '../../../domain/cityLife/model/hotspot/WallHotspot';
 import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';

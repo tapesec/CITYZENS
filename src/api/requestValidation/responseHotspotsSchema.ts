@@ -4,11 +4,7 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
 
-export {
-    requiredWallHotspotProperties,
-    requiredMediaHotspotProperties,
-    requiredAlertHotspotProperties,
-};
+export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
     required: ['id', 'cityId', 'position', 'type', 'iconType', 'views', 'address', 'createdAt'],
@@ -63,58 +59,6 @@ const hotspotSchema = {
         },
     },
 };
-
-const requiredWallHotspotProperties = [
-    ...hotspotSchema.required,
-    'title',
-    'scope',
-    'avatarIconUrl',
-    'slideShow',
-];
-
-const WallHotspotSchema = {
-    required: requiredWallHotspotProperties,
-    properties: {
-        ...hotspotSchema.properties,
-        scope: {
-            type: 'string',
-            enum: ['public', 'private'],
-        },
-        title: {
-            type: 'string',
-            maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        type: {
-            type: 'string',
-            enum: [HotspotType.WallMessage],
-        },
-        slug: {
-            type: 'string',
-        },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Wall],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        members: {
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
-        slideShow: {
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
-    },
-    additionalProperties: false,
-};
-
 const requiredMediaHotspotProperties = [
     ...hotspotSchema.required,
     'title',
@@ -145,11 +89,11 @@ const MediaHotspotSchema = {
         },
         type: {
             type: 'string',
-            enum: [HotspotType.Event],
+            enum: [HotspotType.Event, HotspotType.WallMessage],
         },
         iconType: {
             type: 'string',
-            enum: [HotspotIconType.Event],
+            enum: [HotspotIconType.Event, HotspotIconType.Wall],
         },
         avatarIconUrl: {
             type: 'string',
@@ -249,10 +193,5 @@ export const alertHotspotSchema = {
 
 export const mediaHotspotSchema = {
     ...MediaHotspotSchema,
-    type: 'object',
-};
-
-export const wallHotspotSchema = {
-    ...WallHotspotSchema,
     type: 'object',
 };

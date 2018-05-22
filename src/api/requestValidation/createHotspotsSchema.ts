@@ -1,5 +1,5 @@
+import { HotspotIconType, HotspotType } from './../../domain/cityLife/model/hotspot/Hotspot';
 import * as validation from './constant';
-import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hotspot/Hotspot';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
@@ -8,15 +8,11 @@ export default () => {
     return {
         title: 'POST /hotspots body validation',
         type: 'object',
-        oneOf: [WallHotspotSchema, MediaHotspotSchema, AlertHotspotSchema],
+        oneOf: [MediaHotspotSchema, AlertHotspotSchema],
     };
 };
 
-export {
-    requiredWallHotspotProperties,
-    requiredMediaHotspotProperties,
-    requiredAlertHotspotProperties,
-};
+export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
     required: ['cityId', 'position', 'type', 'iconType', 'address', 'createdAt'],
@@ -54,37 +50,7 @@ const hotspotSchema = {
     },
 };
 
-const requiredWallHotspotProperties = [...hotspotSchema.required, 'title', 'scope'];
-
-const WallHotspotSchema = {
-    required: requiredWallHotspotProperties,
-    properties: {
-        ...hotspotSchema.properties,
-        scope: {
-            type: 'string',
-            enum: ['public', 'private'],
-        },
-        title: {
-            type: 'string',
-            maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        type: {
-            type: 'string',
-            enum: [HotspotType.WallMessage],
-        },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Wall],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-    },
-    additionalProperties: false,
-};
-
-const requiredMediaHotspotProperties = [...hotspotSchema.required, 'title', 'scope', 'dateEnd'];
+const requiredMediaHotspotProperties = [...hotspotSchema.required, 'title', 'scope'];
 
 const MediaHotspotSchema = {
     required: requiredMediaHotspotProperties,

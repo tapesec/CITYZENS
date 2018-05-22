@@ -1,13 +1,13 @@
-import * as server from './../../src/api/server';
+import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import * as ajv from 'ajv';
-import { MediaHotspotPostBody } from './sample/requests-responses';
-import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
 import { mediaHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
+import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
+import * as server from './../../src/api/server';
+import { MediaHotspotPostBody } from './sample/requests-responses';
 
 const eventHotspotsTests = (state: any) => {
-    describe('MediaHotspot behavior', () => {
+    describe('EventHotspot behavior', () => {
         //
         let newPostHotspot: any;
         const validator: ajv.Ajv = new ajv();
@@ -19,7 +19,7 @@ const eventHotspotsTests = (state: any) => {
         let avatarIconUrl;
         let slideShow;
 
-        it('Should create a MediaHotspot and return it with status 201', async () => {
+        it('Should create a EventHotspot and return it with status 201', async () => {
             // Act
             const response = await request(server)
                 .post('/hotspots')
@@ -34,7 +34,7 @@ const eventHotspotsTests = (state: any) => {
             newPostHotspot = response.body;
         });
 
-        it('Should get previously created MediaHotspot with GET request by id', async () => {
+        it('Should get previously created EventHotspot with GET request by id', async () => {
             // Act
             const response = await request(server)
                 .get(`/hotspots/${newPostHotspot.id}`)
