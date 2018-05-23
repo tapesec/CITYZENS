@@ -64,9 +64,6 @@ const MediaHotspotSchema = {
             type: 'string',
             maxLength: validation.TITLE_MAX_LENGTH,
         },
-        dateEnd: {
-            type: 'string',
-        },
         type: {
             type: 'string',
             enum: [HotspotType.Event, HotspotType.WallMessage],

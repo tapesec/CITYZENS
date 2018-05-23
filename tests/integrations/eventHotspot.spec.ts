@@ -60,7 +60,6 @@ const eventHotspotsTests = (state: any) => {
                 .send({
                     avatarIconUrl,
                     slideShow,
-                    dateEnd,
                     scope: hotspotScope,
                     title: hotspotTitle,
                 })
@@ -72,9 +71,6 @@ const eventHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('avatarIconUrl')
                 .to.equal(avatarIconUrl);
-            expect(response.body)
-                .to.have.property('dateEnd')
-                .to.equal(dateEnd);
             expect(response.body)
                 .to.have.property('scope')
                 .to.equal(hotspotScope);
@@ -100,9 +96,6 @@ const eventHotspotsTests = (state: any) => {
             expect(response.body)
                 .to.have.property('avatarIconUrl')
                 .to.equal(avatarIconUrl);
-            expect(response.body)
-                .to.have.property('dateEnd')
-                .to.equal(dateEnd);
             expect(response.body)
                 .to.have.property('scope')
                 .to.equal(hotspotScope);

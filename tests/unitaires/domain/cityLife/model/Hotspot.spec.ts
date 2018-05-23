@@ -226,39 +226,6 @@ describe('WallHotspot entity', () => {
         expect(hotspot.scope).to.be.equal(newScope);
     });
 
-    it('should change createdAt', () => {
-        // Arrange
-        const id: string = v4();
-        const title: string = 'Mairie';
-        const newScope = HotspotScope.Private;
-        const date = new Date(1337);
-        const newDate = new Date(42);
-        // Act
-        const hotspot: MediaHotspot = new MediaHotspot(
-            new HotspotBuilder(
-                new HotspotId(id),
-                PositionSample.MARTIGNAS_NORTH_OUEST,
-                AuthorSample.LOUISE,
-                new CityId('33273'),
-                AddressSample.TOWNHALL_ADDRESS,
-                new ViewsCount(0),
-                HotspotType.WallMessage,
-                HotspotIconType.Wall,
-                date,
-            ),
-            new MediaBuilder(
-                new HotspotTitle(title),
-                new HotspotSlug(slug(title)),
-                HotspotScope.Public,
-                new MemberList(),
-            ),
-        );
-        // Act
-        hotspot.changeCreatedAt(newDate);
-        // assert
-        expect(hotspot.createdAt).to.be.equal(newDate);
-    });
-
     it('Should parse and stringify correctly WallHotspot.', () => {
         const hotspot = MediaHotspotSample.SCHOOL;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));

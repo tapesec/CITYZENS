@@ -196,7 +196,6 @@ class HotspotFactory {
         let scope: HotspotScope;
         let avatarIconUrl: AvatarIconUrl;
         let slideShow = new SlideShow();
-        let dateEnd: Date = undefined;
         const members = new MemberList();
 
         if (data.title) {
@@ -232,9 +231,6 @@ class HotspotFactory {
         if (data.slideShow) {
             slideShow = new SlideShow(data.slideShow.map((x: string) => new ImageLocation(x)));
         }
-        if (data.dateEnd) {
-            dateEnd = new Date(data.dateEnd);
-        }
         return new MediaBuilder(
             hotspotTitle,
             hotspotSlug,
@@ -242,7 +238,6 @@ class HotspotFactory {
             members,
             avatarIconUrl,
             slideShow,
-            dateEnd,
         );
     };
 

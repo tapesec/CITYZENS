@@ -13,7 +13,6 @@ class MediaBuilder {
         protected _members: MemberList,
         protected _avatarIconUrl?: AvatarIconUrl,
         protected _slideShow?: SlideShow,
-        protected _dateEnd?: Date,
     ) {}
 
     get avatarIconUrl() {
@@ -38,10 +37,6 @@ class MediaBuilder {
 
     get slideShow(): SlideShow {
         return this._slideShow;
-    }
-
-    get dateEnd(): Date {
-        return this._dateEnd;
     }
 }
 export default MediaBuilder;

@@ -22,9 +22,6 @@ export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot
         );
     }
 
-    if (requestBody.dateEnd) {
-        (<MediaHotspot>hotspot).reportDateEnd(new Date(requestBody.dateEnd));
-    }
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);
     }

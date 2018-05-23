@@ -14,7 +14,6 @@ const MediaHotspotSchema = {
     anyOf: [
         { required: ['title'] },
         { required: ['scope'] },
-        { required: ['dateEnd'] },
         { required: ['slideShow'] },
         { required: ['avatarIconUrl'] },
     ],
@@ -26,9 +25,6 @@ const MediaHotspotSchema = {
         title: {
             type: 'string',
             maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        dateEnd: {
-            type: 'string',
         },
         avatarIconUrl: {
             type: 'string',

@@ -208,7 +208,6 @@ describe('JschemaValidator', () => {
             scope: 'private',
             type: HotspotType.Event,
             iconType: HotspotIconType.Event,
-            dateEnd: new Date().toISOString(),
             createdAt: '0 00 0000',
         };
         // Act
@@ -233,7 +232,6 @@ describe('JschemaValidator', () => {
             scope: 'private',
             type: HotspotType.Event,
             iconType: HotspotIconType.Event,
-            dateEnd: new Date().toISOString(),
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
         };
@@ -317,7 +315,6 @@ describe('JschemaValidator', () => {
         const body = {
             title: 'an edited title',
             scope: 'private',
-            dateEnd: new Date().toISOString(),
             avatarIconUrl: 'new url',
         };
         // Act
