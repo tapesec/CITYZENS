@@ -29,7 +29,7 @@ describe('HotspotFactory', () => {
                 city: 'Martignas sur Jalles',
             },
             cityId: '34345',
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             createdAt: new Date().toJSON(),
         };
@@ -39,7 +39,7 @@ describe('HotspotFactory', () => {
         // Assert
 
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             scope: HotspotScope.Private,
         });
@@ -66,7 +66,7 @@ describe('HotspotFactory', () => {
                 city: 'Martignas sur Jalles',
             },
             cityId: '34345',
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             slideShow: ['url1', 'url2'],
             createdAt: new Date().toJSON(),
@@ -81,7 +81,7 @@ describe('HotspotFactory', () => {
                 new MemberList([new CityzenId('fake-member-id'), new CityzenId('fake-member-id2')]),
             );
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             id: 'fake-id',
             title: 'new title',

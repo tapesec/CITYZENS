@@ -11,13 +11,8 @@ class MediaBuilder {
         protected _slug: HotspotSlug,
         protected _scope: HotspotScope,
         protected _members: MemberList,
-        protected _avatarIconUrl?: AvatarIconUrl,
         protected _slideShow?: SlideShow,
     ) {}
-
-    get avatarIconUrl() {
-        return this._avatarIconUrl;
-    }
 
     get scope(): HotspotScope {
         return this._scope;

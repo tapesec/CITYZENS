@@ -7,7 +7,17 @@ import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hots
 export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
-    required: ['id', 'cityId', 'position', 'type', 'iconType', 'views', 'address', 'createdAt'],
+    required: [
+        'id',
+        'cityId',
+        'position',
+        'type',
+        'iconType',
+        'views',
+        'address',
+        'createdAt',
+        'avatarIconUrl',
+    ],
     properties: {
         id: {
             type: 'string',
@@ -57,13 +67,16 @@ const hotspotSchema = {
         views: {
             type: 'number',
         },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
+        },
     },
 };
 const requiredMediaHotspotProperties = [
     ...hotspotSchema.required,
     'title',
     'scope',
-    'avatarIconUrl',
     'slug',
     'members',
     'slideShow',
@@ -89,15 +102,11 @@ const MediaHotspotSchema = {
         },
         type: {
             type: 'string',
-            enum: [HotspotType.Event, HotspotType.WallMessage],
+            enum: [HotspotType.Media],
         },
         iconType: {
             type: 'string',
             enum: [HotspotIconType.Event, HotspotIconType.Wall],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
         members: {
             type: 'array',

@@ -14,8 +14,8 @@ const filestackApiKey = process.env.FILE_STACK_API_KEY;
 const filestackApiUrl = process.env.FILE_STACK_API_URL;
 const filestackPolicy = process.env.FILE_STACK_POLICY;
 const filestackSignature = process.env.FILE_STACK_SIGNATURE;
-const defaultWallIcon = process.env.DEFAULT_WALL_ICON;
-const defaultEventIcon = process.env.DEFAULT_EVENT_ICON;
+const defaultMediaIcon = process.env.DEFAULT_MEDIA_ICON;
+const defaultAlertIcon = process.env.DEFAULT_ALERT_ICON;
 const adminUsername = process.env.ADMIN_USERNAME;
 const adminPassword = process.env.ADMIN_PASSWORD;
 const adminAccessToken = process.env.ETERNAL_ADMIN_ACCESS_TOKEN;
@@ -61,8 +61,8 @@ export default {
         slackWebhookErrorUrl,
     },
     avatarIcon: {
-        defaultWallIcon,
-        defaultEventIcon,
+        defaultMediaIcon,
+        defaultAlertIcon,
     },
     filestack: {
         apiKey: filestackApiKey,

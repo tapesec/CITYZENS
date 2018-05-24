@@ -40,7 +40,7 @@ export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
     public build = (data: any): MediaHotspot | AlertHotspot => {
-        if (data.type === HotspotType.Event || data.type === HotspotType.WallMessage) {
+        if (data.type === HotspotType.Media) {
             this.throwErrorIfRequiredAndUndefined(data, requiredMediaHotspotProperties);
             return this.createMediaHotspot(data);
         }
@@ -103,9 +103,21 @@ class HotspotFactory {
         let author: Author;
         let cityId: CityId;
         let views: ViewsCount;
-        let type: HotspotType;
-        let icon: HotspotIconType;
         let createdAt: Date;
+        let avatarIconUrl: AvatarIconUrl;
+
+        try {
+            this.assertType(data.type);
+            this.assertIconType(data.iconType);
+        } catch (error) {
+            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+            hook.alert(
+                `${error.message} in hotspot factory \n
+            data provided: ${JSON.stringify(data)}`,
+            );
+            throw new InvalidArgumentError(error.message);
+        }
+
         // data from both database or user
         if (data.position) {
             position = new Position(data.position.latitude, data.position.longitude);
@@ -140,16 +152,20 @@ class HotspotFactory {
         } else {
             views = new ViewsCount(data.views);
         }
-        try {
-            type = this.setType(data.type);
-            icon = this.setIconType(data.iconType);
-        } catch (error) {
-            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
-            hook.alert(
-                `${error.message} in hotspot factory \n
-                data provided: ${JSON.stringify(data)}`,
-            );
-            throw new InvalidArgumentError(error.message);
+
+        if (!data.avatarIconUrl) {
+            switch (data.type) {
+                case HotspotType.Media:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultMediaIcon);
+                    break;
+                case HotspotType.Alert:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultAlertIcon);
+                    break;
+                default:
+                    throw new Error('Unknow type: ' + data.type);
+            }
+        } else {
+            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
         }
 
         return new HotspotBuilder(
@@ -159,42 +175,38 @@ class HotspotFactory {
             cityId,
             address,
             views,
-            type,
-            icon,
+            data.type as HotspotType,
+            data.iconType as HotspotIconType,
             createdAt,
+            avatarIconUrl,
         );
     };
 
-    private setIconType = (iconType: any) => {
+    private assertIconType = (iconType: string) => {
         if (
-            iconType === HotspotIconType.Wall ||
-            iconType === HotspotIconType.Event ||
-            iconType === HotspotIconType.Accident ||
-            iconType === HotspotIconType.Destruction ||
-            iconType === HotspotIconType.Handicap ||
-            iconType === HotspotIconType.RoadWorks
+            !(
+                iconType === HotspotIconType.Wall ||
+                iconType === HotspotIconType.Event ||
+                iconType === HotspotIconType.Accident ||
+                iconType === HotspotIconType.Destruction ||
+                iconType === HotspotIconType.Handicap ||
+                iconType === HotspotIconType.RoadWorks
+            )
         ) {
-            return iconType;
+            throw new InvalidArgumentError('Unknow Hotspot iconType');
         }
-        throw new InvalidArgumentError('Unknow Hotspot iconType');
     };
 
-    private setType = (hotspotType: any) => {
-        if (
-            hotspotType === HotspotType.WallMessage ||
-            hotspotType === HotspotType.Event ||
-            hotspotType === HotspotType.Alert
-        ) {
-            return hotspotType;
+    private assertType = (hotspotType: string) => {
+        if (!(hotspotType === HotspotType.Media || hotspotType === HotspotType.Alert)) {
+            throw new InvalidArgumentError('Unknow Hotspot type');
         }
-        throw new InvalidArgumentError('Unknow Hotspot type');
     };
 
     private createMediaBuilder = (data: any) => {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        let avatarIconUrl: AvatarIconUrl;
         let slideShow = new SlideShow();
         const members = new MemberList();
 
@@ -214,31 +226,10 @@ class HotspotFactory {
             });
         }
 
-        if (!data.avatarIconUrl) {
-            switch (data.type) {
-                case HotspotType.Event:
-                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultEventIcon);
-                    break;
-                case HotspotType.WallMessage:
-                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultWallIcon);
-                    break;
-                default:
-                    throw new Error('Unknow type: ' + data.type);
-            }
-        } else {
-            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
-        }
         if (data.slideShow) {
             slideShow = new SlideShow(data.slideShow.map((x: string) => new ImageLocation(x)));
         }
-        return new MediaBuilder(
-            hotspotTitle,
-            hotspotSlug,
-            scope,
-            members,
-            avatarIconUrl,
-            slideShow,
-        );
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, slideShow);
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

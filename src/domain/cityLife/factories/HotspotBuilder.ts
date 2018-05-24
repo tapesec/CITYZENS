@@ -5,6 +5,7 @@ import Author from '../model/author/Author';
 import HotspotId from '../model/hotspot/HotspotId';
 import { HotspotType, HotspotIconType } from '../model/hotspot/Hotspot';
 import Position from './../model/hotspot/Position';
+import AvatarIconUrl from '../model/hotspot/AvatarIconUrl';
 
 class HotspotBuilder {
     constructor(
@@ -17,8 +18,12 @@ class HotspotBuilder {
         protected _type: HotspotType,
         protected _iconType: HotspotIconType,
         protected _createdAt: Date,
+        protected _avatarIconUrl: AvatarIconUrl,
     ) {}
 
+    get avatarIconUrl() {
+        return this._avatarIconUrl;
+    }
     get id(): HotspotId {
         return this._uid;
     }

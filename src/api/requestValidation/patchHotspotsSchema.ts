@@ -41,12 +41,20 @@ const MediaHotspotSchema = {
 };
 
 const AlertHotspotSchema = {
-    anyOf: [{ required: ['message'] }, { required: ['alertHotspotImgLocation'] }],
+    anyOf: [
+        { required: ['message'] },
+        { required: ['alertHotspotImgLocation'] },
+        { required: ['avatarIconUrl'] },
+    ],
     properties: {
         message: {
             type: 'string',
         },
         alertHotspotImgLocation: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
+        },
+        avatarIconUrl: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },

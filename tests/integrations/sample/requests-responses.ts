@@ -63,6 +63,7 @@ const createHotspotBody = {
         name: '2 rue du succès',
         city: 'Kaamelott',
     },
+    avatarIconUrl: 'an-url-fake',
 };
 
 export const AlertHotspotPostBody = {
@@ -78,7 +79,7 @@ export const MediaHotspotPostBody = {
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
     createdAt: '0650-05-31T22:00:00.000Z',
-    type: HotspotType.Event,
+    type: HotspotType.Media,
     iconType: HotspotIconType.Event,
 };
 
@@ -86,8 +87,7 @@ export const WallHotspotPostBody = {
     ...createHotspotBody,
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
-    type: HotspotType.WallMessage,
+    type: HotspotType.Media,
     iconType: HotspotIconType.Wall,
-    avatarIconUrl: 'an-url-fake',
     createdAt: '0650-05-31T22:00:00.000Z',
 };

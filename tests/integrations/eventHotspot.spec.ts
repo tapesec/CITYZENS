@@ -30,7 +30,7 @@ const eventHotspotsTests = (state: any) => {
 
             // Assert
             const isValid = validator.validate(mediaHotspotSchema, response.body);
-            expect(isValid).to.be.true;
+            expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;
         });
 

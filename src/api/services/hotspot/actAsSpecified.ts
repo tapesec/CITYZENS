@@ -13,7 +13,7 @@ export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot
         (<MediaHotspot>hotspot).changeScope(requestBody.scope);
     }
     if (requestBody.avatarIconUrl) {
-        (<MediaHotspot>hotspot).changeAvatarIconurl(new AvatarIconUrl(requestBody.avatarIconUrl));
+        hotspot.changeAvatarIconurl(new AvatarIconUrl(requestBody.avatarIconUrl));
     }
 
     if (requestBody.slideShow !== undefined) {

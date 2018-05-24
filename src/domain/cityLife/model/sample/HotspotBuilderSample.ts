@@ -1,11 +1,13 @@
-import ViewsCount from '../hotspot/ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import HotspotId from '../hotspot/HotspotId';
-import PositionSample from './PositionSample';
-import AuthorSample from './AuthorSample';
 import CityId from '../city/CityId';
-import AddressSample from './AddressSample';
+import AvatarIconUrl from '../hotspot/AvatarIconUrl';
 import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
+import HotspotId from '../hotspot/HotspotId';
+import ViewsCount from '../hotspot/ViewsCount';
+import config from './../../../../api/config';
+import AddressSample from './AddressSample';
+import AuthorSample from './AuthorSample';
+import PositionSample from './PositionSample';
 
 class HotspotBuilderSample {
     public static TOWNHALL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -15,9 +17,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.TOWNHALL_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static SCHOOL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -27,9 +30,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.SCHOOL_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static CHURCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -39,9 +43,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.CHURCH_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static MERIGNAC_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -51,9 +56,10 @@ class HotspotBuilderSample {
         new CityId('33281'),
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static TOEDIT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -63,9 +69,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.TOEDIT_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static TOEDIT_CAMELOT_HOTSTPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -78,6 +85,7 @@ class HotspotBuilderSample {
         HotspotType.Alert,
         HotspotIconType.Destruction,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
 
     public static ACCIDENT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -90,6 +98,7 @@ class HotspotBuilderSample {
         HotspotType.Alert,
         HotspotIconType.Accident,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
 
     public static MATCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -99,9 +108,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.MATCH_ADDRESS,
         new ViewsCount(1),
-        HotspotType.Event,
+        HotspotType.Media,
         HotspotIconType.Event,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static DOCTOR_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -111,9 +121,10 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.DOCTOR_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
+        HotspotType.Media,
         HotspotIconType.Wall,
         new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 }
 

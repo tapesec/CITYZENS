@@ -5,6 +5,7 @@ import HotspotId from './HotspotId';
 import Address from './Address';
 import Position from './Position';
 import Author from '../author/Author';
+import AvatarIconUrl from './AvatarIconUrl';
 
 export enum HotspotScope {
     Public = 'public',
@@ -12,8 +13,7 @@ export enum HotspotScope {
 }
 
 export enum HotspotType {
-    WallMessage = 'WallMessage',
-    Event = 'Event',
+    Media = 'Media',
     Alert = 'Alert',
 }
 
@@ -36,6 +36,7 @@ abstract class Hotspot {
     protected _type: HotspotType;
     protected _iconType: HotspotIconType;
     protected _createdAt: Date;
+    protected _avatarIconUrl: AvatarIconUrl;
 
     constructor(builder: HotspotBuilder) {
         this._uid = builder.id;
@@ -47,6 +48,11 @@ abstract class Hotspot {
         this._type = builder.type;
         this._iconType = builder.iconType;
         this._createdAt = builder.createdAt;
+        this._avatarIconUrl = builder.avatarIconUrl;
+    }
+
+    get avatarIconUrl() {
+        return this._avatarIconUrl;
     }
 
     get id(): string {
@@ -97,8 +103,13 @@ abstract class Hotspot {
         this._address = new Address(newAddress, this._address.city);
     }
 
-    toString() {
+    public changeAvatarIconurl(avatarIconUrl: AvatarIconUrl) {
+        this._avatarIconUrl = avatarIconUrl;
+    }
+
+    toJSON() {
         return {
+            avatarIconUrl: this.avatarIconUrl.toString(),
             id: this.id,
             position: this.position,
             author: this.author.toString(),

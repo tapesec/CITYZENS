@@ -47,6 +47,10 @@ const hotspotSchema = {
             },
             required: ['latitude', 'longitude'],
         },
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
+        },
     },
 };
 
@@ -66,15 +70,11 @@ const MediaHotspotSchema = {
         },
         type: {
             type: 'string',
-            enum: [HotspotType.Event, HotspotType.WallMessage],
+            enum: [HotspotType.Media],
         },
         iconType: {
             type: 'string',
             enum: [HotspotIconType.Event, HotspotIconType.Wall],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
     },
     additionalProperties: false,

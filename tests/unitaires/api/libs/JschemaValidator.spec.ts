@@ -32,7 +32,7 @@ describe('JschemaValidator', () => {
                 city: 'Isengard',
                 name: 'Tower of Saruman',
             },
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             createdAt: '0 00 0000',
         };
@@ -156,7 +156,7 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             createdAt: '0 00 0000',
         };
@@ -180,7 +180,7 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Wall,
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
@@ -206,7 +206,7 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.Event,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Event,
             createdAt: '0 00 0000',
         };
@@ -230,7 +230,7 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.Event,
+            type: HotspotType.Media,
             iconType: HotspotIconType.Event,
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
@@ -274,7 +274,7 @@ describe('JschemaValidator', () => {
                 longitude: 22.1112221,
             },
             cityId: '33273',
-            type: HotspotType.Event, // <-- type is for EventHotspot
+            type: HotspotType.Media, // <-- type is for EventHotspot
             iconType: HotspotIconType.Event, // <-- icon for EventHotspot
             message: 'lorem ipsum dolor', // <-- but message for alert hotspot
         };

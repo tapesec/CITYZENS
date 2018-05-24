@@ -46,7 +46,7 @@ class AlertHotspot extends Hotspot {
 
     toJSON() {
         return {
-            ...super.toString(),
+            ...super.toJSON(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
             imageDescriptionLocation: this.imageDescriptionLocation
