@@ -1,4 +1,4 @@
-import { HotspotIconType, HotspotType } from './../../domain/cityLife/model/hotspot/Hotspot';
+import { HotspotType } from './../../domain/cityLife/model/hotspot/Hotspot';
 import * as validation from './constant';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
@@ -15,7 +15,7 @@ export default () => {
 export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
-    required: ['cityId', 'position', 'type', 'iconType', 'address', 'createdAt'],
+    required: ['cityId', 'position', 'type', 'address', 'createdAt'],
     properties: {
         address: {
             type: 'object',
@@ -72,10 +72,6 @@ const MediaHotspotSchema = {
             type: 'string',
             enum: [HotspotType.Media],
         },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Event, HotspotIconType.Wall],
-        },
     },
     additionalProperties: false,
 };
@@ -97,15 +93,6 @@ const AlertHotspotSchema = {
         alertHotspotImgLocation: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        iconType: {
-            type: 'string',
-            enum: [
-                HotspotIconType.Accident,
-                HotspotIconType.Destruction,
-                HotspotIconType.Handicap,
-                HotspotIconType.RoadWorks,
-            ],
         },
     },
     additionalProperties: false,

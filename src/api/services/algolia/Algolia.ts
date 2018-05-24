@@ -1,8 +1,7 @@
-import AlgoliaAPI from './../../../api/libs/AlgoliaAPI';
-import Hotspot from './../../../domain/cityLife/model/hotspot/Hotspot';
-import HotspotRepositoryInMemory from './../../../infrastructure/HotspotRepositoryInMemory';
-import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
 import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
+import AlgoliaAPI from './../../../api/libs/AlgoliaAPI';
+import AlertHotspot from './../../../domain/cityLife/model/hotspot/AlertHotspot';
+import Hotspot from './../../../domain/cityLife/model/hotspot/Hotspot';
 
 class Algolia {
     constructor(protected algolia: AlgoliaAPI) {}
@@ -16,7 +15,6 @@ class Algolia {
             address: hotspot.address.name,
             cityId: hotspot.cityId,
             type: hotspot.type,
-            iconType: hotspot.iconType,
             _geoloc: {
                 lat: hotspot.position.latitude,
                 lng: hotspot.position.longitude,

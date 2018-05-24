@@ -1,38 +1,34 @@
-import SlackWebhook from '../api/libs/SlackWebhook';
-import { format } from 'util';
-import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
-import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
-import {
-    HotspotIconType,
-    HotspotScope,
-    HotspotType,
-} from '../domain/cityLife/model/hotspot/Hotspot';
-import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
-import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import CityId from '../domain/cityLife/model/city/CityId';
-import Author from './../domain/cityLife/model/author/Author';
-import Position from '../domain/cityLife/model/hotspot/Position';
-import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
-import Address from '../domain/cityLife/model/hotspot/Address';
-import config from '../api/config/';
-import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
+import { format } from 'util';
+import { v4 } from 'uuid';
+import config from '../api/config/';
+import SlackWebhook from '../api/libs/SlackWebhook';
 import {
-    requiredMediaHotspotProperties,
     requiredAlertHotspotProperties,
+    requiredMediaHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
-import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
-import MemberList from '../domain/cityLife/model/hotspot/MemberList';
-import VoterList from '../domain/cityLife/model/hotspot/VoterList';
-import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
-import CityzenId from '../domain/cityzens/model/CityzenId';
+import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
+import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
+import CityId from '../domain/cityLife/model/city/CityId';
+import Address from '../domain/cityLife/model/hotspot/Address';
+import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
+import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
 import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
+import { HotspotScope, HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
+import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
+import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
-import SlideShow from '../domain/cityLife/model/hotspot/SlideShow';
 import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+import MemberList from '../domain/cityLife/model/hotspot/MemberList';
+import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
+import Position from '../domain/cityLife/model/hotspot/Position';
+import SlideShow from '../domain/cityLife/model/hotspot/SlideShow';
+import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
+import VoterList from '../domain/cityLife/model/hotspot/VoterList';
+import CityzenId from '../domain/cityzens/model/CityzenId';
+import Author from './../domain/cityLife/model/author/Author';
+import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
 const request = require('request');
 const slug = require('slug');
 
@@ -108,7 +104,6 @@ class HotspotFactory {
 
         try {
             this.assertType(data.type);
-            this.assertIconType(data.iconType);
         } catch (error) {
             const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
             hook.alert(
@@ -176,25 +171,9 @@ class HotspotFactory {
             address,
             views,
             data.type as HotspotType,
-            data.iconType as HotspotIconType,
             createdAt,
             avatarIconUrl,
         );
-    };
-
-    private assertIconType = (iconType: string) => {
-        if (
-            !(
-                iconType === HotspotIconType.Wall ||
-                iconType === HotspotIconType.Event ||
-                iconType === HotspotIconType.Accident ||
-                iconType === HotspotIconType.Destruction ||
-                iconType === HotspotIconType.Handicap ||
-                iconType === HotspotIconType.RoadWorks
-            )
-        ) {
-            throw new InvalidArgumentError('Unknow Hotspot iconType');
-        }
     };
 
     private assertType = (hotspotType: string) => {

@@ -1,11 +1,11 @@
-import ViewsCount from './ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import CityId from '../city/CityId';
-import HotspotId from './HotspotId';
-import Address from './Address';
-import Position from './Position';
 import Author from '../author/Author';
+import CityId from '../city/CityId';
+import Address from './Address';
 import AvatarIconUrl from './AvatarIconUrl';
+import HotspotId from './HotspotId';
+import Position from './Position';
+import ViewsCount from './ViewsCount';
 
 export enum HotspotScope {
     Public = 'public',
@@ -17,15 +17,6 @@ export enum HotspotType {
     Alert = 'Alert',
 }
 
-export enum HotspotIconType {
-    Wall = 'WallIcon',
-    Event = 'EventIcon',
-    Accident = 'AccidentIcon',
-    Destruction = 'DestructionIcon',
-    Handicap = 'HandicapIcon',
-    RoadWorks = 'RoadWorksIcon',
-}
-
 abstract class Hotspot {
     protected _uid: HotspotId;
     protected _position: Position;
@@ -34,7 +25,6 @@ abstract class Hotspot {
     protected _address: Address;
     protected _views: ViewsCount;
     protected _type: HotspotType;
-    protected _iconType: HotspotIconType;
     protected _createdAt: Date;
     protected _avatarIconUrl: AvatarIconUrl;
 
@@ -46,7 +36,6 @@ abstract class Hotspot {
         this._address = builder.address;
         this._views = builder.views;
         this._type = builder.type;
-        this._iconType = builder.iconType;
         this._createdAt = builder.createdAt;
         this._avatarIconUrl = builder.avatarIconUrl;
     }
@@ -83,10 +72,6 @@ abstract class Hotspot {
         return this._type;
     }
 
-    get iconType(): HotspotIconType {
-        return this._iconType;
-    }
-
     get createdAt(): Date {
         return this._createdAt;
     }
@@ -117,7 +102,6 @@ abstract class Hotspot {
             address: this.address,
             views: this.views,
             type: this.type,
-            iconType: this.iconType,
             createdAt: this.createdAt.toJSON(),
         };
     }

@@ -1,7 +1,7 @@
 import HotspotBuilder from '../../factories/HotspotBuilder';
 import CityId from '../city/CityId';
 import AvatarIconUrl from '../hotspot/AvatarIconUrl';
-import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
+import { HotspotType } from '../hotspot/Hotspot';
 import HotspotId from '../hotspot/HotspotId';
 import ViewsCount from '../hotspot/ViewsCount';
 import config from './../../../../api/config';
@@ -18,7 +18,6 @@ class HotspotBuilderSample {
         AddressSample.TOWNHALL_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -31,7 +30,6 @@ class HotspotBuilderSample {
         AddressSample.SCHOOL_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -44,7 +42,6 @@ class HotspotBuilderSample {
         AddressSample.CHURCH_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -57,7 +54,6 @@ class HotspotBuilderSample {
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -70,7 +66,6 @@ class HotspotBuilderSample {
         AddressSample.TOEDIT_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -83,7 +78,6 @@ class HotspotBuilderSample {
         AddressSample.CAMELOT_ADRESS,
         new ViewsCount(1),
         HotspotType.Alert,
-        HotspotIconType.Destruction,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
@@ -96,7 +90,6 @@ class HotspotBuilderSample {
         AddressSample.ACCIDENT_ADDRESS,
         new ViewsCount(1),
         HotspotType.Alert,
-        HotspotIconType.Accident,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
@@ -109,7 +102,6 @@ class HotspotBuilderSample {
         AddressSample.MATCH_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Event,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
@@ -122,7 +114,6 @@ class HotspotBuilderSample {
         AddressSample.DOCTOR_ADDRESS,
         new ViewsCount(1),
         HotspotType.Media,
-        HotspotIconType.Wall,
         new Date(),
         new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );

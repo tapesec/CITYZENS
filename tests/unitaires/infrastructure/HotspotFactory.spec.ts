@@ -1,17 +1,11 @@
+import { expect } from 'chai';
+import { HotspotScope, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import ImageLocation from '../../../src/domain/cityLife/model/hotspot/ImageLocation';
+import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
+import SlideShow from '../../../src/domain/cityLife/model/hotspot/SlideShow';
 import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
 import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
-import cityzenFromJwt from '../../../src/api/services/cityzen/cityzenFromJwt';
 import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
-import { expect } from 'chai';
-import {
-    HotspotIconType,
-    HotspotType,
-    HotspotScope,
-} from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
-import Author from '../../../src/domain/cityLife/model/author/Author';
-import ImageLocation from '../../../src/domain/cityLife/model/hotspot/ImageLocation';
-import SlideShow from '../../../src/domain/cityLife/model/hotspot/SlideShow';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {
@@ -30,7 +24,6 @@ describe('HotspotFactory', () => {
             },
             cityId: '34345',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             createdAt: new Date().toJSON(),
         };
         const hotspotFactory = new HotspotFactory();
@@ -40,7 +33,6 @@ describe('HotspotFactory', () => {
 
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             scope: HotspotScope.Private,
         });
     });
@@ -67,7 +59,6 @@ describe('HotspotFactory', () => {
             },
             cityId: '34345',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             slideShow: ['url1', 'url2'],
             createdAt: new Date().toJSON(),
         };
@@ -82,7 +73,6 @@ describe('HotspotFactory', () => {
             );
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             id: 'fake-id',
             title: 'new title',
             scope: HotspotScope.Private,
@@ -109,7 +99,6 @@ describe('HotspotFactory', () => {
             },
             cityId: '34345',
             type: HotspotType.Alert,
-            iconType: HotspotIconType.Accident,
             voterList: [['auth0|1jks2kdz2dqziq', true]],
             imageDescriptionLocation: 'fake-url',
             message: {
@@ -123,7 +112,6 @@ describe('HotspotFactory', () => {
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
         // Assert
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
-            iconType: HotspotIconType.Accident,
             type: HotspotType.Alert,
             id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
             voterList: ['auth0|1jks2kdz2dqziq', true],

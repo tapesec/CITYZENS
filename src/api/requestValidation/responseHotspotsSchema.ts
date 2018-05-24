@@ -1,5 +1,5 @@
+import { HotspotType } from './../../domain/cityLife/model/hotspot/Hotspot';
 import * as validation from './constant';
-import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hotspot/Hotspot';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
@@ -12,7 +12,6 @@ const hotspotSchema = {
         'cityId',
         'position',
         'type',
-        'iconType',
         'views',
         'address',
         'createdAt',
@@ -104,10 +103,6 @@ const MediaHotspotSchema = {
             type: 'string',
             enum: [HotspotType.Media],
         },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Event, HotspotIconType.Wall],
-        },
         members: {
             type: 'array',
             items: {
@@ -155,15 +150,6 @@ const AlertHotspotSchema = {
         imageDescriptionLocation: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        iconType: {
-            type: 'string',
-            enum: [
-                HotspotIconType.Accident,
-                HotspotIconType.Destruction,
-                HotspotIconType.Handicap,
-                HotspotIconType.RoadWorks,
-            ],
         },
         voterList: {
             type: 'array',

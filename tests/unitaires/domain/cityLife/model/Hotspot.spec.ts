@@ -3,33 +3,32 @@ import { v4 } from 'uuid';
 import HotspotBuilder from '../../../../../src/domain/cityLife/factories/HotspotBuilder';
 import MediaBuilder from '../../../../../src/domain/cityLife/factories/MediaBuilder';
 import CityId from '../../../../../src/domain/cityLife/model/city/CityId';
+import AlertHotspot from '../../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
 import AvatarIconUrl from '../../../../../src/domain/cityLife/model/hotspot/AvatarIconUrl';
 import {
-    HotspotIconType,
     HotspotScope,
     HotspotType,
 } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
 import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
 import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
+import ImageLocation from '../../../../../src/domain/cityLife/model/hotspot/ImageLocation';
 import MediaHotspot from '../../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
 import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
+import PertinenceScore from '../../../../../src/domain/cityLife/model/hotspot/PertinenceScore';
+import SlideShow from '../../../../../src/domain/cityLife/model/hotspot/SlideShow';
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
+import VoterList from '../../../../../src/domain/cityLife/model/hotspot/VoterList';
 import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import AlertMessageSample from '../../../../../src/domain/cityLife/model/sample/AlertMessageSample';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
+import HotspotBuilderSample from '../../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
 import MediaHotspotSample from '../../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
 import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
 import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 import config from './../../../../../src/api/config';
-import AlertHotspot from '../../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
-import HotspotBuilderSample from '../../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
-import AlertMessageSample from '../../../../../src/domain/cityLife/model/sample/AlertMessageSample';
-import ImageLocation from '../../../../../src/domain/cityLife/model/hotspot/ImageLocation';
-import PertinenceScore from '../../../../../src/domain/cityLife/model/hotspot/PertinenceScore';
-import VoterList from '../../../../../src/domain/cityLife/model/hotspot/VoterList';
-import SlideShow from '../../../../../src/domain/cityLife/model/hotspot/SlideShow';
 use(require('chai-shallow-deep-equal'));
 
 const slug = require('slug');
@@ -50,7 +49,6 @@ describe('MediaHotspot entity', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),
@@ -90,7 +88,6 @@ describe('MediaHotspot entity', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),
@@ -118,7 +115,6 @@ describe('MediaHotspot entity', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 new Date(),
                 new AvatarIconUrl(''),
             ),
@@ -148,7 +144,6 @@ describe('MediaHotspot entity', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 new Date(),
                 new AvatarIconUrl(''),
             ),
@@ -176,7 +171,6 @@ describe('MediaHotspot entity', () => {
             address: { name: '4 rue Louis Blanc', city: 'Martignas-sur-Jalle' },
             views: 1,
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             scope: HotspotScope.Public,
             title: 'Ecole Flora Tristan',
             slug: 'Ecole-Flora-Tristan',
@@ -196,7 +190,6 @@ describe('MediaHotspot entity', () => {
             address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
             views: 1,
             type: HotspotType.Alert,
-            iconType: HotspotIconType.Accident,
             imageDescriptionLocation: 'https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1',
             message: {
                 content:
@@ -218,7 +211,6 @@ describe('MediaHotspot entity', () => {
             address: { name: "12 rue de l'Aubépine", city: 'Merignac' },
             views: 1,
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             scope: HotspotScope.Private,
             title: 'Docteur Maboul',
             slug: 'Docteur-Maboul',
@@ -248,7 +240,6 @@ describe('Hotspot', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),
@@ -284,7 +275,6 @@ describe('Hotspot', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),
@@ -318,7 +308,6 @@ describe('Hotspot', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),
@@ -351,7 +340,6 @@ describe('Hotspot', () => {
                 AddressSample.TOWNHALL_ADDRESS,
                 new ViewsCount(0),
                 HotspotType.Media,
-                HotspotIconType.Wall,
                 date,
                 new AvatarIconUrl(''),
             ),

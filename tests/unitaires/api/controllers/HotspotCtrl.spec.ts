@@ -175,7 +175,6 @@ describe('HotspotCtrl', () => {
                 cityId: '33273',
                 scope: 'private',
                 type: HotspotType.Media,
-                iconType: HotspotIconType.Wall,
                 createdAt: 'An trois de la terre du millieu',
             };
             factoryData = {

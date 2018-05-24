@@ -1,15 +1,12 @@
 /**
  * a test suite for easily valid json schema
  */
-import {
-    HotspotType,
-    HotspotIconType,
-} from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import * as ajv from 'ajv';
 import { expect } from 'chai';
-import { patchMessageSchema, getHotspots } from '../../../../src/api/requestValidation/schema';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
 import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
+import { getHotspots, patchMessageSchema } from '../../../../src/api/requestValidation/schema';
+import { HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 
 describe('JschemaValidator', () => {
     let validator: ajv.Ajv;
@@ -33,7 +30,6 @@ describe('JschemaValidator', () => {
                 name: 'Tower of Saruman',
             },
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             createdAt: '0 00 0000',
         };
         // Act
@@ -157,7 +153,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             createdAt: '0 00 0000',
         };
         // Act
@@ -181,7 +176,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Wall,
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
         };
@@ -207,7 +201,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Event,
             createdAt: '0 00 0000',
         };
         // Act
@@ -231,7 +224,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            iconType: HotspotIconType.Event,
             avatarIconUrl: 'url',
             createdAt: '0 00 0000',
         };
@@ -255,7 +247,6 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             type: HotspotType.Alert,
-            iconType: HotspotIconType.Accident,
             message: 'lorem ipsum dolor',
             createdAt: '0 00 0000',
         };
@@ -275,7 +266,6 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             type: HotspotType.Media, // <-- type is for EventHotspot
-            iconType: HotspotIconType.Event, // <-- icon for EventHotspot
             message: 'lorem ipsum dolor', // <-- but message for alert hotspot
         };
         // Act

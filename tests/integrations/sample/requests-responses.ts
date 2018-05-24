@@ -1,17 +1,9 @@
-import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
-import { username } from './granted-cityzen';
+import { HotspotScope, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
+import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
 import MessageFactory from '../../../src/infrastructure/MessageFactory';
-import {
-    FAKE_USER_INFO_AUTH0,
-    FAKE_ADMIN_USER_INFO_AUTH0,
-} from './../../unitaires/api/services/samples';
 import cityzenFromAuth0 from './../../../src/api/services/cityzen/cityzenFromAuth0';
-import Hotspot, {
-    HotspotIconType,
-    HotspotScope,
-    HotspotType,
-} from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import { FAKE_USER_INFO_AUTH0 } from './../../unitaires/api/services/samples';
 
 // POST /hotspots/{hotspotId}/messages
 export const createMessageBody = {
@@ -71,7 +63,6 @@ export const AlertHotspotPostBody = {
     message: 'this is a message alert',
     createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Alert,
-    iconType: HotspotIconType.Accident,
 };
 
 export const MediaHotspotPostBody = {
@@ -80,7 +71,6 @@ export const MediaHotspotPostBody = {
     title: 'A simple title for a cool event',
     createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Media,
-    iconType: HotspotIconType.Event,
 };
 
 export const WallHotspotPostBody = {
@@ -88,6 +78,5 @@ export const WallHotspotPostBody = {
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
     type: HotspotType.Media,
-    iconType: HotspotIconType.Wall,
     createdAt: '0650-05-31T22:00:00.000Z',
 };
