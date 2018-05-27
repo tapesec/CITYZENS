@@ -38,7 +38,7 @@ describe('filterHotspotByOwnerShip', () => {
 
         // to be continued …
         const hotspotReducer = new HotspotReducer(hotspotsToFilter);
-        hotspotReducer.pickHotspotOwnerShip(AuthorSample.LIONNEL2);
+        hotspotReducer.pickHotspotOwnerShip(AuthorSample.LIONNEL);
         const hotspotsFiltered = hotspotReducer.releaseFilteredHotspots();
         expect(hotspotsFiltered.length).to.be.eql(1);
         expect(hotspotsFiltered).to.have.all.members([WallHotspotSample.DOCTOR]);
@@ -71,7 +71,7 @@ describe('filterHotspotByOwnerShip', () => {
 
         const hotspotReducer = new HotspotReducer(hotspotsToFilter);
         const hotspotsFiltered = hotspotReducer.renderVisibleHotspotsByVisitorStatus(
-            CityzenSample.LIONNEL2,
+            CityzenSample.LIONNEL,
         );
         expect(hotspotsFiltered.length).to.be.eql(4);
         expect(hotspotsFiltered).to.have.all.members([

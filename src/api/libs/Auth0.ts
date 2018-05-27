@@ -40,12 +40,12 @@ class Auth0 {
             body: {
                 username,
                 password,
-                grant_type: 'password',
+                grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
                 // offline_access enable refresh_token in the response
                 scope: 'openid offline_access',
                 client_id: this.opts.clientId,
                 client_secret: this.opts.clientSecret,
-                connection: 'Cityzens',
+                realm: 'Cityzens-self-stored',
             },
             json: true,
         };

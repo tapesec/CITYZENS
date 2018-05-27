@@ -21,7 +21,7 @@ describe('Error service.', () => {
             InternalServerError: Sinon.stub(),
         };
 
-        slackWebHookStub = { alert: Sinon.stub() };
+        slackWebHookStub = { alert: Sinon.stub().returns(Promise.resolve()) };
     });
 
     it(`logAndCreateInternal should return InternalError,

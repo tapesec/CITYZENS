@@ -1,29 +1,29 @@
-import { use, expect } from 'chai';
+import { expect, use } from 'chai';
 import { v4 } from 'uuid';
-use(require('chai-shallow-deep-equal'));
-import config from './../../../../../src/api/config';
-import Hotspot, {
+import HotspotBuilder from '../../../../../src/domain/cityLife/factories/HotspotBuilder';
+import MediaBuilder from '../../../../../src/domain/cityLife/factories/MediaBuilder';
+import CityId from '../../../../../src/domain/cityLife/model/city/CityId';
+import {
+    HotspotIconType,
     HotspotScope,
     HotspotType,
-    HotspotIconType,
 } from '../../../../../src/domain/cityLife/model/hotspot/Hotspot';
-import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
-import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
-import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
-import MediaHotspot from '../../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
-import HotspotBuilder from '../../../../../src/domain/cityLife/factories/HotspotBuilder';
-import CityId from '../../../../../src/domain/cityLife/model/city/CityId';
-import MediaBuilder from '../../../../../src/domain/cityLife/factories/MediaBuilder';
 import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
 import HotspotTitle from '../../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
+import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
 import ViewsCount from '../../../../../src/domain/cityLife/model/hotspot/ViewsCount';
 import WallHotspot from '../../../../../src/domain/cityLife/model/hotspot/WallHotspot';
-import HotspotSlug from '../../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
-import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
-import MemberList from '../../../../../src/domain/cityLife/model/hotspot/MemberList';
-import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import AddressSample from '../../../../../src/domain/cityLife/model/sample/AddressSample';
 import AlertHotspotSample from '../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
 import EventHotspotSample from '../../../../../src/domain/cityLife/model/sample/EventHotspotSample';
+import PositionSample from '../../../../../src/domain/cityLife/model/sample/PositionSample';
+import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
+import config from './../../../../../src/api/config';
+use(require('chai-shallow-deep-equal'));
 
 const slug = require('slug');
 
@@ -220,7 +220,7 @@ describe('WallHotspot entity', () => {
         expect(jsonHotspot).to.shallowDeepEqual({
             id: 'c28e94ef-ad1d-4260-8452-89a2b7bf298e',
             position: { latitude: 44.84665782, longitude: -0.76560438 },
-            author: { pseudo: 'Louisounette', id: 'auth0|fake-id2' },
+            author: { pseudo: 'Louisounette', id: CityzenSample.LOUISE.id.toString() },
             cityId: '33273',
             address: { name: '4 rue Louis Blanc', city: 'Martignas-sur-Jalle' },
             views: 1,
@@ -240,7 +240,7 @@ describe('WallHotspot entity', () => {
         expect(jsonHotspot).to.shallowDeepEqual({
             id: 'd0568142-23f4-427d-83f3-e84443cc3643',
             position: { latitude: 44.841633, longitude: -0.776771 },
-            author: { pseudo: 'lucabrx', id: 'auth0|5a1e6928f96aa12d71333e0e' },
+            author: { pseudo: 'lucabrx', id: CityzenSample.LUCA.id.toString() },
             cityId: '33273',
             address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
             views: 1,
@@ -262,7 +262,7 @@ describe('WallHotspot entity', () => {
         expect(jsonHotspot).to.shallowDeepEqual({
             id: '19eab732-1a3f-4bfb-abb0-1d0dde8a3669',
             position: { latitude: 44.84181, longitude: -0.64759 },
-            author: { pseudo: 'Princesse', id: 'auth0|fake-id3' },
+            author: { pseudo: CityzenSample.ELODIE.pseudo, id: CityzenSample.ELODIE.id.toString() },
             cityId: '33281',
             address: { name: "12 rue de l'Aubépine", city: 'Merignac' },
             views: 1,
@@ -271,7 +271,9 @@ describe('WallHotspot entity', () => {
             scope: HotspotScope.Private,
             title: 'Docteur Maboul',
             slug: 'Docteur-Maboul',
-            members: ['auth0|fake-id3', 'auth0|fake-id2'],
+            members: EventHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST.members
+                .toArray()
+                .map(x => x.toString()),
             avatarIconUrl: config.avatarIcon.defaultWallIcon,
             description: {
                 content:

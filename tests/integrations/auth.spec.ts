@@ -1,18 +1,18 @@
-import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import wallHotspotsTests from './wallHotspot.spec';
-import eventHotspotsTests from './eventHotspot.spec';
-import alertHotspotsTests from './alertHotspot.spec';
-import hotspotsEndpointsTests from './hotspots.spec';
-import citiesEndpointTests from './cities.spec';
-import messagesEndpointsTests from './messages.spec';
-import { loginBody } from './sample/requests-responses';
-import * as LoginSample from './sample/LoginSample';
-import { votingPath } from './Voting.spec';
 import config from './../../src/api/config';
+import * as server from './../../src/api/server';
+import { votingPath } from './Voting.spec';
+import alertHotspotsTests from './alertHotspot.spec';
+import citiesEndpointTests from './cities.spec';
+import eventHotspotsTests from './eventHotspot.spec';
+import hotspotsEndpointsTests from './hotspots.spec';
+import messagesEndpointsTests from './messages.spec';
+import * as LoginSample from './sample/LoginSample';
+import wallHotspotsTests from './wallHotspot.spec';
 
-describe('/auth endpoint', () => {
+describe('/auth endpoint', function() {
+    this.timeout(10000);
     const state: any = { admin: {}, standard: {} };
 
     describe('GET /auth/token', () => {
@@ -43,16 +43,12 @@ describe('/auth endpoint', () => {
             expect(responseAdmin.body).to.have.property('refresh_token');
             // Finaly
 
-            state.admin.id_token = responseAdmin.body.id_token;
-            state.admin.refresh_token = responseAdmin.body.refresh_token;
             state.admin.access_token = responseAdmin.body.access_token;
-
-            state.standard.id_token = responseStandard.body.id_token;
-            state.standard.refresh_token = responseStandard.body.refresh_token;
             state.standard.access_token = responseStandard.body.access_token;
             state.standard.auth0id = config.test.standardAuth0id;
         });
     });
+
     wallHotspotsTests(state);
     eventHotspotsTests(state);
     alertHotspotsTests(state);

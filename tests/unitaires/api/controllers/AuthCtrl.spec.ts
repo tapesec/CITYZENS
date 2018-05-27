@@ -1,9 +1,8 @@
-import AuthCtrl from '../../../../src/api/controllers/AuthCtrl';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import * as TypeMoq from 'typemoq';
 import * as rest from 'restify';
-import * as sinon from 'sinon';
+import * as TypeMoq from 'typemoq';
+import AuthCtrl from '../../../../src/api/controllers/AuthCtrl';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 const restifyErrors = require('restify-errors');
 
 describe('AuthCtrl', () => {
@@ -64,7 +63,7 @@ describe('AuthCtrl', () => {
 
             errorHandlerMoq
                 .setup(x =>
-                    x.logAndCreateInvalidCredentials('DELETE path', fakeError.error_description),
+                    x.logAndCreateInvalidCredentials('GET path', fakeError.error_description),
                 )
                 .returns(() => 'error');
 
@@ -77,15 +76,13 @@ describe('AuthCtrl', () => {
 
         it(`Should try to log user and return a 401 http response with error description`, async () => {
             // Arrange
-            const fakeError = {
-                message: 'an error occured',
-            };
+            const fakeError = new Error('an error occured');
             auth0ServiceMoq
                 .setup(x => x.login(username, password))
                 .returns(() => Promise.reject(fakeError));
 
             errorHandlerMoq
-                .setup(x => x.logAndCreateInternal('DELETE path', fakeError))
+                .setup(x => x.logAndCreateInvalidCredentials('GET path', fakeError.message))
                 .returns(() => 'error');
 
             // Act

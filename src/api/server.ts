@@ -6,7 +6,7 @@ const corsMiddleware = require('restify-cors-middleware');
 
 const logger = require('restify-logger');
 
-const server : restify.Server = restify.createServer();
+const server: restify.Server = restify.createServer();
 
 logger.format('standard-format', ':method :url :response-time');
 server.use(logger('standard-format'));
@@ -22,6 +22,7 @@ const cors = corsMiddleware({
         'Authorization',
     ],
 });
+
 server.pre(cors.preflight);
 server.use(cors.actual);
 
@@ -33,9 +34,9 @@ routers.init(server);
 if (module.parent) {
     module.exports = server;
 } else {
-    server.listen(config.server.httpPort, () => {
-        console.log('ready and hope works well on %s', server.url);
-    });
+    routers.initDB(server).then(() =>
+        server.listen(config.server.httpPort, () => {
+            console.log('ready and hope works well on %s', server.url);
+        }),
+    );
 }
-
-

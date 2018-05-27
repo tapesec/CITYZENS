@@ -1,22 +1,25 @@
-import WallHotspot from './WallHotspot';
-import EventHotspot from './EventHotspot';
 import AlertHotspot from './AlertHotspot';
+import EventHotspot from './EventHotspot';
 import Hotspot from './Hotspot';
+import WallHotspot from './WallHotspot';
 
-interface IHotspotRepository​​ {
+interface IHotspotRepository {
+    findById(id: string): Promise<WallHotspot | EventHotspot | AlertHotspot>;
 
-    findById(id : string): WallHotspot|EventHotspot|AlertHotspot;
+    findInArea(
+        north: number,
+        west: number,
+        south: number,
+        east: number,
+    ): Promise<(WallHotspot | EventHotspot | AlertHotspot)[]>;
 
-    findInArea(north : number, west : number, south : number, east : number):
-    (WallHotspot|EventHotspot|AlertHotspot)[];
+    findByCodeCommune(insee: string): Promise<(WallHotspot | EventHotspot | AlertHotspot)[]>;
 
-    findByCodeCommune(insee : string): (WallHotspot|EventHotspot|AlertHotspot)[];
+    isSet(id: string): boolean;
 
-    isSet(id : string) : boolean;
+    store(hotspot: Hotspot): void;
 
-    store(hotspot : Hotspot) : void;
-
-    remove(id : string) : void;
+    remove(id: string): void;
 }
 
 export default IHotspotRepository;

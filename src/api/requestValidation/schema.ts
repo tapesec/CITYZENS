@@ -103,3 +103,44 @@ export const postPertinenceSchema = {
     },
     additionalProperties: false,
 };
+
+export const cityzensDbSchema = {
+    title: "Schema of the postgre's table cityzens",
+    type: 'object',
+    required: ['user_id', 'email', 'password', 'is_admin', 'email_verified'],
+    properties: {
+        user_id: {
+            type: 'number',
+        },
+        name: {
+            type: 'string',
+        },
+        email: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        is_admin: {
+            type: 'boolean',
+        },
+        picture: {
+            type: 'string',
+        },
+        given_name: {
+            type: 'string',
+        },
+        family_name: {
+            type: 'string',
+        },
+        email_verified: {
+            type: 'boolean',
+        },
+        favorites_hotspots: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+    },
+};

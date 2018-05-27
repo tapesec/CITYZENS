@@ -1,29 +1,25 @@
-import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
-import Hotspot from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
-import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
-import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
-import ProfileCtrl from '../../../../src/api/controllers/ProfileCtrl';
-import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import config from '../../../../src/api/config';
-import * as TypeMoq from 'typemoq';
-import { expect } from 'chai';
-import * as rest from 'restify';
-// tslint:disable-next-line:max-line-length
-import CityzenAuth0Repository from './../../../../src/infrastructure/CityzenAuth0Repository';
-import { Auth0 } from '../../../../src/api/libs/Auth0';
 import { OK } from 'http-status-codes';
-import * as sample from './sample';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import Login from '../../../../src/api/services/auth/Login';
-import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
-import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import * as rest from 'restify';
+import * as TypeMoq from 'typemoq';
+import ProfileCtrl from '../../../../src/api/controllers/ProfileCtrl';
+// tslint:disable-next-line:max-line-length
+import { Auth0 } from '../../../../src/api/libs/Auth0';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
+import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import Hotspot from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
+import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 
 describe('ProfileCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
     let resMoq: TypeMoq.IMock<rest.Response>;
     let nextMoq: TypeMoq.IMock<rest.Next>;
-    let cityzenRepositoryMoq: TypeMoq.IMock<CityzenAuth0Repository>;
+    let cityzenRepositoryMoq: TypeMoq.IMock<CityzenRepositoryPostgreSQL>;
     let auth0SdkMoq: TypeMoq.IMock<Auth0>;
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let profileCtrl: ProfileCtrl;
@@ -36,7 +32,7 @@ describe('ProfileCtrl', () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         auth0SdkMoq = TypeMoq.Mock.ofType<Auth0>();
-        cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenAuth0Repository>();
+        cityzenRepositoryMoq = TypeMoq.Mock.ofType<CityzenRepositoryPostgreSQL>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         auth0ServiceMoq = TypeMoq.Mock.ofType<Auth0Service>();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
@@ -101,14 +97,23 @@ describe('ProfileCtrl', () => {
             cityzen.addHotspotAsFavorit(params.favoritHotspotId);
 
             cityzenRepositoryMoq
-                .setup(x => x.updateFavoritesHotspots(cityzen, ''))
+                .setup(x =>
+                    x.updateFavoritesHotspots(
+                        Array.from(cityzen.favoritesHotspots),
+                        new CityzenId(''),
+                    ),
+                )
                 .returns(() => Promise.resolve());
 
             // Act
             await profileCtrl.postFavorit(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             cityzenRepositoryMoq.verify(
-                x => x.updateFavoritesHotspots(cityzen, TypeMoq.It.isAny()),
+                x =>
+                    x.updateFavoritesHotspots(
+                        Array.from(cityzen.favoritesHotspots),
+                        TypeMoq.It.isAny(),
+                    ),
                 TypeMoq.Times.once(),
             );
 

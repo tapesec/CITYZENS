@@ -1,5 +1,5 @@
 import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
-import { username, password } from './granted-cityzen';
+import { username } from './granted-cityzen';
 import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import MessageFactory from '../../../src/infrastructure/MessageFactory';
 import {
@@ -12,11 +12,6 @@ import Hotspot, {
     HotspotScope,
     HotspotType,
 } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-
-export const loginBody = {
-    password,
-    username: `${username}@gmail.com`,
-};
 
 // POST /hotspots/{hotspotId}/messages
 export const createMessageBody = {

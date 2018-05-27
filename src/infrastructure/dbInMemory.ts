@@ -25,7 +25,7 @@ export const HOTSPOT_MARTIGNAS_TOWNHALL = {
     id: WallHotspotSample.TOWNHALL.id,
     title: WallHotspotSample.TOWNHALL.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.ELODIE.id.toString())),
+    authorId: CityzenSample.ELODIE.id.toString(),
     cityId: CitySample.MARTIGNAS.insee,
     slug: slug(WallHotspotSample.TOWNHALL.title),
     address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
@@ -41,7 +41,7 @@ export const HOTSPOT_MARTIGNAS_CHURCH = {
     id: WallHotspotSample.CHURCH.id,
     title: WallHotspotSample.CHURCH.title,
     position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.LOUISE.id.toString())),
+    authorId: CityzenSample.LOUISE.id.toString(),
     slug: slug(WallHotspotSample.CHURCH.title),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
@@ -57,7 +57,7 @@ export const HOTSPOT_MARTIGNAS_SCHOOL = {
     id: WallHotspotSample.SCHOOL.id,
     title: WallHotspotSample.SCHOOL.title,
     position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.ELODIE.id.toString())),
+    authorId: CityzenSample.LOUISE.id.toString(),
     slug: slug(WallHotspotSample.SCHOOL.title),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
@@ -73,7 +73,7 @@ export const HOTSPOT_MERIGNAC_CENTER = {
     id: WallHotspotSample.MERIGNAC.id,
     title: WallHotspotSample.MERIGNAC.title,
     position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.MARTIN.id.toString())),
+    authorId: CityzenSample.MARTIN.id.toString(),
     slug: slug(WallHotspotSample.MERIGNAC.title),
     cityId: CitySample.MERIGNAC.insee,
     address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
@@ -90,7 +90,7 @@ export const HOTSPOT_SIMCITY_TOEDIT = {
     id: WallHotspotSample.TOEDIT.id,
     title: WallHotspotSample.TOEDIT.title,
     position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.MARTIN.id.toString())),
+    authorId: CityzenSample.MARTIN.id.toString(),
     slug: slug(WallHotspotSample.TOEDIT.title),
     cityId: CitySample.SIMCITY.insee,
     address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
@@ -107,7 +107,7 @@ export const HOTSPOT_DOCTOR = {
     id: WallHotspotSample.DOCTOR.id,
     title: WallHotspotSample.DOCTOR.title,
     position: JSON.parse(JSON.stringify(PositionSample.DOCTOR)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.LIONNEL2.id.toString())),
+    authorId: WallHotspotSample.DOCTOR.author.id.toString(),
     slug: slug(WallHotspotSample.DOCTOR.title),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.DOCTOR_ADDRESS)),
@@ -124,7 +124,7 @@ export const ALERT_ACCIDENT = {
     id: AlertHotspotSample.ACCIDENT.id,
     message: AlertHotspotSample.ACCIDENT.message,
     position: JSON.parse(JSON.stringify(PositionSample.ACCIDENT)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.LUCA.id.toString())),
+    authorId: CityzenSample.LUCA.id.toString(),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.ACCIDENT_ADDRESS)),
     views: HOTSPOT_INITIAL_VIEWS,
@@ -140,7 +140,7 @@ export const CAMELOT = {
     id: AlertHotspotSample.TOEDIT_CAMELOT.id,
     message: AlertHotspotSample.TOEDIT_CAMELOT.message,
     position: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.position)),
-    authorId: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.author.id.toString())),
+    authorId: AlertHotspotSample.TOEDIT_CAMELOT.author.id.toString(),
     cityId: AlertHotspotSample.TOEDIT_CAMELOT.cityId,
     address: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.address)),
     views: AlertHotspotSample.TOEDIT_CAMELOT.views,
@@ -155,7 +155,7 @@ export const EVENT_MATCH = {
     id: EventHotspotSample.MATCH_EVENT.id,
     title: EventHotspotSample.MATCH_EVENT.title,
     position: JSON.parse(JSON.stringify(PositionSample.MATCH)),
-    authorId: JSON.parse(JSON.stringify(CityzenSample.LUCA.id.toString())),
+    authorId: CityzenSample.LUCA.id.toString(),
     slug: slug(EventHotspotSample.MATCH_EVENT.title),
     cityId: CitySample.MARTIGNAS.insee,
     address: JSON.parse(JSON.stringify(AddressSample.MATCH_ADDRESS)),
@@ -176,9 +176,7 @@ export const CITYZEN_ELODIE = JSON.parse(JSON.stringify(CityzenSample.ELODIE));
 export const CITYZEN_LOUISE = JSON.parse(JSON.stringify(CityzenSample.LOUISE));
 export const CITYZEN_MARTIN = JSON.parse(JSON.stringify(CityzenSample.MARTIN));
 export const CITYZEN_LIONNEL = JSON.parse(JSON.stringify(CityzenSample.LIONNEL));
-export const CITYZEN_LIONNEL2 = JSON.parse(JSON.stringify(CityzenSample.LIONNEL2));
 export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
-export const CITYZEN_LUCA_GOOGLE = JSON.parse(JSON.stringify(CityzenSample.LUCA_GOOGLE));
 
 const env: string = config.server.env;
 const isInTest = env === 'test';
@@ -233,9 +231,7 @@ const databaseInitialize = () => {
         cityzenCollection.insert(CITYZEN_LOUISE);
         cityzenCollection.insert(CITYZEN_MARTIN);
         cityzenCollection.insert(CITYZEN_LIONNEL);
-        cityzenCollection.insert(CITYZEN_LIONNEL2);
         cityzenCollection.insert(CITYZEN_LUCA);
-        cityzenCollection.insert(CITYZEN_LUCA_GOOGLE);
     }
 };
 

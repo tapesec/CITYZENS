@@ -20,6 +20,11 @@ const adminUsername = process.env.ADMIN_USERNAME;
 const adminPassword = process.env.ADMIN_PASSWORD;
 const standardUsername = process.env.STANDARD_USERNAME;
 const standardPassword = process.env.STANDARD_PASSWORD;
+const postgreSQLUser = process.env.POSTGRESQL_ADDON_USER;
+const postgreSQLHost = process.env.POSTGRESQL_ADDON_HOST;
+const postgreSQLDatabase = process.env.POSTGRESQL_ADDON_DB;
+const postgreSQLPassword = process.env.POSTGRESQL_ADDON_PASSWORD;
+const postgreSQLPort = parseInt(process.env.POSTGRESQL_ADDON_PORT, 10);
 
 export default {
     server: {
@@ -65,6 +70,13 @@ export default {
         },
     },
     test: {
-        standardAuth0id: 'auth0|5accbb899ebc00546acf1e9b',
+        standardAuth0id: 'auth0|6',
+    },
+    postgreSQL: {
+        user: postgreSQLUser,
+        host: postgreSQLHost,
+        database: postgreSQLDatabase,
+        password: postgreSQLPassword,
+        port: postgreSQLPort,
     },
 };

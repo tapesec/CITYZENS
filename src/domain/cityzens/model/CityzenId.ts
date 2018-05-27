@@ -1,5 +1,5 @@
-import ValueObject from './../../interface/ValueObject';
 import * as lodash from 'lodash';
+import ValueObject from './../../interface/ValueObject';
 
 class CityzenId implements ValueObject {
     constructor(private _id: string) {}
@@ -14,6 +14,12 @@ class CityzenId implements ValueObject {
 
     public toJSON() {
         return this._id;
+    }
+
+    public toInt() {
+        const last = this._id.lastIndexOf('|');
+        const intPart = this._id.substr(last + 1);
+        return parseInt(intPart, 10);
     }
 
     public isEqual(other: CityzenId) {

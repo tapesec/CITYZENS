@@ -1,16 +1,16 @@
-import { Auth0 } from './../libs/Auth0';
-import Cityzen from '../../domain/cityzens/model/Cityzen';
-import CityzenAuth0Repository from '../../infrastructure/CityzenAuth0Repository';
-import RootCtrl from './RootCtrl';
-import * as rest from 'restify';
 import { OK } from 'http-status-codes';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
-import ErrorHandler from '../services/errors/ErrorHandler';
-import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import Cityzen from '../../domain/cityzens/model/Cityzen';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
+import ErrorHandler from '../services/errors/ErrorHandler';
+import { Auth0 } from './../libs/Auth0';
+import RootCtrl from './RootCtrl';
 
 class ProfileCtrl extends RootCtrl {
-    protected cityzenRepository: CityzenAuth0Repository;
+    protected cityzenRepository: CityzenRepositoryPostgreSQL;
     protected hotspotRepository: HotspotRepositoryInMemory;
     protected auth0Sdk: Auth0;
     public static UPDATE_PROFILE_ERROR = 'Failed to update profile';
@@ -21,7 +21,7 @@ class ProfileCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
-        cityzenRepository: CityzenAuth0Repository,
+        cityzenRepository: CityzenRepositoryPostgreSQL,
         auth0Sdk: Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
@@ -54,15 +54,12 @@ class ProfileCtrl extends RootCtrl {
                     ),
                 );
             }
-        } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
-        }
-        try {
+
             const currentCityzen: Cityzen = cityzenFromAuth0(this.userInfo);
             currentCityzen.addHotspotAsFavorit(favoritId);
             await this.cityzenRepository.updateFavoritesHotspots(
-                currentCityzen,
-                this.userInfo.accessToken,
+                Array.from(currentCityzen.favoritesHotspots),
+                currentCityzen.id,
             );
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
