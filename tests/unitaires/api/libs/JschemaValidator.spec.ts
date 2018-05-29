@@ -30,7 +30,6 @@ describe('JschemaValidator', () => {
                 name: 'Tower of Saruman',
             },
             type: HotspotType.Media,
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -153,7 +152,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -177,7 +175,6 @@ describe('JschemaValidator', () => {
             scope: 'private',
             type: HotspotType.Media,
             avatarIconUrl: 'url',
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -201,7 +198,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             scope: 'private',
             type: HotspotType.Media,
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -225,7 +221,6 @@ describe('JschemaValidator', () => {
             scope: 'private',
             type: HotspotType.Media,
             avatarIconUrl: 'url',
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -248,7 +243,6 @@ describe('JschemaValidator', () => {
             cityId: '33273',
             type: HotspotType.Alert,
             message: 'lorem ipsum dolor',
-            createdAt: '0 00 0000',
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);

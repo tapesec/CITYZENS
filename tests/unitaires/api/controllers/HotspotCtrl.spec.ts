@@ -12,7 +12,7 @@ import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified'
 import SlideshowService from '../../../../src/api/services/widgets/SlideshowService';
 import Author from '../../../../src/domain/cityLife/model/author/Author';
 import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
-import { HotspotIconType, HotspotScope, HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import { HotspotScope, HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
 import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
@@ -175,7 +175,6 @@ describe('HotspotCtrl', () => {
                 cityId: '33273',
                 scope: 'private',
                 type: HotspotType.Media,
-                createdAt: 'An trois de la terre du millieu',
             };
             factoryData = {
                 ...jsonBody,

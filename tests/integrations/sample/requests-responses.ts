@@ -61,7 +61,6 @@ const createHotspotBody = {
 export const AlertHotspotPostBody = {
     ...createHotspotBody,
     message: 'this is a message alert',
-    createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Alert,
 };
 
@@ -69,7 +68,6 @@ export const MediaHotspotPostBody = {
     ...createHotspotBody,
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
-    createdAt: '0650-05-31T22:00:00.000Z',
     type: HotspotType.Media,
 };
 
@@ -78,5 +76,4 @@ export const WallHotspotPostBody = {
     scope: HotspotScope.Public,
     title: 'A simple title for a cool event',
     type: HotspotType.Media,
-    createdAt: '0650-05-31T22:00:00.000Z',
 };

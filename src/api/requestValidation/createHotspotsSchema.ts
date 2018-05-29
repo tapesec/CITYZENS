@@ -15,7 +15,7 @@ export default () => {
 export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
-    required: ['cityId', 'position', 'type', 'address', 'createdAt'],
+    required: ['cityId', 'position', 'type', 'address'],
     properties: {
         address: {
             type: 'object',
@@ -28,9 +28,6 @@ const hotspotSchema = {
                 },
             },
             required: ['name', 'city'],
-        },
-        createdAt: {
-            type: 'string',
         },
         cityId: {
             type: 'string',

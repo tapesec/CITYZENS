@@ -123,6 +123,8 @@ class HotspotFactory {
         }
         if (data.createdAt) {
             createdAt = new Date(data.createdAt);
+        } else {
+            createdAt = new Date();
         }
 
         if (data.cityzen) {
