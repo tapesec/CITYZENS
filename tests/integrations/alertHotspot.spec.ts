@@ -25,7 +25,7 @@ const alertHotspotsTests = (state: any) => {
 
             // Assert
             const isValid = validator.validate(alertHotspotSchema, response.body);
-            expect(isValid).to.be.true;
+            expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;
         });
         // check if (hotspot correctly retrieved from database)

@@ -1,10 +1,10 @@
-import * as server from './../../src/api/server';
+import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import * as ajv from 'ajv';
-import { EventHotspotPostBody } from './sample/requests-responses';
+import { mediaHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
 import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
-import { eventHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
+import * as server from './../../src/api/server';
+import { MediaHotspotPostBody } from './sample/requests-responses';
 
 const eventHotspotsTests = (state: any) => {
     describe('EventHotspot behavior', () => {
@@ -15,22 +15,21 @@ const eventHotspotsTests = (state: any) => {
         let hotspotScope;
         let hotspotTitle;
         let dateEnd;
-        let description;
         let avatarIconUrl;
         let slideShow;
 
-        it('Should create an EventHotspot and return it with status 201', async () => {
+        it('Should create a EventHotspot and return it with status 201', async () => {
             // Act
             const response = await request(server)
                 .post('/hotspots')
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
-                .send(EventHotspotPostBody)
+                .send(MediaHotspotPostBody)
                 .set('Accept', 'application/json')
                 .expect(201);
 
             // Assert
-            const isValid = validator.validate(eventHotspotSchema, response.body);
-            expect(isValid).to.be.true;
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
+            expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;
         });
 
@@ -39,11 +38,11 @@ const eventHotspotsTests = (state: any) => {
             const response = await request(server)
                 .get(`/hotspots/${newPostHotspot.id}`)
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
-                .set('Accept', 'application/json')
-                .expect(200);
+                .set('Accept', 'application/json');
+            expect(response.ok, response.text).to.be.true;
 
             // Assert
-            const isValid = validator.validate(eventHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid).to.be.true;
         });
 
@@ -51,7 +50,6 @@ const eventHotspotsTests = (state: any) => {
             hotspotScope = HotspotScope.Private;
             hotspotTitle = 'an updated title';
             dateEnd = '0650-05-31T21:00:00.000Z';
-            description = 'an updated description';
             avatarIconUrl = 'new-url';
             slideShow = ['slide(-1)', 'slide(sqrt(5) + 1)'];
 
@@ -60,27 +58,18 @@ const eventHotspotsTests = (state: any) => {
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send({
                     avatarIconUrl,
-                    description,
                     slideShow,
-                    dateEnd,
                     scope: hotspotScope,
                     title: hotspotTitle,
                 })
-                .set('Accept', 'application/json')
-                .expect(200);
+                .set('Accept', 'application/json');
+            expect(response.ok, response.text).to.be.true;
 
-            const isValid = validator.validate(eventHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid).to.be.true;
             expect(response.body)
                 .to.have.property('avatarIconUrl')
                 .to.equal(avatarIconUrl);
-            expect(response.body)
-                .to.have.property('description')
-                .to.have.property('content')
-                .to.equal(description);
-            expect(response.body)
-                .to.have.property('dateEnd')
-                .to.equal(dateEnd);
             expect(response.body)
                 .to.have.property('scope')
                 .to.equal(hotspotScope);
@@ -92,7 +81,7 @@ const eventHotspotsTests = (state: any) => {
                 .to.be.deep.equal(slideShow);
         });
 
-        it('Should get previously updated EventHotspot with GET request by id', async () => {
+        it('Should get previously updated MediaHotspot with GET request by id', async () => {
             // Act
             const response = await request(server)
                 .get(`/hotspots/${newPostHotspot.id}`)
@@ -101,18 +90,11 @@ const eventHotspotsTests = (state: any) => {
                 .expect(200);
 
             // Assert
-            const isValid = validator.validate(eventHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid).to.be.true;
             expect(response.body)
                 .to.have.property('avatarIconUrl')
                 .to.equal(avatarIconUrl);
-            expect(response.body)
-                .to.have.property('description')
-                .to.have.property('content')
-                .to.equal(description);
-            expect(response.body)
-                .to.have.property('dateEnd')
-                .to.equal(dateEnd);
             expect(response.body)
                 .to.have.property('scope')
                 .to.equal(hotspotScope);

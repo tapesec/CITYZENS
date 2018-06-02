@@ -1,11 +1,13 @@
-import ViewsCount from '../hotspot/ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import HotspotId from '../hotspot/HotspotId';
-import PositionSample from './PositionSample';
-import AuthorSample from './AuthorSample';
 import CityId from '../city/CityId';
+import AvatarIconUrl from '../hotspot/AvatarIconUrl';
+import { HotspotType } from '../hotspot/Hotspot';
+import HotspotId from '../hotspot/HotspotId';
+import ViewsCount from '../hotspot/ViewsCount';
+import config from './../../../../api/config';
 import AddressSample from './AddressSample';
-import { HotspotIconType, HotspotType } from '../hotspot/Hotspot';
+import AuthorSample from './AuthorSample';
+import PositionSample from './PositionSample';
 
 class HotspotBuilderSample {
     public static TOWNHALL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -15,8 +17,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.TOWNHALL_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static SCHOOL_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -26,8 +29,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.SCHOOL_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static CHURCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -37,8 +41,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.CHURCH_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static MERIGNAC_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -48,8 +53,9 @@ class HotspotBuilderSample {
         new CityId('33281'),
         AddressSample.RANDOM_MERIGNAC_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static TOEDIT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -59,8 +65,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.TOEDIT_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static TOEDIT_CAMELOT_HOTSTPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -71,7 +78,8 @@ class HotspotBuilderSample {
         AddressSample.CAMELOT_ADRESS,
         new ViewsCount(1),
         HotspotType.Alert,
-        HotspotIconType.Destruction,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
 
     public static ACCIDENT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -82,7 +90,8 @@ class HotspotBuilderSample {
         AddressSample.ACCIDENT_ADDRESS,
         new ViewsCount(1),
         HotspotType.Alert,
-        HotspotIconType.Accident,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
 
     public static MATCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -92,8 +101,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.MATCH_ADDRESS,
         new ViewsCount(1),
-        HotspotType.Event,
-        HotspotIconType.Event,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 
     public static DOCTOR_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
@@ -103,8 +113,9 @@ class HotspotBuilderSample {
         new CityId('33273'),
         AddressSample.DOCTOR_ADDRESS,
         new ViewsCount(1),
-        HotspotType.WallMessage,
-        HotspotIconType.Wall,
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultMediaIcon),
     );
 }
 

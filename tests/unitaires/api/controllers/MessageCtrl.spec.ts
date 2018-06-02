@@ -1,25 +1,15 @@
-import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
-import MessageFactory from '../../../../src/infrastructure/MessageFactory';
-import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
-import IHotspotRepository from '../../../../src/domain/cityLife/model/hotspot/IHotspotRepository';
-import messageRepositoryInMemory, {
-    MessageRepositoryInMemory,
-} from '../../../../src/infrastructure/MessageRepositoryInMemory';
-import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
-import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
-import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import { OK, CREATED, getStatusText, UNAUTHORIZED } from 'http-status-codes';
-import * as TypeMoq from 'typemoq';
-import * as Chai from 'chai';
+import { CREATED, OK, getStatusText } from 'http-status-codes';
 import * as rest from 'restify';
-import * as sample from './sample';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import Login from '../../../../src/api/services/auth/Login';
-import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
-import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
-import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
-import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import * as TypeMoq from 'typemoq';
+import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import MessageFactory from '../../../../src/infrastructure/MessageFactory';
+import { MessageRepositoryInMemory } from '../../../../src/infrastructure/MessageRepositoryInMemory';
+import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
 
 describe('MessageCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -85,7 +75,7 @@ describe('MessageCtrl', () => {
             hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
             hotspotRepositoryMoq
                 .setup(x => x.findById(hotspotId))
-                .returns(() => WallHotspotSample.CHURCH);
+                .returns(() => Promise.resolve(MediaHotspotSample.CHURCH));
             const fakeMessageCollection = [MessageSample.MARTIGNAS_TOWNHALL_MESSAGE];
             messageRepositoryMoq
                 .setup(x => x.findByHotspotId(hotspotId))
@@ -112,7 +102,7 @@ describe('MessageCtrl', () => {
             hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
             hotspotRepositoryMoq
                 .setup(x => x.findById(hotspotId))
-                .returns(() => WallHotspotSample.DOCTOR);
+                .returns(() => Promise.resolve(MediaHotspotSample.DOCTOR));
             errorHandlerMoq
                 .setup(x => x.logAndCreateUnautorized(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
                 .returns(() => 'error');
@@ -158,7 +148,7 @@ describe('MessageCtrl', () => {
             hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
             hotspotRepositoryMoq
                 .setup(x => x.findById(hotspotId))
-                .returns(() => WallHotspotSample.SCHOOL);
+                .returns(() => Promise.resolve(MediaHotspotSample.SCHOOL));
 
             messageFactoryMoq
                 .setup(x => x.createMessage(TypeMoq.It.isAny()))
@@ -223,7 +213,7 @@ describe('MessageCtrl', () => {
             hotspotRepositoryMoq.setup(x => x.isSet(hotspotId)).returns(() => true);
             hotspotRepositoryMoq
                 .setup(x => x.findById(hotspotId))
-                .returns(() => WallHotspotSample.SCHOOL);
+                .returns(() => Promise.resolve(MediaHotspotSample.SCHOOL));
 
             messageRepositoryMoq.setup(x => x.findById(messageId)).returns(() => message);
 

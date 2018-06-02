@@ -3,8 +3,8 @@ import * as sinon from 'sinon';
 import { v4 } from 'uuid';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
 import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
+import MediaHotspotSample from '../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import WallHotspotSample from '../../../src/domain/cityLife/model/sample/WallHotspotSample';
 import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import {
     CITYZEN_ELODIE,
@@ -57,7 +57,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should find an hostpsot by id if id is provided (indeed)', async () => {
         // Arrange
-        const hotspotToGet = WallHotspotSample.SCHOOL;
+        const hotspotToGet = MediaHotspotSample.SCHOOL;
 
         findOneStub.returns(fakeSchool);
         ormCityzen.getAllAuthors.returns(
@@ -75,7 +75,7 @@ describe('HotspotRepositoryInMemory', () => {
     });
 
     it("should find an hostpsot by slug if id's format is slug", async () => {
-        const hotspotToGet = WallHotspotSample.SCHOOL;
+        const hotspotToGet = MediaHotspotSample.SCHOOL;
 
         // Arrange
         findOneStub.returns(fakeSchool);
@@ -106,10 +106,10 @@ describe('HotspotRepositoryInMemory', () => {
     it('should store a new hotspot in memory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
-        const wallHotspot = JSON.parse(JSON.stringify(WallHotspotSample.CHURCH));
+        const wallHotspot = JSON.parse(JSON.stringify(MediaHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
-        hotspotRepository.store(WallHotspotSample.CHURCH);
+        hotspotRepository.store(MediaHotspotSample.CHURCH);
         // Expect
         expect(saveStub.calledWith(wallHotspot)).to.be.true;
     });
@@ -118,9 +118,9 @@ describe('HotspotRepositoryInMemory', () => {
         // Arrange
         hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
         // Act
-        hotspotRepository.remove(WallHotspotSample.SCHOOL.id);
+        hotspotRepository.remove(MediaHotspotSample.SCHOOL.id);
         // Expect
-        expect(removeStub.calledWith(WallHotspotSample.SCHOOL.id)).to.be.true;
+        expect(removeStub.calledWith(MediaHotspotSample.SCHOOL.id)).to.be.true;
     });
 
     it('should retrieve hotspots spoted in the provided area', async () => {

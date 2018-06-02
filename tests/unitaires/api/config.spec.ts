@@ -15,8 +15,8 @@ describe('Config check', () => {
         Chai.expect(config.default.auth.auth0ManagementApiToken == null).to.be.false;
         Chai.expect(config.default.auth.auth0url == null).to.be.false;
 
-        Chai.expect(config.default.avatarIcon.defaultEventIcon == null).to.be.false;
-        Chai.expect(config.default.avatarIcon.defaultWallIcon == null).to.be.false;
+        Chai.expect(config.default.avatarIcon.defaultMediaIcon == null).to.be.false;
+        Chai.expect(config.default.avatarIcon.defaultAlertIcon == null).to.be.false;
 
         Chai.expect(config.default.credentials.adminPassword == null).to.be.false;
         Chai.expect(config.default.credentials.adminUsername == null).to.be.false;

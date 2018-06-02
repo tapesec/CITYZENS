@@ -1,5 +1,5 @@
+import { HotspotType } from './../../domain/cityLife/model/hotspot/Hotspot';
 import * as validation from './constant';
-import { HotspotType, HotspotIconType } from './../../domain/cityLife/model/hotspot/Hotspot';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark
 // tslint:disable:trailing-comma
@@ -8,19 +8,27 @@ export default () => {
     return {
         title: 'POST /hotspots body validation',
         type: 'object',
-        oneOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
+        oneOf: [MediaHotspotSchema, AlertHotspotSchema],
     };
 };
 
-export {
-    requiredWallHotspotProperties,
-    requiredEventHotspotProperties,
-    requiredAlertHotspotProperties,
-};
+export { requiredMediaHotspotProperties, requiredAlertHotspotProperties };
 
 const hotspotSchema = {
-    required: ['cityId', 'position', 'type', 'iconType'],
+    required: ['cityId', 'position', 'type', 'address'],
     properties: {
+        address: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
+                },
+                city: {
+                    type: 'string',
+                },
+            },
+            required: ['name', 'city'],
+        },
         cityId: {
             type: 'string',
         },
@@ -36,25 +44,17 @@ const hotspotSchema = {
             },
             required: ['latitude', 'longitude'],
         },
-        address: {
-            type: 'object',
-            properties: {
-                name: {
-                    type: 'string',
-                },
-                city: {
-                    type: 'string',
-                },
-            },
-            required: ['name', 'city'],
+        avatarIconUrl: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
     },
 };
 
-const requiredWallHotspotProperties = [...hotspotSchema.required, 'title', 'scope'];
+const requiredMediaHotspotProperties = [...hotspotSchema.required, 'title', 'scope'];
 
-const WallHotspotSchema = {
-    required: requiredWallHotspotProperties,
+const MediaHotspotSchema = {
+    required: requiredMediaHotspotProperties,
     properties: {
         ...hotspotSchema.properties,
         scope: {
@@ -67,57 +67,7 @@ const WallHotspotSchema = {
         },
         type: {
             type: 'string',
-            enum: [HotspotType.WallMessage],
-        },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Wall],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-    },
-    additionalProperties: false,
-};
-
-const requiredEventHotspotProperties = [
-    ...hotspotSchema.required,
-    'title',
-    'scope',
-    'dateEnd',
-    'description',
-];
-
-const EventHotspotSchema = {
-    required: requiredEventHotspotProperties,
-    properties: {
-        ...hotspotSchema.properties,
-        scope: {
-            type: 'string',
-            enum: ['public', 'private'],
-        },
-        title: {
-            type: 'string',
-            maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        description: {
-            type: 'string',
-        },
-        dateEnd: {
-            type: 'string',
-        },
-        type: {
-            type: 'string',
-            enum: [HotspotType.Event],
-        },
-        iconType: {
-            type: 'string',
-            enum: [HotspotIconType.Event],
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
+            enum: [HotspotType.Media],
         },
     },
     additionalProperties: false,
@@ -140,15 +90,6 @@ const AlertHotspotSchema = {
         alertHotspotImgLocation: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        iconType: {
-            type: 'string',
-            enum: [
-                HotspotIconType.Accident,
-                HotspotIconType.Destruction,
-                HotspotIconType.Handicap,
-                HotspotIconType.RoadWorks,
-            ],
         },
     },
     additionalProperties: false,

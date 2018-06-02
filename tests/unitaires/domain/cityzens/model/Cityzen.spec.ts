@@ -1,8 +1,8 @@
-import WallHotspotSample from '../../../../../src/domain/cityLife/model/sample/WallHotspotSample';
-import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
-import Cityzen from '../../../../../src/domain/cityzens/model/Cityzen';
 import { expect } from 'chai';
+import MediaHotspotSample from '../../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import Cityzen from '../../../../../src/domain/cityzens/model/Cityzen';
 import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 
 describe('Cityzens entity', () => {
     it('Should have correct properties set by constructor', () => {
@@ -34,7 +34,7 @@ describe('Cityzens entity', () => {
     it('Should add an hotspot as favorit', () => {
         // Arrange
         const elodie: Cityzen = CityzenSample.ELODIE;
-        const favoritHotspotId: string = WallHotspotSample.SCHOOL.id;
+        const favoritHotspotId: string = MediaHotspotSample.SCHOOL.id;
         // Act
         elodie.addHotspotAsFavorit(favoritHotspotId);
         // Assert

@@ -16,7 +16,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Mairie de Martignas')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 
@@ -25,7 +24,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Ecole Flora Tristan')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 
@@ -34,7 +32,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Eglise de Martignas')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 
@@ -43,7 +40,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Merignac centre')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 
@@ -52,7 +48,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('toEdit')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 
@@ -61,7 +56,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Matche football')),
         HotspotScope.Public,
         new MemberList(),
-        new AvatarIconUrl(config.avatarIcon.defaultEventIcon),
         new SlideShow(),
     );
 
@@ -70,7 +64,6 @@ class MediaBuilderSample {
         new HotspotSlug(slug('Docteur Maboul')),
         HotspotScope.Private,
         new MemberList([CityzenSample.ELODIE.id, CityzenSample.LOUISE.id]),
-        new AvatarIconUrl(config.avatarIcon.defaultWallIcon),
         new SlideShow(),
     );
 }

@@ -7,7 +7,7 @@ import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 
 class RootCtrl {
-    protected schemaValidator: ajv.Ajv = new ajv();
+    protected schemaValidator: ajv.Ajv;
     protected errorHandler: ErrorHandler;
     protected userInfo: UserInfoAuth0;
     protected cityzenIfAuthenticated: Cityzen;
@@ -16,6 +16,7 @@ class RootCtrl {
     constructor(errorHandler: ErrorHandler, auth0Info: Auth0Service) {
         this.auth0Service = auth0Info;
         this.errorHandler = errorHandler;
+        this.schemaValidator = new ajv({ allErrors: true });
     }
 
     public loadAuthenticatedUser = async (req: r.Request, res: r.Response, next: r.Next) => {

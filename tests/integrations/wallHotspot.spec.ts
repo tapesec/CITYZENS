@@ -1,12 +1,10 @@
-import * as server from './../../src/api/server';
+import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import * as ajv from 'ajv';
-import { WallHotspotPostBody } from './sample/requests-responses';
+import { mediaHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
 import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
-import { wallHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
-import SlideShow from '../../src/domain/cityLife/model/hotspot/SlideShow';
-import ImageLocation from '../../src/domain/cityLife/model/hotspot/ImageLocation';
+import * as server from './../../src/api/server';
+import { WallHotspotPostBody } from './sample/requests-responses';
 
 const wallHotspotsTests = (state: any) => {
     describe('WallHotspot behavior', () => {
@@ -25,11 +23,11 @@ const wallHotspotsTests = (state: any) => {
                 .post('/hotspots')
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send(WallHotspotPostBody)
-                .set('Accept', 'application/json')
-                .expect(201);
+                .set('Accept', 'application/json');
+            expect(response.ok, response.text).to.be.true;
 
             // Assert
-            const isValid = validator.validate(wallHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;
         });
@@ -43,7 +41,7 @@ const wallHotspotsTests = (state: any) => {
                 .expect(200);
 
             // Assert
-            const isValid = validator.validate(wallHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid).to.be.true;
         });
 
@@ -65,7 +63,7 @@ const wallHotspotsTests = (state: any) => {
                 .set('Accept', 'application/json')
                 .expect(200);
 
-            const isValid = validator.validate(wallHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid, validator.errorsText()).to.be.true;
             expect(response.body)
                 .to.have.property('avatarIconUrl')
@@ -90,7 +88,7 @@ const wallHotspotsTests = (state: any) => {
                 .expect(200);
 
             // Assert
-            const isValid = validator.validate(wallHotspotSchema, response.body);
+            const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid).to.be.true;
             expect(response.body)
                 .to.have.property('avatarIconUrl')

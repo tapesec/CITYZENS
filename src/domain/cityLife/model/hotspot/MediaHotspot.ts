@@ -15,7 +15,6 @@ class MediaHotspot extends Hotspot {
     protected _title: HotspotTitle;
     protected _slug: HotspotSlug;
     protected _members: MemberList;
-    protected _avatarIconUrl?: AvatarIconUrl;
     protected _slideShow?: SlideShow;
 
     constructor(hotpotBuilder: HotspotBuilder, mediaBuilder: MediaBuilder) {
@@ -24,7 +23,6 @@ class MediaHotspot extends Hotspot {
         this._title = mediaBuilder.title;
         this._slug = mediaBuilder.slug;
         this._members = mediaBuilder.members;
-        this._avatarIconUrl = mediaBuilder.avatarIconUrl;
         this._slideShow = mediaBuilder.slideShow;
     }
 
@@ -64,10 +62,6 @@ class MediaHotspot extends Hotspot {
         this._scope = status;
     }
 
-    public changeAvatarIconurl(avatarIconUrl: AvatarIconUrl) {
-        this._avatarIconUrl = avatarIconUrl;
-    }
-
     public get slideShow() {
         return this._slideShow;
     }
@@ -75,17 +69,14 @@ class MediaHotspot extends Hotspot {
         this._slideShow = slideShow;
     }
 
-    toString() {
+    toJSON() {
         const stringed: any = {
-            ...super.toString(),
+            ...super.toJSON(),
             scope: this._scope,
             title: this._title.toString(),
             slug: this._slug.toString(),
             members: this._members.toString(),
         };
-        if (this.avatarIconUrl !== undefined) {
-            stringed.avatarIconUrl = this._avatarIconUrl.toString();
-        }
         if (this.slideShow !== undefined) {
             stringed.slideShow = this._slideShow.toJSON();
         }

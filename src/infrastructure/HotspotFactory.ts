@@ -1,55 +1,44 @@
-import SlackWebhook from '../api/libs/SlackWebhook';
-import { format } from 'util';
-import WallHotspot from '../domain/cityLife/model/hotspot/WallHotspot';
-import EventHotspot from '../domain/cityLife/model/hotspot/EventHotspot';
-import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
-import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
-import EventDescription from '../domain/cityLife/model/hotspot/EventDescription';
-import {
-    HotspotIconType,
-    HotspotScope,
-    HotspotType,
-} from '../domain/cityLife/model/hotspot/Hotspot';
-import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
-import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import CityId from '../domain/cityLife/model/city/CityId';
-import Author from './../domain/cityLife/model/author/Author';
-import Position from '../domain/cityLife/model/hotspot/Position';
-import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
-import Address from '../domain/cityLife/model/hotspot/Address';
-import config from '../api/config/';
-import { v4 } from 'uuid';
 import { InvalidArgumentError } from 'restify-errors';
+import { format } from 'util';
+import { v4 } from 'uuid';
+import config from '../api/config/';
+import SlackWebhook from '../api/libs/SlackWebhook';
 import {
-    requiredWallHotspotProperties,
-    requiredEventHotspotProperties,
     requiredAlertHotspotProperties,
+    requiredMediaHotspotProperties,
 } from '../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
-import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
-import MemberList from '../domain/cityLife/model/hotspot/MemberList';
-import VoterList from '../domain/cityLife/model/hotspot/VoterList';
-import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
-import CityzenId from '../domain/cityzens/model/CityzenId';
+import HotspotBuilder from '../domain/cityLife/factories/HotspotBuilder';
+import MediaBuilder from '../domain/cityLife/factories/MediaBuilder';
+import CityId from '../domain/cityLife/model/city/CityId';
+import Address from '../domain/cityLife/model/hotspot/Address';
+import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
+import AlertMessage from '../domain/cityLife/model/hotspot/AlertMessage';
 import AvatarIconUrl from '../domain/cityLife/model/hotspot/AvatarIconUrl';
+import { HotspotScope, HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
+import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
+import HotspotTitle from '../domain/cityLife/model/hotspot/HotspotTitle';
 import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
+import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+import MemberList from '../domain/cityLife/model/hotspot/MemberList';
+import PertinenceScore from '../domain/cityLife/model/hotspot/PertinenceScore';
+import Position from '../domain/cityLife/model/hotspot/Position';
 import SlideShow from '../domain/cityLife/model/hotspot/SlideShow';
+import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
+import VoterList from '../domain/cityLife/model/hotspot/VoterList';
+import CityzenId from '../domain/cityzens/model/CityzenId';
+import Author from './../domain/cityLife/model/author/Author';
+import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
 const request = require('request');
 const slug = require('slug');
 
 export const HOTSPOT_ID_FOR_TEST = 'fake-hotspot-id';
 
 class HotspotFactory {
-    public build = (data: any): WallHotspot | EventHotspot | AlertHotspot => {
-        if (data.type === HotspotType.WallMessage) {
-            this.throwErrorIfRequiredAndUndefined(data, requiredWallHotspotProperties);
-            return this.createWallHotspot(data);
-        }
-        if (data.type === HotspotType.Event) {
-            this.throwErrorIfRequiredAndUndefined(data, requiredEventHotspotProperties);
-            return this.createEventHotspot(data);
+    public build = (data: any): MediaHotspot | AlertHotspot => {
+        if (data.type === HotspotType.Media) {
+            this.throwErrorIfRequiredAndUndefined(data, requiredMediaHotspotProperties);
+            return this.createMediaHotspot(data);
         }
         if (data.type === HotspotType.Alert) {
             this.throwErrorIfRequiredAndUndefined(data, requiredAlertHotspotProperties);
@@ -57,59 +46,8 @@ class HotspotFactory {
         }
     };
 
-    private createWallHotspot = (data: any): WallHotspot => {
-        let avatarIconUrl;
-        if (!data.avatarIconUrl) {
-            avatarIconUrl = config.avatarIcon.defaultWallIcon;
-        } else {
-            avatarIconUrl = data.avatarIconUrl;
-        }
-
-        const buildData = {
-            ...data,
-            avatarIconUrl,
-        };
-
-        return new WallHotspot(
-            this.createHotspotBuilder(buildData),
-            this.createMediaBuilder(buildData),
-        );
-    };
-
-    private createEventHotspot = (data: any): EventHotspot => {
-        let dateEnd: Date;
-        let description: EventDescription;
-        let avatarIconUrl;
-        if (data && data.dateEnd) {
-            dateEnd = new Date(data.dateEnd);
-        }
-        // data from db
-        if (data && data.description.content) {
-            const content = data.description.content;
-            const updatedAt = data.description.updatedAt;
-            description = new EventDescription(content, updatedAt);
-        }
-        // data from http POST request
-        if (data && data.description && typeof data.description === 'string') {
-            description = new EventDescription(data.description);
-        }
-        if (!data.avatarIconUrl) {
-            avatarIconUrl = config.avatarIcon.defaultEventIcon;
-        } else {
-            avatarIconUrl = data.avatarIconUrl;
-        }
-
-        const buildData = {
-            ...data,
-            avatarIconUrl,
-        };
-
-        return new EventHotspot(
-            this.createHotspotBuilder(buildData),
-            this.createMediaBuilder(buildData),
-            dateEnd,
-            description,
-        );
+    private createMediaHotspot = (data: any): MediaHotspot => {
+        return new MediaHotspot(this.createHotspotBuilder(data), this.createMediaBuilder(data));
     };
 
     private createAlertHotspot = (data: any): AlertHotspot => {
@@ -134,17 +72,16 @@ class HotspotFactory {
             } else {
                 pertinenceScore = new PertinenceScore(0, 0);
             }
-            if (data.imageDescriptionLocation) {
-                imageLocation = new ImageLocation(data.imageDescriptionLocation);
-            }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
-            imageLocation = new ImageLocation();
             pertinenceScore = new PertinenceScore(0, 0);
         }
+
+        imageLocation = new ImageLocation(data.imageDescriptionLocation);
+
         return new AlertHotspot(
             this.createHotspotBuilder(data),
             message,
@@ -161,8 +98,20 @@ class HotspotFactory {
         let author: Author;
         let cityId: CityId;
         let views: ViewsCount;
-        let type: HotspotType;
-        let icon: HotspotIconType;
+        let createdAt: Date;
+        let avatarIconUrl: AvatarIconUrl;
+
+        try {
+            this.assertType(data.type);
+        } catch (error) {
+            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+            hook.alert(
+                `${error.message} in hotspot factory \n
+            data provided: ${JSON.stringify(data)}`,
+            );
+            throw new InvalidArgumentError(error.message);
+        }
+
         // data from both database or user
         if (data.position) {
             position = new Position(data.position.latitude, data.position.longitude);
@@ -171,6 +120,12 @@ class HotspotFactory {
         if (data.address) {
             address = new Address(data.address.name, data.address.city);
         }
+        if (data.createdAt) {
+            createdAt = new Date(data.createdAt);
+        } else {
+            createdAt = new Date();
+        }
+
         if (data.cityzen) {
             // Data from user
             author = new Author(data.cityzen.pseudo, data.cityzen.id);
@@ -193,51 +148,45 @@ class HotspotFactory {
         } else {
             views = new ViewsCount(data.views);
         }
-        try {
-            type = this.setType(data.type);
-            icon = this.setIconType(data.iconType);
-        } catch (error) {
-            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
-            hook.alert(
-                `${error.message} in hotspot factory \n
-                data provided: ${JSON.stringify(data)}`,
-            );
-            throw new InvalidArgumentError(error.message);
+
+        if (!data.avatarIconUrl) {
+            switch (data.type) {
+                case HotspotType.Media:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultMediaIcon);
+                    break;
+                case HotspotType.Alert:
+                    avatarIconUrl = new AvatarIconUrl(config.avatarIcon.defaultAlertIcon);
+                    break;
+                default:
+                    throw new Error('Unknow type: ' + data.type);
+            }
+        } else {
+            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
         }
 
-        return new HotspotBuilder(hotspotId, position, author, cityId, address, views, type, icon);
+        return new HotspotBuilder(
+            hotspotId,
+            position,
+            author,
+            cityId,
+            address,
+            views,
+            data.type as HotspotType,
+            createdAt,
+            avatarIconUrl,
+        );
     };
 
-    private setIconType = (iconType: any) => {
-        if (
-            iconType === HotspotIconType.Wall ||
-            iconType === HotspotIconType.Event ||
-            iconType === HotspotIconType.Accident ||
-            iconType === HotspotIconType.Destruction ||
-            iconType === HotspotIconType.Handicap ||
-            iconType === HotspotIconType.RoadWorks
-        ) {
-            return iconType;
+    private assertType = (hotspotType: string) => {
+        if (!(hotspotType === HotspotType.Media || hotspotType === HotspotType.Alert)) {
+            throw new InvalidArgumentError('Unknow Hotspot type');
         }
-        throw new InvalidArgumentError('Unknow Hotspot iconType');
-    };
-
-    private setType = (hotspotType: any) => {
-        if (
-            hotspotType === HotspotType.WallMessage ||
-            hotspotType === HotspotType.Event ||
-            hotspotType === HotspotType.Alert
-        ) {
-            return hotspotType;
-        }
-        throw new InvalidArgumentError('Unknow Hotspot type');
     };
 
     private createMediaBuilder = (data: any) => {
         let hotspotTitle: HotspotTitle;
         let hotspotSlug: HotspotSlug;
         let scope: HotspotScope;
-        let avatarIconUrl: AvatarIconUrl;
         let slideShow = new SlideShow();
         const members = new MemberList();
 
@@ -256,20 +205,11 @@ class HotspotFactory {
                 members.add(new CityzenId(m));
             });
         }
-        if (data.avatarIconUrl) {
-            avatarIconUrl = new AvatarIconUrl(data.avatarIconUrl);
-        }
+
         if (data.slideShow) {
             slideShow = new SlideShow(data.slideShow.map((x: string) => new ImageLocation(x)));
         }
-        return new MediaBuilder(
-            hotspotTitle,
-            hotspotSlug,
-            scope,
-            members,
-            avatarIconUrl,
-            slideShow,
-        );
+        return new MediaBuilder(hotspotTitle, hotspotSlug, scope, members, slideShow);
     };
 
     private throwErrorIfRequiredAndUndefined = (data: any, requiredProperties: string[]) => {

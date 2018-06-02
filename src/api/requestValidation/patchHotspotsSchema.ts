@@ -6,11 +6,11 @@ export default () => {
     return {
         title: 'PATCH /hotspots body validation',
         type: 'object',
-        anyOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
+        anyOf: [MediaHotspotSchema, AlertHotspotSchema],
     };
 };
 
-const WallHotspotSchema = {
+const MediaHotspotSchema = {
     anyOf: [
         { required: ['title'] },
         { required: ['scope'] },
@@ -25,44 +25,6 @@ const WallHotspotSchema = {
         title: {
             type: 'string',
             maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        slideShow: {
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
-    },
-    additionalProperties: false,
-};
-
-const EventHotspotSchema = {
-    anyOf: [
-        { required: ['title'] },
-        { required: ['scope'] },
-        { required: ['dateEnd'] },
-        { required: ['slideShow'] },
-        { required: ['description'] },
-        { required: ['avatarIconUrl'] },
-    ],
-    properties: {
-        scope: {
-            type: 'string',
-            enum: ['public', 'private'],
-        },
-        title: {
-            type: 'string',
-            maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        dateEnd: {
-            type: 'string',
-        },
-        description: {
-            type: 'string',
         },
         avatarIconUrl: {
             type: 'string',
@@ -79,12 +41,20 @@ const EventHotspotSchema = {
 };
 
 const AlertHotspotSchema = {
-    anyOf: [{ required: ['message'] }, { required: ['alertHotspotImgLocation'] }],
+    anyOf: [
+        { required: ['message'] },
+        { required: ['alertHotspotImgLocation'] },
+        { required: ['avatarIconUrl'] },
+    ],
     properties: {
         message: {
             type: 'string',
         },
         alertHotspotImgLocation: {
+            type: 'string',
+            maxLength: validation.ASSETS_URL_MAX_LENGTH,
+        },
+        avatarIconUrl: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },

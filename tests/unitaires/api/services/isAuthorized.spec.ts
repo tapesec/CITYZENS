@@ -1,24 +1,23 @@
-import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
-import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import EventHotspotSample from '../../../../src/domain/cityLife/model/sample/EventHotspotSample';
-import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
-import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
-import * as isAuthorized from './../../../../src/api/services/hotspot/isAuthorized';
 import * as Chai from 'chai';
-import Message from '../../../../src/domain/cityLife/model/messages/Message';
-import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import Message from '../../../../src/domain/cityLife/model/messages/Message';
+import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
+import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import * as isAuthorized from './../../../../src/api/services/hotspot/isAuthorized';
 
 describe("isAuthorized's functions.", () => {
     it('toSeeHotspots', () => {
         const authorizedHotspots = [
-            WallHotspotSample.SCHOOL,
+            MediaHotspotSample.SCHOOL,
             AlertHotspotSample.ACCIDENT,
-            EventHotspotSample.MATCH_EVENT,
+            MediaHotspotSample.MATCH_EVENT,
         ];
 
-        const privateHotspots = [WallHotspotSample.DOCTOR];
+        const privateHotspots = [MediaHotspotSample.DOCTOR];
 
         const authorizedCityzens = [
             CityzenSample.ELODIE,
@@ -48,12 +47,12 @@ describe("isAuthorized's functions.", () => {
 
     it('toSeeMessages', () => {
         const authorizedHotspots = [
-            WallHotspotSample.SCHOOL,
+            MediaHotspotSample.SCHOOL,
             AlertHotspotSample.ACCIDENT,
-            EventHotspotSample.MATCH_EVENT,
+            MediaHotspotSample.MATCH_EVENT,
         ];
 
-        const privateHotspots = [WallHotspotSample.DOCTOR];
+        const privateHotspots = [MediaHotspotSample.DOCTOR];
 
         const authorizedCityzens = [
             CityzenSample.ELODIE,
@@ -84,7 +83,7 @@ describe("isAuthorized's functions.", () => {
     it('toAddMember', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         // the author and the one and only god of all cityzens, the one whose name should be sanctify, his reign will comme.
         const authorizedCityzens = [CityzenSample.ELODIE, CityzenSample.LIONNEL];
@@ -116,7 +115,7 @@ describe("isAuthorized's functions.", () => {
     it('toPostMessages', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
@@ -147,7 +146,7 @@ describe("isAuthorized's functions.", () => {
     it('toPatchHotspot', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
@@ -178,7 +177,7 @@ describe("isAuthorized's functions.", () => {
     it('toPatchMessages', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
@@ -209,7 +208,7 @@ describe("isAuthorized's functions.", () => {
     it('toPatchMessage', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
@@ -224,7 +223,7 @@ describe("isAuthorized's functions.", () => {
             '',
             AuthorSample.ELODIE,
             false,
-            new HotspotId(WallHotspotSample.TOEDIT.id),
+            new HotspotId(MediaHotspotSample.TOEDIT.id),
             new Date(),
             new Date(),
         );
@@ -251,7 +250,7 @@ describe("isAuthorized's functions.", () => {
     it('toRemoveHotspot', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
@@ -282,7 +281,7 @@ describe("isAuthorized's functions.", () => {
     it('toRemoveMessages', () => {
         const authorizedhotspots = [];
 
-        const privateHotspots = [WallHotspotSample.TOEDIT];
+        const privateHotspots = [MediaHotspotSample.TOEDIT];
 
         const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
         const unauthorizedCityzens = [
