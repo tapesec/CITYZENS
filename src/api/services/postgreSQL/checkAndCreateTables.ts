@@ -1,7 +1,7 @@
-import PostgreSQL from './postgreSQL';
-import { CITYZEN_TABLE_NAME } from './constants';
-import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
+import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
+import { CITYZEN_TABLE_NAME } from './constants';
+import PostgreSQL from './postgreSQL';
 
 const cityzens = async (postgre: PostgreSQL) => {
     try {
@@ -11,7 +11,9 @@ const cityzens = async (postgre: PostgreSQL) => {
 
         const createTable = `CREATE TABLE cityzens (
             user_id text NOT NULL UNIQUE PRIMARY KEY,
-            password text, email text NOT NULL UNIQUE,
+            password text, 
+            email text NOT NULL UNIQUE,
+            email_verified boolean DEFAULT FALSE,
             pseudo text,
             picture text,
             is_admin boolean DEFAULT FALSE,
@@ -32,8 +34,8 @@ const cityzens = async (postgre: PostgreSQL) => {
             const password = entry[1];
 
             const query =
-                `INSERT INTO ${CITYZEN_TABLE_NAME}(user_id, password, email, pseudo, is_admin, favorites_hotspots) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6)`;
+                `INSERT INTO ${CITYZEN_TABLE_NAME}(user_id, password, email_verified, email, pseudo, is_admin, favorites_hotspots) ` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
             const favorites =
                 cityzen.favoritesHotspots !== undefined
@@ -42,6 +44,7 @@ const cityzens = async (postgre: PostgreSQL) => {
             await postgre.query(query, [
                 cityzen.id.toString(),
                 password,
+                true,
                 cityzen.email,
                 cityzen.pseudo,
                 cityzen.isAdmin,

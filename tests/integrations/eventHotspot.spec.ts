@@ -1,10 +1,10 @@
-import * as server from './../../src/api/server';
+import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import * as ajv from 'ajv';
-import { EventHotspotPostBody } from './sample/requests-responses';
-import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
 import { eventHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
+import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
+import * as server from './../../src/api/server';
+import { EventHotspotPostBody } from './sample/requests-responses';
 
 const eventHotspotsTests = (state: any) => {
     describe('EventHotspot behavior', () => {

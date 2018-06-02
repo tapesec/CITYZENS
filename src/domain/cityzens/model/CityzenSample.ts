@@ -29,7 +29,7 @@ class CityzenSample {
 
     public static LIONNEL: Cityzen = new Cityzen(
         new CityzenId('auth0|7'),
-        'lionel.dupouy@gmail.com',
+        'lionel.dupouy@cityzen.com',
         'Lasalle',
         true,
         undefined,
@@ -38,7 +38,7 @@ class CityzenSample {
 
     public static LUCA: Cityzen = new Cityzen(
         new CityzenId('auth0|9'),
-        'lucabrx@hotmail.fr',
+        'lucabrx@cityzen.com',
         'lucabrx',
         true,
         undefined,
