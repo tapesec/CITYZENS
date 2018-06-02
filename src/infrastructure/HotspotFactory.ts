@@ -72,17 +72,16 @@ class HotspotFactory {
             } else {
                 pertinenceScore = new PertinenceScore(0, 0);
             }
-            if (data.imageDescriptionLocation) {
-                imageLocation = new ImageLocation(data.imageDescriptionLocation);
-            }
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
             message = new AlertMessage(data.message);
             voterList = new VoterList();
-            imageLocation = new ImageLocation();
             pertinenceScore = new PertinenceScore(0, 0);
         }
+
+        imageLocation = new ImageLocation(data.imageDescriptionLocation);
+
         return new AlertHotspot(
             this.createHotspotBuilder(data),
             message,

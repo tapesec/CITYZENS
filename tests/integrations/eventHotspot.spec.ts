@@ -15,7 +15,6 @@ const eventHotspotsTests = (state: any) => {
         let hotspotScope;
         let hotspotTitle;
         let dateEnd;
-        let description;
         let avatarIconUrl;
         let slideShow;
 
