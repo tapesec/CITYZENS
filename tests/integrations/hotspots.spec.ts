@@ -1,10 +1,10 @@
-import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
-import { WallHotspotPostBody } from './sample/requests-responses';
-import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import * as server from './../../src/api/server';
+import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
+import { MediaHotspotPostBody } from './sample/requests-responses';
 
 const hotspotsEndpointsTests = (state: any) => {
     describe('/hotspots endpoint', () => {
@@ -181,7 +181,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .post('/hotspots')
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .send(WallHotspotPostBody)
+                    .send(MediaHotspotPostBody)
                     .set('Accept', 'application/json')
                     .expect(201);
                 newHotspotId = response.body.id;

@@ -71,10 +71,3 @@ export const MediaHotspotPostBody = {
     title: 'A simple title for a cool event',
     type: HotspotType.Media,
 };
-
-export const WallHotspotPostBody = {
-    ...createHotspotBody,
-    scope: HotspotScope.Public,
-    title: 'A simple title for a cool event',
-    type: HotspotType.Media,
-};

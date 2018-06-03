@@ -6,8 +6,8 @@ import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
 import * as server from './../../src/api/server';
 import { MediaHotspotPostBody } from './sample/requests-responses';
 
-const eventHotspotsTests = (state: any) => {
-    describe('EventHotspot behavior', () => {
+export default (state: any) => {
+    describe('MediaHotspot behavior', () => {
         //
         let newPostHotspot: any;
         const validator: ajv.Ajv = new ajv();
@@ -18,22 +18,33 @@ const eventHotspotsTests = (state: any) => {
         let avatarIconUrl;
         let slideShow;
 
-        it('Should create a EventHotspot and return it with status 201', async () => {
+        it("Shoudl'nt create a MediaHotspot beacause of missing propertie.", async () => {
+            const badMediaHotspotBody = { ...MediaHotspotPostBody };
+            delete badMediaHotspotBody.cityId;
+
+            const response = await request(server)
+                .post('/hotspots')
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .send(badMediaHotspotBody)
+                .set('Accept', 'application/json');
+
+            expect(response.badRequest, response.text).to.be.true;
+        });
+        it('Should create a MediaHotspot and return it with status 201', async () => {
             // Act
             const response = await request(server)
                 .post('/hotspots')
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send(MediaHotspotPostBody)
-                .set('Accept', 'application/json')
-                .expect(201);
+                .set('Accept', 'application/json');
 
-            // Assert
+            expect(response.ok, response.text).to.be.true;
             const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;
         });
 
-        it('Should get previously created EventHotspot with GET request by id', async () => {
+        it('Should get previously created MediaHotspot with GET request by id', async () => {
             // Act
             const response = await request(server)
                 .get(`/hotspots/${newPostHotspot.id}`)
@@ -107,5 +118,3 @@ const eventHotspotsTests = (state: any) => {
         });
     });
 };
-
-export default eventHotspotsTests;

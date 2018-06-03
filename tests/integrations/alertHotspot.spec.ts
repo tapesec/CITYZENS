@@ -1,11 +1,10 @@
-import * as server from './../../src/api/server';
+import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import * as ajv from 'ajv';
-import { AlertHotspotPostBody } from './sample/requests-responses';
-import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
 import { alertHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
 import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import * as server from './../../src/api/server';
+import { AlertHotspotPostBody } from './sample/requests-responses';
 
 const alertHotspotsTests = (state: any) => {
     describe('AlertHotspot behavior', () => {
@@ -13,6 +12,19 @@ const alertHotspotsTests = (state: any) => {
         const validator: ajv.Ajv = new ajv();
         let alertMessage: string;
         let alertHotspotImgLocation: string;
+
+        it("Should'nt create AlertHotspot, because of missing properties", async () => {
+            const badAlertHotspotBody = { ...AlertHotspotPostBody };
+            delete badAlertHotspotBody.message;
+
+            const response = await request(server)
+                .post('/hotspots')
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .send(badAlertHotspotBody)
+                .set('Accept', 'application/json');
+
+            expect(response.badRequest, response.text).to.be.true;
+        });
 
         it('Should create an AlertHotspot and return it with status 201', async () => {
             // Act
