@@ -4,7 +4,10 @@
 import * as ajv from 'ajv';
 import { expect } from 'chai';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
-import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
+import getUpdateHotspotSchema, {
+    patchAlertHotspotSchema,
+    patchMediaHotspotSchema,
+} from '../../../../src/api/requestValidation/patchHotspotsSchema';
 import { getHotspots, patchMessageSchema } from '../../../../src/api/requestValidation/schema';
 import { HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 
@@ -315,5 +318,18 @@ describe('JschemaValidator', () => {
         const isValid = validator.validate(getUpdateHotspotSchema(), body);
         // Assert
         expect(isValid).to.be.false;
+    });
+
+    it("Shouldn't validate AlertHotspot patch on AvatarIconUrl", () => {
+        const body = { avatarIconUrl: 'nex icon' };
+
+        const isValid = validator.validate(patchAlertHotspotSchema, body);
+        expect(isValid, validator.errorsText()).to.be.false;
+    });
+    it('Should validate MediaHotspot patch on AvatarIconUrl', () => {
+        const body = { avatarIconUrl: 'nex icon' };
+
+        const isValid = validator.validate(patchMediaHotspotSchema, body);
+        expect(isValid, validator.errorsText()).to.be.true;
     });
 });

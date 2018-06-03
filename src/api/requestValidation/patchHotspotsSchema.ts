@@ -6,11 +6,11 @@ export default () => {
     return {
         title: 'PATCH /hotspots body validation',
         type: 'object',
-        anyOf: [MediaHotspotSchema, AlertHotspotSchema],
+        anyOf: [patchMediaHotspotSchema, patchAlertHotspotSchema],
     };
 };
 
-const MediaHotspotSchema = {
+export const patchMediaHotspotSchema = {
     anyOf: [
         { required: ['title'] },
         { required: ['scope'] },
@@ -40,21 +40,13 @@ const MediaHotspotSchema = {
     additionalProperties: false,
 };
 
-const AlertHotspotSchema = {
-    anyOf: [
-        { required: ['message'] },
-        { required: ['alertHotspotImgLocation'] },
-        { required: ['avatarIconUrl'] },
-    ],
+export const patchAlertHotspotSchema = {
+    anyOf: [{ required: ['message'] }, { required: ['alertHotspotImgLocation'] }],
     properties: {
         message: {
             type: 'string',
         },
         alertHotspotImgLocation: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        avatarIconUrl: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },
