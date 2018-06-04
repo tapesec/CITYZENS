@@ -1,20 +1,11 @@
 const slug = require('slug');
-import MessageSample from '../domain/cityLife/model/sample/MessageSample';
-import WallHotspotSample from '../domain/cityLife/model/sample/WallHotspotSample';
 import CitySample from '../domain/cityLife/model/sample/CitySample';
-import AddressSample from '../domain/cityLife/model/sample/AddressSample';
-import {
-    HotspotScope,
-    HotspotType,
-    HotspotIconType,
-} from '../domain/cityLife/model/hotspot/Hotspot';
-const loki = require('lokijs');
+import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
-import PositionSample from './../domain/cityLife/model/sample/PositionSample';
-import { HOTSPOT_INITIAL_VIEWS } from '../domain/cityLife/constants';
-import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
-import EventHotspotSample from './../domain/cityLife/model/sample/EventHotspotSample';
 import config from './../api/config';
+import AlertHotspotSample from './../domain/cityLife/model/sample/AlertHotspotSample';
+import MediaHotspotSample from './../domain/cityLife/model/sample/MediaHotspotSample';
+const loki = require('lokijs');
 
 let hotspotCollection: any;
 let messageCollection: any;
@@ -22,151 +13,53 @@ let cityCollection: any;
 let cityzenCollection: any;
 
 export const HOTSPOT_MARTIGNAS_TOWNHALL = {
-    id: WallHotspotSample.TOWNHALL.id,
-    title: WallHotspotSample.TOWNHALL.title,
-    position: JSON.parse(JSON.stringify(PositionSample.TOWNHALL)),
-    authorId: CityzenSample.ELODIE.id.toString(),
-    cityId: CitySample.MARTIGNAS.insee,
-    slug: slug(WallHotspotSample.TOWNHALL.title),
-    address: JSON.parse(JSON.stringify(AddressSample.TOWNHALL_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.TOWNHALL.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.TOWNHALL.slideShow.toJSON(),
+    ...MediaHotspotSample.TOWNHALL.toJSON(),
+    authorId: MediaHotspotSample.TOWNHALL.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_CHURCH = {
-    id: WallHotspotSample.CHURCH.id,
-    title: WallHotspotSample.CHURCH.title,
-    position: JSON.parse(JSON.stringify(PositionSample.CHURCH)),
-    authorId: CityzenSample.LOUISE.id.toString(),
-    slug: slug(WallHotspotSample.CHURCH.title),
-    cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.CHURCH_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.CHURCH.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.CHURCH.slideShow.toJSON(),
+    ...MediaHotspotSample.CHURCH.toJSON(),
+    authorId: MediaHotspotSample.CHURCH.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MARTIGNAS_SCHOOL = {
-    id: WallHotspotSample.SCHOOL.id,
-    title: WallHotspotSample.SCHOOL.title,
-    position: JSON.parse(JSON.stringify(PositionSample.SCHOOL)),
-    authorId: CityzenSample.LOUISE.id.toString(),
-    slug: slug(WallHotspotSample.SCHOOL.title),
-    cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.SCHOOL_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.SCHOOL.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.SCHOOL.slideShow.toJSON(),
+    ...MediaHotspotSample.SCHOOL.toJSON(),
+    authorId: MediaHotspotSample.SCHOOL.author.id.toString(),
     removed: false,
 };
 export const HOTSPOT_MERIGNAC_CENTER = {
-    id: WallHotspotSample.MERIGNAC.id,
-    title: WallHotspotSample.MERIGNAC.title,
-    position: JSON.parse(JSON.stringify(PositionSample.MERIGNAC)),
-    authorId: CityzenSample.MARTIN.id.toString(),
-    slug: slug(WallHotspotSample.MERIGNAC.title),
-    cityId: CitySample.MERIGNAC.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.RANDOM_MERIGNAC_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.MERIGNAC.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.MERIGNAC.slideShow.toJSON(),
+    ...MediaHotspotSample.MERIGNAC.toJSON(),
+    authorId: MediaHotspotSample.MERIGNAC.author.id.toString(),
     removed: false,
 };
 
 export const HOTSPOT_SIMCITY_TOEDIT = {
-    id: WallHotspotSample.TOEDIT.id,
-    title: WallHotspotSample.TOEDIT.title,
-    position: JSON.parse(JSON.stringify(PositionSample.TOEDIT)),
-    authorId: CityzenSample.MARTIN.id.toString(),
-    slug: slug(WallHotspotSample.TOEDIT.title),
-    cityId: CitySample.SIMCITY.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.TOEDIT_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Private,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.TOEDIT.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.TOEDIT.slideShow.toJSON(),
+    ...MediaHotspotSample.TOEDIT.toJSON(),
+    authorId: MediaHotspotSample.TOEDIT.author.id.toString(),
     removed: false,
 };
 
 export const HOTSPOT_DOCTOR = {
-    id: WallHotspotSample.DOCTOR.id,
-    title: WallHotspotSample.DOCTOR.title,
-    position: JSON.parse(JSON.stringify(PositionSample.DOCTOR)),
-    authorId: WallHotspotSample.DOCTOR.author.id.toString(),
-    slug: slug(WallHotspotSample.DOCTOR.title),
-    cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.DOCTOR_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Private,
-    type: HotspotType.WallMessage,
-    iconType: HotspotIconType.Wall,
-    avatarIconUrl: WallHotspotSample.DOCTOR.avatarIconUrl.toString(),
-    slideShow: WallHotspotSample.DOCTOR.slideShow.toJSON(),
+    ...MediaHotspotSample.DOCTOR.toJSON(),
+    authorId: MediaHotspotSample.DOCTOR.author.id.toString(),
     removed: false,
 };
 
 export const ALERT_ACCIDENT = {
-    id: AlertHotspotSample.ACCIDENT.id,
-    message: AlertHotspotSample.ACCIDENT.message,
-    position: JSON.parse(JSON.stringify(PositionSample.ACCIDENT)),
-    authorId: CityzenSample.LUCA.id.toString(),
-    cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.ACCIDENT_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.Alert,
-    iconType: HotspotIconType.Accident,
-    imageDescriptionLocation: AlertHotspotSample.ACCIDENT.imageDescriptionLocation.toString(),
-    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.ACCIDENT.voterList)),
+    ...AlertHotspotSample.ACCIDENT.toJSON(),
+    authorId: AlertHotspotSample.ACCIDENT.author.id.toString(),
     removed: false,
 };
 
 export const CAMELOT = {
-    id: AlertHotspotSample.TOEDIT_CAMELOT.id,
-    message: AlertHotspotSample.TOEDIT_CAMELOT.message,
-    position: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.position)),
+    ...AlertHotspotSample.TOEDIT_CAMELOT.toJSON(),
     authorId: AlertHotspotSample.TOEDIT_CAMELOT.author.id.toString(),
-    cityId: AlertHotspotSample.TOEDIT_CAMELOT.cityId,
-    address: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.address)),
-    views: AlertHotspotSample.TOEDIT_CAMELOT.views,
-    scope: HotspotScope.Public,
-    type: HotspotType.Alert,
-    iconType: HotspotIconType.Destruction,
-    voterList: JSON.parse(JSON.stringify(AlertHotspotSample.TOEDIT_CAMELOT.voterList)),
     removed: false,
 };
 
 export const EVENT_MATCH = {
-    id: EventHotspotSample.MATCH_EVENT.id,
-    title: EventHotspotSample.MATCH_EVENT.title,
-    position: JSON.parse(JSON.stringify(PositionSample.MATCH)),
-    authorId: CityzenSample.LUCA.id.toString(),
-    slug: slug(EventHotspotSample.MATCH_EVENT.title),
-    cityId: CitySample.MARTIGNAS.insee,
-    address: JSON.parse(JSON.stringify(AddressSample.MATCH_ADDRESS)),
-    views: HOTSPOT_INITIAL_VIEWS,
-    scope: HotspotScope.Public,
-    type: HotspotType.Event,
-    iconType: HotspotIconType.Event,
-    description: EventHotspotSample.MATCH_EVENT.description,
-    dateEnd: EventHotspotSample.MATCH_EVENT.dateEnd,
-    avatarIconUrl: EventHotspotSample.MATCH_EVENT.avatarIconUrl.toString(),
-    slideShow: EventHotspotSample.MATCH_EVENT.slideShow.toJSON(),
+    ...MediaHotspotSample.MATCH_EVENT.toJSON(),
+    authorId: MediaHotspotSample.MATCH_EVENT.author.id.toString(),
     removed: false,
 };
 

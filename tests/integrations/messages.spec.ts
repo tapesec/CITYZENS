@@ -1,16 +1,15 @@
-import WallHotspotSample from '../../src/domain/cityLife/model/sample/WallHotspotSample';
-import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
-import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
+import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
+import * as server from './../../src/api/server';
+import { username } from './sample/granted-cityzen';
 import {
     createMessageBody,
+    editedMessageResponse,
     newMessageResponse,
     patchMessageBody,
-    editedMessageResponse,
 } from './sample/requests-responses';
-import { username } from './sample/granted-cityzen';
 
 const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
@@ -94,7 +93,7 @@ const messagesEndpointsTests = (state: any) => {
 
             before(() => {
                 messageId = MessageSample.SIMCITY_TOEDIT_MESSAGE.id;
-                hotspotId = WallHotspotSample.TOEDIT.id;
+                hotspotId = MediaHotspotSample.TOEDIT.id;
             });
 
             it('should patch a message and respond 200', async () => {

@@ -1,46 +1,30 @@
 // tslint:disable-next-line:import-name
-import {
-    HotspotIconType,
-    HotspotType,
-    HotspotScope,
-} from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
-import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
-import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
-import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
-import cityzenFromJwt from '../../../../src/api/services/cityzen/cityzenFromJwt';
-import JwtParser from '../../../../src/api/services/auth/JwtParser';
-// tslint:disable-next-line:import-name
-import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
-import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
-const restifyErrors = require('restify-errors');
-import * as TypeMoq from 'typemoq';
-import * as rest from 'restify';
-import * as sample from './sample';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import RootCtrl from '../../../../src/api/controllers/RootCtrl';
-import CityzenId from './../../../../src/domain/cityzens/model/CityzenId';
-import * as Sinon from 'sinon';
 import * as Chai from 'chai';
-import { resolve } from 'url';
-import Login from '../../../../src/api/services/auth/Login';
-import UserInfoAuth0 from '../../../../src/api/services/auth/UserInfoAuth0';
-import { FAKE_USER_INFO_AUTH0, FAKE_ADMIN_USER_INFO_AUTH0 } from '../services/samples';
-import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import { OK, getStatusText } from 'http-status-codes';
+import * as rest from 'restify';
+import * as TypeMoq from 'typemoq';
+import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
 import Algolia from '../../../../src/api/services/algolia/Algolia';
-import WallHotspot from '../../../../src/domain/cityLife/model/hotspot/WallHotspot';
+import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
+import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified';
+import SlideshowService from '../../../../src/api/services/widgets/SlideshowService';
+import Author from '../../../../src/domain/cityLife/model/author/Author';
+import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
+import { HotspotScope, HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import MediaHotspot from '../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
+import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
+import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
+import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import HotspotBuilderSample from '../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
 import MediaBuilderSample from '../../../../src/domain/cityLife/model/sample/MediaBuilderSample';
-import Author from '../../../../src/domain/cityLife/model/author/Author';
-import HotspotBuilder from '../../../../src/domain/cityLife/factories/HotspotBuilder';
-import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
-import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
-import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
-import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
-import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
-import { OK, getStatusText } from 'http-status-codes';
-import actAsSpecified from '../../../../src/api/services/hotspot/actAsSpecified';
-import EventHotspot from '../../../../src/domain/cityLife/model/hotspot/EventHotspot';
+import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
+// tslint:disable-next-line:import-name
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
+const restifyErrors = require('restify-errors');
 
 describe('HotspotCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -51,6 +35,7 @@ describe('HotspotCtrl', () => {
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let hotspotCtrl: HotspotCtrl;
+    let slideshowServiceMoq: TypeMoq.IMock<SlideshowService>;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
 
     before(async () => {
@@ -62,6 +47,7 @@ describe('HotspotCtrl', () => {
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         algoliaMoq = TypeMoq.Mock.ofType<Algolia>();
+        slideshowServiceMoq = TypeMoq.Mock.ofType<SlideshowService>();
 
         algoliaMoq.setup(x => x.initHotspots()).returns(() => {});
 
@@ -71,6 +57,7 @@ describe('HotspotCtrl', () => {
             hotspotRepositoryMoq.object,
             hotspotFactoryMoq.object,
             algoliaMoq.object,
+            slideshowServiceMoq.object,
         );
     });
     afterEach(() => {
@@ -97,7 +84,7 @@ describe('HotspotCtrl', () => {
             south = -2.434;
             west = 9.23322;
             east = -2.1111;
-            repositoryResult = [WallHotspotSample.CHURCH, WallHotspotSample.SCHOOL];
+            repositoryResult = [MediaHotspotSample.CHURCH, MediaHotspotSample.SCHOOL];
             queryStrings = { north, south, east, west };
         });
 
@@ -181,10 +168,13 @@ describe('HotspotCtrl', () => {
                     latitude: 12.23323,
                     longitude: 22.1112221,
                 },
+                address: {
+                    city: 'Fondcombe',
+                    name: "Maison d'Elround",
+                },
                 cityId: '33273',
                 scope: 'private',
-                type: HotspotType.WallMessage,
-                iconType: HotspotIconType.Wall,
+                type: HotspotType.Media,
             };
             factoryData = {
                 ...jsonBody,
@@ -224,7 +214,7 @@ describe('HotspotCtrl', () => {
     describe('getHotspots', () => {
         let id: string;
         let params: any;
-        let hotspot: WallHotspot;
+        let hotspot: MediaHotspot;
 
         const errorNotfound: any = { notfound: true };
         const errorUnauthorized: any = { unauthorized: true };
@@ -234,7 +224,7 @@ describe('HotspotCtrl', () => {
             params = {
                 id,
             };
-            hotspot = new WallHotspot(
+            hotspot = new MediaHotspot(
                 HotspotBuilderSample.CHURCH_HOTSPOT_BUILDER,
                 MediaBuilderSample.CHURCH_MEDIA_BUILDER,
             );
@@ -292,7 +282,7 @@ describe('HotspotCtrl', () => {
         });
 
         it('Should return 200 on private call with right id', async () => {
-            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
+            const hotspotMoq = TypeMoq.Mock.ofType<MediaHotspot>();
 
             hotspotMoq.setup(x => x.scope).returns(() => HotspotScope.Private);
 
@@ -345,7 +335,7 @@ describe('HotspotCtrl', () => {
         });
 
         it('should add new member to hotspot on validcall', async () => {
-            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
+            const hotspotMoq = TypeMoq.Mock.ofType<MediaHotspot>();
             hotspotMoq
                 .setup(x => x.author)
                 .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
@@ -382,7 +372,7 @@ describe('HotspotCtrl', () => {
 
         it('Should return internal error.', () => {
             const error = new Error('message');
-            const hotspotMoq = TypeMoq.Mock.ofType<WallHotspot>();
+            const hotspotMoq = TypeMoq.Mock.ofType<MediaHotspot>();
 
             hotspotMoq
                 .setup(x => x.author)
@@ -452,7 +442,7 @@ describe('HotspotCtrl', () => {
         });
 
         it('Should return bad request on hotspot different than Alert.', async () => {
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -472,7 +462,7 @@ describe('HotspotCtrl', () => {
         });
 
         it('Should return internal error.', () => {
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
             const error = new Error('message');
 
             reqMoq.setup(x => x.body).returns(() => body);
@@ -639,7 +629,7 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'idid',
             };
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -672,12 +662,12 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'idid',
             };
-            const hotspot = new WallHotspot(
+            const hotspot = new MediaHotspot(
                 HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
                 MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
             );
             const updatedHotspot = actAsSpecified(
-                new WallHotspot(
+                new MediaHotspot(
                     HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
                     MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
                 ),
@@ -709,7 +699,7 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'idid',
             };
-            const hotspot = new WallHotspot(
+            const hotspot = new MediaHotspot(
                 HotspotBuilderSample.SCHOOL_HOTSPOT_BUILDER,
                 MediaBuilderSample.SCHOOL_MEDIA_BUILDER,
             );
@@ -755,7 +745,7 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'id',
             };
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
 
             reqMoq.setup(x => x.params).returns(() => params);
 
@@ -798,7 +788,7 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'id',
             };
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
 
             reqMoq.setup(x => x.params).returns(() => params);
 
@@ -820,7 +810,7 @@ describe('HotspotCtrl', () => {
             const params = {
                 hotspotId: 'id',
             };
-            const hotspot = WallHotspotSample.SCHOOL;
+            const hotspot = MediaHotspotSample.SCHOOL;
             const error = new Error('message');
 
             reqMoq.setup(x => x.params).returns(() => params);

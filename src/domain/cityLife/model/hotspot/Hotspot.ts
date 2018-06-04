@@ -1,10 +1,11 @@
-import ViewsCount from './ViewsCount';
 import HotspotBuilder from '../../factories/HotspotBuilder';
-import CityId from '../city/CityId';
-import HotspotId from './HotspotId';
-import Address from './Address';
-import Position from './Position';
 import Author from '../author/Author';
+import CityId from '../city/CityId';
+import Address from './Address';
+import AvatarIconUrl from './AvatarIconUrl';
+import HotspotId from './HotspotId';
+import Position from './Position';
+import ViewsCount from './ViewsCount';
 
 export enum HotspotScope {
     Public = 'public',
@@ -12,18 +13,8 @@ export enum HotspotScope {
 }
 
 export enum HotspotType {
-    WallMessage = 'WallMessage',
-    Event = 'Event',
+    Media = 'Media',
     Alert = 'Alert',
-}
-
-export enum HotspotIconType {
-    Wall = 'WallIcon',
-    Event = 'EventIcon',
-    Accident = 'AccidentIcon',
-    Destruction = 'DestructionIcon',
-    Handicap = 'HandicapIcon',
-    RoadWorks = 'RoadWorksIcon',
 }
 
 abstract class Hotspot {
@@ -34,7 +25,8 @@ abstract class Hotspot {
     protected _address: Address;
     protected _views: ViewsCount;
     protected _type: HotspotType;
-    protected _iconType: HotspotIconType;
+    protected _createdAt: Date;
+    protected _avatarIconUrl: AvatarIconUrl;
 
     constructor(builder: HotspotBuilder) {
         this._uid = builder.id;
@@ -44,7 +36,12 @@ abstract class Hotspot {
         this._address = builder.address;
         this._views = builder.views;
         this._type = builder.type;
-        this._iconType = builder.iconType;
+        this._createdAt = builder.createdAt;
+        this._avatarIconUrl = builder.avatarIconUrl;
+    }
+
+    get avatarIconUrl() {
+        return this._avatarIconUrl;
     }
 
     get id(): string {
@@ -75,8 +72,8 @@ abstract class Hotspot {
         return this._type;
     }
 
-    get iconType(): HotspotIconType {
-        return this._iconType;
+    get createdAt(): Date {
+        return this._createdAt;
     }
 
     countOneMoreView(): void {
@@ -91,8 +88,13 @@ abstract class Hotspot {
         this._address = new Address(newAddress, this._address.city);
     }
 
-    toString() {
+    public changeAvatarIconurl(avatarIconUrl: AvatarIconUrl) {
+        this._avatarIconUrl = avatarIconUrl;
+    }
+
+    toJSON() {
         return {
+            avatarIconUrl: this.avatarIconUrl.toString(),
             id: this.id,
             position: this.position,
             author: this.author.toString(),
@@ -100,7 +102,7 @@ abstract class Hotspot {
             address: this.address,
             views: this.views,
             type: this.type,
-            iconType: this.iconType,
+            createdAt: this.createdAt.toJSON(),
         };
     }
 }

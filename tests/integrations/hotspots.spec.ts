@@ -1,10 +1,10 @@
-import * as server from './../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
-import { WallHotspotPostBody } from './sample/requests-responses';
-import WallHotspotSample from '../../src/domain/cityLife/model/sample/WallHotspotSample';
 import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import * as server from './../../src/api/server';
+import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
+import { MediaHotspotPostBody } from './sample/requests-responses';
 
 const hotspotsEndpointsTests = (state: any) => {
     describe('/hotspots endpoint', () => {
@@ -36,7 +36,7 @@ const hotspotsEndpointsTests = (state: any) => {
                     .set('Accept', 'application/json')
                     .expect(200);
 
-                expect(response.body).to.have.lengthOf(5);
+                expect(response.body).to.have.lengthOf(6);
             });
 
             it('should return 400 bad request', async () => {
@@ -59,8 +59,8 @@ const hotspotsEndpointsTests = (state: any) => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = WallHotspotSample.CHURCH.id;
-                const originalMembers = WallHotspotSample.CHURCH.members;
+                const hotspotId = MediaHotspotSample.CHURCH.id;
+                const originalMembers = MediaHotspotSample.CHURCH.members;
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
@@ -94,7 +94,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = WallHotspotSample.CHURCH.id;
+                const hotspotId = MediaHotspotSample.CHURCH.id;
 
                 const response = await request(server)
                     .post(`/hotspots/${hotspotId}/members`)
@@ -166,7 +166,7 @@ const hotspotsEndpointsTests = (state: any) => {
             });
 
             it('Should return 401 non authorized.', async () => {
-                const id = WallHotspotSample.DOCTOR.id;
+                const id = MediaHotspotSample.DOCTOR.id;
 
                 const response = await request(server)
                     .get(`/hotspots/${id}`)
@@ -181,7 +181,7 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .post('/hotspots')
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .send(WallHotspotPostBody)
+                    .send(MediaHotspotPostBody)
                     .set('Accept', 'application/json')
                     .expect(201);
                 newHotspotId = response.body.id;

@@ -1,9 +1,8 @@
-import WallHotspotSample from './WallHotspotSample';
 import HotspotId from '../hotspot/HotspotId';
 import AuthorSample from './AuthorSample';
 import Message from '../messages/Message';
 import { v4 } from 'uuid';
-
+import MediaHotspotsSample from './MediaHotspotSample';
 class MessageSample {
     public static MARTIGNAS_CHURCH_MESSAGE = new Message(
         v4(),
@@ -18,7 +17,7 @@ class MessageSample {
         Just as a matter of deductive logic.`,
         AuthorSample.LOUISE,
         true,
-        new HotspotId(WallHotspotSample.CHURCH.id),
+        new HotspotId(MediaHotspotsSample.CHURCH.id),
         new Date(),
     );
 
@@ -35,7 +34,7 @@ class MessageSample {
          dans la ville de Foix.`,
         AuthorSample.MARTIN,
         false,
-        new HotspotId(WallHotspotSample.SCHOOL.id),
+        new HotspotId(MediaHotspotsSample.SCHOOL.id),
         new Date(),
         new Date(),
     );
@@ -52,7 +51,7 @@ class MessageSample {
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
         false,
-        new HotspotId(WallHotspotSample.TOWNHALL.id),
+        new HotspotId(MediaHotspotsSample.TOWNHALL.id),
         new Date(),
         new Date(),
     );
@@ -69,7 +68,7 @@ class MessageSample {
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
         false,
-        new HotspotId(WallHotspotSample.TOEDIT.id),
+        new HotspotId(MediaHotspotsSample.TOEDIT.id),
         new Date(),
         new Date(),
     );

@@ -1,14 +1,13 @@
+import Author from '../model/author/Author';
+import CityId from '../model/city/CityId';
+import AvatarIconUrl from '../model/hotspot/AvatarIconUrl';
+import { HotspotType } from '../model/hotspot/Hotspot';
+import HotspotId from '../model/hotspot/HotspotId';
 import ViewsCount from '../model/hotspot/ViewsCount';
 import Address from './../model/hotspot/Address';
-import CityId from '../model/city/CityId';
-import Author from '../model/author/Author';
-import HotspotId from '../model/hotspot/HotspotId';
-import { HotspotType, HotspotIconType } from '../model/hotspot/Hotspot';
 import Position from './../model/hotspot/Position';
 
-
 class HotspotBuilder {
-
     constructor(
         protected _uid: HotspotId,
         protected _position: Position,
@@ -17,9 +16,13 @@ class HotspotBuilder {
         protected _address: Address,
         protected _views: ViewsCount,
         protected _type: HotspotType,
-        protected _iconType: HotspotIconType,
+        protected _createdAt: Date,
+        protected _avatarIconUrl: AvatarIconUrl,
     ) {}
 
+    get avatarIconUrl() {
+        return this._avatarIconUrl;
+    }
     get id(): HotspotId {
         return this._uid;
     }
@@ -44,13 +47,12 @@ class HotspotBuilder {
         return this._type;
     }
 
-    get iconType(): HotspotIconType {
-        return this._iconType;
-    }
-
     get views(): ViewsCount {
         return this._views;
     }
 
+    get createdAt(): Date {
+        return this._createdAt;
+    }
 }
 export default HotspotBuilder;

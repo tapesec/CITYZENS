@@ -6,11 +6,11 @@ export default () => {
     return {
         title: 'PATCH /hotspots body validation',
         type: 'object',
-        anyOf: [WallHotspotSchema, EventHotspotSchema, AlertHotspotSchema],
+        anyOf: [patchMediaHotspotSchema, patchAlertHotspotSchema],
     };
 };
 
-const WallHotspotSchema = {
+export const patchMediaHotspotSchema = {
     anyOf: [
         { required: ['title'] },
         { required: ['scope'] },
@@ -40,45 +40,7 @@ const WallHotspotSchema = {
     additionalProperties: false,
 };
 
-const EventHotspotSchema = {
-    anyOf: [
-        { required: ['title'] },
-        { required: ['scope'] },
-        { required: ['dateEnd'] },
-        { required: ['slideShow'] },
-        { required: ['description'] },
-        { required: ['avatarIconUrl'] },
-    ],
-    properties: {
-        scope: {
-            type: 'string',
-            enum: ['public', 'private'],
-        },
-        title: {
-            type: 'string',
-            maxLength: validation.TITLE_MAX_LENGTH,
-        },
-        dateEnd: {
-            type: 'string',
-        },
-        description: {
-            type: 'string',
-        },
-        avatarIconUrl: {
-            type: 'string',
-            maxLength: validation.ASSETS_URL_MAX_LENGTH,
-        },
-        slideShow: {
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
-    },
-    additionalProperties: false,
-};
-
-const AlertHotspotSchema = {
+export const patchAlertHotspotSchema = {
     anyOf: [{ required: ['message'] }, { required: ['alertHotspotImgLocation'] }],
     properties: {
         message: {

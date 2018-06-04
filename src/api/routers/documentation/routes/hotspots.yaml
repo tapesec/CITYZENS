@@ -118,6 +118,7 @@
               type: WallMessage
               iconType: WallIcon
               title: Ecole Flora Tristan
+              createdAt: "00"
               scope: public
             - cityId: "33273"
               position:
@@ -131,7 +132,7 @@
               title: Les 10km du moulin Bidon
               scope: private
               dateEnd: 2017-12-15T07:39:15.490Z
-              description: Les dossards sont à retirer la veille. La course commence à 9h00
+              createdAt: "11"
             - cityId: "33273"
               position:
                 latitude: 22.12342
@@ -142,6 +143,7 @@
               type: Alert
               iconType: AccidentIcon
               message: Accident entre une voiture et un scooter pompier sur place.
+              createdAt: "22"
     produces:
       - application/json
     responses:

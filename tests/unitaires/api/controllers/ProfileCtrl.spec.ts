@@ -8,12 +8,12 @@ import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAuth0';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import Hotspot from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
-import WallHotspotSample from '../../../../src/domain/cityLife/model/sample/WallHotspotSample';
+import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
-import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 
 describe('ProfileCtrl', () => {
     let reqMoq: TypeMoq.IMock<rest.Request>;
@@ -91,7 +91,7 @@ describe('ProfileCtrl', () => {
             // simule l'existance du hotspot à ajouter en favoris
             hotspotRepositoryMoq
                 .setup(x => x.findById(params.favoritHotspotId))
-                .returns(() => WallHotspotSample.CHURCH);
+                .returns(() => Promise.resolve(MediaHotspotSample.CHURCH));
 
             const cityzen = cityzenFromAuth0(FAKE_USER_INFO_AUTH0);
             cityzen.addHotspotAsFavorit(params.favoritHotspotId);

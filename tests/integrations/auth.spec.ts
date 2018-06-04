@@ -5,11 +5,10 @@ import * as server from './../../src/api/server';
 import { votingPath } from './Voting.spec';
 import alertHotspotsTests from './alertHotspot.spec';
 import citiesEndpointTests from './cities.spec';
-import eventHotspotsTests from './eventHotspot.spec';
 import hotspotsEndpointsTests from './hotspots.spec';
+import mediaHotspotSpec from './mediaHotspot.spec';
 import messagesEndpointsTests from './messages.spec';
 import * as LoginSample from './sample/LoginSample';
-import wallHotspotsTests from './wallHotspot.spec';
 
 describe('/auth endpoint', function() {
     this.timeout(10000);
@@ -49,8 +48,7 @@ describe('/auth endpoint', function() {
         });
     });
 
-    wallHotspotsTests(state);
-    eventHotspotsTests(state);
+    mediaHotspotSpec(state);
     alertHotspotsTests(state);
     // /hotspots tests suite
     hotspotsEndpointsTests(state);

@@ -1,9 +1,9 @@
-import MessageSample from '../../../../../src/domain/cityLife/model/sample/MessageSample';
-import Message from '../../../../../src/domain/cityLife/model/messages/Message';
-import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
-import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
-import { v4 } from 'uuid';
 import { expect } from 'chai';
+import { v4 } from 'uuid';
+import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import Message from '../../../../../src/domain/cityLife/model/messages/Message';
+import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
+import MessageSample from '../../../../../src/domain/cityLife/model/sample/MessageSample';
 
 describe('Message entity', () => {
     it('should have correct properties', () => {
@@ -25,7 +25,7 @@ describe('Message entity', () => {
             pinned,
             hotspotId,
             createdAt,
-            new Date(),
+            updatedAt,
         );
         // Assert
         expect(newMessage)

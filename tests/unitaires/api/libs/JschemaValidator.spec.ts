@@ -1,15 +1,15 @@
 /**
  * a test suite for easily valid json schema
  */
-import {
-    HotspotType,
-    HotspotIconType,
-} from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 import * as ajv from 'ajv';
 import { expect } from 'chai';
-import { patchMessageSchema, getHotspots } from '../../../../src/api/requestValidation/schema';
 import getCreateHotspotSchema from '../../../../src/api/requestValidation/createHotspotsSchema';
-import getUpdateHotspotSchema from '../../../../src/api/requestValidation/patchHotspotsSchema';
+import getUpdateHotspotSchema, {
+    patchAlertHotspotSchema,
+    patchMediaHotspotSchema,
+} from '../../../../src/api/requestValidation/patchHotspotsSchema';
+import { getHotspots, patchMessageSchema } from '../../../../src/api/requestValidation/schema';
+import { HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
 
 describe('JschemaValidator', () => {
     let validator: ajv.Ajv;
@@ -28,8 +28,11 @@ describe('JschemaValidator', () => {
             },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
-            iconType: HotspotIconType.Wall,
+            address: {
+                city: 'Isengard',
+                name: 'Tower of Saruman',
+            },
+            type: HotspotType.Media,
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -145,10 +148,13 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Minas Tirith',
+                name: 'Devant les portes',
+            },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
-            iconType: HotspotIconType.Wall,
+            type: HotspotType.Media,
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -164,10 +170,13 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Minas Tirith',
+                name: 'Forum',
+            },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.WallMessage,
-            iconType: HotspotIconType.Wall,
+            type: HotspotType.Media,
             avatarIconUrl: 'url',
         };
         // Act
@@ -185,12 +194,13 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Comté',
+                name: 'Cul de sac',
+            },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.Event,
-            iconType: HotspotIconType.Event,
-            dateEnd: new Date().toISOString(),
-            description: 'lorem ipsum dolor',
+            type: HotspotType.Media,
         };
         // Act
         const isValid = validator.validate(getCreateHotspotSchema(), body);
@@ -206,12 +216,13 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: "Je n'ai plus de nom",
+                name: 'Peu importe',
+            },
             cityId: '33273',
             scope: 'private',
-            type: HotspotType.Event,
-            iconType: HotspotIconType.Event,
-            dateEnd: new Date().toISOString(),
-            description: 'lorem ipsum dolor',
+            type: HotspotType.Media,
             avatarIconUrl: 'url',
         };
         // Act
@@ -228,9 +239,12 @@ describe('JschemaValidator', () => {
                 latitude: 12.23323,
                 longitude: 22.1112221,
             },
+            address: {
+                city: 'Gondor',
+                name: "La tombe de Boromir (le fleuve en vrai parcequ'il n'a pas de tombe",
+            },
             cityId: '33273',
             type: HotspotType.Alert,
-            iconType: HotspotIconType.Accident,
             message: 'lorem ipsum dolor',
         };
         // Act
@@ -248,8 +262,7 @@ describe('JschemaValidator', () => {
                 longitude: 22.1112221,
             },
             cityId: '33273',
-            type: HotspotType.Event, // <-- type is for EventHotspot
-            iconType: HotspotIconType.Event, // <-- icon for EventHotspot
+            type: HotspotType.Media, // <-- type is for EventHotspot
             message: 'lorem ipsum dolor', // <-- but message for alert hotspot
         };
         // Act
@@ -284,13 +297,11 @@ describe('JschemaValidator', () => {
         expect(isValid).to.be.true;
     });
 
-    it('should validate EventHotspot update with corresponding schema', () => {
+    it('should validate MediaHotspot update with corresponding schema', () => {
         // Arrange
         const body = {
             title: 'an edited title',
             scope: 'private',
-            dateEnd: new Date().toISOString(),
-            description: 'an edited description',
             avatarIconUrl: 'new url',
         };
         // Act
@@ -307,5 +318,18 @@ describe('JschemaValidator', () => {
         const isValid = validator.validate(getUpdateHotspotSchema(), body);
         // Assert
         expect(isValid).to.be.false;
+    });
+
+    it("Shouldn't validate AlertHotspot patch on AvatarIconUrl", () => {
+        const body = { avatarIconUrl: 'nex icon' };
+
+        const isValid = validator.validate(patchAlertHotspotSchema, body);
+        expect(isValid, validator.errorsText()).to.be.false;
+    });
+    it('Should validate MediaHotspot patch on AvatarIconUrl', () => {
+        const body = { avatarIconUrl: 'nex icon' };
+
+        const isValid = validator.validate(patchMediaHotspotSchema, body);
+        expect(isValid, validator.errorsText()).to.be.true;
     });
 });
