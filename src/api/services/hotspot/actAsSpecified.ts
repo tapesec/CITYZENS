@@ -1,9 +1,9 @@
 import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../../domain/cityLife/model/hotspot/Hotspot';
-import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
-import AvatarIconUrl from './../../../domain/cityLife/model/hotspot/AvatarIconUrl';
-import SlideShow from '../../../domain/cityLife/model/hotspot/SlideShow';
 import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
+import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
+import SlideShow from '../../../domain/cityLife/model/hotspot/SlideShow';
+import AvatarIconUrl from './../../../domain/cityLife/model/hotspot/AvatarIconUrl';
 
 export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot => {
     if (requestBody.title) {

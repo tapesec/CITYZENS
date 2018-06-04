@@ -30,6 +30,19 @@ export default (state: any) => {
 
             expect(response.badRequest, response.text).to.be.true;
         });
+
+        it("Should'nt create MediaHotspot, because of an additional properties", async () => {
+            const badMediaHotspotBody = { ...MediaHotspotPostBody, UneProprieteenTrop: ':(' };
+
+            const response = await request(server)
+                .post('/hotspots')
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .send(badMediaHotspotBody)
+                .set('Accept', 'application/json');
+
+            expect(response.badRequest, response.text).to.be.true;
+        });
+
         it('Should create a MediaHotspot and return it with status 201', async () => {
             // Act
             const response = await request(server)

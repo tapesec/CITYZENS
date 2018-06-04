@@ -1,4 +1,4 @@
-import { hotspotCollection, cityzenCollection, messageCollection } from './dbInMemory';
+import { hotspotCollection, messageCollection } from './dbInMemory';
 
 const hotspotFind = (requestParams: any) => {
     let hotspotsResults: any[];
@@ -42,8 +42,8 @@ const hotspotUpdate = (data: any) => {
     if (data.message) hotspot.message = data.message;
     if (data.voterList) hotspot.voterList = data.voterList;
     if (data.avatarIconUrl) hotspot.avatarIconUrl = data.avatarIconUrl;
-    if (data.imageDescriptionLocation) {
-        hotspot.imageDescriptionLocation = data.imageDescriptionLocation;
+    if (data.alertHotspotImgLocation) {
+        hotspot.alertHotspotImgLocation = data.alertHotspotImgLocation;
     }
     if (data.slideShow) hotspot.slideShow = data.slideShow;
     hotspotCollection.update(hotspot);

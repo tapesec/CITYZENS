@@ -190,7 +190,7 @@ describe('MediaHotspot entity', () => {
             address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
             views: 1,
             type: HotspotType.Alert,
-            imageDescriptionLocation: 'https://cdn.filestackcontent.com/XMLTLsrBQY2uwNWpAIq1',
+            alertHotspotImgLocation: AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU.imageDescriptionLocation.toString(),
             message: {
                 content:
                     'Un accident est survenue entre un 4x4 et une smart, des debris son encore présent.',

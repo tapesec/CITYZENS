@@ -80,7 +80,7 @@ class HotspotFactory {
             pertinenceScore = new PertinenceScore(0, 0);
         }
 
-        imageLocation = new ImageLocation(data.imageDescriptionLocation);
+        imageLocation = new ImageLocation(data.alertHotspotImgLocation);
 
         return new AlertHotspot(
             this.createHotspotBuilder(data),

@@ -100,7 +100,7 @@ describe('HotspotFactory', () => {
             cityId: '34345',
             type: HotspotType.Alert,
             voterList: [['auth0|1jks2kdz2dqziq', true]],
-            imageDescriptionLocation: 'fake-url',
+            alertHotspotImgLocation: 'fake-url',
             message: {
                 content: 'a fake content for test purpose',
                 updatedAt: '2018-04-09T04:36:54.450Z',
@@ -110,6 +110,7 @@ describe('HotspotFactory', () => {
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
+        console.log(fakeNewHotspot);
         // Assert
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Alert,

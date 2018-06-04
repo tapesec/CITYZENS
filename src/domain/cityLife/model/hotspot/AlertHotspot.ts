@@ -1,10 +1,10 @@
-import AlertMessage from './AlertMessage';
+import CityzenId from '../../../cityzens/model/CityzenId';
 import HotspotBuilder from '../../factories/HotspotBuilder';
+import AlertMessage from './AlertMessage';
 import Hotspot from './Hotspot';
+import ImageLocation from './ImageLocation';
 import PertinenceScore from './PertinenceScore';
 import VoterList from './VoterList';
-import CityzenId from '../../../cityzens/model/CityzenId';
-import ImageLocation from './ImageLocation';
 
 class AlertHotspot extends Hotspot {
     constructor(
@@ -49,7 +49,7 @@ class AlertHotspot extends Hotspot {
             ...super.toJSON(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
-            imageDescriptionLocation: this.imageDescriptionLocation
+            alertHotspotImgLocation: this.imageDescriptionLocation
                 ? this.imageDescriptionLocation.toString()
                 : undefined,
             pertinence: {

@@ -26,6 +26,18 @@ const alertHotspotsTests = (state: any) => {
             expect(response.badRequest, response.text).to.be.true;
         });
 
+        it("Should'nt create AlertHotspot, because of an additional properties", async () => {
+            const badAlertHotspotBody = { ...AlertHotspotPostBody, UneProprieteenTrop: ':(' };
+
+            const response = await request(server)
+                .post('/hotspots')
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .send(badAlertHotspotBody)
+                .set('Accept', 'application/json');
+
+            expect(response.badRequest, response.text).to.be.true;
+        });
+
         it('Should create an AlertHotspot and return it with status 201', async () => {
             // Act
             const response = await request(server)
@@ -74,7 +86,7 @@ const alertHotspotsTests = (state: any) => {
                 .to.equal(alertMessage);
             expect(response.body.message).to.have.property('updatedAt');
             expect(response.body)
-                .to.have.property('imageDescriptionLocation')
+                .to.have.property('alertHotspotImgLocation')
                 .to.equal(alertHotspotImgLocation);
         });
 
@@ -95,7 +107,7 @@ const alertHotspotsTests = (state: any) => {
                 .to.equal(alertMessage);
             expect(response.body.message).to.have.property('updatedAt');
             expect(response.body)
-                .to.have.property('imageDescriptionLocation')
+                .to.have.property('alertHotspotImgLocation')
                 .to.equal(alertHotspotImgLocation);
         });
     });
