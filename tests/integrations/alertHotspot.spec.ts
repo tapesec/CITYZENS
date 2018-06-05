@@ -11,7 +11,7 @@ const alertHotspotsTests = (state: any) => {
         let newPostHotspot: any;
         const validator: ajv.Ajv = new ajv();
         let alertMessage: string;
-        let alertHotspotImgLocation: string;
+        let pictureDescription: string;
 
         it("Should'nt create AlertHotspot, because of missing properties", async () => {
             const badAlertHotspotBody = { ...AlertHotspotPostBody };
@@ -68,12 +68,12 @@ const alertHotspotsTests = (state: any) => {
 
         it('Should test updating all allowed properties', async () => {
             alertMessage = 'an updated message';
-            alertHotspotImgLocation = 'a-fake-url';
+            pictureDescription = 'a-fake-url';
             const response = await request(server)
                 .patch(`/hotspots/${newPostHotspot.id}`)
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send({
-                    alertHotspotImgLocation,
+                    pictureDescription,
                     message: alertMessage,
                 })
                 .set('Accept', 'application/json')
@@ -86,8 +86,8 @@ const alertHotspotsTests = (state: any) => {
                 .to.equal(alertMessage);
             expect(response.body.message).to.have.property('updatedAt');
             expect(response.body)
-                .to.have.property('alertHotspotImgLocation')
-                .to.equal(alertHotspotImgLocation);
+                .to.have.property('pictureDescription')
+                .to.equal(pictureDescription);
         });
 
         // check if (hotspot correctly retrieved from database)
@@ -107,8 +107,8 @@ const alertHotspotsTests = (state: any) => {
                 .to.equal(alertMessage);
             expect(response.body.message).to.have.property('updatedAt');
             expect(response.body)
-                .to.have.property('alertHotspotImgLocation')
-                .to.equal(alertHotspotImgLocation);
+                .to.have.property('pictureDescription')
+                .to.equal(pictureDescription);
         });
     });
 

@@ -87,7 +87,7 @@ const AlertHotspotSchema = {
             type: 'string',
             enum: [HotspotType.Alert],
         },
-        alertHotspotImgLocation: {
+        pictureDescription: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },

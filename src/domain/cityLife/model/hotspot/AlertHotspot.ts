@@ -10,7 +10,7 @@ class AlertHotspot extends Hotspot {
     constructor(
         hotpotBuilder: HotspotBuilder,
         protected _message: AlertMessage,
-        protected _imageDescriptionLocation: ImageLocation,
+        protected _pictureDescription: ImageLocation,
         protected _pertinence: PertinenceScore,
         protected _voterList: VoterList,
     ) {
@@ -22,12 +22,12 @@ class AlertHotspot extends Hotspot {
         this._voterList.add(voterId, doAgree);
     }
 
-    public get imageDescriptionLocation(): ImageLocation {
-        return this._imageDescriptionLocation;
+    public get pictureDescription(): ImageLocation {
+        return this._pictureDescription;
     }
 
     public addImageDescription(url: string): void {
-        this._imageDescriptionLocation = new ImageLocation(url);
+        this._pictureDescription = new ImageLocation(url);
     }
 
     public editMessage(newMessage: string): void {
@@ -49,8 +49,8 @@ class AlertHotspot extends Hotspot {
             ...super.toJSON(),
             message: this.message,
             voterList: Array.from(this._voterList.list),
-            alertHotspotImgLocation: this.imageDescriptionLocation
-                ? this.imageDescriptionLocation.toString()
+            pictureDescription: this.pictureDescription
+                ? this.pictureDescription.toString()
                 : undefined,
             pertinence: {
                 agree: this.pertinence.nAgree,

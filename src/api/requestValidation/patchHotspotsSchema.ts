@@ -41,12 +41,12 @@ export const patchMediaHotspotSchema = {
 };
 
 export const patchAlertHotspotSchema = {
-    anyOf: [{ required: ['message'] }, { required: ['alertHotspotImgLocation'] }],
+    anyOf: [{ required: ['message'] }, { required: ['pictureDescription'] }],
     properties: {
         message: {
             type: 'string',
         },
-        alertHotspotImgLocation: {
+        pictureDescription: {
             type: 'string',
             maxLength: validation.ASSETS_URL_MAX_LENGTH,
         },

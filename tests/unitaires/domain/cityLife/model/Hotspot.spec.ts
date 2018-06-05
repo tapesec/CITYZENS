@@ -160,25 +160,6 @@ describe('MediaHotspot entity', () => {
         expect(hotspot.scope).to.be.eql(newScope);
     });
 
-    it('Should parse and stringify correctly WallHotspot.', () => {
-        const hotspot = MediaHotspotSample.SCHOOL;
-        const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
-        expect(jsonHotspot).to.shallowDeepEqual({
-            id: 'c28e94ef-ad1d-4260-8452-89a2b7bf298e',
-            position: { latitude: 44.84665782, longitude: -0.76560438 },
-            author: { pseudo: 'Louisounette', id: CityzenSample.LOUISE.id.toString() },
-            cityId: '33273',
-            address: { name: '4 rue Louis Blanc', city: 'Martignas-sur-Jalle' },
-            views: 1,
-            type: HotspotType.Media,
-            scope: HotspotScope.Public,
-            title: 'Ecole Flora Tristan',
-            slug: 'Ecole-Flora-Tristan',
-            members: [],
-            avatarIconUrl: config.avatarIcon.defaultMediaIcon,
-        });
-    });
-
     it('should stringify and parse correctly an AlertHotspot', () => {
         const hotspot = AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
@@ -190,7 +171,7 @@ describe('MediaHotspot entity', () => {
             address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
             views: 1,
             type: HotspotType.Alert,
-            alertHotspotImgLocation: AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU.imageDescriptionLocation.toString(),
+            pictureDescription: AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU.pictureDescription.toString(),
             message: {
                 content:
                     'Un accident est survenue entre un 4x4 et une smart, des debris son encore présent.',

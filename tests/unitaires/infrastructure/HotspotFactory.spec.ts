@@ -100,7 +100,7 @@ describe('HotspotFactory', () => {
             cityId: '34345',
             type: HotspotType.Alert,
             voterList: [['auth0|1jks2kdz2dqziq', true]],
-            alertHotspotImgLocation: 'fake-url',
+            pictureDescription: 'fake-url',
             message: {
                 content: 'a fake content for test purpose',
                 updatedAt: '2018-04-09T04:36:54.450Z',
@@ -110,13 +110,12 @@ describe('HotspotFactory', () => {
         const hotspotFactory = new HotspotFactory();
         // Act
         const fakeNewHotspot = hotspotFactory.build(fakeDataFromDatabase);
-        console.log(fakeNewHotspot);
         // Assert
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Alert,
             id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
             voterList: ['auth0|1jks2kdz2dqziq', true],
-            alertHotspotImgLocation: 'fake-url',
+            pictureDescription: 'fake-url',
         });
     });
 });
@@ -183,9 +182,9 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
             .to.have.property('iconType')
             .to.be.equal(specificProperties.iconType);
     }
-    if (specificProperties.alertHotspotImgLocation !== undefined) {
+    if (specificProperties.pictureDescription !== undefined) {
         expect(fakeNewHotspot)
-            .to.have.property('imageDescriptionLocation')
+            .to.have.property('pictureDescription')
             .to.have.property('url')
             .to.be.equal('fake-url');
     }

@@ -62,7 +62,7 @@ export const AlertHotspotPostBody = {
     ...createHotspotBody,
     message: 'this is a message alert',
     type: HotspotType.Alert,
-    alertHotspotImgLocation: 'Best location in the world',
+    pictureDescription: 'Best location in the world',
 };
 
 export const MediaHotspotPostBody = {

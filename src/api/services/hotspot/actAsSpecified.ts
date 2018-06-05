@@ -25,8 +25,8 @@ export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot
     if (requestBody.message) {
         (<AlertHotspot>hotspot).editMessage(requestBody.message);
     }
-    if (requestBody.alertHotspotImgLocation) {
-        (<AlertHotspot>hotspot).addImageDescription(requestBody.alertHotspotImgLocation);
+    if (requestBody.pictureDescription) {
+        (<AlertHotspot>hotspot).addImageDescription(requestBody.pictureDescription);
     }
     return hotspot;
 };

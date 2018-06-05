@@ -54,7 +54,7 @@ class HotspotFactory {
         let message: AlertMessage;
         let voterList = new VoterList();
         let pertinenceScore: PertinenceScore;
-        let imageLocation: ImageLocation;
+        let pictureDescription: ImageLocation;
 
         // data from database
         if (data && data.message.content) {
@@ -80,12 +80,12 @@ class HotspotFactory {
             pertinenceScore = new PertinenceScore(0, 0);
         }
 
-        imageLocation = new ImageLocation(data.alertHotspotImgLocation);
+        pictureDescription = new ImageLocation(data.pictureDescription);
 
         return new AlertHotspot(
             this.createHotspotBuilder(data),
             message,
-            imageLocation,
+            pictureDescription,
             pertinenceScore,
             voterList,
         );
