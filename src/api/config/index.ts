@@ -25,6 +25,7 @@ const postgreSQLHost = process.env.POSTGRESQL_ADDON_HOST;
 const postgreSQLDatabase = process.env.POSTGRESQL_ADDON_DB;
 const postgreSQLPassword = process.env.POSTGRESQL_ADDON_PASSWORD;
 const postgreSQLPort = parseInt(process.env.POSTGRESQL_ADDON_PORT, 10);
+const defaultCityzenAvatar = process.env.DEFAULT_CITYZEN_AVATAR;
 
 export default {
     server: {
@@ -78,5 +79,8 @@ export default {
         database: postgreSQLDatabase,
         password: postgreSQLPassword,
         port: postgreSQLPort,
+    },
+    cityzen: {
+        defaultAvatar: defaultCityzenAvatar,
     },
 };

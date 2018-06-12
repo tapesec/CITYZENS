@@ -128,10 +128,20 @@ class HotspotFactory {
 
         if (data.cityzen) {
             // Data from user
-            author = new Author(data.cityzen.pseudo, data.cityzen.id);
+            author = new Author(
+                data.cityzen.pseudo,
+                data.cityzen.id,
+                data.cityzen.pictureExtern,
+                data.cityzen.pictureCityzen,
+            );
         } else {
-            // Data from loki
-            author = new Author(data.author.pseudo, new CityzenId(data.author.id));
+            // Data from db
+            author = new Author(
+                data.author.pseudo,
+                new CityzenId(data.author.id),
+                new ImageLocation(data.author.pictureExtern),
+                new ImageLocation(data.author.pictureCityzen),
+            );
         }
         // new hotspot posted by user
         if (!data.id) {

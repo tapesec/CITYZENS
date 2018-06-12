@@ -1,6 +1,6 @@
-import Hotspot, { HotspotType, HotspotScope } from '../../../domain/cityLife/model/hotspot/Hotspot';
-import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 import Author from '../../../domain/cityLife/model/author/Author';
+import Hotspot, { HotspotScope } from '../../../domain/cityLife/model/hotspot/Hotspot';
+import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenId from '../../../domain/cityzens/model/CityzenId';
 
@@ -64,7 +64,12 @@ class HotspotReducer {
 
             this.pickHotspotMemberShip(cityzenAuthenticated.id);
             this.pickHotspotOwnerShip(
-                new Author(cityzenAuthenticated.pseudo, cityzenAuthenticated.id),
+                new Author(
+                    cityzenAuthenticated.pseudo,
+                    cityzenAuthenticated.id,
+                    cityzenAuthenticated.pictureExtern,
+                    cityzenAuthenticated.pictureCityzen,
+                ),
             );
         }
         return this.releaseFilteredHotspots();

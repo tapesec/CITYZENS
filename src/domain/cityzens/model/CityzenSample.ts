@@ -1,3 +1,5 @@
+import ImageLocation from '../../cityLife/model/hotspot/ImageLocation';
+import config from './../../../api/config';
 import Cityzen from './Cityzen';
 import CityzenId from './CityzenId';
 
@@ -9,6 +11,8 @@ class CityzenSample {
         false,
         new Set<string>(['auth0|fake-id1', 'auth0|fake-id2']),
         'Jeune enfant',
+        new ImageLocation(undefined),
+        new ImageLocation(config.cityzen.defaultAvatar),
     );
     public static LOUISE: Cityzen = new Cityzen(
         new CityzenId('auth0|5'),
@@ -17,14 +21,18 @@ class CityzenSample {
         false,
         new Set<string>(['auth0|fake-id2']),
         'Jeune écolière',
+        new ImageLocation(undefined),
+        new ImageLocation(config.cityzen.defaultAvatar),
     );
     public static ELODIE: Cityzen = new Cityzen(
         new CityzenId('auth0|6'),
         'elodie@cityzen.com',
         'Princesse',
         false,
-        undefined,
+        new Set<string>(),
         'Infirmière libérale',
+        new ImageLocation(undefined),
+        new ImageLocation(config.cityzen.defaultAvatar),
     );
 
     public static LIONNEL: Cityzen = new Cityzen(
@@ -32,8 +40,10 @@ class CityzenSample {
         'lionel.dupouy@cityzen.com',
         'Lasalle',
         true,
-        undefined,
+        new Set<string>(),
         'Hipster',
+        new ImageLocation(undefined),
+        new ImageLocation(config.cityzen.defaultAvatar),
     );
 
     public static LUCA: Cityzen = new Cityzen(
@@ -41,8 +51,10 @@ class CityzenSample {
         'lucabrx@cityzen.com',
         'lucabrx',
         true,
-        undefined,
+        new Set<string>(),
         'Hipster',
+        new ImageLocation(undefined),
+        new ImageLocation(config.cityzen.defaultAvatar),
     );
 }
 

@@ -1,5 +1,6 @@
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
+import config from './../../../api/config';
 import { CITYZEN_TABLE_NAME } from './constants';
 import PostgreSQL from './postgreSQL';
 
@@ -15,7 +16,8 @@ const cityzens = async (postgre: PostgreSQL) => {
             email text NOT NULL UNIQUE,
             email_verified boolean DEFAULT FALSE,
             pseudo text,
-            picture text,
+            picture_cityzen text NOT NULL DEFAULT '${config.cityzen.defaultAvatar}',
+            picture_extern text,
             is_admin boolean DEFAULT FALSE,
             favorites_hotspots text[]
         )`;
@@ -34,8 +36,9 @@ const cityzens = async (postgre: PostgreSQL) => {
             const password = entry[1];
 
             const query =
-                `INSERT INTO ${CITYZEN_TABLE_NAME}(user_id, password, email_verified, email, pseudo, is_admin, favorites_hotspots) ` +
-                `VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+                `INSERT INTO ${CITYZEN_TABLE_NAME}
+                    (user_id, password, email_verified, email, pseudo, is_admin, favorites_hotspots, picture_cityzen, picture_extern)` +
+                `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
 
             const favorites =
                 cityzen.favoritesHotspots !== undefined
@@ -49,6 +52,8 @@ const cityzens = async (postgre: PostgreSQL) => {
                 cityzen.pseudo,
                 cityzen.isAdmin,
                 favorites,
+                cityzen.pictureCityzen.toString(),
+                cityzen.pictureExtern.toString(),
             ]);
 
             await new Promise((resolve, reject) => {

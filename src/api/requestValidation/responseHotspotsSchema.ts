@@ -36,8 +36,15 @@ const hotspotSchema = {
                 id: {
                     type: 'string',
                 },
+                pictureCityzen: {
+                    type: 'string',
+                },
+                pictureExtern: {
+                    type: ['string', 'null'],
+                },
             },
-            required: ['pseudo', 'id'],
+            required: ['pseudo', 'id', 'pictureCityzen'],
+            additionalProperties: false,
         },
         position: {
             type: 'object',

@@ -1,5 +1,6 @@
-import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import UserInfoAuth0 from 'src/api/services/auth/UserInfoAuth0';
+import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
+import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenId from '../../../domain/cityzens/model/CityzenId';
 
 export class InvalidPayloadError extends Error {
@@ -15,6 +16,8 @@ const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
     let pseudo: string;
     let favoritesHotspots: Set<string>;
     let description: string;
+    let pictureCityzen: string;
+    let pictureExtern: string;
     let isAdmin = false;
 
     if (payload.sub) id = new CityzenId(payload.sub);
@@ -34,7 +37,19 @@ const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
         description = payload.userMetadata.description;
     }
 
-    const cityzen = new Cityzen(id, email, pseudo, isAdmin, favoritesHotspots, description);
+    pictureCityzen = payload.pictureCityzen;
+    pictureExtern = pictureExtern;
+
+    const cityzen = new Cityzen(
+        id,
+        email,
+        pseudo,
+        isAdmin,
+        favoritesHotspots,
+        description,
+        new ImageLocation(pictureExtern),
+        new ImageLocation(pictureCityzen),
+    );
 
     return cityzen;
 };

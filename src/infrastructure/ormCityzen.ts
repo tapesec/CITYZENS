@@ -1,6 +1,5 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import CheckAndCreateTable from '../api/services/postgreSQL/checkAndCreateTables';
 
 class OrmCityzen {
     constructor(private postgre: PostgreSQL) {}
@@ -21,7 +20,8 @@ class OrmCityzen {
     getAllAuthors = async (ids: CityzenId[]) => {
         if (ids.length === 0) return [];
 
-        let queryString = 'SELECT user_id, pseudo from cityzens WHERE user_id IN (';
+        let queryString =
+            'SELECT user_id, pseudo, picture_cityzen, picture_extern from cityzens WHERE user_id IN (';
         for (let i = 0; i + 1 < ids.length; i += 1) {
             queryString += `$${i + 1}, `;
         }
@@ -38,6 +38,8 @@ class OrmCityzen {
             return {
                 id: e.user_id,
                 pseudo: e.pseudo,
+                pictureCityzen: e.picture_cityzen,
+                pictureExtern: e.picture_extern,
             };
         });
     };

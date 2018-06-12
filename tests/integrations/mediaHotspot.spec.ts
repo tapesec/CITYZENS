@@ -67,7 +67,7 @@ export default (state: any) => {
 
             // Assert
             const isValid = validator.validate(mediaHotspotSchema, response.body);
-            expect(isValid).to.be.true;
+            expect(isValid, validator.errorsText()).to.be.true;
         });
 
         it('Should test updating all allowed properties', async () => {

@@ -2,7 +2,8 @@ class UserInfoAuth0 {
     private _sub: string;
     private _nickname: string;
     private _name: string;
-    private _picture: string;
+    private _pictureCityzen: string;
+    private _pictureExtern: string;
     private _updateAt: string;
     private _email: string;
     private _email_verified: boolean;
@@ -16,13 +17,16 @@ class UserInfoAuth0 {
         this._sub = userInfo.sub as string;
         this._nickname = userInfo.nickname as string;
         this._name = userInfo.name as string;
-        this._picture = userInfo.picture as string;
-        this._updateAt = userInfo.updateAt as string;
         this._email = userInfo.email as string;
         this._email_verified = userInfo.email_verified as boolean;
         this._user_metadata = userInfo['https://www.cityzen.fr/user_metadata'] as any;
-        if (this._user_metadata) this._isAdmin = this._user_metadata.isAdmin as boolean;
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
+        this._updateAt = userInfo.updateAt as string;
+        if (!this._user_metadata) return;
+
+        this._isAdmin = this._user_metadata.isAdmin as boolean;
+        this._pictureCityzen = this._user_metadata.pictureCityzen as string;
+        this._pictureExtern = this._user_metadata.pictureExtern as string;
     }
 
     public get sub(): string {
@@ -37,8 +41,11 @@ class UserInfoAuth0 {
         return this._name;
     }
 
-    public get picture(): string {
-        return this._picture;
+    public get pictureCityzen(): string {
+        return this._pictureCityzen;
+    }
+    public get pictureExtern(): string {
+        return this._pictureExtern;
     }
 
     public get updatedAt(): string {

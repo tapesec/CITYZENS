@@ -1,5 +1,5 @@
-import HotspotId from '../hotspot/HotspotId';
 import Author from '../author/Author';
+import HotspotId from '../hotspot/HotspotId';
 
 class Message {
     constructor(
@@ -64,7 +64,7 @@ class Message {
             id: this.id,
             title: this.title,
             body: this.body,
-            author: this.author.toString(),
+            author: this.author.toJSON(),
             hotspotId: this.hotspotId.toString(),
             pinned: this.pinned,
             createdAt: this.createdAt,
