@@ -1,8 +1,9 @@
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import Author from './../domain/cityLife/model/author/Author';
-import Message from '../domain/cityLife/model/messages/Message';
 import { v4 } from 'uuid';
+import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
+import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
+import Message from '../domain/cityLife/model/messages/Message';
 import CityzenId from '../domain/cityzens/model/CityzenId';
+import Author from './../domain/cityLife/model/author/Author';
 
 class MessageFactory {
     public createMessage = (data: any): Message => {
@@ -18,12 +19,16 @@ class MessageFactory {
         // data coming from database
         if (data.author) {
             const cityzenId = new CityzenId(data.author.id);
-            author = new Author(data.author.pseudo, cityzenId);
+            const pictureCityzen = new ImageLocation(data.author.pictureCityzen);
+            const pictureExtern = new ImageLocation(data.author.pictureExtern);
+            author = new Author(data.author.pseudo, cityzenId, pictureExtern, pictureCityzen);
         }
         // data coming from the api user
         if (data.cityzen) {
             const cityzenId = new CityzenId(data.cityzen.id);
-            author = new Author(data.cityzen.pseudo, cityzenId);
+            const pictureCityzen = new ImageLocation(data.cityzen.pictureCityzen);
+            const pictureExtern = new ImageLocation(data.cityzen.pictureExtern);
+            author = new Author(data.cityzen.pseudo, cityzenId, pictureExtern, pictureCityzen);
         }
 
         if (data.pinned) {

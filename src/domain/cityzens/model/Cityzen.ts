@@ -1,11 +1,14 @@
+import ImageLocation from '../../cityLife/model/hotspot/ImageLocation';
 import CityzenId from './CityzenId';
 
 class Cityzen {
     protected _id: CityzenId;
     protected _email: string;
     protected _pseudo: string;
-    protected _description: string;
     protected _isAdmin: boolean;
+    protected _description: string;
+    protected _pictureExtern: ImageLocation;
+    protected _pictureCityzen: ImageLocation;
     protected _favoritesHotspots: Set<string>;
 
     constructor(
@@ -13,19 +16,19 @@ class Cityzen {
         email: string,
         pseudo: string,
         isAdmin: boolean,
-        favoritesHotspots?: Set<string>,
-        description?: string,
+        favoritesHotspots: Set<string>,
+        description: string,
+        pictureExtern: ImageLocation,
+        pictureCityzen: ImageLocation,
     ) {
         this._id = id;
         this._email = email;
         this._pseudo = pseudo;
         this._isAdmin = isAdmin;
-        if (favoritesHotspots) {
-            this._favoritesHotspots = favoritesHotspots;
-        }
-        if (description) {
-            this._description = description;
-        }
+        this._favoritesHotspots = favoritesHotspots;
+        this._description = description;
+        this._pictureExtern = pictureExtern;
+        this._pictureCityzen = pictureCityzen;
     }
 
     get id(): CityzenId {
@@ -52,8 +55,20 @@ class Cityzen {
         return this._isAdmin;
     }
 
+    get pictureCityzen(): ImageLocation {
+        return this._pictureCityzen;
+    }
+
+    get pictureExtern(): ImageLocation {
+        return this._pictureExtern;
+    }
+
     editDescription(newDescription: string): void {
         this._description = newDescription;
+    }
+
+    editPictureLocation(newPictureLocation: ImageLocation) {
+        this._pictureCityzen = newPictureLocation;
     }
 
     addHotspotAsFavorit(hotspotId: string): void {
@@ -70,7 +85,9 @@ class Cityzen {
             pseudo: this.pseudo,
             isAdmin: this.isAdmin,
             description: this.description,
-            favoritesHotspots: this.favoritesHotspots,
+            pictureExtern: this.pictureExtern.toString(),
+            pictureCityzen: this.pictureCityzen.toString(),
+            favoritesHotspots: JSON.stringify(Array.from(this.favoritesHotspots)),
         };
     }
 }

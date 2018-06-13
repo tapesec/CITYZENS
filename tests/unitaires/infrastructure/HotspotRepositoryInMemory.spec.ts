@@ -62,7 +62,12 @@ describe('HotspotRepositoryInMemory', () => {
         findOneStub.returns(fakeSchool);
         ormCityzen.getAllAuthors.returns(
             Promise.resolve([
-                { id: hotspotToGet.author.id.toString(), pseudo: hotspotToGet.author.pseudo },
+                {
+                    id: hotspotToGet.author.id.toString(),
+                    pseudo: hotspotToGet.author.pseudo,
+                    pictureCityzen: hotspotToGet.author.pictureCityzen.toString(),
+                    pictureExtern: hotspotToGet.author.pictureExtern.toString(),
+                },
             ]),
         );
 
@@ -81,7 +86,12 @@ describe('HotspotRepositoryInMemory', () => {
         findOneStub.returns(fakeSchool);
         ormCityzen.getAllAuthors.returns(
             Promise.resolve([
-                { id: hotspotToGet.author.id.toString(), pseudo: hotspotToGet.author.pseudo },
+                {
+                    id: hotspotToGet.author.id.toString(),
+                    pseudo: hotspotToGet.author.pseudo,
+                    pictureCityzen: hotspotToGet.author.pictureCityzen.toString(),
+                    pictureExtern: hotspotToGet.author.pictureExtern.toString(),
+                },
             ]),
         );
 

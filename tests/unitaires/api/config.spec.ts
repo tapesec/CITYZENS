@@ -39,5 +39,7 @@ describe('Config check', () => {
         Chai.expect(config.default.slack.slackWebhookErrorUrl == null).to.be.false;
 
         Chai.expect(config.default.test.standardAuth0id == null).to.be.false;
+
+        Chai.expect(config.default.cityzen.defaultAvatar == null).to.be.false;
     });
 });

@@ -97,7 +97,7 @@ abstract class Hotspot {
             avatarIconUrl: this.avatarIconUrl.toString(),
             id: this.id,
             position: this.position,
-            author: this.author.toString(),
+            author: this.author.toJSON(),
             cityId: this.cityId,
             address: this.address,
             views: this.views,
