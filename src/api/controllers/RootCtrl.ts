@@ -5,6 +5,8 @@ import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+const logs = require('./../../logs');
+const httpLogger = logs.get('log-debug');
 
 class RootCtrl {
     protected schemaValidator: ajv.Ajv;
@@ -34,6 +36,7 @@ class RootCtrl {
         const access_token = headerAuthorization.slice(7);
         try {
             this.userInfo = await this.auth0Service.getUserInfo(access_token);
+            httpLogger.info(JSON.stringify(this.userInfo));
             this.cityzenIfAuthenticated = cityzenFromAuth0(this.userInfo);
             return next();
         } catch (err) {

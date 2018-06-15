@@ -19,4 +19,13 @@ container.add('http-response-data', {
     format: formatCombined,
 });
 
+container.add('log-debug', {
+    transports: [
+        new winston.transports.File({ filename: 'log_debug.log' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+        new winston.transports.Console({ format: formatCombined }),
+    ],
+    format: formatCombined,
+});
+
 module.exports = container;
