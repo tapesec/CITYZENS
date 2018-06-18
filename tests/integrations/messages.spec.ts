@@ -24,9 +24,9 @@ const messagesEndpointsTests = (state: any) => {
                 // Act
                 const response = await request(server)
                     .get(`/hotspots/${hotspotId}/messages`)
-                    .set('Accept', 'application/json')
-                    .expect(200);
+                    .set('Accept', 'application/json');
 
+                expect(response.ok, response.text).to.be.true;
                 expect(response.body).to.have.lengthOf(1);
             });
 
@@ -92,7 +92,7 @@ const messagesEndpointsTests = (state: any) => {
             let hotspotId: string;
 
             before(() => {
-                messageId = MessageSample.SIMCITY_TOEDIT_MESSAGE.id;
+                messageId = MessageSample.SIMCITY_TOEDIT_MESSAGE.id.toString();
                 hotspotId = MediaHotspotSample.TOEDIT.id;
             });
 
@@ -104,9 +104,9 @@ const messagesEndpointsTests = (state: any) => {
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
                     .send(body)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .set('Accept', 'application/json')
-                    .expect(200);
+                    .set('Accept', 'application/json');
 
+                expect(response.ok, response.text).to.be.true;
                 expect(response.body.title).to.eql(editedMessageResponse().title);
                 expect(response.body.body).to.eql(editedMessageResponse().body);
                 expect(response.body.pinned).to.eql(editedMessageResponse().pinned);

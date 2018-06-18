@@ -1,14 +1,16 @@
-import { CREATED, OK, getStatusText } from 'http-status-codes';
+import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import * as TypeMoq from 'typemoq';
 import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
+import MessageId from '../../../../src/domain/cityLife/model/messages/MessageId';
 import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
 import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../../../src/infrastructure/MessageFactory';
-import { MessageRepositoryInMemory } from '../../../../src/infrastructure/MessageRepositoryInMemory';
+import { MessageRepositoryInMemory } from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
 import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
 
 describe('MessageCtrl', () => {
@@ -78,13 +80,16 @@ describe('MessageCtrl', () => {
                 .returns(() => Promise.resolve(MediaHotspotSample.CHURCH));
             const fakeMessageCollection = [MessageSample.MARTIGNAS_TOWNHALL_MESSAGE];
             messageRepositoryMoq
-                .setup(x => x.findByHotspotId(hotspotId))
-                .returns(() => fakeMessageCollection);
+                .setup(x => x.findByHotspotId(new HotspotId(hotspotId)))
+                .returns(() => Promise.resolve(fakeMessageCollection));
             // Act
             await messageCtrl.getMessages(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             hotspotRepositoryMoq.verify(x => x.isSet(hotspotId), TypeMoq.Times.once());
-            messageRepositoryMoq.verify(x => x.findByHotspotId(hotspotId), TypeMoq.Times.once());
+            messageRepositoryMoq.verify(
+                x => x.findByHotspotId(new HotspotId(hotspotId)),
+                TypeMoq.Times.once(),
+            );
             resMoq.verify(x => x.json(OK, fakeMessageCollection), TypeMoq.Times.once());
         });
 
@@ -215,7 +220,9 @@ describe('MessageCtrl', () => {
                 .setup(x => x.findById(hotspotId))
                 .returns(() => Promise.resolve(MediaHotspotSample.SCHOOL));
 
-            messageRepositoryMoq.setup(x => x.findById(messageId)).returns(() => message);
+            messageRepositoryMoq
+                .setup(x => x.findById(new MessageId(messageId)))
+                .returns(() => message);
 
             reqMoq.setup(x => x.body).returns(() => reqBody);
 
@@ -256,11 +263,14 @@ describe('MessageCtrl', () => {
 
         it('should remove a message', async () => {
             // Arrange
-            messageRepositoryMoq.setup(x => x.isSet(messageId)).returns(() => true);
+            messageRepositoryMoq.setup(x => x.isSet(new MessageId(messageId))).returns(() => true);
             // Act
             await messageCtrl.removeMessage(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
-            messageRepositoryMoq.verify(x => x.delete(messageId), TypeMoq.Times.once());
+            messageRepositoryMoq.verify(
+                x => x.delete(new MessageId(messageId)),
+                TypeMoq.Times.once(),
+            );
             resMoq.verify(x => x.json(OK, getStatusText(OK)), TypeMoq.Times.once());
         });
     });

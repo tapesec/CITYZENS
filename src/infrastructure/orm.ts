@@ -1,4 +1,4 @@
-import { hotspotCollection, messageCollection } from './dbInMemory';
+import { hotspotCollection } from './dbInMemory';
 
 const hotspotFind = (requestParams: any) => {
     let hotspotsResults: any[];
@@ -61,34 +61,6 @@ const hotspotCacheAlgolia = (id: string, v: boolean) => {
     hotspotCollection.update(hotspot);
 };
 
-const messageFind = (requestParams: any) => {
-    return messageCollection.find(requestParams);
-};
-
-const messageFindOne = (requestParams: any) => {
-    return messageCollection.findOne(requestParams);
-};
-
-const messageSave = (data: any) => {
-    data.removed = false;
-    messageCollection.insert(data);
-};
-
-const messageUpdate = (data: any) => {
-    const message = messageCollection.findOne({ id: data.id, removed: false });
-    message.body = data.body;
-    message.title = data.title;
-    message.pinned = data.pinned;
-    message.updatedAt = data.updatedAt;
-    messageCollection.update(message);
-};
-
-const messageDelete = (id: string) => {
-    const message = messageCollection.findOne({ id });
-    message.removed = true;
-    messageCollection.update(message);
-};
-
 const orm = {
     hotspot: {
         findAll: hotspotFind,
@@ -97,13 +69,6 @@ const orm = {
         update: hotspotUpdate,
         remove: hotspotRemove,
         cacheAlgolia: hotspotCacheAlgolia,
-    },
-    message: {
-        findAll: messageFind,
-        findOne: messageFindOne,
-        save: messageSave,
-        update: messageUpdate,
-        delete: messageDelete,
     },
 };
 export default orm;

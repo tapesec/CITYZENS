@@ -1,11 +1,11 @@
 import HotspotId from '../hotspot/HotspotId';
-import AuthorSample from './AuthorSample';
 import Message from '../messages/Message';
-import { v4 } from 'uuid';
+import MessageId from '../messages/MessageId';
+import AuthorSample from './AuthorSample';
 import MediaHotspotsSample from './MediaHotspotSample';
 class MessageSample {
     public static MARTIGNAS_CHURCH_MESSAGE = new Message(
-        v4(),
+        new MessageId('b17234e7-7a91-4bec-b68d-281333871538'),
         'Messe tous les dimanches',
         `You see? It\'s curious. Ted did figure it out - time travel.
         And when we get back, we gonna tell everyone.
@@ -19,10 +19,11 @@ class MessageSample {
         true,
         new HotspotId(MediaHotspotsSample.CHURCH.id),
         new Date(),
+        new Date(),
     );
 
     public static MARTIGNAS_SCHOOL_MESSAGE = new Message(
-        v4(),
+        new MessageId('a5b45da8-140c-4565-a81f-970c265ee750'),
         'Recherche volontaires pour la kermess',
         `Pour cette nouvelle édition de la kermess de l'école,
         nous cherchons des volontaires pour tenir les stands.
@@ -40,7 +41,7 @@ class MessageSample {
     );
 
     public static MARTIGNAS_TOWNHALL_MESSAGE = new Message(
-        v4(),
+        new MessageId('7cee17c4-4bc7-4160-944a-17e1bbcc2c9d'),
         "Horraires d'ouverture",
         `Your bones don't break, mine do. That's clear.
         Your cells react to bacteria and viruses differently than mine.
@@ -57,7 +58,7 @@ class MessageSample {
     );
 
     public static SIMCITY_TOEDIT_MESSAGE = new Message(
-        '07066d2a-8fbf-4c01-9ff8-9958239b56e0',
+        new MessageId('c6ece8ef-7f8e-4d35-b54a-009be9214e68'),
         'A title that will be edit',
         `Your bones don't break, mine do. That's clear.
         Your cells react to bacteria and viruses differently than mine.

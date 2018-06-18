@@ -1,16 +1,17 @@
+import HotspotId from '../hotspot/HotspotId';
 import Message from './Message';
+import MessageId from './MessageId';
 
 export default interface IMessageRepository {
+    findByHotspotId(id: HotspotId): Promise<Message[]>;
 
-    findByHotspotId(id: string): Message[];
-
-    findById(id: string): Message;
+    findById(id: MessageId): Promise<Message>;
 
     store(message: Message): void;
 
-    isSet(id: string): boolean;
+    isSet(id: MessageId): Promise<boolean>;
 
     update(message: Message): void;
 
-    delete(id: string): void;
-}
+    delete(id: MessageId): void;
+};

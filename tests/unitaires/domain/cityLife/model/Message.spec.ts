@@ -121,6 +121,6 @@ describe('Message entity', () => {
 
         expect(jsonMessage)
             .to.have.property('id')
-            .to.be.equal(message.id);
+            .to.be.equal(message.id.toString());
     });
 });
