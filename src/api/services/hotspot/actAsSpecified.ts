@@ -6,7 +6,7 @@ import SlideShow from '../../../domain/cityLife/model/hotspot/SlideShow';
 import AvatarIconUrl from './../../../domain/cityLife/model/hotspot/AvatarIconUrl';
 
 export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot => {
-    if (requestBody.title) {
+    if (requestBody.title !== undefined) {
         (<MediaHotspot>hotspot).changeTitle(requestBody.title);
     }
     if (requestBody.scope) {

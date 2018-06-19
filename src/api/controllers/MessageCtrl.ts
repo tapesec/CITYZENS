@@ -163,10 +163,10 @@ class MessageCtrl extends RootCtrl {
 
         // TODO encapsuler la logique suivante
         try {
-            if (req.body.title) {
+            if (req.body.title !== undefined) {
                 message.changeTitle(req.body.title);
             }
-            if (req.body.body) {
+            if (req.body.body !== undefined) {
                 message.editBody(req.body.body);
             }
             if (req.body.pinned !== undefined) {
