@@ -1,4 +1,4 @@
-import { CREATED, OK, getStatusText } from 'http-status-codes';
+import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';

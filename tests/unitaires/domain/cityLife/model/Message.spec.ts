@@ -2,13 +2,14 @@ import { expect } from 'chai';
 import { v4 } from 'uuid';
 import HotspotId from '../../../../../src/domain/cityLife/model/hotspot/HotspotId';
 import Message from '../../../../../src/domain/cityLife/model/messages/Message';
+import MessageId from '../../../../../src/domain/cityLife/model/messages/MessageId';
 import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
 import MessageSample from '../../../../../src/domain/cityLife/model/sample/MessageSample';
 
 describe('Message entity', () => {
     it('should have correct properties', () => {
         // Arrange
-        const id = v4();
+        const id = new MessageId(v4());
         const hotspotId = new HotspotId(v4());
         const title = 'a fake title';
         const body = 'lorem ipsum';
@@ -24,6 +25,7 @@ describe('Message entity', () => {
             author,
             pinned,
             hotspotId,
+            undefined,
             createdAt,
             updatedAt,
         );
@@ -49,6 +51,7 @@ describe('Message entity', () => {
         expect(newMessage)
             .to.have.property('pinned')
             .to.equal(true);
+        expect(newMessage).to.have.property('parentId').to.be.undefined;
     });
 
     it('should change the title', () => {

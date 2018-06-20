@@ -11,6 +11,7 @@ class MessageFactory {
         let author: Author;
         let pinned: boolean;
         let hotspotId: HotspotId;
+        let parentId: MessageId;
         let createdAt: Date;
         let updatedAt: Date;
 
@@ -26,10 +27,12 @@ class MessageFactory {
         }
         // data coming from the api user
         if (data.cityzen) {
-            const cityzenId = new CityzenId(data.cityzen.id);
-            const pictureCityzen = new ImageLocation(data.cityzen.pictureCityzen);
-            const pictureExtern = new ImageLocation(data.cityzen.pictureExtern);
-            author = new Author(data.cityzen.pseudo, cityzenId, pictureExtern, pictureCityzen);
+            author = new Author(
+                data.cityzen.pseudo,
+                data.cityzen.id,
+                data.cityzen.pictureExtern,
+                data.cityzen.pictureCityzen,
+            );
         }
 
         if (data.pinned) {
@@ -46,6 +49,10 @@ class MessageFactory {
 
         if (data.updatedAt) {
             updatedAt = new Date(data.updatedAt);
+        } else updatedAt = createdAt;
+
+        if (data.parentId) {
+            parentId = new MessageId(data.parentId);
         }
 
         return new Message(
@@ -55,6 +62,7 @@ class MessageFactory {
             author,
             pinned,
             hotspotId,
+            parentId,
             createdAt,
             updatedAt,
         );

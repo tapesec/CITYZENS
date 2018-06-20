@@ -10,6 +10,7 @@ class Message {
         private _author: Author,
         private _pinned: boolean,
         private _hotspotId: HotspotId,
+        private _parentId: MessageId,
         private _createdAt: Date,
         private _updatedAt?: Date,
     ) {}
@@ -27,6 +28,10 @@ class Message {
     public togglePinMode = (): void => {
         this._pinned = !this.pinned;
     };
+
+    get parentId(): MessageId {
+        return this._parentId;
+    }
 
     get id(): MessageId {
         return this._id;
@@ -68,6 +73,7 @@ class Message {
             author: this.author.toJSON(),
             hotspotId: this.hotspotId.toString(),
             pinned: this.pinned,
+            parentId: this.parentId,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

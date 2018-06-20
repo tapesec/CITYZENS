@@ -18,6 +18,7 @@ class MessageSample {
         AuthorSample.LOUISE,
         true,
         new HotspotId(MediaHotspotsSample.CHURCH.id),
+        undefined,
         new Date(),
         new Date(),
     );
@@ -36,6 +37,7 @@ class MessageSample {
         AuthorSample.MARTIN,
         false,
         new HotspotId(MediaHotspotsSample.SCHOOL.id),
+        undefined,
         new Date(),
         new Date(),
     );
@@ -53,6 +55,7 @@ class MessageSample {
         AuthorSample.ELODIE,
         false,
         new HotspotId(MediaHotspotsSample.TOWNHALL.id),
+        undefined,
         new Date(),
         new Date(),
     );
@@ -70,6 +73,7 @@ class MessageSample {
         AuthorSample.ELODIE,
         false,
         new HotspotId(MediaHotspotsSample.TOEDIT.id),
+        undefined,
         new Date(),
         new Date(),
     );

@@ -81,7 +81,8 @@ const messages = async (postgre: PostgreSQL) => {
                 body text,
                 pinned boolean DEFAULT FALSE,
                 created_at timestamp NOT NULL DEFAULT current_timestamp,
-                updated_at timestamp
+                updated_at timestamp,
+                parent_id text
             )
         `;
 
@@ -96,8 +97,8 @@ const messages = async (postgre: PostgreSQL) => {
 
         for (const entry of messagesSample) {
             const query = `
-                INSERT INTO ${MESSAGE_TABLE_NAME} (id, author_id, hotspot_id, title, body, pinned, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                INSERT INTO ${MESSAGE_TABLE_NAME} (id, author_id, hotspot_id, title, body, pinned, created_at, updated_at, parent_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `;
 
             await postgre.query(query, [
@@ -109,6 +110,7 @@ const messages = async (postgre: PostgreSQL) => {
                 entry.pinned,
                 entry.createdAt.toUTCString(),
                 entry.updatedAt.toUTCString(),
+                entry.parentId === undefined ? 'null' : entry.parentId.toString(),
             ]);
 
             await new Promise((resolve, reject) => {

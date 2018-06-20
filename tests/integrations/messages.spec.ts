@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as request from 'supertest';
-import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { username } from './sample/granted-cityzen';
@@ -14,6 +13,7 @@ import {
 const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
         let hotspotId: string;
+        let messagePostedId: string;
 
         beforeEach(() => {
             hotspotId = MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.hotspotId.id;
@@ -59,6 +59,8 @@ const messagesEndpointsTests = (state: any) => {
                     .to.have.property('pseudo')
                     .to.eql(username);
                 expect(response.body.pinned).to.equal(false);
+                expect(response.body).to.have.property('id');
+                messagePostedId = response.body.id;
             });
 
             it("should return 404 if hotspot doesn't exist", async () => {
@@ -87,21 +89,28 @@ const messagesEndpointsTests = (state: any) => {
             });
         });
 
-        describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', async () => {
-            let messageId: string;
-            let hotspotId: string;
+        describe('GET /hotspots/{hotspotId}/messages', () => {
+            it('should return previous posted message', async () => {
+                // Act
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .set('Accept', 'application/json');
 
-            before(() => {
-                messageId = MessageSample.SIMCITY_TOEDIT_MESSAGE.id.toString();
-                hotspotId = MediaHotspotSample.TOEDIT.id;
+                expect(response.ok, response.text).to.be.true;
+                expect(response.body).to.have.lengthOf(2);
+                expect(response.body[0])
+                    .to.have.property('body')
+                    .to.be.equal(createMessageBody.body);
             });
+        });
 
-            it('should patch a message and respond 200', async () => {
+        describe('PATCH /hotspots/{hotspotId}/messages/{messageId}', async () => {
+            it('should patch previously created message and respond 200', async () => {
                 // Arrange
                 const body = patchMessageBody;
                 // Act
                 const response = await request(server)
-                    .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
+                    .patch(`/hotspots/${hotspotId}/messages/${messagePostedId}`)
                     .send(body)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json');
@@ -112,10 +121,23 @@ const messagesEndpointsTests = (state: any) => {
                 expect(response.body.pinned).to.eql(editedMessageResponse().pinned);
             });
 
+            it('should return previous patched message', async () => {
+                // Act
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response.body).to.have.lengthOf(2);
+                expect(response.body[0])
+                    .to.have.property('body')
+                    .to.be.equal(patchMessageBody.body);
+            });
+
             it('should return 404 if invalid messageId is provided', async () => {
                 // Arrange
                 const body = patchMessageBody;
-                messageId = 'fake-message-id';
+                const messageId = 'fake-message-id';
                 // Act
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
@@ -130,7 +152,7 @@ const messagesEndpointsTests = (state: any) => {
                 const body = {
                     foo: 'bar',
                 };
-                messageId = 'fake-message-id';
+                const messageId = 'fake-message-id';
                 // Act
                 const response = await request(server)
                     .patch(`/hotspots/${hotspotId}/messages/${messageId}`)
@@ -138,6 +160,17 @@ const messagesEndpointsTests = (state: any) => {
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .set('Accept', 'application/json')
                     .expect(400);
+            });
+        });
+
+        describe('DELETE /hotspots/{hotspotId}/messages/{messageId}', () => {
+            it('Should delete previously create message.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotId}/messages/${messagePostedId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
             });
         });
     });

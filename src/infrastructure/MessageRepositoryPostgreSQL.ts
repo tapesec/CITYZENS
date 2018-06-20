@@ -31,16 +31,16 @@ class MessageRepositoryInMemory implements IMessageRepository {
         return !!data;
     }
 
-    public store(message: Message) {
-        this.ormMessage.save(message);
+    public async store(message: Message) {
+        await this.ormMessage.save(message);
     }
 
-    public update(message: Message) {
-        this.ormMessage.update(message);
+    public async update(message: Message) {
+        await this.ormMessage.update(message);
     }
 
-    public delete(id: MessageId) {
-        this.ormMessage.delete(id);
+    public async delete(id: MessageId) {
+        await this.ormMessage.delete(id);
     }
 }
 

@@ -110,7 +110,7 @@ class MessageCtrl extends RootCtrl {
             req.body.hotspotId = req.params.hotspotId;
             req.body.cityzen = this.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
-            this.messageRepository.store(newMessage);
+            await this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
@@ -174,7 +174,7 @@ class MessageCtrl extends RootCtrl {
             if (req.body.pinned !== undefined) {
                 if (message.pinned !== req.body.pinned) message.togglePinMode();
             }
-            this.messageRepository.update(message);
+            await this.messageRepository.update(message);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
@@ -212,7 +212,7 @@ class MessageCtrl extends RootCtrl {
         }
 
         try {
-            this.messageRepository.delete(new MessageId(req.params.messageId));
+            await this.messageRepository.delete(new MessageId(req.params.messageId));
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }
