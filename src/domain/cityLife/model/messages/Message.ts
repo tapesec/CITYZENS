@@ -66,17 +66,20 @@ class Message {
     }
 
     toJSON() {
-        return {
+        const serialized: any = {
             id: this.id.toString(),
             title: this.title,
             body: this.body,
             author: this.author.toJSON(),
             hotspotId: this.hotspotId.toString(),
             pinned: this.pinned,
-            parentId: this.parentId,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };
+        if (this.parentId) {
+            serialized.parentId = this.parentId.toString();
+        }
+        return serialized;
     }
 }
 export default Message;

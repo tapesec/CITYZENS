@@ -98,9 +98,7 @@ const messagesEndpointsTests = (state: any) => {
 
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body).to.have.lengthOf(2);
-                expect(response.body[0])
-                    .to.have.property('body')
-                    .to.be.equal(createMessageBody.body);
+                expect(response.body.map(x => x.body)).to.include(createMessageBody.body);
             });
         });
 
@@ -129,9 +127,9 @@ const messagesEndpointsTests = (state: any) => {
 
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body).to.have.lengthOf(2);
-                expect(response.body[0])
-                    .to.have.property('body')
-                    .to.be.equal(patchMessageBody.body);
+
+                // One of them should have
+                expect(response.body.map(x => x.body)).to.include(patchMessageBody.body);
             });
 
             it('should return 404 if invalid messageId is provided', async () => {
