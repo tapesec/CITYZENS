@@ -1,7 +1,8 @@
+import MessageSample from '../../../domain/cityLife/model/sample/MessageSample';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
 import config from './../../../api/config';
-import { CITYZEN_TABLE_NAME } from './constants';
+import { CITYZEN_TABLE_NAME, MESSAGE_TABLE_NAME } from './constants';
 import PostgreSQL from './postgreSQL';
 
 const cityzens = async (postgre: PostgreSQL) => {
@@ -66,8 +67,65 @@ const cityzens = async (postgre: PostgreSQL) => {
     }
 };
 
+const messages = async (postgre: PostgreSQL) => {
+    try {
+        const exist = await postgre.tableExist(MESSAGE_TABLE_NAME);
+        if (exist) return;
+
+        const createTableQueryString = `
+            CREATE TABLE messages (
+                id text NOT NULL UNIQUE,
+                author_id text NOT NULL,
+                hotspot_id text NOT NULL,
+                title text,
+                body text,
+                pinned boolean DEFAULT FALSE,
+                created_at timestamp NOT NULL DEFAULT current_timestamp,
+                updated_at timestamp,
+                parent_id text
+            )
+        `;
+
+        await postgre.query(createTableQueryString);
+
+        const messagesSample = [
+            MessageSample.MARTIGNAS_CHURCH_MESSAGE,
+            MessageSample.MARTIGNAS_SCHOOL_MESSAGE,
+            MessageSample.MARTIGNAS_TOWNHALL_MESSAGE,
+            MessageSample.SIMCITY_TOEDIT_MESSAGE,
+        ];
+
+        for (const entry of messagesSample) {
+            const query = `
+                INSERT INTO ${MESSAGE_TABLE_NAME} (id, author_id, hotspot_id, title, body, pinned, created_at, updated_at, parent_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            `;
+
+            await postgre.query(query, [
+                entry.id.toString(),
+                entry.author.id.toString(),
+                entry.hotspotId.toString(),
+                entry.title,
+                entry.body,
+                entry.pinned,
+                entry.createdAt.toUTCString(),
+                entry.updatedAt.toUTCString(),
+                entry.parentId === undefined ? 'null' : entry.parentId.toString(),
+            ]);
+
+            await new Promise((resolve, reject) => {
+                setTimeout(resolve, 500);
+            });
+        }
+    } catch (error) {
+        console.log("Can't connect to database: ", error);
+        process.exit(1);
+    }
+};
+
 const CheckAndCreateTable = {
     cityzens,
+    messages,
 };
 
 export default CheckAndCreateTable;

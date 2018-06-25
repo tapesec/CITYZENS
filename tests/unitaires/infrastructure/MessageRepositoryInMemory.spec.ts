@@ -1,67 +1,36 @@
-import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
-import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
-import MessageFactory from '../../../src/infrastructure/MessageFactory';
-import
-messageRepositoryInMemory,
-{ MessageRepositoryInMemory } from '../../../src/infrastructure/MessageRepositoryInMemory';
-import * as TypeMoq from 'typemoq';
-import * as sinon from 'sinon';
 import { expect } from 'chai';
+import * as TypeMoq from 'typemoq';
+import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
+import MessageId from '../../../src/domain/cityLife/model/messages/MessageId';
+import MessageSample from '../../../src/domain/cityLife/model/sample/MessageSample';
+import MessageFactory from '../../../src/infrastructure/MessageFactory';
+import MessageRepositoryPostgreSQL from '../../../src/infrastructure/MessageRepositoryPostgreSQL';
+import OrmMessage from '../../../src/infrastructure/ormMessage';
 
 describe('MessageRepository', () => {
-
-    let ormStub: any = {};
-    let findAllStub: sinon.SinonStub;
-    let findOneStub: any;
-    let saveStub: any;
-    let updateStub: any;
-    let deleteStub: any;
-    let repository: MessageRepositoryInMemory;
+    let repository: MessageRepositoryPostgreSQL;
     let messageFactoryMock: TypeMoq.IMock<MessageFactory>;
-    let fakeMessageId: string;
+    let ormMessage: TypeMoq.IMock<OrmMessage>;
 
     beforeEach('should mock orm before test MessageRepository', () => {
-        findAllStub = sinon.stub();
-        findOneStub = sinon.stub();
-        saveStub = sinon.stub();
-        updateStub = sinon.stub();
-        deleteStub = sinon.stub();
-        ormStub.message = {
-            findAll: findAllStub,
-            findOne: findOneStub,
-            save: saveStub,
-            update: updateStub,
-            delete: deleteStub,
-        };
+        ormMessage = TypeMoq.Mock.ofType<OrmMessage>();
         messageFactoryMock = TypeMoq.Mock.ofType<MessageFactory>();
-        fakeMessageId = 'fake-message-id';
-        repository = new MessageRepositoryInMemory(ormStub, messageFactoryMock.object);
-    });
-
-    afterEach(() => {
-        ormStub = {};
-        repository = null;
+        repository = new MessageRepositoryPostgreSQL(ormMessage.object, messageFactoryMock.object);
     });
 
     describe('findByHotspotId', () => {
-
-        it('should call orm findAll method with an hotspotId as request parameter', () => {
+        it('should call orm findAll method with an hotspotId as request parameter', async () => {
             // Arrange
-            const fakeHotspotId = 'fake-id';
-            const fakeDatafromDb = [
-                { foo: 'bar' },
-                { foo: 'bar' },
-                { foo: 'bar' },
-            ];
-            findAllStub.returns(fakeDatafromDb);
+            const fakeHotspotId = new HotspotId('fake-id');
+            const fakeDatafromDb = [{ foo: 'bar' }, { foo: 'bar' }, { foo: 'bar' }];
+            ormMessage
+                .setup(x => x.findAll(TypeMoq.It.isAny()))
+                .returns(() => Promise.resolve(fakeDatafromDb));
             // Act
-            repository.findByHotspotId(fakeHotspotId);
+            await repository.findByHotspotId(fakeHotspotId);
             // Assert
-            expect(
-                findAllStub.calledWith({ hotspotId: new HotspotId('fake-id').id, removed: false }),
-            ).to.be.true;
-            messageFactoryMock
-            .verify(
+            ormMessage.verify(x => x.findAll(TypeMoq.It.isAny()), TypeMoq.Times.once());
+            messageFactoryMock.verify(
                 x => x.createMessage(TypeMoq.It.isAny()),
                 TypeMoq.Times.exactly(3),
             );
@@ -69,36 +38,36 @@ describe('MessageRepository', () => {
     });
 
     describe('findById', () => {
-
-        it ('should call orm findOne method and return a new Message', () => {
+        it('should call orm findOne method and return a new Message', async () => {
             // Arrange
-            const fakeDatafromDb = { foo: 'bar' };
-            findOneStub.returns(fakeDatafromDb);
+            // Arrange
+            const fakeMessageId = new MessageId('fake-id');
+            const fakeDatafromDb: any = { foo: 'bar' };
+            ormMessage
+                .setup(x => x.findOne(fakeMessageId))
+                .returns(() => Promise.resolve(fakeDatafromDb));
             // Act
-            repository.findById(fakeMessageId);
+            await repository.findById(fakeMessageId);
             // Assert
-            expect(
-                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
-            ).to.be.true;
-            messageFactoryMock
-            .verify(
+            ormMessage.verify(x => x.findOne(fakeMessageId), TypeMoq.Times.once());
+            messageFactoryMock.verify(
                 x => x.createMessage(TypeMoq.It.isAny()),
                 TypeMoq.Times.once(),
             );
         });
 
-        it ('should call orm findOne method and return undefined if no entry from database', () => {
+        it('should call orm findOne method and return undefined if no entry from database', async () => {
             // Arrange
+            const fakeMessageId = new MessageId('fake-id');
             const emptyDatafromDb: any = undefined;
-            findOneStub.returns(emptyDatafromDb);
+            ormMessage
+                .setup(x => x.findOne(fakeMessageId))
+                .returns(() => Promise.resolve(undefined));
             // Act
-            repository.findById(fakeMessageId);
+            await repository.findById(fakeMessageId);
             // Assert
-            expect(
-                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
-            ).to.be.true;
-            messageFactoryMock
-            .verify(
+            ormMessage.verify(x => x.findOne(fakeMessageId), TypeMoq.Times.once());
+            messageFactoryMock.verify(
                 x => x.createMessage(TypeMoq.It.isAny()),
                 TypeMoq.Times.never(),
             );
@@ -106,61 +75,62 @@ describe('MessageRepository', () => {
     });
 
     describe('isSet', () => {
-        it ('should call orm findOne and return true when there is a message', () => {
+        it('should call orm findOne and return true when there is a message', async () => {
             // Arrange
-            const fakeDatafromDb = { foo: 'bar' };
-            findOneStub.returns(fakeDatafromDb);
+            const fakeMessageId = new MessageId('fake-id');
+            const fakeDatafromDb: any = { foo: 'bar' };
+            ormMessage
+                .setup(x => x.findOne(fakeMessageId))
+                .returns(() => Promise.resolve(fakeDatafromDb));
             // Act
-            const isSet: boolean = repository.isSet(fakeMessageId);
+            const isSet: boolean = await repository.isSet(fakeMessageId);
             // Assert
-            expect(
-                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
-            ).to.be.true;
+            ormMessage.verify(x => x.findOne(fakeMessageId), TypeMoq.Times.once());
             expect(isSet).to.be.true;
         });
 
-        it ('should call orm findOne and return false when there is not a message', () => {
+        it('should call orm findOne and return false when there is not a message', async () => {
             // Arrange
+            const fakeMessageId = new MessageId('fake-id');
             const fakeDatafromDb: any = undefined;
-            findOneStub.returns(fakeDatafromDb);
+            ormMessage
+                .setup(x => x.findOne(fakeMessageId))
+                .returns(() => Promise.resolve(fakeDatafromDb));
             // Act
-            const isSet: boolean = repository.isSet(fakeMessageId);
+            const isSet: boolean = await repository.isSet(fakeMessageId);
             // Assert
-            expect(
-                findOneStub.calledWith({ id: fakeMessageId, removed: false }),
-            ).to.be.true;
+            ormMessage.verify(x => x.findOne(fakeMessageId), TypeMoq.Times.once());
             expect(isSet).to.be.false;
         });
     });
 
     describe('store', () => {
-        it ('should call orm save methode after stringify then parse a message object', () => {
-            // Arrange
-            const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;;
-            // Act
-            repository.store(aMessage);
-            // Assert
-            expect(saveStub.calledWith(JSON.parse(JSON.stringify(aMessage)))).to.be.true;
-        });
-    });
-
-    describe('store', () => {
-        it ('should call orm update methode after stringify then parse a message object', () => {
+        it('should call orm save methode after stringify then parse a message object', async () => {
             // Arrange
             const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
             // Act
-            repository.update(aMessage);
+            await repository.store(aMessage);
             // Assert
-            expect(updateStub.calledWith(JSON.parse(JSON.stringify(aMessage)))).to.be.true;
+            ormMessage.verify(x => x.save(aMessage), TypeMoq.Times.once());
+        });
+
+        it('should call orm update methode after stringify then parse a message object', async () => {
+            // Arrange
+            const aMessage = MessageSample.MARTIGNAS_CHURCH_MESSAGE;
+            // Act
+            await repository.update(aMessage);
+            // Assert
+            ormMessage.verify(x => x.update(aMessage), TypeMoq.Times.once());
         });
     });
 
     describe('delete', () => {
-        it ('should call orm delete methode with message id parameter', () => {
+        it('should call orm delete methode with message id parameter', async () => {
+            const fakeMessageId = new MessageId('fake-id');
             // Act
-            repository.delete(fakeMessageId);
+            await repository.delete(fakeMessageId);
             // Assert
-            expect(deleteStub.calledWith(fakeMessageId)).to.be.true;
+            ormMessage.verify(x => x.delete(fakeMessageId), TypeMoq.Times.once());
         });
     });
 });

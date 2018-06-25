@@ -6,7 +6,7 @@ import * as c from '../../../../src/api/routers/constants';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import hotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../../../src/infrastructure/MessageFactory';
-import messageRepositoryInMemory from '../../../../src/infrastructure/MessageRepositoryInMemory';
+import messageRepositoryInMemory from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
 
 describe('messages router', () => {
     it('should register routes related to messages', () => {

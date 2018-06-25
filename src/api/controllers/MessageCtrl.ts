@@ -1,9 +1,11 @@
-import { CREATED, OK, getStatusText } from 'http-status-codes';
+import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
+import MessageId from '../../domain/cityLife/model/messages/MessageId';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
-import { MessageRepositoryInMemory } from '../../infrastructure/MessageRepositoryInMemory';
+import MessageRepositoryInMemory from '../../infrastructure/MessageRepositoryPostgreSQL';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
@@ -57,8 +59,8 @@ class MessageCtrl extends RootCtrl {
                 );
             }
 
-            const hotspotContent: Message[] = this.messageRepository.findByHotspotId(
-                req.params.hotspotId,
+            const hotspotContent: Message[] = await this.messageRepository.findByHotspotId(
+                new HotspotId(req.params.hotspotId),
             );
             res.json(OK, hotspotContent);
         } catch (err) {
@@ -108,7 +110,7 @@ class MessageCtrl extends RootCtrl {
             req.body.hotspotId = req.params.hotspotId;
             req.body.cityzen = this.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
-            this.messageRepository.store(newMessage);
+            await this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
@@ -139,7 +141,7 @@ class MessageCtrl extends RootCtrl {
         }
 
         try {
-            message = this.messageRepository.findById(req.params.messageId);
+            message = await this.messageRepository.findById(new MessageId(req.params.messageId));
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
@@ -172,7 +174,7 @@ class MessageCtrl extends RootCtrl {
             if (req.body.pinned !== undefined) {
                 if (message.pinned !== req.body.pinned) message.togglePinMode();
             }
-            this.messageRepository.update(message);
+            await this.messageRepository.update(message);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
         }
@@ -181,7 +183,7 @@ class MessageCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
     public removeMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.messageRepository.isSet(req.params.messageId)) {
+        if (!this.messageRepository.isSet(new MessageId(req.params.messageId))) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `DELETE ${req.path()}`,
@@ -210,7 +212,7 @@ class MessageCtrl extends RootCtrl {
         }
 
         try {
-            this.messageRepository.delete(req.params.messageId);
+            await this.messageRepository.delete(new MessageId(req.params.messageId));
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }

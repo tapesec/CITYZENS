@@ -5,7 +5,8 @@ import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryP
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
-import messageRepositoryInMemory from '../../infrastructure/MessageRepositoryInMemory';
+import MessageRepositoryInMemory from '../../infrastructure/MessageRepositoryPostgreSQL';
+import OrmMessage from '../../infrastructure/ormMessage';
 import AuthCtrl from '../controllers/AuthCtrl';
 import CityCtrl from '../controllers/CityCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
@@ -14,6 +15,7 @@ import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
 import FilestackService from '../services/filestack/FilestackService';
+import CheckAndCreateTable from '../services/postgreSQL/checkAndCreateTables';
 import PostgreSQL from '../services/postgreSQL/postgreSQL';
 import SlideshowService from '../services/widgets/SlideshowService';
 import orm from './../../infrastructure/orm';
@@ -29,7 +31,6 @@ import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
 import SwaggerRouter from './SwaggerRouter';
-import CheckAndCreateTable from '../services/postgreSQL/checkAndCreateTables';
 
 // const jwt = require('jsonwebtoken');
 const restifyErrors = require('restify-errors');
@@ -56,9 +57,13 @@ const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 const postgreSql = new PostgreSQL(config.postgreSQL);
 
 const ormCityzen = new OrmCityzen(postgreSql);
+const ormMessage = new OrmMessage(postgreSql);
+
+const messageFactory = new MessageFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, ormCityzen);
+const messageRepositoryInMemory = new MessageRepositoryInMemory(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
 const slideshowService = new SlideshowService(filestackService);
@@ -68,6 +73,7 @@ const slideshowService = new SlideshowService(filestackService);
 export const initDB = async (server: restify.Server) => {
     console.log('Trying to connect');
     await CheckAndCreateTable.cityzens(postgreSql);
+    await CheckAndCreateTable.messages(postgreSql);
 };
 
 export const init = (server: restify.Server) => {
@@ -105,7 +111,7 @@ export const init = (server: restify.Server) => {
                 auth0Service,
                 hotspotRepositoryInMemory,
                 messageRepositoryInMemory,
-                new MessageFactory(),
+                messageFactory,
             ),
         ),
     );

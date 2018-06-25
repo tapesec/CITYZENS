@@ -46,7 +46,7 @@ export const getHotspotId = {
 export const createMessageSchema = {
     title: 'POST /hotspots/{hotspotId}/messages body validation',
     type: 'object',
-    required: ['title', 'body'],
+    required: ['title', 'body', 'pinned'],
     properties: {
         title: {
             type: 'string',
@@ -58,6 +58,9 @@ export const createMessageSchema = {
         },
         pinned: {
             type: 'boolean',
+        },
+        parentId: {
+            type: 'string',
         },
     },
 };
