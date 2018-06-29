@@ -1,6 +1,6 @@
-import HotspotCtrl from '../controllers/HotspotCtrl';
 import * as restify from 'restify';
-import { HOTSPOT_ENDPOINT, VIEWS_ENDPOINT, ALERT_PERTINENCE, MEMBER_ENDPOINT } from './constants';
+import HotspotCtrl from '../controllers/HotspotCtrl';
+import { ALERT_PERTINENCE, HOTSPOT_ENDPOINT, MEMBER_ENDPOINT, VIEWS_ENDPOINT } from './constants';
 
 class HotspotRouter {
     private ctrl: HotspotCtrl;

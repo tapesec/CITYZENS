@@ -5,7 +5,7 @@ import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import MessageId from '../../domain/cityLife/model/messages/MessageId';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
-import MessageRepositoryInMemory from '../../infrastructure/MessageRepositoryPostgreSQL';
+import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
@@ -15,7 +15,7 @@ import RootCtrl from './RootCtrl';
 
 class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
-    private messageRepository: MessageRepositoryInMemory;
+    private messageRepository: MessageRepositoryPostgreSql;
     private messageFactory: MessageFactory;
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
@@ -25,7 +25,7 @@ class MessageCtrl extends RootCtrl {
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
-        messageRepositoryInMemory: MessageRepositoryInMemory,
+        messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
     ) {
         super(errorHandler, auth0Service);
@@ -63,6 +63,41 @@ class MessageCtrl extends RootCtrl {
                 new HotspotId(req.params.hotspotId),
             );
             res.json(OK, hotspotContent);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+        }
+    };
+
+    // method=GET url=/hotspots/{hotspotId}/messages/
+    public getComments = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        const hotspotId = req.params.hotspotId;
+        const messageId = req.params.messageId;
+
+        if (!this.hotspotRepository.isSet(hotspotId)) {
+            return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
+        }
+        try {
+            const hotspot = await this.hotspotRepository.findById(hotspotId);
+            if (!hotspot) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path}`,
+                        MessageCtrl.MESSAGE_PRIVATE,
+                    ),
+                );
+            }
+
+            const comments = await this.messageRepository.findComments(new MessageId(messageId));
+            res.json(OK, comments);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
         }

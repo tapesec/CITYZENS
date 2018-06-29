@@ -3,12 +3,7 @@ import * as request from 'supertest';
 import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { username } from './sample/granted-cityzen';
-import {
-    createMessageBody,
-    editedMessageResponse,
-    newMessageResponse,
-    patchMessageBody,
-} from './sample/requests-responses';
+import { commentPostBody, createMessageBody, editedMessageResponse, newMessageResponse, patchMessageBody } from './sample/requests-responses';
 
 const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
@@ -98,7 +93,15 @@ const messagesEndpointsTests = (state: any) => {
 
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body).to.have.lengthOf(2);
-                expect(response.body.map(x => x.body)).to.include(createMessageBody.body);
+                let flag = false;
+
+                for (const message of response.body) {
+                    if (message.body === createMessageBody.body) {
+                        flag = true;
+                    }
+                }
+
+                expect(flag).to.be.true;
             });
         });
 
@@ -127,9 +130,15 @@ const messagesEndpointsTests = (state: any) => {
 
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body).to.have.lengthOf(2);
+                let flag = false;
 
-                // One of them should have
-                expect(response.body.map(x => x.body)).to.include(patchMessageBody.body);
+                for (const message of response.body) {
+                    if (message.body === patchMessageBody.body) {
+                        flag = true;
+                    }
+                }
+
+                expect(flag).to.be.true;
             });
 
             it('should return 404 if invalid messageId is provided', async () => {
@@ -169,6 +178,56 @@ const messagesEndpointsTests = (state: any) => {
                     .set('Accept', 'application/json');
 
                 expect(response.ok, response.text).to.be.true;
+            });
+        });
+
+        describe('POST a comment', () => {
+            let commentPosted;
+            const hotspotToComment = MessageSample.MARTIGNAS_CHURCH_MESSAGE.hotspotId.toString();
+            const messageToComment = MessageSample.MARTIGNAS_CHURCH_MESSAGE.id.toString();
+            it('Should post a comment on a message.', async () => {
+                const body = commentPostBody;
+
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/messages`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                commentPosted = response.body.id;
+            });
+
+            it('Should get previously posted comment.', async () => {
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages/${messageToComment}/comments`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response.body).to.have.lengthOf(1);
+                expect(response.body[0])
+                    .to.have.property('body')
+                    .to.be.equal(commentPostBody.body);
+            });
+
+            it('Should delete previously posted comment.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotId}/messages/${commentPosted}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+            });
+
+            it('Should return no comments.', async () => {
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages/${messageToComment}/comments`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response.body).to.have.lengthOf(0);
             });
         });
     });

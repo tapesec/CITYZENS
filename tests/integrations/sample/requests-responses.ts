@@ -29,6 +29,13 @@ export const patchMessageBody = {
     pinned: true,
 };
 
+export const commentPostBody = {
+    title: 'I Would like to make a comment',
+    body: 'No Comment.',
+    parentId: MessageSample.MARTIGNAS_CHURCH_MESSAGE.id.toString(),
+    pinned: false,
+};
+
 // response
 export const editedMessageResponse = () => {
     const message = MessageSample.SIMCITY_TOEDIT_MESSAGE;

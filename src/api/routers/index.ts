@@ -5,7 +5,7 @@ import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryP
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
-import MessageRepositoryInMemory from '../../infrastructure/MessageRepositoryPostgreSQL';
+import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import OrmMessage from '../../infrastructure/ormMessage';
 import AuthCtrl from '../controllers/AuthCtrl';
 import CityCtrl from '../controllers/CityCtrl';
@@ -63,7 +63,7 @@ const messageFactory = new MessageFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(orm, ormCityzen);
-const messageRepositoryInMemory = new MessageRepositoryInMemory(ormMessage, messageFactory);
+const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
 const slideshowService = new SlideshowService(filestackService);

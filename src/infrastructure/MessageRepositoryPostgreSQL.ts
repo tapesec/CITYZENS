@@ -5,7 +5,7 @@ import MessageId from '../domain/cityLife/model/messages/MessageId';
 import MessageFactory from './MessageFactory';
 import OrmMessage from './ormMessage';
 
-class MessageRepositoryInMemory implements IMessageRepository {
+class MessageRepositoryPostgreSql implements IMessageRepository {
     protected ormMessage: OrmMessage;
     protected messageFactory: MessageFactory;
 
@@ -26,6 +26,15 @@ class MessageRepositoryInMemory implements IMessageRepository {
         return message;
     }
 
+    public async findComments(id: MessageId): Promise<Message[]> {
+        const entries = await this.ormMessage.findComments(id);
+        const messages: Message[] = [];
+        for (const entry of entries) {
+            messages.push(this.messageFactory.createMessage(entry));
+        }
+        return messages;
+    }
+
     public async isSet(id: MessageId): Promise<boolean> {
         const data = await this.ormMessage.findOne(id);
         return !!data;
@@ -44,4 +53,4 @@ class MessageRepositoryInMemory implements IMessageRepository {
     }
 }
 
-export default MessageRepositoryInMemory;
+export default MessageRepositoryPostgreSql;

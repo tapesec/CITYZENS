@@ -7,6 +7,8 @@ export default interface IMessageRepository {
 
     findById(id: MessageId): Promise<Message>;
 
+    findComments(id: MessageId): Promise<Message[]>;
+
     store(message: Message): void;
 
     isSet(id: MessageId): Promise<boolean>;
