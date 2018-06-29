@@ -3,7 +3,7 @@ import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import Cityzen from '../../domain/cityzens/model/Cityzen';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import { Auth0 } from './../libs/Auth0';

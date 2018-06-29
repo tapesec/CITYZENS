@@ -3,7 +3,7 @@ import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import MessageId from '../../domain/cityLife/model/messages/MessageId';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import MessageRepositoryInMemory from '../../infrastructure/MessageRepositoryPostgreSQL';
 import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';

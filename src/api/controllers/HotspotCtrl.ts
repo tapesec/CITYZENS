@@ -6,7 +6,7 @@ import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
