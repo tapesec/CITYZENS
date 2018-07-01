@@ -1,0 +1,19 @@
+definitions:
+  Cityzen:
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+      pseudo:
+        type: string
+      favoritesHotspots:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      pictureExtern:
+        type: string
+      pictureCityzen:
+        type: string

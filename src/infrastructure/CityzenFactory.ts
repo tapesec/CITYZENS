@@ -9,12 +9,12 @@ export default class CityzenFactory {
         return new Cityzen(
             data.user_id,
             data.email,
-            data.nickname,
+            data.pseudo,
             data.is_admin,
             new Set<string>(data.favorites_hotspots),
             'No description available',
-            new ImageLocation(data.pictureExtern),
-            new ImageLocation(data.pictureCityzen),
+            new ImageLocation(data.picture_extern),
+            new ImageLocation(data.picture_cityzen),
         );
     }
 }
