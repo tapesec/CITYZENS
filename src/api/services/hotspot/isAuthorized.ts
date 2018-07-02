@@ -60,9 +60,8 @@ const toRemoveMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
     return toRemoveHotspot(hotspot, cityzen);
 };
 
-const toSeeCityzen = (cityzenToSee: Cityzen, cityzenViewer?: Cityzen) => {
-    if (cityzenViewer === undefined) return false;
-    return true;
+const toPostComments = (hotspot: Hotspot, cityzen: Cityzen) => {
+    return toSeeHotspot(hotspot, cityzen);
 };
 
 export {
@@ -75,5 +74,5 @@ export {
     toPatchMessages,
     toRemoveMessages,
     toPostMessages,
-    toSeeCityzen,
+    toPostComments,
 };

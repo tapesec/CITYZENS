@@ -3,7 +3,13 @@ import * as request from 'supertest';
 import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { username } from './sample/granted-cityzen';
-import { commentPostBody, createMessageBody, editedMessageResponse, newMessageResponse, patchMessageBody } from './sample/requests-responses';
+import {
+    commentPostBody,
+    createMessageBody,
+    editedMessageResponse,
+    newMessageResponse,
+    patchMessageBody,
+} from './sample/requests-responses';
 
 const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
@@ -189,7 +195,7 @@ const messagesEndpointsTests = (state: any) => {
                 const body = commentPostBody;
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/messages`)
+                    .post(`/hotspots/${hotspotId}/messages/${commentPostBody.parentId}/comments`)
                     .send(body)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json');

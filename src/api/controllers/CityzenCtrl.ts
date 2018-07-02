@@ -3,7 +3,6 @@ import CityzenId from '../../domain/cityzens/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import Auth0Service from '../services/auth/Auth0Service';
 import ErrorHandler from '../services/errors/ErrorHandler';
-import * as isAuthorized from './../services/hotspot/isAuthorized';
 import RootCtrl from './RootCtrl';
 
 class CityzenCtrl extends RootCtrl {
@@ -23,10 +22,6 @@ class CityzenCtrl extends RootCtrl {
             const cityzen = await this.cityzenRepo.findById(cityzenId);
             if (cityzen === undefined) {
                 return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
-            }
-
-            if (!isAuthorized.toSeeCityzen(cityzen, this.cityzenIfAuthenticated)) {
-                return next(this.errorHandler.logAndCreateUnautorized(`GET ${req.path()}`));
             }
             res.json(cityzen);
         } catch (err) {
