@@ -31,7 +31,7 @@ class MessageRouter {
         server.post(
             HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT + '/:messageId' + COMMENT_ENDPOINT,
             this.ctrl.loadAuthenticatedUser,
-            this.ctrl.postMessage,
+            this.ctrl.postComment,
         );
 
         server.patch(

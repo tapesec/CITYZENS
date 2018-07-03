@@ -28,7 +28,10 @@ export default class OrmMessage {
     }
 
     public async findAll(hotspotId: HotspotId) {
-        const query = `SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id WHERE hotspot_id = $1 AND parent_id = 'null'`;
+        const query = `
+            SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id
+            WHERE hotspot_id = $1 AND parent_id = 'null' AND removed = false
+        `;
         const values = [hotspotId.toString()];
 
         const result = await this.postgre.query(query, values);
@@ -40,7 +43,10 @@ export default class OrmMessage {
         return messages;
     }
     public async findComments(messageId: MessageId) {
-        const query = `SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id WHERE parent_id = $1`;
+        const query = `
+            SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id
+            WHERE parent_id = $1 AND removed = false
+        `;
         const values = [messageId.toString()];
 
         const result = await this.postgre.query(query, values);
@@ -52,8 +58,10 @@ export default class OrmMessage {
         return messages;
     }
     public async findOne(messageId: MessageId) {
-        const query =
-            'SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id WHERE id = $1';
+        const query = `
+            SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id
+            WHERE id = $1 AND removed = false
+        `;
         const values = [messageId.toString()];
 
         const result = await this.postgre.query(query, values);
@@ -96,7 +104,7 @@ export default class OrmMessage {
         await this.postgre.query(query, values);
     }
     public async delete(id: MessageId) {
-        const query = 'DELETE FROM messages WHERE id = $1';
+        const query = 'UPDATE messages SET removed = true WHERE id = $1 OR parent_id = $1';
         const values = [id.toString()];
 
         await this.postgre.query(query, values);
