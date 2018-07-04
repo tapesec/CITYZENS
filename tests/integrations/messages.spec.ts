@@ -3,7 +3,13 @@ import * as request from 'supertest';
 import MessageSample from '../../src/domain/cityLife/model/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { username } from './sample/granted-cityzen';
-import { commentPostBody, createMessageBody, editedMessageResponse, newMessageResponse, patchMessageBody } from './sample/requests-responses';
+import {
+    commentPostBody,
+    createMessageBody,
+    editedMessageResponse,
+    newMessageResponse,
+    patchMessageBody,
+} from './sample/requests-responses';
 
 const messagesEndpointsTests = (state: any) => {
     describe('/messages endpoint', () => {
@@ -181,6 +187,51 @@ const messagesEndpointsTests = (state: any) => {
             });
         });
 
+        describe('Should delete all comments from message when it is deleted.', () => {
+            let messageId;
+            let commentId;
+            it('Post messages.', async () => {
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/messages`)
+                    .send({ body: 'lala' })
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${state.admin.access_token}`);
+
+                expect(response.ok, response.text).to.be.true;
+
+                messageId = response.body.id;
+            });
+            it('Post comments.', async () => {
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/messages/${messageId}/comments`)
+                    .send({ body: 'lala' })
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${state.admin.access_token}`);
+
+                console.log(response.body);
+                expect(response.ok, response.text).to.be.true;
+
+                commentId = response.body.id;
+            });
+            it('Delete message.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotId}/messages/${messageId}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+            });
+            it('Check deletion.', async () => {
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .set('Accept', 'application/json');
+
+                const array = response.body.map(x => x.id);
+                expect(response.ok, response.text).to.be.true;
+                expect(array, array).to.not.include(commentId);
+            });
+        });
+
         describe('POST a comment', () => {
             let commentPosted;
             const hotspotToComment = MessageSample.MARTIGNAS_CHURCH_MESSAGE.hotspotId.toString();
@@ -189,7 +240,7 @@ const messagesEndpointsTests = (state: any) => {
                 const body = commentPostBody;
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/messages`)
+                    .post(`/hotspots/${hotspotId}/messages/${commentPostBody.parentId}/comments`)
                     .send(body)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json');

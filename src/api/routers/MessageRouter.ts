@@ -28,6 +28,12 @@ class MessageRouter {
             this.ctrl.postMessage,
         );
 
+        server.post(
+            HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT + '/:messageId' + COMMENT_ENDPOINT,
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.postComment,
+        );
+
         server.patch(
             HOTSPOT_ENDPOINT + '/:hotspotId' + MESSAGE_ENDPOINT + '/:messageId',
             this.ctrl.loadAuthenticatedUser,

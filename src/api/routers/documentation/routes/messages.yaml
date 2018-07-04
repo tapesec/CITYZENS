@@ -166,5 +166,54 @@
         description: Jeton invalide.
       500:
         description: Quelque chose à mal tourné.
-
-
+/hotspots/{hotspotId}/messages/{messageId}/comments:
+  post:
+    description: Créer un commentaire et le retourne.
+    tags:
+      - Message
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: hotspotId
+        in: path
+        description: L'uuid de l'hotspot ou l'on va poster un commentaire.
+        required: true
+        type: string
+      - name: messageId
+        in: path
+        description: L'uuid du message à commenter.
+        required: true
+        type: string
+      - in: body
+        name: message
+        description: Le commentaire à poster.
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            pinned:
+              type: boolean
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Le commentaire correctement formé.
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/definitions/Messages'
+      400:
+        description: Body invalide verifiez votre requète.
+      401:
+        description: Jeton invalide.
+      404:
+        description: HotspotId ou MessageId invalide(non trouvé).
+      500:
+        description: Quelque chose à mal tourné.

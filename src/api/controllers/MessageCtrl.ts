@@ -152,6 +152,55 @@ class MessageCtrl extends RootCtrl {
         }
     };
 
+    // method=POST url=/hotspots/{hotspotId}/messages/{messageId}/comment
+    public postComment = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.schemaValidator.validate(createMessageSchema, req.body)) {
+            return next(
+                this.errorHandler.logAndCreateBadRequest(
+                    `POST ${req.path()}`,
+                    this.schemaValidator.errorsText(),
+                ),
+            );
+        }
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    MessageCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+        if (!hotspot) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
+        if (!isAuthorized.toPostComments(hotspot, this.cityzenIfAuthenticated)) {
+            return next(
+                this.errorHandler.logAndCreateUnautorized(
+                    `POST ${req.path()}`,
+                    MessageCtrl.MESSAGE_PRIVATE,
+                ),
+            );
+        }
+
+        try {
+            req.body.hotspotId = req.params.hotspotId;
+            req.body.parentId = req.params.messageId;
+            req.body.cityzen = this.cityzenIfAuthenticated;
+            const newMessage = this.messageFactory.createMessage(req.body);
+            await this.messageRepository.store(newMessage);
+            res.json(CREATED, newMessage);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+        }
+    };
+
     // method=PATCH url=/hotspots/{hotspotId}/messages/{messageId}
     public patchMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         let message: Message;

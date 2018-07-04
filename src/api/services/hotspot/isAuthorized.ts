@@ -1,7 +1,7 @@
-import Cityzen from './../../../domain/cityzens/model/Cityzen';
+import Message from '../../../domain/cityLife/model/messages/Message';
 import Hotspot, { HotspotScope } from './../../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from './../../../domain/cityLife/model/hotspot/MediaHotspot';
-import Message from '../../../domain/cityLife/model/messages/Message';
+import Cityzen from './../../../domain/cityzens/model/Cityzen';
 
 const toSeeHotspot = (hotspot: Hotspot, member?: Cityzen) => {
     if (!(hotspot instanceof MediaHotspot)) return true;
@@ -60,6 +60,10 @@ const toRemoveMessages = (hotspot: Hotspot, cityzen?: Cityzen) => {
     return toRemoveHotspot(hotspot, cityzen);
 };
 
+const toPostComments = (hotspot: Hotspot, cityzen: Cityzen) => {
+    return toSeeHotspot(hotspot, cityzen);
+};
+
 export {
     toSeeHotspot,
     toAddMember,
@@ -70,4 +74,5 @@ export {
     toPatchMessages,
     toRemoveMessages,
     toPostMessages,
+    toPostComments,
 };

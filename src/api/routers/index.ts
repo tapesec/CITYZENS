@@ -9,6 +9,7 @@ import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryP
 import OrmMessage from '../../infrastructure/ormMessage';
 import AuthCtrl from '../controllers/AuthCtrl';
 import CityCtrl from '../controllers/CityCtrl';
+import CityzenCtrl from '../controllers/CityzenCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import MessageCtrl from '../controllers/MessageCtrl';
 import ProfileCtrl from '../controllers/ProfileCtrl';
@@ -27,6 +28,7 @@ import Algolia from './../services/algolia/Algolia';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import AuthRouter from './AuthRouter';
 import CityRouter from './CityRouter';
+import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
@@ -114,6 +116,9 @@ export const init = (server: restify.Server) => {
                 messageFactory,
             ),
         ),
+    );
+    routers.push(
+        new CityzenRouter(new CityzenCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
     );
 
     routers.forEach(r => r.bind(server));

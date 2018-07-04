@@ -2,13 +2,14 @@ import { expect } from 'chai';
 import * as request from 'supertest';
 import config from './../../src/api/config';
 import * as server from './../../src/api/server';
-import { votingPath } from './Voting.spec';
 import alertHotspotsTests from './alertHotspot.spec';
 import citiesEndpointTests from './cities.spec';
+import cityzenTest from './cityzen.spec';
 import hotspotsEndpointsTests from './hotspots.spec';
 import mediaHotspotSpec from './mediaHotspot.spec';
 import messagesEndpointsTests from './messages.spec';
 import * as LoginSample from './sample/LoginSample';
+import { votingPath } from './Voting.spec';
 
 describe('/auth endpoint', function() {
     this.timeout(10000);
@@ -47,6 +48,8 @@ describe('/auth endpoint', function() {
             state.standard.auth0id = config.test.standardAuth0id;
         });
     });
+
+    cityzenTest(state);
 
     mediaHotspotSpec(state);
     alertHotspotsTests(state);
