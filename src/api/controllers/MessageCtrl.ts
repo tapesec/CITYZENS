@@ -6,7 +6,11 @@ import MessageId from '../../domain/cityLife/model/messages/MessageId';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
-import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
+import {
+    createMessageSchema,
+    getMessageSchemaQuery,
+    patchMessageSchema,
+} from '../requestValidation/schema';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
 import Message from './../../domain/cityLife/model/messages/Message';
@@ -17,9 +21,11 @@ class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
     private messageRepository: MessageRepositoryPostgreSql;
     private messageFactory: MessageFactory;
+
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
+    private static MESSAGES_IS_NOT_LIST = "Expected a messageId list joined by ','";
 
     constructor(
         errorHandler: ErrorHandler,
@@ -36,6 +42,62 @@ class MessageCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId}/messages
     public getMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (req.query.count !== undefined) {
+            return this.listCommentsCount(req, res, next);
+        }
+        return this.listMessages(req, res, next);
+    };
+
+    private listCommentsCount = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        try {
+            console.log(req.query);
+
+            if (!this.schemaValidator.validate(getMessageSchemaQuery, req.query)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `GET ${req.path()}`,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+
+            if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+                return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
+            }
+            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+
+            const messages = (req.query.messages as string).split(',').map(x => new MessageId(x));
+            if (!hotspot) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path()}`,
+                        MessageCtrl.MESSAGE_PRIVATE,
+                    ),
+                );
+            }
+            const commentCount = await this.messageRepository.getCommentsCount(messages);
+
+            const commentCountJson: any = {};
+            for (const entry of commentCount) {
+                commentCountJson[entry[0].toString()] = entry[1];
+            }
+            res.json(OK, commentCountJson);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+        }
+    };
+
+    // method=GET url=/hotspots/{hotspotId}/messages
+    private listMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
         }
