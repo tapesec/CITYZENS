@@ -5,7 +5,7 @@ import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotReposit
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import { isUuid } from './../api/helpers';
 import HotspotFactory from './HotspotFactory';
-import { Orm } from './orm';
+import { Orm } from './ormHotspot';
 import OrmCityzen from './ormCityzen';
 import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 
@@ -15,6 +15,8 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     constructor(protected orm: Orm, protected ormCityzen: OrmCityzen) {}
 
     public async findByCodeCommune(insee: string): Promise<(MediaHotspot | AlertHotspot)[]> {
+        return;
+
         const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
         if (data === []) return Promise.resolve([]);
 

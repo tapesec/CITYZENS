@@ -1,4 +1,4 @@
-import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepositoryPostgreSQL';
 
 const hotspotsByArea = (queryStrings: any, hotspotRepository: HotspotRepositoryInMemory) => {
     return hotspotRepository.findInArea(
