@@ -2,7 +2,7 @@ import { hstoreConverter } from '../api/services/postgreSQL/hstoreConverter';
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityId from '../domain/cityLife/model/city/CityId';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
+import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
 import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 import MapToObject from '../helpers/MapToObject';
@@ -10,7 +10,37 @@ import MapToObject from '../helpers/MapToObject';
 export default class OrmHotspot {
     constructor(private postgre: PostgreSQL) {}
 
-    private constructFromQuery(entry: any) {}
+    private constructFromQuery(entry: any) {
+        const author = {
+            pseudo: entry['pseudo'],
+            id: entry['user_id'],
+            pictureExtern: entry['picture_extern'],
+            pictureCityzen: entry['picture_cityzen'],
+        };
+        if (entry['type'] === HotspotType.Alert) {
+            const hotspot = {
+                position: {
+                    latitude: entry['position_lat'],
+                    longitude: entry['position_lon'],
+                },
+            };
+        }
+        if (entry['type'] === HotspotType.Media) {
+            const hotspot = {};
+        }
+
+        const message = {
+            author,
+            id: entry.id,
+            title: entry['title'],
+            body: entry['body'],
+            pinned: entry['pinned'],
+            hotspotId: entry['hotspot_id'],
+            createdAt: entry['created_at'],
+            updateAt: entry['updated_at'],
+            parentId: entry['parent_id'] === null ? undefined : entry['parent_id'],
+        };
+    }
 
     public async findByArea(north: number, south: number, west: number, east: number) {
         const query = `
@@ -44,7 +74,7 @@ export default class OrmHotspot {
         for (const entry of results.rows) {
             hotspots.push(this.constructFromQuery(entry));
         }
-        return this.constructFromQuery(results.rows);
+        return hotspots;
     }
 
     public async findOne(hotspotId: HotspotId) {

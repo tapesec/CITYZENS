@@ -1,32 +1,21 @@
-import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
+import CityId from '../domain/cityLife/model/city/CityId';
 import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
 import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
+import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import { isUuid } from './../api/helpers';
 import HotspotFactory from './HotspotFactory';
-import { Orm } from './ormHotspot';
 import OrmCityzen from './ormCityzen';
-import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+import OrmHotspot from './ormHotspot';
 
 class HotspotRepositoryInMemory implements IHotspotRepository {
     protected hotspots: Map<string, Hotspot> = new Map();
 
-    constructor(protected orm: Orm, protected ormCityzen: OrmCityzen) {}
+    constructor(protected orm: OrmHotspot, protected ormCityzen: OrmCityzen) {}
 
     public async findByCodeCommune(insee: string): Promise<(MediaHotspot | AlertHotspot)[]> {
-        return;
-
-        const data = this.orm.hotspot.findAll({ cityId: insee, removed: false });
-        if (data === []) return Promise.resolve([]);
-
-        const authorsId = Array.from(
-            new Set(data.map((entry: any) => new CityzenId(entry.authorId))),
-        );
-
-        const authors = await this.ormCityzen.getAllAuthors(authorsId);
-
-        const hotspotsArray: (MediaHotspot | AlertHotspot)[] = [];
+        const data = await this.orm.findByCity(new CityId(insee));
         const factory = new HotspotFactory();
         data.forEach((entry: any) => {
             const formedData = { ...entry };
