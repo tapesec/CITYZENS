@@ -38,7 +38,7 @@ const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
     }
 
     pictureCityzen = payload.pictureCityzen;
-    pictureExtern = pictureExtern;
+    pictureExtern = payload.pictureExtern;
 
     const cityzen = new Cityzen(
         id,
