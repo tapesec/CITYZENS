@@ -1,5 +1,5 @@
 class AlertMessage {
-    constructor(private _content: string, private _updatedAt?: Date) {}
+    constructor(private _content: string, private _updatedAt: Date) {}
 
     get content(): string {
         return this._content;

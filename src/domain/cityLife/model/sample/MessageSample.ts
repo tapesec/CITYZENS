@@ -1,4 +1,3 @@
-import HotspotId from '../hotspot/HotspotId';
 import Message from '../messages/Message';
 import MessageId from '../messages/MessageId';
 import AuthorSample from './AuthorSample';
@@ -17,7 +16,7 @@ class MessageSample {
         Just as a matter of deductive logic.`,
         AuthorSample.LOUISE,
         true,
-        new HotspotId(MediaHotspotsSample.CHURCH.id),
+        MediaHotspotsSample.CHURCH.id,
         undefined,
         new Date(),
         new Date(),
@@ -36,7 +35,7 @@ class MessageSample {
          dans la ville de Foix.`,
         AuthorSample.MARTIN,
         false,
-        new HotspotId(MediaHotspotsSample.SCHOOL.id),
+        MediaHotspotsSample.SCHOOL.id,
         undefined,
         new Date(),
         new Date(),
@@ -54,7 +53,7 @@ class MessageSample {
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
         false,
-        new HotspotId(MediaHotspotsSample.TOWNHALL.id),
+        MediaHotspotsSample.TOWNHALL.id,
         undefined,
         new Date(),
         new Date(),
@@ -72,7 +71,7 @@ class MessageSample {
         We're on the same curve, just on opposite ends.`,
         AuthorSample.ELODIE,
         false,
-        new HotspotId(MediaHotspotsSample.TOEDIT.id),
+        MediaHotspotsSample.TOEDIT.id,
         undefined,
         new Date(),
         new Date(),

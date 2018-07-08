@@ -132,7 +132,7 @@ const messages = async (postgre: PostgreSQL) => {
 
 const hotspots = async (postgre: PostgreSQL) => {
     try {
-        const exist = postgre.tableExist(HOTSPOT_TABLE_NAME);
+        const exist = await postgre.tableExist(HOTSPOT_TABLE_NAME);
 
         if (exist) return;
 
@@ -161,7 +161,10 @@ const hotspots = async (postgre: PostgreSQL) => {
                 title text,
                 slug text,
                 members text[],
-                slideshow text[]
+                slideshow text[],
+
+                removed boolean DEFAULT FALSE,
+                cache_algolia boolean DEFAULT FALSE
             )
         `;
 
@@ -220,7 +223,7 @@ const hotspots = async (postgre: PostgreSQL) => {
                         city_id, scope, title, slug, members, slideshow
                     )
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, '${
-                        HotspotType.Alert
+                        HotspotType.Media
                     }', $9, $10, $11, $12, $13, $14, $15)
                 `;
 
@@ -256,6 +259,7 @@ const hotspots = async (postgre: PostgreSQL) => {
 const CheckAndCreateTable = {
     cityzens,
     messages,
+    hotspots,
 };
 
 export default CheckAndCreateTable;

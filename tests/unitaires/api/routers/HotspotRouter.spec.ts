@@ -1,17 +1,15 @@
 // tslint:disable-next-line:import-name
-import Login from '../../../../src/api/services/auth/Login';
-import hotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
-import HotspotRouter from '../../../../src/api/routers/HotspotRouter';
-import * as TypeMoq from 'typemoq';
 import * as restify from 'restify';
-import * as sinon from 'sinon';
-import { expect } from 'chai';
+import * as TypeMoq from 'typemoq';
 import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
-import * as c from '../../../../src/api/routers/constants';
-import Algolia from '../../../../src/api/services/algolia/Algolia';
 import AlgoliaAPI from '../../../../src/api/libs/AlgoliaAPI';
-import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
+import * as c from '../../../../src/api/routers/constants';
+import HotspotRouter from '../../../../src/api/routers/HotspotRouter';
+import Algolia from '../../../../src/api/services/algolia/Algolia';
+import Login from '../../../../src/api/services/auth/Login';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
+import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 
 describe('hotspots router', () => {
     it('should register routes related to hotspots', () => {
@@ -35,7 +33,7 @@ describe('hotspots router', () => {
             true,
             errorHandlerMoq,
             loginServiceMoq,
-            hotspotRepositoryInMemory,
+            hotspotRepositoryPostgreSQL,
             hostpotFactoryMoq,
             algoliaMock.object,
         );

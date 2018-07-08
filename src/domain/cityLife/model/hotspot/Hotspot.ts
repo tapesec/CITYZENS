@@ -44,8 +44,8 @@ abstract class Hotspot {
         return this._avatarIconUrl;
     }
 
-    get id(): string {
-        return this._uid.toString();
+    get id(): HotspotId {
+        return this._uid;
     }
 
     get position(): Position {
@@ -95,7 +95,7 @@ abstract class Hotspot {
     toJSON() {
         return {
             avatarIconUrl: this.avatarIconUrl.toString(),
-            id: this.id,
+            id: this.id.toString(),
             position: this.position,
             author: this.author.toJSON(),
             cityId: this.cityId,

@@ -1,6 +1,7 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import CityId from '../../domain/cityLife/model/city/CityId';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
@@ -68,7 +69,7 @@ class HotspotCtrl extends RootCtrl {
                 hotspotsResult = await hotspotsByArea(queryStrings, this.hotspotRepository);
             } else if (queryStrings.insee) {
                 hotspotsResult = await hotspotsByCodeCommune(
-                    queryStrings.insee,
+                    new CityId(queryStrings.insee),
                     this.hotspotRepository,
                 );
             }
@@ -84,7 +85,7 @@ class HotspotCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId or id}
     public getHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.hotspotRepository.isSet(req.params.id)) {
+        if (!await this.hotspotRepository.isSet(req.params.id)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `GET ${req.path()}`,
@@ -125,15 +126,15 @@ class HotspotCtrl extends RootCtrl {
         try {
             req.body.cityzen = this.cityzenIfAuthenticated;
             const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
-            this.hotspotRepository.store(newHotspot);
+            await this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
             this.algolia
                 .addHotspot(newHotspot)
                 .then(() => {
-                    this.hotspotRepository.cacheAlgolia(newHotspot, true);
+                    this.hotspotRepository.cacheAlgolia(newHotspot.id, true);
                 })
                 .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(newHotspot, false);
+                    this.hotspotRepository.cacheAlgolia(newHotspot.id, false);
                     this.errorHandler.logSlack(
                         `POST ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(error)}`,
@@ -146,7 +147,7 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST view ${req.path()}`,
@@ -157,7 +158,7 @@ class HotspotCtrl extends RootCtrl {
         try {
             const visitedHotspot = await this.hotspotRepository.findById(req.params.hotspotId);
             visitedHotspot.countOneMoreView();
-            this.hotspotRepository.update(visitedHotspot);
+            await this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err));
@@ -174,7 +175,7 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST addMember ${req.path()}`,
@@ -213,7 +214,7 @@ class HotspotCtrl extends RootCtrl {
             }
 
             hotspot.addMember(memberId);
-            this.hotspotRepository.update(hotspot);
+            await this.hotspotRepository.update(hotspot);
             res.json(OK, hotspot);
         } catch (err) {
             return next(
@@ -233,7 +234,7 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST ${req.path()}`,
@@ -264,7 +265,7 @@ class HotspotCtrl extends RootCtrl {
             }
 
             hotspot.addVoter(cityzenId, req.body.agree as boolean);
-            this.hotspotRepository.update(hotspot);
+            await this.hotspotRepository.update(hotspot);
 
             res.json(OK, hotspot);
         } catch (err) {
@@ -282,7 +283,7 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `PATCH ${req.path()}`,
@@ -308,15 +309,15 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
             const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
-            this.hotspotRepository.update(hotspotToUpdate);
+            await this.hotspotRepository.update(hotspotToUpdate);
             res.json(OK, hotspotToUpdate);
             this.algolia
                 .addHotspot(hotspotToUpdate)
                 .then(() => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, true);
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate.id, true);
                 })
                 .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate, false);
+                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate.id, false);
                     this.errorHandler.logSlack(
                         `PATCH ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(error)}`,
@@ -329,7 +330,7 @@ class HotspotCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}
     public removeHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND));
         }
         try {
@@ -344,7 +345,7 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
 
-            this.hotspotRepository.remove(req.params.hotspotId);
+            await this.hotspotRepository.remove(req.params.hotspotId);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }

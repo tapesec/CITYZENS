@@ -6,7 +6,7 @@ import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
 import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
 import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
 import MapToObject from '../helpers/MapToObject';
-
+const slug = require('slug');
 export default class OrmHotspot {
     constructor(private postgre: PostgreSQL) {}
 
@@ -17,29 +17,53 @@ export default class OrmHotspot {
             pictureExtern: entry['picture_extern'],
             pictureCityzen: entry['picture_cityzen'],
         };
+        const hotspot = {
+            author,
+            id: entry['id'],
+            position: {
+                latitude: parseInt(entry['position_lat'], 10),
+                longitude: parseInt(entry['position_lon'], 10),
+            },
+            address: {
+                name: entry['address_name'],
+                city: entry['address_city'],
+            },
+            createdAt: entry['created_at'],
+            views: parseInt(entry['views'], 10),
+            type: entry['type'],
+            cityId: entry['city_id'],
+        };
         if (entry['type'] === HotspotType.Alert) {
-            const hotspot = {
-                position: {
-                    latitude: entry['position_lat'],
-                    longitude: entry['position_lon'],
+            const voterListObj = hstoreConverter.parse(entry['voter_list']);
+            return {
+                ...hotspot,
+                avatarIconUrl: entry['picture'],
+                message: {
+                    content: entry['message_content'],
+                    updatedAt: entry['message_updated_at'],
                 },
+                pertinence: {
+                    agree: parseInt(entry['pertinence_agree'], 10),
+                    disagree: parseInt(entry['pertinence_disagree'], 10),
+                },
+                pictureDescription: entry['picture_description'],
+                voterList: Object.keys(voterListObj).map(x => [
+                    x,
+                    voterListObj[x] === 'true' ? true : false,
+                ]),
             };
         }
         if (entry['type'] === HotspotType.Media) {
-            const hotspot = {};
+            return {
+                ...hotspot,
+                avatarIconUrl: entry['picture'],
+                scope: entry['scope'],
+                title: entry['title'],
+                slug: entry['slug'],
+                members: entry['members'],
+                slideshow: entry['slideshow'],
+            };
         }
-
-        const message = {
-            author,
-            id: entry.id,
-            title: entry['title'],
-            body: entry['body'],
-            pinned: entry['pinned'],
-            hotspotId: entry['hotspot_id'],
-            createdAt: entry['created_at'],
-            updateAt: entry['updated_at'],
-            parentId: entry['parent_id'] === null ? undefined : entry['parent_id'],
-        };
     }
 
     public async findByArea(north: number, south: number, west: number, east: number) {
@@ -87,18 +111,16 @@ export default class OrmHotspot {
         if (result.rowCount < 1) {
             return;
         }
-        const entry = this.constructFromQuery(result.rows[0]);
-
-        return entry;
+        return this.constructFromQuery(result.rows[0]);
     }
     public async save(hotspot: Hotspot) {
-        if (hotspot instanceof MediaHotspot) this.saveMedia(hotspot);
-        if (hotspot instanceof AlertHotspot) this.saveAlert(hotspot);
+        if (hotspot instanceof MediaHotspot) await this.saveMedia(hotspot);
+        if (hotspot instanceof AlertHotspot) await this.saveAlert(hotspot);
     }
     private async saveMedia(hotspot: MediaHotspot) {
         const query = `
             INSERT INTO hotspots (
-                id, members, position_lat, position_lon, scope, slideshow, slug, city_id
+                id, members, position_lat, position_lon, scope, slideshow, slug, city_id,
                 title, type, views, address_city, address_name, author_id, picture
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         `;
@@ -148,28 +170,29 @@ export default class OrmHotspot {
             hotspot.author.id.toString(),
             hotspot.avatarIconUrl.toString(),
             hstoreConverter.stringify(MapToObject(hotspot.voterList.list)),
+            hotspot.cityId.toString(),
         ];
 
         await this.postgre.query(query, values);
     }
 
     public async update(hotspot: Hotspot) {
-        if (hotspot instanceof AlertHotspot) this.updateAlert(hotspot);
-        if (hotspot instanceof MediaHotspot) this.updateMedia(hotspot);
+        if (hotspot instanceof AlertHotspot) await this.updateAlert(hotspot);
+        if (hotspot instanceof MediaHotspot) await this.updateMedia(hotspot);
     }
 
     public async updateAlert(hotspot: AlertHotspot) {
         const query = `
-            UPDATE hotspots SET (
-                picture_description, message_updated_at,
-                pertinence_agree, pertinence_disagree, views, voter_list
-            ) VALUES ($2, $3, $4, $5, $6, $7)
+            UPDATE hotspots SET 
+                picture_description = $2, message_updated_at = $3, message_content = $4
+                pertinence_agree = $5, pertinence_disagree = $6, views = $7, voter_list = $8
             WHERE id = $1
         `;
         const values = [
-            hotspot.id,
+            hotspot.id.toString(),
             hotspot.pictureDescription.toString(),
             hotspot.message.updatedAt.toUTCString(),
+            hotspot.message.content.toString(),
             hotspot.pertinence.nAgree,
             hotspot.pertinence.nDisagree,
             hotspot.views,
@@ -180,25 +203,36 @@ export default class OrmHotspot {
     }
     public async updateMedia(hotspot: MediaHotspot) {
         const query = `
-            UPDATE hotspots SET (
-                members, slideShow, views
-            ) VALUES ($2, $3, $4)
+            UPDATE hotspots
+            SET members = $2, slideShow = $3, views = $4, title = $5, scope = $6, slug = $7, picture = $8
             WHERE id = $1
         `;
         const values = [
-            hotspot.id,
+            hotspot.id.toString(),
             hotspot.members.toArray().map(x => x.toString()),
             hotspot.slideShow.list.map(x => x.toString()),
             hotspot.views,
+            hotspot.title.toString(),
+            hotspot.scope.toString(),
+            slug(hotspot.title),
+            hotspot.avatarIconUrl.toString(),
         ];
 
         await this.postgre.query(query, values);
     }
     public async delete(id: HotspotId) {
         const query = `
-            UPDATES hotspots SET removed = false WHERE id = $1
+            UPDATE hotspots SET removed = false WHERE id = $1
         `;
         const values = [id.toString()];
+
+        await this.postgre.query(query, values);
+    }
+    public async cacheAlgolia(id: HotspotId, v: boolean) {
+        const query = `
+            UPDATE hotspots SET cache_algolia = $1 WHERE id = $2
+        `;
+        const values = [v, id.toString()];
 
         await this.postgre.query(query, values);
     }

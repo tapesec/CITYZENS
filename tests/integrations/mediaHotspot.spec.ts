@@ -52,6 +52,8 @@ export default (state: any) => {
                 .set('Accept', 'application/json');
 
             expect(response.ok, response.text).to.be.true;
+            console.log(response.body);
+
             const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid, validator.errorsText()).to.be.true;
             newPostHotspot = response.body;

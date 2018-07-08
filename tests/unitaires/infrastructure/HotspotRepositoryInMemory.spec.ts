@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
+import * as TypeMoq from 'typemoq';
 import { v4 } from 'uuid';
+import CityId from '../../../src/domain/cityLife/model/city/CityId';
 import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
 import MediaHotspotSample from '../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
-import HotspotRepositoryInMemory from '../../../src/infrastructure/HotspotRepositoryInMemory';
 import {
     CITYZEN_ELODIE,
     CITYZEN_MARTIN,
@@ -13,13 +15,15 @@ import {
     HOTSPOT_MARTIGNAS_SCHOOL,
     HOTSPOT_MARTIGNAS_TOWNHALL,
 } from '../../../src/infrastructure/dbInMemory';
+import HotspotRepositoryPostgreSQL from '../../../src/infrastructure/HotspotRepositoryPostgreSQL';
+import OrmHotspot from '../../../src/infrastructure/ormHotspot';
 
 describe('HotspotRepositoryInMemory', () => {
-    let hotspotRepository: HotspotRepositoryInMemory;
+    let hotspotRepository: HotspotRepositoryPostgreSQL;
     let fakeTownHall: any;
     let fakeChurch: any;
     let fakeSchool: any;
-    let orm: any = {};
+    let orm: any;
     let findStub: any;
     let findOneStub: any;
     let removeStub: any;
@@ -38,12 +42,7 @@ describe('HotspotRepositoryInMemory', () => {
         findOneStub = sinon.stub();
         removeStub = sinon.stub();
         saveStub = sinon.stub();
-        orm.hotspot = {
-            findAll: findStub,
-            findOne: findOneStub,
-            save: saveStub,
-            remove: removeStub,
-        };
+        orm = TypeMoq.Mock.ofType<OrmHotspot>();
         ormCityzen = {
             getAllAuthors: sinon.stub(),
         };
@@ -51,7 +50,6 @@ describe('HotspotRepositoryInMemory', () => {
     });
 
     afterEach(() => {
-        orm = {};
         hotspotRepository = null;
     });
 
@@ -71,7 +69,7 @@ describe('HotspotRepositoryInMemory', () => {
             ]),
         );
 
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         // Act
         const school = await hotspotRepository.findById(hotspotToGet.id);
         // Expect
@@ -95,9 +93,9 @@ describe('HotspotRepositoryInMemory', () => {
             ]),
         );
 
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         // Act
-        const school = await hotspotRepository.findById(hotspotToGet.slug);
+        const school = await hotspotRepository.findById(hotspotToGet.id);
         // Expect
         expect(findOneStub.calledWith({ slug: hotspotToGet.slug, removed: false })).to.be.true;
         expect(school).to.be.eql(hotspotToGet);
@@ -106,16 +104,16 @@ describe('HotspotRepositoryInMemory', () => {
     it('should return undefined if no hotspot found', async () => {
         // Arrange
         findOneStub.returns(undefined);
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         // Act
-        const nomatch = await hotspotRepository.findById(v4());
+        const nomatch = await hotspotRepository.findById(new HotspotId(v4()));
         // Expect
         expect(nomatch).to.be.undefined;
     });
 
     it('should store a new hotspot in memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         const wallHotspot = JSON.parse(JSON.stringify(MediaHotspotSample.CHURCH));
         wallHotspot.removed = false;
         // Act
@@ -126,7 +124,7 @@ describe('HotspotRepositoryInMemory', () => {
 
     it('should remove an hotspot from memory', () => {
         // Arrange
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         // Act
         hotspotRepository.remove(MediaHotspotSample.SCHOOL.id);
         // Expect
@@ -143,7 +141,7 @@ describe('HotspotRepositoryInMemory', () => {
                 { id: fakeSchool.authorId, pseudo: 'three' },
             ]),
         );
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         const north: number = PositionSample.MARTIGNAS_NORTH_OUEST.latitude;
         const west: number = PositionSample.MARTIGNAS_NORTH_OUEST.longitude;
         const south: number = PositionSample.MARTIGNAS_SOUTH_EST.latitude;
@@ -164,7 +162,7 @@ describe('HotspotRepositoryInMemory', () => {
     it("should'nt match hotspot in the specified area", async () => {
         // Arrange
         findStub.returns([]);
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         // Act
         const hotspots: Hotspot[] = await hotspotRepository.findInArea(
             PositionSample.MARTIGNAS_NORTH_OUEST.latitude,
@@ -187,10 +185,10 @@ describe('HotspotRepositoryInMemory', () => {
                 { id: fakeSchool.authorId, pseudo: 'three' },
             ]),
         );
-        hotspotRepository = new HotspotRepositoryInMemory(orm, ormCityzen as any);
+        hotspotRepository = new HotspotRepositoryPostgreSQL(orm, ormCityzen as any);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
-        const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(insee);
+        const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(new CityId(insee));
         // Assert
         expect(hotspots).to.have.lengthOf(3);
     });

@@ -19,6 +19,7 @@ function stringify(object: any) {
 }
 
 function parse(stringed: string) {
+    if (!stringed) return {};
     const result: any = {};
 
     stringed.split(',').forEach(v => {
