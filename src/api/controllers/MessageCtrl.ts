@@ -25,7 +25,6 @@ class MessageCtrl extends RootCtrl {
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
-    private static MESSAGES_IS_NOT_LIST = "Expected a messageId list joined by ','";
 
     constructor(
         errorHandler: ErrorHandler,
