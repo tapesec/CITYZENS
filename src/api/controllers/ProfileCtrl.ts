@@ -10,7 +10,6 @@ import { Auth0 } from './../libs/Auth0';
 import RootCtrl from './RootCtrl';
 
 class ProfileCtrl extends RootCtrl {
-    protected cityzenRepository: CityzenRepositoryPostgreSQL;
     protected hotspotRepository: HotspotRepositoryInMemory;
     protected auth0Sdk: Auth0;
     public static UPDATE_PROFILE_ERROR = 'Failed to update profile';
@@ -25,8 +24,7 @@ class ProfileCtrl extends RootCtrl {
         auth0Sdk: Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, auth0Service);
-        this.cityzenRepository = cityzenRepository;
+        super(errorHandler, auth0Service, cityzenRepository);
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
     }

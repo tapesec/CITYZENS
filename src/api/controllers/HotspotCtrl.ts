@@ -5,6 +5,7 @@ import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
 import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
 import { strToNumQSProps } from '../helpers/';
@@ -37,12 +38,13 @@ class HotspotCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
+        cityzenRepository: CityzenRepositoryPostgreSQL,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
         slideshowService: SlideshowService,
     ) {
-        super(errorHandler, auth0Service);
+        super(errorHandler, auth0Service, cityzenRepository);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
@@ -95,8 +97,9 @@ class HotspotCtrl extends RootCtrl {
 
         try {
             const hotspot = await this.hotspotRepository.findById(req.params.id);
-
             if (isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
+                console.log('OUIII');
+
                 res.json(OK, hotspot);
             } else {
                 return next(

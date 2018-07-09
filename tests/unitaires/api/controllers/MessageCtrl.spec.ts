@@ -8,9 +8,12 @@ import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
 import MessageId from '../../../../src/domain/cityLife/model/messages/MessageId';
 import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
 import MessageFactory from '../../../../src/infrastructure/MessageFactory';
-import { MessageRepositoryInMemory } from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
+import MessageRepositoryPostgreSql from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
 import { FAKE_ADMIN_USER_INFO_AUTH0, FAKE_USER_INFO_AUTH0 } from '../services/samples';
 
 describe('MessageCtrl', () => {
@@ -19,23 +22,23 @@ describe('MessageCtrl', () => {
     let nextMoq: TypeMoq.IMock<rest.Next>;
     let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let hotspotRepositoryMoq: TypeMoq.IMock<HotspotRepositoryInMemory>;
-    let messageRepositoryMoq: TypeMoq.IMock<MessageRepositoryInMemory>;
+    let messageRepositoryMoq: TypeMoq.IMock<MessageRepositoryPostgreSql>;
     let messageFactoryMoq: TypeMoq.IMock<MessageFactory>;
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let messageCtrl: MessageCtrl;
-
+    let cityzenRepositoryMoq: TypeMoq.IMock<CityzenRepositoryPostgreSQL>;
     let hotspotId: string;
 
     before(async () => {
         hotspotId = 'fake-hotspot-id';
-
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
+        cityzenRepositoryMoq = TypeMoq.Mock.ofType();
         errorHandlerMoq = TypeMoq.Mock.ofType<ErrorHandler>();
         auth0ServiceMoq = TypeMoq.Mock.ofType<Auth0Service>();
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
-        messageRepositoryMoq = TypeMoq.Mock.ofType<MessageRepositoryInMemory>();
+        messageRepositoryMoq = TypeMoq.Mock.ofType<MessageRepositoryPostgreSql>();
         messageFactoryMoq = TypeMoq.Mock.ofType<MessageFactory>();
 
         reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
@@ -44,9 +47,17 @@ describe('MessageCtrl', () => {
             .setup(x => x.getUserInfo('my authorisation'))
             .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
+        cityzenRepositoryMoq
+            .setup(x => x.findById(new CityzenId(FAKE_USER_INFO_AUTH0.sub)))
+            .returns(() => Promise.resolve(CityzenSample.MARTIN));
+        cityzenRepositoryMoq
+            .setup(x => x.findById(new CityzenId(FAKE_ADMIN_USER_INFO_AUTH0.sub)))
+            .returns(() => Promise.resolve(CityzenSample.LUCA));
+
         messageCtrl = new MessageCtrl(
             errorHandlerMoq.object,
             auth0ServiceMoq.object,
+            cityzenRepositoryMoq.object,
             hotspotRepositoryMoq.object,
             messageRepositoryMoq.object,
             messageFactoryMoq.object,
@@ -100,7 +111,10 @@ describe('MessageCtrl', () => {
             await messageCtrl.getMessages(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             hotspotRepositoryMoq.verify(x => x.isSet(hotspotId), TypeMoq.Times.once());
-            messageRepositoryMoq.verify(x => x.findByHotspotId(hotspotId), TypeMoq.Times.never());
+            messageRepositoryMoq.verify(
+                x => x.findByHotspotId(new HotspotId(hotspotId)),
+                TypeMoq.Times.never(),
+            );
         });
 
         it('Should return unauthorized on a private message', async () => {
@@ -222,7 +236,7 @@ describe('MessageCtrl', () => {
 
             messageRepositoryMoq
                 .setup(x => x.findById(new MessageId(messageId)))
-                .returns(() => message);
+                .returns(() => Promise.resolve(message));
 
             reqMoq.setup(x => x.body).returns(() => reqBody);
 
@@ -263,7 +277,9 @@ describe('MessageCtrl', () => {
 
         it('should remove a message', async () => {
             // Arrange
-            messageRepositoryMoq.setup(x => x.isSet(new MessageId(messageId))).returns(() => true);
+            messageRepositoryMoq
+                .setup(x => x.isSet(new MessageId(messageId)))
+                .returns(() => Promise.resolve(true));
             // Act
             await messageCtrl.removeMessage(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert

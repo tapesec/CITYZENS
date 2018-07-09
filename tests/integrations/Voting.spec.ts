@@ -1,7 +1,7 @@
-import * as server from './../../src/api/server';
-import * as request from 'supertest';
 import * as Chai from 'chai';
+import * as request from 'supertest';
 import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import * as server from './../../src/api/server';
 
 export const votingPath = state => {
     describe('Voting path.', () => {
@@ -36,8 +36,9 @@ export const votingPath = state => {
             const response = await request(server)
                 .post(`/hotspots/${hotspotId}/pertinence`)
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
-                .send({ agree: true })
-                .expect(400);
+                .send({ agree: true });
+
+            Chai.expect(response.badRequest, response.text).to.be.true;
         });
     });
 };

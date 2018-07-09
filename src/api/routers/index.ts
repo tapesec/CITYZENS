@@ -81,7 +81,9 @@ export const initDB = async (server: restify.Server) => {
 export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(errorHandler, auth0Service)));
+    routers.push(
+        new AuthRouter(new AuthCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
+    );
     routers.push(
         new ProfileRouter(
             new ProfileCtrl(
@@ -93,12 +95,22 @@ export const init = (server: restify.Server) => {
             ),
         ),
     );
-    routers.push(new CityRouter(new CityCtrl(errorHandler, auth0Service, cityRepositoryInMemory)));
+    routers.push(
+        new CityRouter(
+            new CityCtrl(
+                errorHandler,
+                auth0Service,
+                cityzenRepositoryPostgreSQL,
+                cityRepositoryInMemory,
+            ),
+        ),
+    );
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 errorHandler,
                 auth0Service,
+                cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
                 new HotspotFactory(),
                 algolia,
@@ -111,6 +123,7 @@ export const init = (server: restify.Server) => {
             new MessageCtrl(
                 errorHandler,
                 auth0Service,
+                cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
                 messageRepositoryInMemory,
                 messageFactory,
