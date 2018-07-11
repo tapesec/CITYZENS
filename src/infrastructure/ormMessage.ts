@@ -31,11 +31,12 @@ export default class OrmMessage {
         // Match parent_id with the number of times there are mentionned
         const query = `
             SELECT parent_id, count(id) AS count FROM messages
-            WHERE parent_id IN (${ids
-                .map(x => `'${x.toString()}'`)
-                .join(',')}) AND removed = false GROUP BY parent_id
+            WHERE parent_id IN (
+                ${ids.map((x, i) => `$${i + 1}`).join(',')}) AND removed = false GROUP BY parent_id
         `;
-        const results = await this.postgre.query(query);
+        const values = ids.map(x => x.toString());
+        const results = await this.postgre.query(query, values);
+
         return results.rows;
     }
 

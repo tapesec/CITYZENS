@@ -73,9 +73,7 @@ export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 
 const env: string = config.server.env;
 const isInTest = env === 'test';
-const lokiDevPath = 'loki/dev.json';
-const lokiTestPath = 'loki/test.json';
-const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
+const lokiPath = 'loki/dev.json';
 
 const databaseInitialize = () => {
     hotspotCollection = db.getCollection('hotspots');
@@ -134,7 +132,7 @@ const databaseInitialize = () => {
 const db = new loki(lokiPath, {
     autoload: true,
     autoloadCallback: databaseInitialize,
-    autosave: !isInTest,
+    autosave: true,
     autosaveInterval: 4000,
 });
 
