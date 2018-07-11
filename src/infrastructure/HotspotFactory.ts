@@ -26,6 +26,7 @@ import Position from '../domain/cityLife/model/hotspot/Position';
 import SlideShow from '../domain/cityLife/model/hotspot/SlideShow';
 import ViewsCount from '../domain/cityLife/model/hotspot/ViewsCount';
 import VoterList from '../domain/cityLife/model/hotspot/VoterList';
+import Cityzen from '../domain/cityzens/model/Cityzen';
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import Author from './../domain/cityLife/model/author/Author';
 import HotspotSlug from './../domain/cityLife/model/hotspot/HotspotSlug';
@@ -127,12 +128,13 @@ class HotspotFactory {
         }
 
         if (data.cityzen) {
+            const cityzen = data.cityzen as Cityzen;
             // Data from user
             author = new Author(
-                data.cityzen.pseudo,
-                data.cityzen.id,
-                data.cityzen.pictureExtern,
-                data.cityzen.pictureCityzen,
+                cityzen.pseudo,
+                cityzen.id,
+                cityzen.pictureExtern,
+                cityzen.pictureCityzen,
             );
         } else {
             // Data from db

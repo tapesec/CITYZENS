@@ -9,9 +9,9 @@ class CityzenCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
-        private cityzenRepo: CityzenRepositoryPostgreSQL,
+        cityzenRepo: CityzenRepositoryPostgreSQL,
     ) {
-        super(errorHandler, auth0Service);
+        super(errorHandler, auth0Service, cityzenRepo);
     }
 
     // GET /cityzens/{cityzenId}
@@ -19,7 +19,7 @@ class CityzenCtrl extends RootCtrl {
         try {
             const cityzenId = new CityzenId(req.params.cityzenId);
 
-            const cityzen = await this.cityzenRepo.findById(cityzenId);
+            const cityzen = await this.cityzenRepository.findById(cityzenId);
             if (cityzen === undefined) {
                 return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
             }

@@ -1,6 +1,6 @@
 // tslint:disable-next-line:import-name
 import * as Chai from 'chai';
-import { OK, getStatusText } from 'http-status-codes';
+import { getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import * as TypeMoq from 'typemoq';
 import HotspotCtrl from '../../../../src/api/controllers/HotspotCtrl';
@@ -13,6 +13,7 @@ import SlideshowService from '../../../../src/api/services/widgets/SlideshowServ
 import Author from '../../../../src/domain/cityLife/model/author/Author';
 import AlertHotspot from '../../../../src/domain/cityLife/model/hotspot/AlertHotspot';
 import { HotspotScope, HotspotType } from '../../../../src/domain/cityLife/model/hotspot/Hotspot';
+import ImageLocation from '../../../../src/domain/cityLife/model/hotspot/ImageLocation';
 import MediaHotspot from '../../../../src/domain/cityLife/model/hotspot/MediaHotspot';
 import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
 import VoterList from '../../../../src/domain/cityLife/model/hotspot/VoterList';
@@ -20,6 +21,10 @@ import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/Ale
 import HotspotBuilderSample from '../../../../src/domain/cityLife/model/sample/HotspotBuilderSample';
 import MediaBuilderSample from '../../../../src/domain/cityLife/model/sample/MediaBuilderSample';
 import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 // tslint:disable-next-line:import-name
 import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
@@ -37,6 +42,7 @@ describe('HotspotCtrl', () => {
     let hotspotCtrl: HotspotCtrl;
     let slideshowServiceMoq: TypeMoq.IMock<SlideshowService>;
     let algoliaMoq: TypeMoq.IMock<Algolia>;
+    let cityzenRepositoryMoq: TypeMoq.IMock<CityzenRepositoryPostgreSQL>;
 
     before(async () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
@@ -47,13 +53,21 @@ describe('HotspotCtrl', () => {
         hotspotRepositoryMoq = TypeMoq.Mock.ofType<HotspotRepositoryInMemory>();
         hotspotFactoryMoq = TypeMoq.Mock.ofType<HotspotFactory>();
         algoliaMoq = TypeMoq.Mock.ofType<Algolia>();
+        cityzenRepositoryMoq = TypeMoq.Mock.ofType();
         slideshowServiceMoq = TypeMoq.Mock.ofType<SlideshowService>();
 
         algoliaMoq.setup(x => x.initHotspots()).returns(() => {});
+        cityzenRepositoryMoq
+            .setup(x => x.findById(new CityzenId(FAKE_USER_INFO_AUTH0.sub)))
+            .returns(() => Promise.resolve<Cityzen>(CityzenSample.MARTIN));
+        cityzenRepositoryMoq
+            .setup(x => x.findById(new CityzenId(FAKE_ADMIN_USER_INFO_AUTH0.sub)))
+            .returns(() => Promise.resolve<Cityzen>(CityzenSample.LUCA));
 
         hotspotCtrl = new HotspotCtrl(
             errorHandlerMoq.object,
             auth0ServiceMoq.object,
+            cityzenRepositoryMoq.object,
             hotspotRepositoryMoq.object,
             hotspotFactoryMoq.object,
             algoliaMoq.object,
@@ -90,6 +104,7 @@ describe('HotspotCtrl', () => {
 
         beforeEach(async () => {
             reqMoq.setup(x => x.header('Authorization')).returns(() => 'Bearer my authorisation');
+
             auth0ServiceMoq
                 .setup(x => x.getUserInfo('my authorisation'))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
@@ -178,7 +193,7 @@ describe('HotspotCtrl', () => {
             };
             factoryData = {
                 ...jsonBody,
-                cityzen: cityzenFromAuth0(FAKE_USER_INFO_AUTH0),
+                cityzen: CityzenSample.MARTIN,
             };
         });
         beforeEach(async () => {
@@ -225,8 +240,8 @@ describe('HotspotCtrl', () => {
                 id,
             };
             hotspot = new MediaHotspot(
-                HotspotBuilderSample.CHURCH_HOTSPOT_BUILDER,
-                MediaBuilderSample.CHURCH_MEDIA_BUILDER,
+                HotspotBuilderSample.MATCH_HOTSPOT_BUILDER,
+                MediaBuilderSample.MATCH_MEDIA_BUILDER,
             );
 
             reqMoq.setup(x => x.path()).returns(() => 'path');
@@ -290,7 +305,15 @@ describe('HotspotCtrl', () => {
 
             hotspotMoq
                 .setup(x => x.author)
-                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+                .returns(
+                    () =>
+                        new Author(
+                            '',
+                            cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id,
+                            new ImageLocation(undefined),
+                            new ImageLocation(undefined),
+                        ),
+                );
 
             const hotspot = Object.assign({}, hotspotMoq.object);
 
@@ -338,7 +361,15 @@ describe('HotspotCtrl', () => {
             const hotspotMoq = TypeMoq.Mock.ofType<MediaHotspot>();
             hotspotMoq
                 .setup(x => x.author)
-                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+                .returns(
+                    () =>
+                        new Author(
+                            '',
+                            CityzenSample.MARTIN.id,
+                            new ImageLocation(undefined),
+                            new ImageLocation(undefined),
+                        ),
+                );
             hotspotMoq.setup(x => x.addMember).returns(() => {
                 return () => {};
             });
@@ -376,7 +407,15 @@ describe('HotspotCtrl', () => {
 
             hotspotMoq
                 .setup(x => x.author)
-                .returns(() => new Author('', cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id));
+                .returns(
+                    () =>
+                        new Author(
+                            '',
+                            cityzenFromAuth0(FAKE_USER_INFO_AUTH0).id,
+                            new ImageLocation(undefined),
+                            new ImageLocation(undefined),
+                        ),
+                );
 
             reqMoq.setup((x: rest.Request) => x.body).returns(() => jsonBody);
 
@@ -486,7 +525,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
-                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
+                AlertHotspotSample.ACCIDENT.pictureDescription,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
@@ -509,11 +548,11 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
-                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
+                AlertHotspotSample.ACCIDENT.pictureDescription,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
-            hotspot.addVoter(cityzenFromAuth0(FAKE_ADMIN_USER_INFO_AUTH0).id, true);
+            hotspot.addVoter(CityzenSample.LUCA.id, true);
 
             reqMoq.setup(x => x.body).returns(() => body);
             reqMoq.setup(x => x.params).returns(() => params);
@@ -542,7 +581,7 @@ describe('HotspotCtrl', () => {
             const hotspot = new AlertHotspot(
                 HotspotBuilderSample.ACCIDENT_HOTSPOT_BUILDER,
                 AlertHotspotSample.ACCIDENT.message,
-                AlertHotspotSample.ACCIDENT.imageDescriptionLocation,
+                AlertHotspotSample.ACCIDENT.pictureDescription,
                 AlertHotspotSample.ACCIDENT.pertinence,
                 new VoterList(),
             );
