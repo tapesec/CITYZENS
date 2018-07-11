@@ -17,16 +17,14 @@ class MessageRepositoryPostgreSql implements IMessageRepository {
     public async getCommentsCount(ids: MessageId[]): Promise<[MessageId, number][]> {
         const results = await this.ormMessage.countAllComments(ids);
 
-        const response: [MessageId, number][] = [];
+        const commentCountJson: any = {};
 
         for (const entry of results) {
             const message = new MessageId(entry['parent_id']);
             const count = entry['count'];
-
-            response.push([message, count]);
+            commentCountJson[message.toString()] = count;
         }
-
-        return response;
+        return commentCountJson;
     }
 
     public async findByHotspotId(id: HotspotId): Promise<Message[]> {

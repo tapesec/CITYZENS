@@ -83,12 +83,7 @@ class MessageCtrl extends RootCtrl {
                     ),
                 );
             }
-            const commentCount = await this.messageRepository.getCommentsCount(messages);
-
-            const commentCountJson: any = {};
-            for (const entry of commentCount) {
-                commentCountJson[entry[0].toString()] = entry[1];
-            }
+            const commentCountJson = await this.messageRepository.getCommentsCount(messages);
             res.json(OK, commentCountJson);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
