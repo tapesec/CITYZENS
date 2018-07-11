@@ -27,6 +27,18 @@ export default class OrmMessage {
         return message;
     }
 
+    public async countAllComments(ids: MessageId[]) {
+        // Match parent_id with the number of times there are mentionned
+        const query = `
+            SELECT parent_id, count(id) AS count FROM messages
+            WHERE parent_id IN (${ids
+                .map(x => `'${x.toString()}'`)
+                .join(',')}) AND removed = false GROUP BY parent_id
+        `;
+        const results = await this.postgre.query(query);
+        return results.rows;
+    }
+
     public async findAll(hotspotId: HotspotId) {
         const query = `
             SELECT * from messages m JOIN cityzens c ON m.author_id = c.user_id

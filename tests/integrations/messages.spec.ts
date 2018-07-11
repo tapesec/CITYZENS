@@ -21,6 +21,65 @@ const messagesEndpointsTests = (state: any) => {
         });
 
         describe('GET /hotspots/{hotspotId}/messages', async () => {
+            let commentPosted;
+
+            it('Should post a comment to make sure the returned commentCount is correct.', async () => {
+                // Arrange
+                const body = { body: 'blo' };
+                const messageId = MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.id.toString();
+                // Act
+                const response = await request(server)
+                    .post(`/hotspots/${hotspotId}/messages/${messageId}/comments`)
+                    .send(body)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+
+                commentPosted = response.body.id;
+            });
+
+            it('Should return incorrect request.', async () => {
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .query({
+                        count: true,
+                        riri: 'fifi',
+                    })
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.badRequest, response.text).to.be.true;
+            });
+
+            it('Should return correct comment count.', async () => {
+                const response = await request(server)
+                    .get(`/hotspots/${hotspotId}/messages`)
+                    .query({
+                        count: true,
+                        messages: [MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.id.toString()].join(
+                            ',',
+                        ),
+                    })
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response.body)
+                    .to.have.property(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.id.toString())
+                    .to.be.equal('1');
+            });
+
+            it('Should delete previous comment.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotId}/messages/${commentPosted}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+            });
+        });
+        describe('GET /hotspots/{hotspotId}/messages', async () => {
             it('should return a collection of message for a given hotspot', async () => {
                 // Act
                 const response = await request(server)

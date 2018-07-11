@@ -107,6 +107,24 @@ export const postPertinenceSchema = {
     additionalProperties: false,
 };
 
+export const getMessageSchemaQuery = {
+    type: 'object',
+    properties: {
+        count: {
+            type: 'string',
+            enum: ['true', 'false', ''],
+        },
+        messages: {
+            type: 'string',
+        },
+    },
+    dependencies: {
+        count: ['messages'],
+        messages: ['count'],
+    },
+    additionalProperties: false,
+};
+
 export const cityzensDbSchema = {
     title: "Schema of the postgre's table cityzens",
     type: 'object',
