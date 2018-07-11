@@ -20,9 +20,9 @@ class RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Info: Auth0Service,
-        ormCityzen: CityzenRepositoryPostgreSQL,
+        repository: CityzenRepositoryPostgreSQL,
     ) {
-        this.cityzenRepository = ormCityzen;
+        this.cityzenRepository = repository;
         this.auth0Service = auth0Info;
         this.errorHandler = errorHandler;
         this.schemaValidator = new ajv({ allErrors: true });
