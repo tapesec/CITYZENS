@@ -98,8 +98,6 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = await this.hotspotRepository.findById(req.params.id);
             if (isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
-                console.log('OUIII');
-
                 res.json(OK, hotspot);
             } else {
                 return next(
@@ -136,7 +134,7 @@ class HotspotCtrl extends RootCtrl {
                     this.hotspotRepository.cacheAlgolia(newHotspot, true);
                 })
                 .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(newHotspot, false);
+                    this.hotspotRepository.cacheAlgolia(newHotspot, false)
                     this.errorHandler.logSlack(
                         `POST ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(error)}`,
