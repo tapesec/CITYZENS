@@ -266,8 +266,6 @@ const messagesEndpointsTests = (state: any) => {
                     .send({ body: 'lala' })
                     .set('Accept', 'application/json')
                     .set('Authorization', `Bearer ${state.admin.access_token}`);
-
-                console.log(response.body);
                 expect(response.ok, response.text).to.be.true;
 
                 commentId = response.body.id;

@@ -51,8 +51,6 @@ class MessageCtrl extends RootCtrl {
 
     private listCommentsCount = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
-            console.log(req.query);
-
             if (!this.schemaValidator.validate(getMessageSchemaQuery, req.query)) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
