@@ -161,5 +161,5 @@ export const cityzensDbSchema = {
             },
         },
     },
-    additionalProperties: false,
+    additionalProperties: true,
 };
