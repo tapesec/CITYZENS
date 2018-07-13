@@ -155,11 +155,11 @@ export const cityzensDbSchema = {
             type: ['string', 'null'],
         },
         favorites_hotspots: {
-            type: 'array',
+            type: ['array', 'null'],
             items: {
                 type: 'string',
             },
         },
     },
-    additionalProperties: true,
+    additionalProperties: false,
 };
