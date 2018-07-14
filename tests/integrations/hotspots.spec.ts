@@ -4,7 +4,7 @@ import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHots
 import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
 import * as server from './../../src/api/server';
 import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
-import { MediaHotspotPostBody } from './sample/requests-responses';
+import { AlertHotspotPostBody, MediaHotspotPostBody } from './sample/requests-responses';
 
 const hotspotsEndpointsTests = (state: any) => {
     describe('/hotspots endpoint', () => {
@@ -20,8 +20,9 @@ const hotspotsEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .get('/hotspots')
                     .query({ north, west, south, east })
-                    .set('Accept', 'application/json')
-                    .expect(200);
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
 
                 expect(response.body).to.have.lengthOf(5);
             });
@@ -55,22 +56,33 @@ const hotspotsEndpointsTests = (state: any) => {
         });
 
         describe('POST /hotspots/{hotspotId}/members.', () => {
+            let hotspotToMember;
+            it('Should create a new mediaHotspot to add members to.', async () => {
+                const response = await request(server)
+                    .post('/hotspots')
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(MediaHotspotPostBody)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+
+                hotspotToMember = response.body.id;
+            });
+
             it('Should return 200 and add member.', async () => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = MediaHotspotSample.CHURCH.id;
-                const originalMembers = MediaHotspotSample.CHURCH.members;
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/members`)
+                    .post(`/hotspots/${hotspotToMember}/members`)
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
-                    .send(body)
-                    .expect(200);
+                    .send(body);
+                expect(response.ok, response.text).to.be.true;
 
-                expect(response.body)
+                expect(response.body, response.text)
                     .to.have.property('members')
-                    .to.be.length(originalMembers.size + 1);
+                    .to.be.length(1);
                 response.body.members.forEach(member => {
                     expect(member).to.not.be.null;
                     expect(member).to.not.be.undefined;
@@ -81,39 +93,66 @@ const hotspotsEndpointsTests = (state: any) => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = 'fake id';
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/members`)
+                    .post(`/hotspots/notHotspot/members`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .send(body)
-                    .expect(404);
+                    .send(body);
+
+                expect(response.notFound, response.text).to.be.true;
             });
 
             it('Should return 401 non authorized.', async () => {
                 const body = {
                     memberId: 'new id',
                 };
-                const hotspotId = MediaHotspotSample.CHURCH.id;
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/members`)
+                    .post(`/hotspots/${hotspotToMember}/members`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .send(body)
-                    .expect(401);
+                    .send(body);
+
+                expect(response.unauthorized, response.text).to.be.true;
+            });
+
+            it('Should delete previously created hotspot.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotToMember}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+                const response2 = await request(server)
+                    .get(`/hotspots/${hotspotToMember}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response2.notFound, response2.text).to.be.true;
             });
         });
 
         describe('POST /hotspots/{hotspotId}/pertinence.', () => {
+            let hotspotToMember;
+            it('Should create a new mediaHotspot to add members to.', async () => {
+                const response = await request(server)
+                    .post('/hotspots')
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .send(AlertHotspotPostBody)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+
+                hotspotToMember = response.body.id;
+            });
+
             it('Should return 200.', async () => {
-                const hotspotId = AlertHotspotSample.ACCIDENT.id;
                 const body = { agree: true };
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .post(`/hotspots/${hotspotToMember}/pertinence`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .send(body)
-                    .expect(200);
+                    .send(body);
+
+                expect(response.ok, response.text).to.be.true;
 
                 expect(response.body)
                     .to.have.property('voterList')
@@ -135,24 +174,36 @@ const hotspotsEndpointsTests = (state: any) => {
             });
 
             it('Should return 400 on double vote.', async () => {
-                const hotspotId = AlertHotspotSample.ACCIDENT.id;
                 const body = { agree: true };
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .post(`/hotspots/${hotspotToMember}/pertinence`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .send(body)
                     .expect(400);
             });
             it('Should return 400 on invalid request.', async () => {
-                const hotspotId = AlertHotspotSample.ACCIDENT.id;
                 const body = { agree: 'Oui.', non: true };
 
                 const response = await request(server)
-                    .post(`/hotspots/${hotspotId}/pertinence`)
+                    .post(`/hotspots/${hotspotToMember}/pertinence`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
                     .send(body)
                     .expect(400);
+            });
+
+            it('Should delete previously created hotspot.', async () => {
+                const response = await request(server)
+                    .delete(`/hotspots/${hotspotToMember}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+                const response2 = await request(server)
+                    .get(`/hotspots/${hotspotToMember}`)
+                    .set('Authorization', `Bearer ${state.admin.access_token}`)
+                    .set('Accept', 'application/json');
+
+                expect(response.ok, response.text).to.be.true;
+                expect(response2.notFound, response2.text).to.be.true;
             });
         });
 
@@ -190,8 +241,8 @@ const hotspotsEndpointsTests = (state: any) => {
             it('Should return 401.', async () => {
                 const response = await request(server)
                     .delete(`/hotspots/${AlertHotspotSample.ACCIDENT.id}`)
-                    .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .expect(401);
+                    .set('Authorization', `Bearer ${state.standard.access_token}`);
+                expect(response.unauthorized, response.text).to.be.true;
             });
 
             it('Should return 200 and delete hotspot.', async () => {

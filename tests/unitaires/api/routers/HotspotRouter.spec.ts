@@ -9,7 +9,7 @@ import Algolia from '../../../../src/api/services/algolia/Algolia';
 import Login from '../../../../src/api/services/auth/Login';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
-import hotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import OrmCityzen from '../../../../src/infrastructure/ormCityzen';
 
 describe('hotspots router', () => {
@@ -35,8 +35,8 @@ describe('hotspots router', () => {
             true,
             errorHandlerMoq,
             loginServiceMoq,
+            hotspotRepositoryPostgreSQL,
             ormCityzenMoq,
-            hotspotRepositoryInMemory,
             hostpotFactoryMoq,
             algoliaMock.object,
         );

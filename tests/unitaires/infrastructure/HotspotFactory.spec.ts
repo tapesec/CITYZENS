@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { HotspotScope, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
+import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
 import ImageLocation from '../../../src/domain/cityLife/model/hotspot/ImageLocation';
 import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
 import SlideShow from '../../../src/domain/cityLife/model/hotspot/SlideShow';
@@ -73,7 +74,7 @@ describe('HotspotFactory', () => {
             );
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Media,
-            id: 'fake-id',
+            id: new HotspotId('fake-id'),
             title: 'new title',
             scope: HotspotScope.Private,
             slideShow: new SlideShow([new ImageLocation('url1'), new ImageLocation('url2')]),
@@ -113,7 +114,7 @@ describe('HotspotFactory', () => {
         // Assert
         commonHotspotPropertiesAssertion(fakeNewHotspot, {
             type: HotspotType.Alert,
-            id: '2633cf57-15a0-4d67-818b-eb25bf734c8f',
+            id: new HotspotId('2633cf57-15a0-4d67-818b-eb25bf734c8f'),
             voterList: ['auth0|1jks2kdz2dqziq', true],
             pictureDescription: 'fake-url',
         });
@@ -124,7 +125,7 @@ const commonHotspotPropertiesAssertion = (fakeNewHotspot: any, specificPropertie
     if (specificProperties.id !== undefined) {
         expect(fakeNewHotspot)
             .to.have.property('id')
-            .and.to.be.equal(specificProperties.id);
+            .and.to.be.deep.equal(specificProperties.id);
     }
     if (specificProperties.title !== undefined) {
         expect(fakeNewHotspot)

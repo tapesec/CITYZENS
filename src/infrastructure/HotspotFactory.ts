@@ -76,7 +76,7 @@ class HotspotFactory {
         }
         // data from http POST request
         if (data && typeof data.message === 'string') {
-            message = new AlertMessage(data.message);
+            message = new AlertMessage(data.message, new Date());
             voterList = new VoterList();
             pertinenceScore = new PertinenceScore(0, 0);
         }

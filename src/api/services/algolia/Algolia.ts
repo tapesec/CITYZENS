@@ -28,7 +28,7 @@ class Algolia {
             data.avatarIconUrl = hotspot.avatarIconUrl.toString();
         }
 
-        return this.algolia.sendObject('hotspots', data, hotspot.id);
+        return this.algolia.sendObject('hotspots', data, hotspot.id.toString());
     }
 }
 

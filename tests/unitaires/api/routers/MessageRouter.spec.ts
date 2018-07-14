@@ -1,10 +1,10 @@
 import * as restify from 'restify';
 import * as TypeMoq from 'typemoq';
 import MessageCtrl from '../../../../src/api/controllers/MessageCtrl';
-import MessageRouter from '../../../../src/api/routers/MessageRouter';
 import * as c from '../../../../src/api/routers/constants';
+import MessageRouter from '../../../../src/api/routers/MessageRouter';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import hotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../../../src/infrastructure/MessageFactory';
 import messageRepositoryInMemory from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
 
@@ -18,7 +18,7 @@ describe('messages router', () => {
             TypeMoq.MockBehavior.Loose,
             true,
             jwtParser,
-            hotspotRepositoryInMemory,
+            hotspotRepositoryPostgreSQL,
             messageRepositoryInMemory,
             new MessageFactory(),
         );

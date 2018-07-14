@@ -1,9 +1,11 @@
+import CityId from '../city/CityId';
 import AlertHotspot from './AlertHotspot';
 import Hotspot from './Hotspot';
+import HotspotId from './HotspotId';
 import MediaHotspot from './MediaHotspot';
 
 interface IHotspotRepository {
-    findById(id: string): Promise<MediaHotspot | AlertHotspot>;
+    findById(id: HotspotId): Promise<MediaHotspot | AlertHotspot>;
 
     findInArea(
         north: number,
@@ -12,13 +14,13 @@ interface IHotspotRepository {
         east: number,
     ): Promise<(MediaHotspot | AlertHotspot)[]>;
 
-    findByCodeCommune(insee: string): Promise<(MediaHotspot | AlertHotspot)[]>;
+    findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]>;
 
-    isSet(id: string): boolean;
+    isSet(id: HotspotId): Promise<boolean>;
 
     store(hotspot: Hotspot): void;
 
-    remove(id: string): void;
+    remove(id: HotspotId): void;
 }
 
 export default IHotspotRepository;

@@ -4,7 +4,7 @@ import Auth0Service from 'src/api/services/auth/Auth0Service';
 import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import MessageId from '../../domain/cityLife/model/messages/MessageId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {

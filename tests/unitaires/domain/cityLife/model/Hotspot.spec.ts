@@ -60,7 +60,7 @@ describe('MediaHotspot entity', () => {
             ),
         );
         // Assert
-        expect(hotspot.id).to.be.equal(id);
+        expect(hotspot.id.toString()).to.be.equal(id);
         expect(hotspot.position).to.be.equal(PositionSample.MARTIGNAS_NORTH_OUEST);
         expect(hotspot.title).to.be.equal(title);
         expect(hotspot.slug).to.be.equal(slug(title));
@@ -164,20 +164,27 @@ describe('MediaHotspot entity', () => {
         const hotspot = AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
         expect(jsonHotspot).to.shallowDeepEqual({
-            id: 'd0568142-23f4-427d-83f3-e84443cc3643',
-            position: { latitude: 44.841633, longitude: -0.776771 },
-            author: { pseudo: 'lucabrx', id: CityzenSample.LUCA.id.toString() },
-            cityId: '33273',
-            address: { name: '6 avenue de Verdin', city: 'Martignas-sur-Jalle' },
+            id: 'f0789142-23c5-123d-493-e84443cc3643',
+            position: { latitude: 3.141592, longitude: 1.414 },
+            author: {
+                pseudo: 'lucabrx',
+                id: CityzenSample.LUCA.id.toString(),
+                pictureCityzen: hotspot.author.pictureCityzen.toString(),
+            },
+            cityId: '5498',
+            address: { name: 'Mystery shack', city: 'Gravity falls' },
             views: 1,
             type: HotspotType.Alert,
             pictureDescription: AlertHotspotSample.TO_READ_ALERT_HOTSPOT_FOR_TU.pictureDescription.toString(),
             message: {
+                updatedAt: hotspot.message.updatedAt.toJSON(),
                 content:
                     'Un accident est survenue entre un 4x4 et une smart, des debris son encore présent.',
             },
+            createdAt: hotspot.createdAt.toJSON(),
             voterList: [['Karadoc', true], ['Perceval', false]],
             pertinence: { agree: 58420, disagree: 1754 },
+            avatarIconUrl: hotspot.avatarIconUrl.toString(),
         });
     });
 

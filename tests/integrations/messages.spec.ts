@@ -96,8 +96,9 @@ const messagesEndpointsTests = (state: any) => {
                 const response = await request(server)
                     .get(`/hotspots/${hotspotId}/messages`)
                     .set('Authorization', `Bearer ${state.standard.access_token}`)
-                    .set('Accept', 'application/json')
-                    .expect(404);
+                    .set('Accept', 'application/json');
+
+                expect(response.notFound, response.text).to.be.true;
             });
         });
 

@@ -1,6 +1,7 @@
-import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepositoryInMemory';
+import CityId from '../../../domain/cityLife/model/city/CityId';
+import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepositoryPostgreSQL';
 
-const hotspotsByCodeCommune = (insee: string, repository: HotspotRepositoryInMemory) => {
+const hotspotsByCodeCommune = (insee: CityId, repository: HotspotRepositoryInMemory) => {
     return repository.findByCodeCommune(insee);
 };
 

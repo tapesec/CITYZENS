@@ -110,6 +110,20 @@ const alertHotspotsTests = (state: any) => {
                 .to.have.property('pictureDescription')
                 .to.equal(pictureDescription);
         });
+
+        it('Should delete previously created AlertHotpsot.', async () => {
+            const response = await request(server)
+                .delete(`/hotspots/${newPostHotspot.id}`)
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .set('Accept', 'application/json');
+            const response2 = await request(server)
+                .get(`/hotspots/${newPostHotspot.id}`)
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .set('Accept', 'application/json');
+
+            expect(response.ok, response.text).to.be.true;
+            expect(response2.notFound, response2.text).to.be.true;
+        });
     });
 
     describe('PATCH Hotspot no matter type.', () => {

@@ -94,6 +94,18 @@ class HotspotBuilderSample {
         new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
     );
 
+    public static TO_READ_ALERT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('f0789142-23c5-123d-493-e84443cc3643'),
+        PositionSample.TO_READ_ALERT,
+        AuthorSample.LUCA,
+        new CityId('5498'),
+        AddressSample.TO_READ_ADDRESS,
+        new ViewsCount(1),
+        HotspotType.Alert,
+        new Date(),
+        new AvatarIconUrl(config.avatarIcon.defaultAlertIcon),
+    );
+
     public static MATCH_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
         new HotspotId('a5d317f1-d8c8-4e71-849e-cf6860fc5ff3'),
         PositionSample.MATCH,

@@ -13,7 +13,7 @@ class HotspotRouter {
         server.get(HOTSPOT_ENDPOINT, this.ctrl.optInAuthenticateUser, this.ctrl.hotspots);
 
         server.get(
-            HOTSPOT_ENDPOINT + '/:id',
+            HOTSPOT_ENDPOINT + '/:hotspotId',
             this.ctrl.optInAuthenticateUser,
             this.ctrl.getHotspot,
         );
