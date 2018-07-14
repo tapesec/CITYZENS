@@ -10,9 +10,21 @@ import OrmHotspot from './ormHotspot';
 class HotspotRepositoryInMemory implements IHotspotRepository {
     constructor(protected orm: OrmHotspot, private factory: HotspotFactory) {}
 
-    public async findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]> {
+    public async findByCodeCommune(
+        insee: CityId,
+        onError: (exception: Error) => void,
+    ): Promise<(MediaHotspot | AlertHotspot)[]> {
         const data = await this.orm.findByCity(insee);
-        return data.map(x => this.factory.build(x));
+        return data
+            .map(x => {
+                try {
+                    return this.factory.build(x);
+                } catch (error) {
+                    onError(error);
+                    return undefined;
+                }
+            })
+            .filter(x => x !== undefined);
     }
 
     public async findById(id: HotspotId): Promise<MediaHotspot | AlertHotspot> {
@@ -43,10 +55,18 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         west: number,
         south: number,
         east: number,
+        onError: (error: Error) => void,
     ): Promise<(MediaHotspot | AlertHotspot)[]> {
         const data = await this.orm.findByArea(north, west, south, east);
 
-        return data.map(x => this.factory.build(x));
+        return data.map(x => {
+            try {
+                return this.factory.build(x);
+            } catch (error) {
+                onError(error);
+                return undefined;
+            }
+        });
     }
 
     public async store(hotspot: Hotspot) {

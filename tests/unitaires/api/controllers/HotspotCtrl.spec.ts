@@ -118,7 +118,7 @@ describe('HotspotCtrl', () => {
             reqMoq.setup((x: rest.Request) => x.query).returns(() => queryStrings);
 
             hotspotRepositoryMoq
-                .setup(x => x.findInArea(north, west, south, east))
+                .setup(x => x.findInArea(north, west, south, east, TypeMoq.It.isAny()))
                 .returns(() => Promise.resolve(repositoryResult));
 
             // Act
@@ -157,6 +157,7 @@ describe('HotspotCtrl', () => {
                         queryStrings.west,
                         queryStrings.south,
                         queryStrings.east,
+                        TypeMoq.It.isAny(),
                     ),
                 )
                 .returns(() => {

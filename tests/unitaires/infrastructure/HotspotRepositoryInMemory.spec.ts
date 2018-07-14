@@ -111,7 +111,13 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = new HotspotRepositoryPostgreSQL(orm.object, factory.object);
 
         // Act
-        const hotspots: Hotspot[] = await hotspotRepository.findInArea(north, west, south, east);
+        const hotspots: Hotspot[] = await hotspotRepository.findInArea(
+            north,
+            west,
+            south,
+            east,
+            () => {},
+        );
         // Assert
 
         orm.verify(x => x.findByArea(north, west, south, east), TypeMoq.Times.once());
@@ -141,7 +147,13 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = new HotspotRepositoryPostgreSQL(orm.object, factory.object);
 
         // Act
-        const hotspots: Hotspot[] = await hotspotRepository.findInArea(north, west, south, east);
+        const hotspots: Hotspot[] = await hotspotRepository.findInArea(
+            north,
+            west,
+            south,
+            east,
+            () => {},
+        );
         // Assert
 
         orm.verify(x => x.findByArea(north, west, south, east), TypeMoq.Times.once());
@@ -165,7 +177,7 @@ describe('HotspotRepositoryInMemory', () => {
         hotspotRepository = new HotspotRepositoryPostgreSQL(orm.object, factory.object);
         const insee = CitySample.MARTIGNAS.insee;
         // Act
-        const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(cityId);
+        const hotspots: Hotspot[] = await hotspotRepository.findByCodeCommune(cityId, () => {});
         // Assert
         expect(hotspots).to.have.lengthOf(3);
     });

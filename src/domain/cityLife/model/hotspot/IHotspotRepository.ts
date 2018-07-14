@@ -12,9 +12,13 @@ interface IHotspotRepository {
         west: number,
         south: number,
         east: number,
+        onError: (exception: Error) => void,
     ): Promise<(MediaHotspot | AlertHotspot)[]>;
 
-    findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]>;
+    findByCodeCommune(
+        insee: CityId,
+        onError: (exception: Error) => void,
+    ): Promise<(MediaHotspot | AlertHotspot)[]>;
 
     isSet(id: HotspotId): Promise<boolean>;
 

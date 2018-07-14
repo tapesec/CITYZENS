@@ -68,12 +68,21 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         try {
+            const onError = (error: Error) => {
+                this.errorHandler.logSlack(`GET ${req.path()}`, error.message);
+            };
+
             if (queryStrings.north) {
-                hotspotsResult = await hotspotsByArea(queryStrings, this.hotspotRepository);
+                hotspotsResult = await hotspotsByArea(
+                    queryStrings,
+                    this.hotspotRepository,
+                    onError,
+                );
             } else if (queryStrings.insee) {
                 hotspotsResult = await hotspotsByCodeCommune(
                     new CityId(queryStrings.insee),
                     this.hotspotRepository,
+                    onError,
                 );
             }
             const hotspotReducer = new HotspotReducer(hotspotsResult);
