@@ -1,9 +1,9 @@
 import * as Chai from 'chai';
-import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
 import Message from '../../../../src/domain/cityLife/model/messages/Message';
 import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
 import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
 import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
@@ -223,26 +223,26 @@ describe("isAuthorized's functions.", () => {
             '',
             AuthorSample.ELODIE,
             false,
-            new HotspotId(MediaHotspotSample.TOEDIT.id),
+            MediaHotspotSample.TOEDIT.id,
             new Date(),
             new Date(),
         );
 
         authorizedhotspots.forEach(hotspot => {
             authorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toPatchMessage(hotspot, message, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toPatchMessage(message, cityzen)).to.be.true;
             });
             unauthorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toPatchMessage(hotspot, message, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toPatchMessage(message, cityzen)).to.be.true;
             });
         });
 
         privateHotspots.forEach(hotspot => {
             authorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toPatchMessage(hotspot, message, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toPatchMessage(message, cityzen)).to.be.true;
             });
             unauthorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toPatchMessage(hotspot, message, cityzen)).to.be.false;
+                Chai.expect(isAuthorized.toPatchMessage(message, cityzen)).to.be.false;
             });
         });
     });
@@ -279,32 +279,31 @@ describe("isAuthorized's functions.", () => {
     });
 
     it('toRemoveMessages', () => {
-        const authorizedhotspots = [];
+        const authorizedMessages = [];
 
-        const privateHotspots = [MediaHotspotSample.TOEDIT];
-
-        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.ELODIE];
-        const unauthorizedCityzens = [
-            new Cityzen(new CityzenId(''), '', '', false),
-            undefined,
-            CityzenSample.MARTIN,
+        const privateMessages = [
+            MessageSample.MARTIGNAS_CHURCH_MESSAGE,
+            MessageSample.MARTIGNAS_SCHOOL_MESSAGE,
         ];
 
-        authorizedhotspots.forEach(hotspot => {
+        const authorizedCityzens = [CityzenSample.LIONNEL, CityzenSample.LUCA];
+        const unauthorizedCityzens = [CityzenSample.ELODIE];
+
+        authorizedMessages.forEach(message => {
             authorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toRemoveMessages(hotspot, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toRemoveMessages(message, cityzen)).to.be.true;
             });
             unauthorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toRemoveMessages(hotspot, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toRemoveMessages(message, cityzen)).to.be.true;
             });
         });
 
-        privateHotspots.forEach(hotspot => {
+        privateMessages.forEach(message => {
             authorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toRemoveMessages(hotspot, cityzen)).to.be.true;
+                Chai.expect(isAuthorized.toRemoveMessages(message, cityzen)).to.be.true;
             });
             unauthorizedCityzens.forEach(cityzen => {
-                Chai.expect(isAuthorized.toRemoveMessages(hotspot, cityzen)).to.be.false;
+                Chai.expect(isAuthorized.toRemoveMessages(message, cityzen)).to.be.false;
             });
         });
     });
