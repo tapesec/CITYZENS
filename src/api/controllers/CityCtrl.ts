@@ -1,10 +1,11 @@
+import * as rest from 'restify';
+import Auth0Service from 'src/api/services/auth/Auth0Service';
+import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 import City from '../../domain/cityLife/model/city/City';
 import CitySample from '../../domain/cityLife/model/sample/CitySample';
 import { CityRepositoryInMemory } from '../../infrastructure/CityRepositoryInMemory';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import RootCtrl from './RootCtrl';
-import * as rest from 'restify';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
-import Auth0Service from 'src/api/services/auth/Auth0Service';
 
 class CityCtrl extends RootCtrl {
     private cityRepository: CityRepositoryInMemory;
@@ -15,9 +16,10 @@ class CityCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
+        cityzenRepository: CityzenRepositoryPostgreSQL,
         cityRepositoryInMemory: CityRepositoryInMemory,
     ) {
-        super(errorHandler, auth0Service);
+        super(errorHandler, auth0Service, cityzenRepository);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }

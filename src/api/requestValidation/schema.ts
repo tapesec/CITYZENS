@@ -107,21 +107,31 @@ export const postPertinenceSchema = {
     additionalProperties: false,
 };
 
+export const getMessageSchemaQuery = {
+    type: 'object',
+    properties: {
+        count: {
+            type: 'string',
+            enum: ['true', 'false', ''],
+        },
+        messages: {
+            type: 'string',
+        },
+    },
+    dependencies: {
+        count: ['messages'],
+        messages: ['count'],
+    },
+    additionalProperties: false,
+};
+
 export const cityzensDbSchema = {
     title: "Schema of the postgre's table cityzens",
     type: 'object',
-    required: [
-        'user_id',
-        'email',
-        'password',
-        'is_admin',
-        'pseudo',
-        'picture_cityzen',
-        'picture_extern',
-    ],
+    required: ['user_id', 'email', 'password', 'is_admin', 'pseudo', 'picture_cityzen'],
     properties: {
         user_id: {
-            type: 'number',
+            type: 'string',
         },
         pseudo: {
             type: 'string',
@@ -129,8 +139,11 @@ export const cityzensDbSchema = {
         email: {
             type: 'string',
         },
+        email_verified: {
+            type: 'boolean',
+        },
         password: {
-            type: 'string',
+            type: ['string', 'null'],
         },
         is_admin: {
             type: 'boolean',
@@ -139,10 +152,10 @@ export const cityzensDbSchema = {
             type: 'string',
         },
         picture_extern: {
-            type: 'string',
+            type: ['string', 'null'],
         },
         favorites_hotspots: {
-            type: 'array',
+            type: ['array', 'null'],
             items: {
                 type: 'string',
             },

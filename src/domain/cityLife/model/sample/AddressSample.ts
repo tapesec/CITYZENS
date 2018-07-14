@@ -1,5 +1,5 @@
-import CitySample from './CitySample';
 import Address from '../hotspot/Address';
+import CitySample from './CitySample';
 
 class AddressSample {
     public static TOWNHALL_ADDRESS: Address = new Address(
@@ -18,6 +18,7 @@ class AddressSample {
         "12 rue de l'Aubépine",
         CitySample.MERIGNAC.name,
     );
+    public static TO_READ_ADDRESS: Address = new Address('Mystery shack', 'Gravity falls');
     public static CAMELOT_ADRESS: Address = new Address('Kaamelott', 'Royaume de Loegre');
     public static TOEDIT_ADDRESS: Address = new Address(
         '2 place des éditions galimard',

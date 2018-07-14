@@ -1,18 +1,18 @@
-import DecodedJwtPayload from '../../../../src/api/services/auth/DecodedJwtPayload';
 import * as rest from 'restify';
-import JwtParser from '../../../../src/api/services/auth/JwtParser';
-import RootCtrl from '../../../../src/api/controllers/RootCtrl';
-import { expect } from 'chai';
 import * as TypeMoq from 'typemoq';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import Login from '../../../../src/api/services/auth/Login';
-import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
+import RootCtrl from '../../../../src/api/controllers/RootCtrl';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
+import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
+import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
 const restifyErrors = require('restify-errors');
 
 describe('RootCtrl', () => {
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;
     let resMoq: TypeMoq.IMock<rest.Response>;
+    let cityzenRepository: TypeMoq.IMock<CityzenRepositoryPostgreSQL>;
     let auth0ServiceMoq: TypeMoq.IMock<Auth0Service>;
     let reqMoq: TypeMoq.IMock<rest.Request>;
     let nextMoq: TypeMoq.IMock<rest.Next>;
@@ -25,6 +25,7 @@ describe('RootCtrl', () => {
         resMoq = TypeMoq.Mock.ofType<rest.Response>();
         reqMoq = TypeMoq.Mock.ofType<rest.Request>();
         nextMoq = TypeMoq.Mock.ofType<rest.Next>();
+        cityzenRepository = TypeMoq.Mock.ofType();
 
         token = 'javascript.web.token';
 
@@ -40,8 +41,16 @@ describe('RootCtrl', () => {
                 .setup(x => x.getUserInfo(token))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
+            cityzenRepository
+                .setup(x => x.findById(new CityzenId(FAKE_USER_INFO_AUTH0.sub)))
+                .returns(() => Promise.resolve(CityzenSample.LUCA));
+
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
+            const rootCtrl = new RootCtrl(
+                errorHandlerMoq.object,
+                auth0ServiceMoq.object,
+                cityzenRepository.object,
+            );
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());
@@ -57,12 +66,20 @@ describe('RootCtrl', () => {
                 .setup(x => x.getUserInfo(token))
                 .returns(() => Promise.resolve(FAKE_USER_INFO_AUTH0));
 
+            cityzenRepository
+                .setup(x => x.findById(new CityzenId(FAKE_USER_INFO_AUTH0.sub)))
+                .returns(() => Promise.resolve(CityzenSample.LUCA));
+
             errorHandlerMoq
                 .setup(x => x.logAndCreateUnautorized('path', 'Token must be provided'))
                 .returns(() => 'error');
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
+            const rootCtrl = new RootCtrl(
+                errorHandlerMoq.object,
+                auth0ServiceMoq.object,
+                cityzenRepository.object,
+            );
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.exactly(1));
@@ -84,7 +101,11 @@ describe('RootCtrl', () => {
                 .returns(() => 'error');
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
+            const rootCtrl = new RootCtrl(
+                errorHandlerMoq.object,
+                auth0ServiceMoq.object,
+                cityzenRepository.object,
+            );
             await rootCtrl.loadAuthenticatedUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());
@@ -102,7 +123,11 @@ describe('RootCtrl', () => {
             auth0ServiceMoq.setup(x => x.getUserInfo(token)).returns(() => Promise.reject('tata'));
 
             // Act
-            const rootCtrl = new RootCtrl(errorHandlerMoq.object, auth0ServiceMoq.object);
+            const rootCtrl = new RootCtrl(
+                errorHandlerMoq.object,
+                auth0ServiceMoq.object,
+                cityzenRepository.object,
+            );
             await rootCtrl.optInAuthenticateUser(reqMoq.object, resMoq.object, nextMoq.object);
             // Assert
             reqMoq.verify(x => x.header('Authorization'), TypeMoq.Times.once());

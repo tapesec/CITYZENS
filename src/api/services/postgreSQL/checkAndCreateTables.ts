@@ -89,7 +89,8 @@ const messages = async (postgre: PostgreSQL) => {
                 pinned boolean DEFAULT FALSE,
                 created_at timestamp NOT NULL DEFAULT current_timestamp,
                 updated_at timestamp,
-                parent_id text
+                parent_id text,
+                removed boolean DEFAULT FALSE
             )
         `;
 

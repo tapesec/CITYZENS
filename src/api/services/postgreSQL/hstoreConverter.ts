@@ -22,7 +22,7 @@ function parse(stringed: string) {
     if (!stringed) return {};
     const result: any = {};
 
-    stringed.split(',').forEach(v => {
+    stringed.split(', ').forEach(v => {
         const quotedKey = v.split('=>')[0];
         const key = quotedKey.substr(1, quotedKey.length - 2);
 

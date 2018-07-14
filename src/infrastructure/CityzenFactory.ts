@@ -1,5 +1,6 @@
 import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
 import Cityzen from '../domain/cityzens/model/Cityzen';
+import CityzenId from '../domain/cityzens/model/CityzenId';
 
 export default class CityzenFactory {
     constructor() {}
@@ -7,14 +8,14 @@ export default class CityzenFactory {
     // data _must_ be from PostgreSQL db.
     public build(data: any): Cityzen {
         return new Cityzen(
-            data.user_id,
+            new CityzenId(data.user_id),
             data.email,
-            data.nickname,
+            data.pseudo,
             data.is_admin,
             new Set<string>(data.favorites_hotspots),
             'No description available',
-            new ImageLocation(data.pictureExtern),
-            new ImageLocation(data.pictureCityzen),
+            new ImageLocation(data.picture_extern),
+            new ImageLocation(data.picture_cityzen),
         );
     }
 }

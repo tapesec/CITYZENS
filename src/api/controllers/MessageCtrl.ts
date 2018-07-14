@@ -3,10 +3,15 @@ import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import MessageId from '../../domain/cityLife/model/messages/MessageId';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
-import { createMessageSchema, patchMessageSchema } from '../requestValidation/schema';
+import {
+    createMessageSchema,
+    getMessageSchemaQuery,
+    patchMessageSchema,
+} from '../requestValidation/schema';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
 import Message from './../../domain/cityLife/model/messages/Message';
@@ -17,6 +22,7 @@ class MessageCtrl extends RootCtrl {
     private hotspotRepository: HotspotRepositoryInMemory;
     private messageRepository: MessageRepositoryPostgreSql;
     private messageFactory: MessageFactory;
+
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
@@ -24,11 +30,12 @@ class MessageCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
+        cityzenRepository: CityzenRepositoryPostgreSQL,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
     ) {
-        super(errorHandler, auth0Service);
+        super(errorHandler, auth0Service, cityzenRepository);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
@@ -36,6 +43,55 @@ class MessageCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId}/messages
     public getMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (req.query.count !== undefined) {
+            return this.listCommentsCount(req, res, next);
+        }
+        return this.listMessages(req, res, next);
+    };
+
+    private listCommentsCount = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        try {
+            if (!this.schemaValidator.validate(getMessageSchemaQuery, req.query)) {
+                return next(
+                    this.errorHandler.logAndCreateBadRequest(
+                        `GET ${req.path()}`,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+
+            if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+                return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
+            }
+            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+
+            const messages = (req.query.messages as string).split(',').map(x => new MessageId(x));
+            if (!hotspot) {
+                return next(
+                    this.errorHandler.logAndCreateNotFound(
+                        `GET ${req.path()}`,
+                        HotspotCtrl.HOTSPOT_NOT_FOUND,
+                    ),
+                );
+            }
+
+            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+                return next(
+                    this.errorHandler.logAndCreateUnautorized(
+                        `GET ${req.path()}`,
+                        MessageCtrl.MESSAGE_PRIVATE,
+                    ),
+                );
+            }
+            const commentCountJson = await this.messageRepository.getCommentsCount(messages);
+            res.json(OK, commentCountJson);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+        }
+    };
+
+    // method=GET url=/hotspots/{hotspotId}/messages
+    private listMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
         }
@@ -143,6 +199,55 @@ class MessageCtrl extends RootCtrl {
 
         try {
             req.body.hotspotId = req.params.hotspotId;
+            req.body.cityzen = this.cityzenIfAuthenticated;
+            const newMessage = this.messageFactory.createMessage(req.body);
+            await this.messageRepository.store(newMessage);
+            res.json(CREATED, newMessage);
+        } catch (err) {
+            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+        }
+    };
+
+    // method=POST url=/hotspots/{hotspotId}/messages/{messageId}/comment
+    public postComment = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        if (!this.schemaValidator.validate(createMessageSchema, req.body)) {
+            return next(
+                this.errorHandler.logAndCreateBadRequest(
+                    `POST ${req.path()}`,
+                    this.schemaValidator.errorsText(),
+                ),
+            );
+        }
+        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    MessageCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+        if (!hotspot) {
+            return next(
+                this.errorHandler.logAndCreateNotFound(
+                    `POST ${req.path()}`,
+                    HotspotCtrl.HOTSPOT_NOT_FOUND,
+                ),
+            );
+        }
+
+        if (!isAuthorized.toPostComments(hotspot, this.cityzenIfAuthenticated)) {
+            return next(
+                this.errorHandler.logAndCreateUnautorized(
+                    `POST ${req.path()}`,
+                    MessageCtrl.MESSAGE_PRIVATE,
+                ),
+            );
+        }
+
+        try {
+            req.body.hotspotId = req.params.hotspotId;
+            req.body.parentId = req.params.messageId;
             req.body.cityzen = this.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
             await this.messageRepository.store(newMessage);

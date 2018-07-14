@@ -14,6 +14,7 @@ class OrmCityzen {
         }
 
         const data = results.rows[0];
+        if (data.picture_extern === null) data.picture_extern = undefined;
 
         return data;
     };
@@ -39,7 +40,7 @@ class OrmCityzen {
                 id: e.user_id,
                 pseudo: e.pseudo,
                 pictureCityzen: e.picture_cityzen,
-                pictureExtern: e.picture_extern,
+                pictureExtern: e.picture_extern === null ? undefined : e.picture_extern,
             };
         });
     };

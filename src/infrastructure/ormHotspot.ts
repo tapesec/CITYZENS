@@ -21,8 +21,8 @@ export default class OrmHotspot {
             author,
             id: entry['id'],
             position: {
-                latitude: parseInt(entry['position_lat'], 10),
-                longitude: parseInt(entry['position_lon'], 10),
+                latitude: parseFloat(entry['position_lat']),
+                longitude: parseFloat(entry['position_lon']),
             },
             address: {
                 name: entry['address_name'],
@@ -61,19 +61,19 @@ export default class OrmHotspot {
                 title: entry['title'],
                 slug: entry['slug'],
                 members: entry['members'],
-                slideshow: entry['slideshow'],
+                slideShow: entry['slideshow'],
             };
         }
     }
 
-    public async findByArea(north: number, south: number, west: number, east: number) {
+    public async findByArea(north: number, west: number, south: number, east: number) {
         const query = `
             SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id
-            WHERE h.position_lat <= $1 AND $2 <= h.position_lat AND
-                  h.position_lon <= $3 AND $4 <= h.position_lon AND h.removed = false 
+            WHERE $1 <= h.position_lat AND h.position_lat <= $2 AND
+                  $3 <= h.position_lon AND h.position_lon <= $4 AND h.removed = false 
         `;
 
-        const values = [north, south, west, east];
+        const values = [south, north, west, east];
 
         const result = await this.postgre.query(query, values);
 
@@ -103,16 +103,31 @@ export default class OrmHotspot {
 
     public async findOne(hotspotId: HotspotId) {
         const query =
-            'SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id WHERE id = $1';
+            'SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id WHERE id = $1 AND removed = false';
         const values = [hotspotId.toString()];
 
         const result = await this.postgre.query(query, values);
 
         if (result.rowCount < 1) {
-            return;
+            return undefined;
         }
         return this.constructFromQuery(result.rows[0]);
     }
+
+    public async findBySlug(slug: String) {
+        const query = `
+            SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id WHERE slug = $1 AND removed = false 
+        `;
+        const values = [slug];
+
+        const result = await this.postgre.query(query, values);
+
+        if (result.rowCount < 1) {
+            return undefined;
+        }
+        return this.constructFromQuery(result.rows[0]);
+    }
+
     public async save(hotspot: Hotspot) {
         if (hotspot instanceof MediaHotspot) await this.saveMedia(hotspot);
         if (hotspot instanceof AlertHotspot) await this.saveAlert(hotspot);
@@ -183,8 +198,8 @@ export default class OrmHotspot {
 
     public async updateAlert(hotspot: AlertHotspot) {
         const query = `
-            UPDATE hotspots SET 
-                picture_description = $2, message_updated_at = $3, message_content = $4
+            UPDATE hotspots SET
+                picture_description = $2, message_updated_at = $3, message_content = $4,
                 pertinence_agree = $5, pertinence_disagree = $6, views = $7, voter_list = $8
             WHERE id = $1
         `;
@@ -222,7 +237,7 @@ export default class OrmHotspot {
     }
     public async delete(id: HotspotId) {
         const query = `
-            UPDATE hotspots SET removed = false WHERE id = $1
+            UPDATE hotspots SET removed = true WHERE id = $1
         `;
         const values = [id.toString()];
 

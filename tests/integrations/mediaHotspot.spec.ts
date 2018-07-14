@@ -52,7 +52,6 @@ export default (state: any) => {
                 .set('Accept', 'application/json');
 
             expect(response.ok, response.text).to.be.true;
-            console.log(response.body);
 
             const isValid = validator.validate(mediaHotspotSchema, response.body);
             expect(isValid, validator.errorsText()).to.be.true;
@@ -80,7 +79,7 @@ export default (state: any) => {
             slideShow = ['slide(-1)', 'slide(sqrt(5) + 1)'];
 
             const response = await request(server)
-                .patch(`/hotspots/${newPostHotspot.id}`)
+                .patch(`/hotspots/${newPostHotspot.id.toString()}`)
                 .set('Authorization', `Bearer ${state.admin.access_token}`)
                 .send({
                     avatarIconUrl,
@@ -130,6 +129,20 @@ export default (state: any) => {
             expect(response.body)
                 .to.have.property('slideShow')
                 .to.be.deep.equal(slideShow);
+        });
+
+        it('Should delete previously created hotspot.', async () => {
+            const response = await request(server)
+                .delete(`/hotspots/${newPostHotspot.id}`)
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .set('Accept', 'application/json');
+            const response2 = await request(server)
+                .get(`/hotspots/${newPostHotspot.id}`)
+                .set('Authorization', `Bearer ${state.admin.access_token}`)
+                .set('Accept', 'application/json');
+
+            expect(response.ok, response.text).to.be.true;
+            expect(response2.notFound, response2.text).to.be.true;
         });
     });
 };

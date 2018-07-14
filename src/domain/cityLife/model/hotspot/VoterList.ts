@@ -1,6 +1,6 @@
-import ValueObject from '../../../interface/ValueObject';
 import * as lodash from 'lodash';
 import CityzenId from '../../../cityzens/model/CityzenId';
+import ValueObject from '../../../interface/ValueObject';
 
 class VoterList implements ValueObject {
     private _list: Map<CityzenId, boolean>;

@@ -4,11 +4,13 @@ import Auth0Service from 'src/api/services/auth/Auth0Service';
 import CityId from '../../domain/cityLife/model/city/CityId';
 import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
 import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
+import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
 import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
+import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
-import { strToNumQSProps } from '../helpers/';
+import { isUuid, strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
@@ -38,12 +40,13 @@ class HotspotCtrl extends RootCtrl {
     constructor(
         errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
+        cityzenRepository: CityzenRepositoryPostgreSQL,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
         hotspotFactory: HotspotFactory,
         algolia: Algolia,
         slideshowService: SlideshowService,
     ) {
-        super(errorHandler, auth0Service);
+        super(errorHandler, auth0Service, cityzenRepository);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
@@ -83,9 +86,17 @@ class HotspotCtrl extends RootCtrl {
         }
     };
 
-    // method=GET url=/hotspots/{hotspotId or id}
+    // method=GET url=/hotspots/{hotspotId or id(slug)}
     public getHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!await this.hotspotRepository.isSet(req.params.id)) {
+        const hotspotId = isUuid(req.params.hotspotId)
+            ? new HotspotId(req.params.hotspotId)
+            : (req.params.hotspotId as String);
+
+        const isSet = await (hotspotId instanceof HotspotId
+            ? this.hotspotRepository.isSet(hotspotId)
+            : this.hotspotRepository.isSetBySlug(hotspotId));
+
+        if (!isSet) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `GET ${req.path()}`,
@@ -95,8 +106,9 @@ class HotspotCtrl extends RootCtrl {
         }
 
         try {
-            const hotspot = await this.hotspotRepository.findById(req.params.id);
-
+            const hotspot = await (hotspotId instanceof HotspotId
+                ? this.hotspotRepository.findById(hotspotId)
+                : this.hotspotRepository.findBySlug(hotspotId));
             if (isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 res.json(OK, hotspot);
             } else {
@@ -147,7 +159,8 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
+        const hotspotId = new HotspotId(req.params.id);
+        if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST view ${req.path()}`,
@@ -156,7 +169,7 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         try {
-            const visitedHotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+            const visitedHotspot = await this.hotspotRepository.findById(hotspotId);
             visitedHotspot.countOneMoreView();
             await this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
@@ -175,7 +188,9 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
-        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
+
+        const hotspotId = new HotspotId(req.params.hotspotId);
+        if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST addMember ${req.path()}`,
@@ -185,7 +200,7 @@ class HotspotCtrl extends RootCtrl {
         }
         try {
             const memberId = new CityzenId(req.body.memberId);
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot = await this.hotspotRepository.findById(hotspotId);
 
             if (hotspot instanceof AlertHotspot) {
                 return next(
@@ -234,7 +249,9 @@ class HotspotCtrl extends RootCtrl {
             );
         }
 
-        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
+        const hotspotId = new HotspotId(req.params.hotspotId);
+
+        if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `POST ${req.path()}`,
@@ -244,7 +261,7 @@ class HotspotCtrl extends RootCtrl {
         }
 
         try {
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot = await this.hotspotRepository.findById(hotspotId);
             if (!(hotspot instanceof AlertHotspot)) {
                 return next(
                     this.errorHandler.logAndCreateBadRequest(
@@ -283,7 +300,10 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
-        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
+
+        const hotspotId = new HotspotId(req.params.hotspotId);
+
+        if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `PATCH ${req.path()}`,
@@ -292,7 +312,7 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         try {
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot = await this.hotspotRepository.findById(hotspotId);
 
             if (!isAuthorized.toPatchHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
@@ -330,11 +350,13 @@ class HotspotCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}
     public removeHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!await this.hotspotRepository.isSet(req.params.hotspotId)) {
+        const hotspotId = new HotspotId(req.params.hotspotId);
+
+        if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(this.errorHandler.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND));
         }
         try {
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
+            const hotspot = await this.hotspotRepository.findById(hotspotId);
 
             if (!isAuthorized.toRemoveHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
@@ -345,7 +367,7 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
 
-            await this.hotspotRepository.remove(req.params.hotspotId);
+            await this.hotspotRepository.remove(hotspotId);
         } catch (err) {
             return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
         }

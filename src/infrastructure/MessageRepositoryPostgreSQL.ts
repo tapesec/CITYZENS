@@ -14,6 +14,19 @@ class MessageRepositoryPostgreSql implements IMessageRepository {
         this.messageFactory = messageFactory;
     }
 
+    public async getCommentsCount(ids: MessageId[]): Promise<[MessageId, number][]> {
+        const results = await this.ormMessage.countAllComments(ids);
+
+        const commentCountJson: any = {};
+
+        for (const entry of results) {
+            const message = new MessageId(entry['parent_id']);
+            const count = entry['count'];
+            commentCountJson[message.toString()] = count;
+        }
+        return commentCountJson;
+    }
+
     public async findByHotspotId(id: HotspotId): Promise<Message[]> {
         const data = await this.ormMessage.findAll(id);
         return data.map((messageEntry: any) => this.messageFactory.createMessage(messageEntry));

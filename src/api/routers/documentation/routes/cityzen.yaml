@@ -1,0 +1,33 @@
+/cityzens/{cityzenId}:
+  get:
+    tags:
+      - Cityzen
+    description: Retourne le cityzen identifié par l'id.
+
+    parameters:
+    - name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+    - name: cityzenId
+      in: path
+      required: true
+      schema:
+        type: string
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Le Cityzen en question.
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                $ref: '#/definitions/Cityzen'
+      404:
+        description: Cityzen introuvable.
+      401:
+        descritpion: Non authorisé a voir ce Cityzen.
+

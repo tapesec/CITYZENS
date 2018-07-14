@@ -73,41 +73,41 @@ export const CITYZEN_LUCA = JSON.parse(JSON.stringify(CityzenSample.LUCA));
 
 const env: string = config.server.env;
 const isInTest = env === 'test';
-const lokiDevPath = 'loki/dev.json';
-const lokiTestPath = 'loki/test.json';
-const lokiPath = isInTest ? lokiTestPath : lokiDevPath;
+const lokiPath = 'loki/dev.json';
 
 const databaseInitialize = () => {
     hotspotCollection = db.getCollection('hotspots');
     if (hotspotCollection === null) {
         hotspotCollection = db.addCollection('hotspots');
-
-        hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
-        hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
-        hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
-        hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
-        hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
-        hotspotCollection.insert(HOTSPOT_DOCTOR);
-        hotspotCollection.insert(ALERT_ACCIDENT);
-        hotspotCollection.insert(CAMELOT);
-        hotspotCollection.insert(EVENT_MATCH);
+        if (isInTest) {
+            hotspotCollection.insert(HOTSPOT_MARTIGNAS_TOWNHALL);
+            hotspotCollection.insert(HOTSPOT_MARTIGNAS_CHURCH);
+            hotspotCollection.insert(HOTSPOT_MARTIGNAS_SCHOOL);
+            hotspotCollection.insert(HOTSPOT_MERIGNAC_CENTER);
+            hotspotCollection.insert(HOTSPOT_SIMCITY_TOEDIT);
+            hotspotCollection.insert(HOTSPOT_DOCTOR);
+            hotspotCollection.insert(ALERT_ACCIDENT);
+            hotspotCollection.insert(CAMELOT);
+            hotspotCollection.insert(EVENT_MATCH);
+        }
     }
     messageCollection = db.getCollection('messages');
     if (messageCollection === null) {
         messageCollection = db.addCollection('messages');
-
-        const message1 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_CHURCH_MESSAGE));
-        message1.removed = false;
-        messageCollection.insert(message1);
-        const message2 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_SCHOOL_MESSAGE));
-        message2.removed = false;
-        messageCollection.insert(message2);
-        const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
-        message3.removed = false;
-        messageCollection.insert(message3);
-        const message4 = JSON.parse(JSON.stringify(MessageSample.SIMCITY_TOEDIT_MESSAGE));
-        message4.removed = false;
-        messageCollection.insert(message4);
+        if (isInTest) {
+            const message1 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_CHURCH_MESSAGE));
+            message1.removed = false;
+            messageCollection.insert(message1);
+            const message2 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_SCHOOL_MESSAGE));
+            message2.removed = false;
+            messageCollection.insert(message2);
+            const message3 = JSON.parse(JSON.stringify(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE));
+            message3.removed = false;
+            messageCollection.insert(message3);
+            const message4 = JSON.parse(JSON.stringify(MessageSample.SIMCITY_TOEDIT_MESSAGE));
+            message4.removed = false;
+            messageCollection.insert(message4);
+        }
     }
     cityCollection = db.getCollection('city');
     if (cityCollection === null) {
@@ -119,19 +119,20 @@ const databaseInitialize = () => {
     cityzenCollection = db.getCollection('cityzens');
     if (cityzenCollection === null) {
         cityzenCollection = db.addCollection('cityzens');
-
-        cityzenCollection.insert(CITYZEN_ELODIE);
-        cityzenCollection.insert(CITYZEN_LOUISE);
-        cityzenCollection.insert(CITYZEN_MARTIN);
-        cityzenCollection.insert(CITYZEN_LIONNEL);
-        cityzenCollection.insert(CITYZEN_LUCA);
+        if (isInTest) {
+            cityzenCollection.insert(CITYZEN_ELODIE);
+            cityzenCollection.insert(CITYZEN_LOUISE);
+            cityzenCollection.insert(CITYZEN_MARTIN);
+            cityzenCollection.insert(CITYZEN_LIONNEL);
+            cityzenCollection.insert(CITYZEN_LUCA);
+        }
     }
 };
 
 const db = new loki(lokiPath, {
     autoload: true,
     autoloadCallback: databaseInitialize,
-    autosave: !isInTest,
+    autosave: true,
     autosaveInterval: 4000,
 });
 

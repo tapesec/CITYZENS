@@ -1,6 +1,5 @@
 import * as ajv from 'ajv';
 import { cityzensDbSchema } from '../api/requestValidation/schema';
-import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
 import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
 import OrmCityzen from './../infrastructure/ormCityzen';
@@ -20,7 +19,7 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     public async findById(id: CityzenId) {
         const data = await this.orm.findById(id);
         if (!this.validator.validate(cityzensDbSchema, data)) {
-            throw new Error('Data from database are ill-formed');
+            throw new Error(`Data from database are ill-formed ${this.validator.errorsText()}`);
         }
 
         return this.cityzenFactory.build(data);

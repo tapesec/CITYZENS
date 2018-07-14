@@ -3,13 +3,14 @@ import * as restify from 'restify';
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
+import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../infrastructure/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import { default as OrmHotspot } from '../../infrastructure/ormHotspot';
 import OrmMessage from '../../infrastructure/ormMessage';
 import AuthCtrl from '../controllers/AuthCtrl';
 import CityCtrl from '../controllers/CityCtrl';
+import CityzenCtrl from '../controllers/CityzenCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import MessageCtrl from '../controllers/MessageCtrl';
 import ProfileCtrl from '../controllers/ProfileCtrl';
@@ -27,6 +28,7 @@ import Algolia from './../services/algolia/Algolia';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import AuthRouter from './AuthRouter';
 import CityRouter from './CityRouter';
+import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
@@ -61,9 +63,10 @@ const ormCityzen = new OrmCityzen(postgreSql);
 const ormMessage = new OrmMessage(postgreSql);
 
 const messageFactory = new MessageFactory();
+const hotspotFactory = new HotspotFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepositoryInMemory = new HotspotRepositoryInMemory(ormHotspot, ormCityzen);
+const hotspotRepositoryInMemory = new HotspotRepositoryPostgreSQL(ormHotspot, hotspotFactory);
 const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
@@ -81,7 +84,9 @@ export const initDB = async (server: restify.Server) => {
 export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(errorHandler, auth0Service)));
+    routers.push(
+        new AuthRouter(new AuthCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
+    );
     routers.push(
         new ProfileRouter(
             new ProfileCtrl(
@@ -93,12 +98,22 @@ export const init = (server: restify.Server) => {
             ),
         ),
     );
-    routers.push(new CityRouter(new CityCtrl(errorHandler, auth0Service, cityRepositoryInMemory)));
+    routers.push(
+        new CityRouter(
+            new CityCtrl(
+                errorHandler,
+                auth0Service,
+                cityzenRepositoryPostgreSQL,
+                cityRepositoryInMemory,
+            ),
+        ),
+    );
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 errorHandler,
                 auth0Service,
+                cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
                 new HotspotFactory(),
                 algolia,
@@ -111,11 +126,15 @@ export const init = (server: restify.Server) => {
             new MessageCtrl(
                 errorHandler,
                 auth0Service,
+                cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
                 messageRepositoryInMemory,
                 messageFactory,
             ),
         ),
+    );
+    routers.push(
+        new CityzenRouter(new CityzenCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
     );
 
     routers.forEach(r => r.bind(server));

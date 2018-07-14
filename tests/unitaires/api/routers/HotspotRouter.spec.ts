@@ -10,6 +10,7 @@ import Login from '../../../../src/api/services/auth/Login';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
+import OrmCityzen from '../../../../src/infrastructure/ormCityzen';
 
 describe('hotspots router', () => {
     it('should register routes related to hotspots', () => {
@@ -20,6 +21,7 @@ describe('hotspots router', () => {
         const hostpotFactoryMoq: TypeMoq.IMock<HotspotFactory> = TypeMoq.Mock.ofType<
             HotspotFactory
         >();
+        const ormCityzenMoq: TypeMoq.IMock<OrmCityzen> = TypeMoq.Mock.ofType();
         const algoliaMock: TypeMoq.IMock<Algolia> = TypeMoq.Mock.ofType<Algolia>(
             Algolia,
             TypeMoq.MockBehavior.Loose,
@@ -34,6 +36,7 @@ describe('hotspots router', () => {
             errorHandlerMoq,
             loginServiceMoq,
             hotspotRepositoryPostgreSQL,
+            ormCityzenMoq,
             hostpotFactoryMoq,
             algoliaMock.object,
         );
