@@ -294,7 +294,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        if (!isAuthorized.toPatchMessage(hotspot, message, this.cityzenIfAuthenticated)) {
+        if (!isAuthorized.toPatchMessage(message, this.cityzenIfAuthenticated)) {
             return next(
                 this.errorHandler.logAndCreateUnautorized(
                     `PATCH ${req.path()}`,
@@ -323,7 +323,8 @@ class MessageCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
     public removeMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.messageRepository.isSet(new MessageId(req.params.messageId))) {
+        const messageId = new MessageId(req.params.messageId);
+        if (!this.messageRepository.isSet(messageId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
                     `DELETE ${req.path()}`,
@@ -342,7 +343,8 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        if (!isAuthorized.toRemoveMessages(hotspot, this.cityzenIfAuthenticated)) {
+        const message = await this.messageRepository.findById(messageId);
+        if (!isAuthorized.toRemoveMessages(message, this.cityzenIfAuthenticated)) {
             return next(
                 this.errorHandler.logAndCreateUnautorized(
                     `DELETE ${req.path()}`,
