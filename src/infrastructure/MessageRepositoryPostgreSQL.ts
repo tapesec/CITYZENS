@@ -21,7 +21,7 @@ class MessageRepositoryPostgreSql implements IMessageRepository {
 
         for (const entry of results) {
             const message = new MessageId(entry['parent_id']);
-            const count = entry['count'];
+            const count = parseInt(entry['count'], 10);
             commentCountJson[message.toString()] = count;
         }
         return commentCountJson;
