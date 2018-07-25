@@ -103,7 +103,7 @@ export default class OrmHotspot {
 
     public async findOne(hotspotId: HotspotId) {
         const query =
-            'SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id WHERE id = $1 AND removed = false';
+            'SELECT * from hotspots h JOIN cityzens c ON h.author_id = c.user_id WHERE h.id = $1 AND removed = false';
         const values = [hotspotId.toString()];
 
         const result = await this.postgre.query(query, values);

@@ -168,7 +168,7 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        const hotspotId = new HotspotId(req.params.id);
+        const hotspotId = new HotspotId(req.params.hotspotId);
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.errorHandler.logAndCreateNotFound(
@@ -177,9 +177,12 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
+        console.log('bon');
         try {
             const visitedHotspot = await this.hotspotRepository.findById(hotspotId);
+            console.log(visitedHotspot.views, 'before');
             visitedHotspot.countOneMoreView();
+            console.log(visitedHotspot.views, 'after');
             await this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
