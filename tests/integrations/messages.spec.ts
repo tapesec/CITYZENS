@@ -67,7 +67,7 @@ const messagesEndpointsTests = (state: any) => {
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body)
                     .to.have.property(MessageSample.MARTIGNAS_TOWNHALL_MESSAGE.id.toString())
-                    .to.be.equal('1');
+                    .to.be.equal(1);
             });
 
             it('Should delete previous comment.', async () => {
