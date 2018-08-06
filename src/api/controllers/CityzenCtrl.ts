@@ -17,7 +17,11 @@ class CityzenCtrl extends RootCtrl {
     // GET /cityzens/{cityzenId}
     public cityzen = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
-            const cityzenId = new CityzenId(req.params.cityzenId);
+            if (!req.query.provider) {
+                return next(this.errorHandler.logAndCreateBadRequest(`GET ${req.path()}`));
+            }
+            const userId = `${req.query.provider}|${req.params.cityzenId}`;
+            const cityzenId = new CityzenId(userId);
 
             const cityzen = await this.cityzenRepository.findById(cityzenId);
             if (cityzen === undefined) {
