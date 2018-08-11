@@ -6,17 +6,18 @@ const cityzenTest = (state: any) => {
     describe('/cityzens endpoint', () => {
         describe('GET /cityzens/{cityzenID}', () => {
             it('Should return a Cityzen with correct user_id', async () => {
-                const cityzenId = 'auth0|5';
-
+                const cityzenId = '5';
+                const provider = 'auth0';
                 const response = await request(server)
                     .get('/cityzens/' + cityzenId)
+                    .query({ provider })
                     .set('Authorization', `Bearer ${state.admin.access_token}`)
                     .set('Accept', 'application/json');
 
                 expect(response.ok, response.text).to.be.true;
                 expect(response.body)
                     .to.have.property('id')
-                    .to.be.equal(cityzenId);
+                    .to.be.equal(`${provider}|${cityzenId}`);
 
                 expect(response.body).to.not.have.property('password');
             });
