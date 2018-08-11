@@ -18,6 +18,7 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     }
     public async findById(id: CityzenId) {
         const data = await this.orm.findById(id);
+        console.log(data, 'data cityzen');
         if (!this.validator.validate(cityzensDbSchema, data)) {
             throw new Error(
                 `Data from database are ill-formed ${this.validator.errorsText()}, ${JSON.stringify(
