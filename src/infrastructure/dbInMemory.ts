@@ -1,4 +1,4 @@
-const slug = require('slug');
+// const slug = require('slug');
 import CitySample from '../domain/cityLife/model/sample/CitySample';
 import MessageSample from '../domain/cityLife/model/sample/MessageSample';
 import CityzenSample from '../domain/cityzens/model/CityzenSample';
