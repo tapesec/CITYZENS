@@ -12,7 +12,7 @@ import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/Med
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryInMemory';
+import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';
 
 describe('ProfileCtrl', () => {

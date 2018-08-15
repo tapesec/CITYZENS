@@ -10,6 +10,7 @@ class Cityzen {
     protected _pictureExtern: ImageLocation;
     protected _pictureCityzen: ImageLocation;
     protected _favoritesHotspots: Set<string>;
+    protected _createdAt: Date;
 
     constructor(
         id: CityzenId,
@@ -20,6 +21,7 @@ class Cityzen {
         description: string,
         pictureExtern: ImageLocation,
         pictureCityzen: ImageLocation,
+        createdAt: Date,
     ) {
         this._id = id;
         this._email = email;
@@ -29,6 +31,7 @@ class Cityzen {
         this._description = description;
         this._pictureExtern = pictureExtern;
         this._pictureCityzen = pictureCityzen;
+        this._createdAt = createdAt;
     }
 
     get id(): CityzenId {
@@ -63,6 +66,10 @@ class Cityzen {
         return this._pictureExtern;
     }
 
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+
     editDescription(newDescription: string): void {
         this._description = newDescription;
     }
@@ -88,6 +95,7 @@ class Cityzen {
             pictureExtern: this.pictureExtern.toString(),
             pictureCityzen: this.pictureCityzen.toString(),
             favoritesHotspots: JSON.stringify(Array.from(this.favoritesHotspots)),
+            createdAt: this.createdAt.toJSON(),
         };
     }
 }

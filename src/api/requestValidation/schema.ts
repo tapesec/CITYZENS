@@ -128,7 +128,7 @@ export const getMessageSchemaQuery = {
 export const cityzensDbSchema = {
     title: "Schema of the postgre's table cityzens",
     type: 'object',
-    required: ['user_id', 'email', 'is_admin', 'pseudo', 'picture_cityzen'],
+    required: ['user_id', 'email', 'is_admin', 'pseudo', 'picture_cityzen', 'created_at'],
     properties: {
         user_id: {
             type: 'string',
@@ -159,6 +159,9 @@ export const cityzensDbSchema = {
             items: {
                 type: 'string',
             },
+        },
+        created_at: {
+            type: 'string',
         },
     },
     additionalProperties: false,

@@ -13,6 +13,7 @@ class CityzenSample {
         'Jeune enfant',
         new ImageLocation(undefined),
         new ImageLocation(config.cityzen.defaultAvatar),
+        new Date(),
     );
     public static LOUISE: Cityzen = new Cityzen(
         new CityzenId('auth0|5'),
@@ -23,6 +24,7 @@ class CityzenSample {
         'Jeune écolière',
         new ImageLocation(undefined),
         new ImageLocation(config.cityzen.defaultAvatar),
+        new Date(),
     );
     public static ELODIE: Cityzen = new Cityzen(
         new CityzenId('auth0|6'),
@@ -33,6 +35,7 @@ class CityzenSample {
         'Infirmière libérale',
         new ImageLocation(undefined),
         new ImageLocation(config.cityzen.defaultAvatar),
+        new Date(),
     );
 
     public static LIONNEL: Cityzen = new Cityzen(
@@ -44,6 +47,7 @@ class CityzenSample {
         'Hipster',
         new ImageLocation(undefined),
         new ImageLocation(config.cityzen.defaultAvatar),
+        new Date(),
     );
 
     public static LUCA: Cityzen = new Cityzen(
@@ -55,6 +59,7 @@ class CityzenSample {
         'Hipster',
         new ImageLocation(undefined),
         new ImageLocation(config.cityzen.defaultAvatar),
+        new Date(),
     );
 }
 

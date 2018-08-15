@@ -5,6 +5,7 @@ class UserInfoAuth0 {
     private _pictureCityzen: string;
     private _pictureExtern: string;
     private _updateAt: string;
+    private _createdAt: string;
     private _email: string;
     private _email_verified: boolean;
     private _user_metadata: any;
@@ -22,6 +23,7 @@ class UserInfoAuth0 {
         this._user_metadata = userInfo['https://www.cityzen.fr/user_metadata'] as any;
         this._app_metadata = userInfo['https://www.cityzen.fr/app_metadata'] as any;
         this._updateAt = userInfo.updateAt as string;
+        this._createdAt = userInfo.updateAt as string;
         if (!this._user_metadata) return;
 
         this._isAdmin = this._user_metadata.isAdmin as boolean;
@@ -50,6 +52,10 @@ class UserInfoAuth0 {
 
     public get updatedAt(): string {
         return this._updateAt;
+    }
+
+    public get createdAt(): string {
+        return this._createdAt;
     }
 
     public get email(): string {

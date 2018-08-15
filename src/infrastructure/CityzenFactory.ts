@@ -16,6 +16,7 @@ export default class CityzenFactory {
             'No description available',
             new ImageLocation(data.picture_extern),
             new ImageLocation(data.picture_cityzen),
+            data.created_at,
         );
     }
 }

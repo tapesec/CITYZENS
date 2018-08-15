@@ -49,6 +49,7 @@ const cityzenFromAuth0 = (payload: UserInfoAuth0): Cityzen => {
         description,
         new ImageLocation(pictureExtern),
         new ImageLocation(pictureCityzen),
+        new Date(payload.createdAt),
     );
 
     return cityzen;
