@@ -27,7 +27,8 @@ const cityzens = async (postgre: PostgreSQL) => {
             picture_cityzen text NOT NULL DEFAULT '${config.cityzen.defaultAvatar}',
             picture_extern text,
             is_admin boolean DEFAULT FALSE,
-            favorites_hotspots text[]
+            favorites_hotspots text[],
+            created_at timestamp NOT NULL DEFAULT current_timestamp,
         )`;
         await postgre.query(createTable);
 
