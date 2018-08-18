@@ -13,7 +13,7 @@ export default class CityzenFactory {
             data.pseudo,
             data.is_admin,
             new Set<string>(data.favorites_hotspots),
-            'No description available',
+            data.description,
             new ImageLocation(data.picture_extern),
             new ImageLocation(data.picture_cityzen),
             data.created_at,

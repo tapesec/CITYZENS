@@ -43,7 +43,6 @@ class RootCtrl {
         const access_token = headerAuthorization.slice(7);
         try {
             this.userInfo = await this.auth0Service.getUserInfo(access_token);
-            httpLogger.info(JSON.stringify(this.userInfo));
             this.cityzenIfAuthenticated = await this.cityzenRepository.findById(
                 new CityzenId(this.userInfo.sub),
             );

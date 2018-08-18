@@ -4,6 +4,7 @@ import CityzenId from '../domain/cityzens/model/CityzenId';
 import ICityzenRepository from '../domain/cityzens/model/ICityzenRepository';
 import OrmCityzen from './../infrastructure/ormCityzen';
 import CityzenFactory from './CityzenFactory';
+import Cityzen from '../domain/cityzens/model/Cityzen';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     private cityzenFactory: CityzenFactory;
@@ -19,14 +20,10 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     public async findById(id: CityzenId) {
         const data = await this.orm.findById(id);
         // console.log(data, 'data cityzen');
-        /* if (!this.validator.validate(cityzensDbSchema, data)) {
-            throw new Error(
-                `Data from database are ill-formed ${this.validator.errorsText()}, ${JSON.stringify(
-                    data,
-                )}`,
-            );
-        } */
-
         return this.cityzenFactory.build(data);
+    }
+
+    public updateCityzen(cityzen: Cityzen) {
+        return this.orm.update(cityzen);
     }
 }

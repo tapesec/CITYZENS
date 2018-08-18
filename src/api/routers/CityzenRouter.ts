@@ -11,6 +11,12 @@ class CityzenRouter {
             this.ctrl.loadAuthenticatedUser,
             this.ctrl.cityzen,
         );
+
+        server.patch(
+            CITYZEN_ENDPOINT + '/:cityzenId',
+            this.ctrl.loadAuthenticatedUser,
+            this.ctrl.patchCityzen,
+        );
     }
 }
 

@@ -24,6 +24,7 @@ const cityzens = async (postgre: PostgreSQL) => {
             email text NOT NULL UNIQUE,
             email_verified boolean DEFAULT FALSE,
             pseudo text,
+            description text,
             picture_cityzen text NOT NULL DEFAULT '${config.cityzen.defaultAvatar}',
             picture_extern text,
             is_admin boolean DEFAULT FALSE,

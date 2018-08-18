@@ -1,5 +1,6 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzens/model/CityzenId';
+import Cityzen from '../domain/cityzens/model/Cityzen';
 
 class OrmCityzen {
     constructor(private postgre: PostgreSQL) {}
@@ -50,6 +51,16 @@ class OrmCityzen {
             [data, id.toString()],
         );
     };
+    update(cityzen: Cityzen) {
+        const query = `
+            UPDATE cityzens
+            SET description = $2
+            WHERE user_id = $1
+        `;
+        const values = [cityzen.id.toString(), cityzen.description];
+
+        return this.postgre.query(query, values);
+    }
 }
 
 export default OrmCityzen;

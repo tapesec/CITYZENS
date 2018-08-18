@@ -177,12 +177,9 @@ class HotspotCtrl extends RootCtrl {
                 ),
             );
         }
-        console.log('bon');
         try {
             const visitedHotspot = await this.hotspotRepository.findById(hotspotId);
-            console.log(visitedHotspot.views, 'before');
             visitedHotspot.countOneMoreView();
-            console.log(visitedHotspot.views, 'after');
             await this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {

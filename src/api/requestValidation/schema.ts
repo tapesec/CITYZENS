@@ -166,3 +166,15 @@ export const cityzensDbSchema = {
     },
     additionalProperties: false,
 };
+
+export const patchCityzenSchema = {
+    title: 'Patch cityzen request body schema',
+    type: 'object',
+    anyOf: [{ required: ['description'] }],
+    properties: {
+        description: {
+            type: 'string',
+            maxLength: validation.CITYZEN_DESCRIPTION_MAX_LENGTH,
+        },
+    },
+};
