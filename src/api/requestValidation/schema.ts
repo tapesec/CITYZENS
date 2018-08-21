@@ -170,11 +170,15 @@ export const cityzensDbSchema = {
 export const patchCityzenSchema = {
     title: 'Patch cityzen request body schema',
     type: 'object',
-    anyOf: [{ required: ['description'] }],
+    anyOf: [{ required: ['description'] }, { required: ['pictureCityzen'] }],
     properties: {
         description: {
             type: 'string',
             maxLength: validation.CITYZEN_DESCRIPTION_MAX_LENGTH,
+        },
+        pictureCityzen: {
+            type: 'string',
+            title: 'the filestack handle of the picture',
         },
     },
 };

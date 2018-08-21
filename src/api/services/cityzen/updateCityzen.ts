@@ -1,8 +1,12 @@
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
+import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
 
 const updateCityzen = (cityzenToUpdate: Cityzen, requestPayload: any): Cityzen => {
     if (requestPayload.description !== undefined) {
         cityzenToUpdate.editDescription(requestPayload.description);
+    }
+    if (requestPayload.pictureCityzen !== undefined) {
+        cityzenToUpdate.editPictureLocation(new ImageLocation(requestPayload.pictureCityzen));
     }
     return cityzenToUpdate;
 };

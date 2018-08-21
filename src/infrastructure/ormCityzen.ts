@@ -54,10 +54,14 @@ class OrmCityzen {
     update(cityzen: Cityzen) {
         const query = `
             UPDATE cityzens
-            SET description = $2
+            SET description = $2, picture_cityzen = $3
             WHERE user_id = $1
         `;
-        const values = [cityzen.id.toString(), cityzen.description];
+        const values = [
+            cityzen.id.toString(),
+            cityzen.description,
+            cityzen.pictureCityzen.toString(),
+        ];
 
         return this.postgre.query(query, values);
     }
