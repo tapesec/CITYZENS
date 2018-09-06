@@ -53,7 +53,7 @@ jobs:
                   name: listen deploy events
                   command: |
                       node testci.js
-                      sudo npm install -g wscat
+                      npm install webscocket
                       wscat -c wss://api.clever-cloud.com/v2/events/event-socket
 
 workflows:
