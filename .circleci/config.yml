@@ -53,8 +53,7 @@ jobs:
                   name: listen deploy events
                   command: |
                       sudo npm install -g wscat
-                      wscat -c ws://echo.websocket.org
-                      wss://api.clever-cloud.com/v2/events/event-socket
+                      wscat -c wss://api.clever-cloud.com/v2/events/event-socket < "{\"message_type\": \"oauth\",\"authorization\": \"<oauth_header>\"}"
 
 workflows:
     version: 2
