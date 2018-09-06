@@ -53,7 +53,7 @@ jobs:
                   name: listen deploy events
                   command: |
                       npm install websocket
-                      node testci.js
+                      node deployment-listener.js --app CITYZENS-API
 
 workflows:
     version: 2

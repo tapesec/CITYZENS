@@ -47,7 +47,8 @@
         "typemoq": "^2.1.0",
         "uuid": "^3.2.1",
         "websocket": "^1.0.26",
-        "winston": "^3.0.0-rc1"
+        "winston": "^3.0.0-rc1",
+        "ws": "^6.0.0"
     },
     "devDependencies": {
         "@types/chai": "^4.1.2",
