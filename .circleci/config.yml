@@ -52,7 +52,7 @@ jobs:
             - run:
                   name: listen deploy events
                   command: |
-                      npm install webscocket
+                      npm install websocket
                       node testci.js
 
 workflows:
