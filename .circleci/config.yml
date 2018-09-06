@@ -52,7 +52,6 @@ jobs:
             - run:
                   name: listen deploy events
                   command: |
-                      npm install websocket
                       node deployment-listener.js --app CITYZENS-API
 
 workflows:
