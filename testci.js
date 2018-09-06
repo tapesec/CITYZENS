@@ -18,7 +18,7 @@ client.on('connect', function(connection) {
     });
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
-            console.log("Received: '" + message.utf8Data + "'");
+            console.log("Received: '" + JSON.stringify(message.utf8Data) + "'");
         }
         process.exit(0);
     });
