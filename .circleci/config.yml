@@ -52,7 +52,7 @@ jobs:
             - run:
                   name: listen deploy events
                   command: |
-                      npm install -g wscat
+                      sudo npm install -g wscat
                       wscat -c ws://echo.websocket.org
                       wss://api.clever-cloud.com/v2/events/event-socket
 
