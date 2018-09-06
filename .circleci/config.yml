@@ -52,10 +52,9 @@ jobs:
             - run:
                   name: listen deploy events
                   command: |
-                      sudo apt-get install libevent
-                      git clone git://github.com/progrium/wssh.git
-                      cd wssh
-                      python setup.py install
+                      npm install -g wscat
+                      wscat -c ws://echo.websocket.org
+                      wss://api.clever-cloud.com/v2/events/event-socket
 
 workflows:
     version: 2
