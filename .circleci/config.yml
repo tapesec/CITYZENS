@@ -26,15 +26,15 @@ jobs:
                       # fallback to using the latest cache if no exact match is found
                       - v1-dependencies-
 
-            - run: npm install
+            #- run: npm install
 
-            - save_cache:
-                  paths:
-                      - node_modules
-                  key: v1-dependencies-{{ checksum "package.json" }}
+            #- save_cache:
+            #      paths:
+            #          - node_modules
+            #      key: v1-dependencies-{{ checksum "package.json" }}
 
             # run tests!
-            - run: npm test
+            #- run: npm test
     deploy:
         docker:
             - image: circleci/node:8.9.4
@@ -44,11 +44,11 @@ jobs:
         steps:
             - checkout
 
-            - run:
-                  name: clever deploy
-                  command: |
-                      git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
-                      git push -u clever master
+            #- run:
+            #      name: clever deploy
+            #      command: |
+            #          git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
+            #          git push -u clever master
             - run:
                   name: listen deploy events
                   command: |
