@@ -33,7 +33,7 @@ jobs:
                       - node_modules
                   key: v1-dependencies-{{ checksum "package.json" }}
 
-             run tests!
+              run tests!
             - run: npm test
     deploy:
         docker:
@@ -45,13 +45,14 @@ jobs:
             - checkout
 
             - run:
-                  name: clever deploy
-                  command: |
-                      git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
-                      git push -u clever master
+                   name: clever deploy
+                   command: |
+                       git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
+                       git push -u clever master
             - run:
                   name: listen deploy events
                   command: |
+                      npm install websocket
                       node deployment-listener.js --app CITYZENS-API
 
 workflows:
