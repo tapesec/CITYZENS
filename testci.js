@@ -34,4 +34,5 @@ client.on('connect', function(connection) {
     auth();
 });
 
-client.connect('wss://api.clever-cloud.com/v2/events/event-socket');
+// client.connect('wss://api.clever-cloud.com/v2/events/event-socket');
+client.connect('wss://echo.websocket.org');
