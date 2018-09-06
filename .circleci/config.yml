@@ -51,6 +51,13 @@ jobs:
           command: |
             git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/$CLEVER_APP_ID.git
             git push -u clever master
+      -run:
+          name: listen deploy events
+          command: |
+            apt-get install libevent
+            git clone git://github.com/progrium/wssh.git
+            cd wssh
+            python setup.py install
 
 workflows:
   version: 2
