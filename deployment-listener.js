@@ -31,7 +31,7 @@ client.on('connect', function(connection) {
                 parsedMessage.event === 'DEPLOYMENT_SUCCESS'
             ) {
                 console.log('Deployment finished successfully ! next step …');
-                process.exit(0);
+                connection.close();
             }
             if (
                 application &&
