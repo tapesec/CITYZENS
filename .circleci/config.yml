@@ -35,7 +35,7 @@ jobs:
 
               # run tests!
             - run: npm test
-    deploy:
+    deploy-dev:
         docker:
             - image: circleci/node:8.9.4
 
@@ -58,6 +58,29 @@ jobs:
                   name: listen deploy events
                   command: |
                       node deployment-listener.js --app CITYZENS-API
+    deploy-prod:
+        docker:
+            - image: circleci/node:8.9.4
+
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+
+            - run:
+                  name: install websocket
+                  command: |
+                      npm install websocket
+
+            - run:
+                  name: clever deploy
+                  command: |
+                      git remote add clever https://$CLEVER_TOKEN:$CLEVER_SECRET@push-par-clevercloud-customers.services.clever-cloud.com/app_309e49c6-3269-47ec-b0b0-35ff5b9890be.git
+                      git push -u clever master
+            - run:
+                  name: listen deploy events
+                  command: |
+                      node deployment-listener.js --app CITYZENS_API_PROD
 
 workflows:
     version: 2
@@ -65,9 +88,15 @@ workflows:
         jobs:
             - build
 
-            - deploy:
+            - deploy-dev:
                   requires:
                       - build
+                  filters:
+                      branches:
+                          only: master
+            - deploy-prod:
+                  requires:
+                      - deploy-dev
                   filters:
                       branches:
                           only: master
