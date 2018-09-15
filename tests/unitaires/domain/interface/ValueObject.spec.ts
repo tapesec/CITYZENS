@@ -1,17 +1,17 @@
-import HotspotId from '../../../../src/domain/cityLife/model/hotspot/HotspotId';
-import HotspotSlug from '../../../../src/domain/cityLife/model/hotspot/HotspotSlug';
-import HotspotTitle from '../../../../src/domain/cityLife/model/hotspot/HotspotTitle';
-import MemberList from '../../../../src/domain/cityLife/model/hotspot/MemberList';
-import Position from '../../../../src/domain/cityLife/model/hotspot/Position';
-import ViewsCount from '../../../../src/domain/cityLife/model/hotspot/ViewsCount';
-import Address from '../../../../src/domain/cityLife/model/hotspot/Address';
-import CityId from '../../../../src/domain/cityLife/model/city/CityId';
-import Author from '../../../../src/domain/cityLife/model/author/Author';
-import ImageLocation from '../../../../src/domain/cityLife/model/hotspot/ImageLocation';
+import HotspotId from '../../../../src/domain/model/HotspotId';
+import HotspotSlug from '../../../../src/domain/model/HotspotSlug';
+import HotspotTitle from '../../../../src/domain/model/HotspotTitle';
+import MemberList from '../../../../src/domain/model/MemberList';
+import Position from '../../../../src/domain/model/Position';
+import ViewsCount from '../../../../src/domain/model/ViewsCount';
+import Address from '../../../../src/domain/model/Address';
+import CityId from '../../../../src/domain/model/CityId';
+import Author from '../../../../src/domain/model/Author';
+import ImageLocation from '../../../../src/domain/model/ImageLocation';
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
-import SlideShow from '../../../../src/domain/cityLife/model/hotspot/SlideShow';
+import SlideShow from '../../../../src/domain/model/SlideShow';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {

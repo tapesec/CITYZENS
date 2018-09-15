@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import * as server from './../../src/api/server';
 import { AlertHotspotPostBody } from './sample/requests-responses';
 
-export const votingPath = state => {
+export const votingPath = (state: any) => {
     describe('Voting path.', () => {
         let hotspotToVote;
         it('Should create a new AlertHotspot to vote on.', async () => {

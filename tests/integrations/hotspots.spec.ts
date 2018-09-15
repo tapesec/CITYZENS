@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import * as request from 'supertest';
-import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import MediaHotspotSample from '../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import AlertHotspotSample from '../../src/domain/model/sample/AlertHotspotSample';
+import MediaHotspotSample from '../../src/domain/model/sample/MediaHotspotSample';
 import * as server from './../../src/api/server';
-import PositionSample from './../../src/domain/cityLife/model/sample/PositionSample';
+import PositionSample from '../../src/domain/model/sample/PositionSample';
 import { AlertHotspotPostBody, MediaHotspotPostBody } from './sample/requests-responses';
 
 const hotspotsEndpointsTests = (state: any) => {

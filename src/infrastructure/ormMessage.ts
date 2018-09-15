@@ -1,7 +1,7 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import Message from '../domain/cityLife/model/messages/Message';
-import MessageId from '../domain/cityLife/model/messages/MessageId';
+import HotspotId from '../domain/model/HotspotId';
+import Message from '../domain/model/Message';
+import MessageId from '../domain/model/MessageId';
 
 export default class OrmMessage {
     constructor(private postgre: PostgreSQL) {}

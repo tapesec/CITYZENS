@@ -1,7 +1,7 @@
-import IMessageRepository from 'src/domain/cityLife/model/messages/IMessageRepository';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import Message from '../domain/cityLife/model/messages/Message';
-import MessageId from '../domain/cityLife/model/messages/MessageId';
+import IMessageRepository from '../domain/interface/IMessageRepository';
+import HotspotId from '../domain/model/HotspotId';
+import Message from '../domain/model/Message';
+import MessageId from '../domain/model/MessageId';
 import MessageFactory from './MessageFactory';
 import OrmMessage from './ormMessage';
 

@@ -3,9 +3,9 @@ import * as TypeMoq from 'typemoq';
 import CityCtrl from '../../../../src/api/controllers/CityCtrl';
 import Auth0Service from '../../../../src/api/services/auth/Auth0Service';
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
-import City from '../../../../src/domain/cityLife/model/city/City';
-import PostalCode from '../../../../src/domain/cityLife/model/city/PostalCode';
-import Position from '../../../../src/domain/cityLife/model/hotspot/Position';
+import City from '../../../../src/domain/model/City';
+import PostalCode from '../../../../src/domain/model/PostalCode';
+import Position from '../../../../src/domain/model/Position';
 import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import { CityRepositoryInMemory } from './../../../../src/infrastructure/CityRepositoryInMemory';
 

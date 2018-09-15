@@ -1,8 +1,8 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
-import MessageId from '../../domain/cityLife/model/messages/MessageId';
+import HotspotId from '../../domain/model/HotspotId';
+import MessageId from '../../domain/model/MessageId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../infrastructure/MessageFactory';
@@ -14,7 +14,7 @@ import {
 } from '../requestValidation/schema';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import * as isAuthorized from '../services/hotspot/isAuthorized';
-import Message from './../../domain/cityLife/model/messages/Message';
+import Message from '../../domain/model/Message';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
 

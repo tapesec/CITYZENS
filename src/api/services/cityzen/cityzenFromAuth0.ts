@@ -1,5 +1,5 @@
 import UserInfoAuth0 from 'src/api/services/auth/UserInfoAuth0';
-import ImageLocation from '../../../domain/cityLife/model/hotspot/ImageLocation';
+import ImageLocation from '../../../domain/model/ImageLocation';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenId from '../../../domain/cityzens/model/CityzenId';
 

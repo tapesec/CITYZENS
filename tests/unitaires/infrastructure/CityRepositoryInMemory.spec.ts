@@ -1,6 +1,6 @@
-import City from '../../../src/domain/cityLife/model/city/City';
+import City from '../../../src/domain/model/City';
 import cityRepositoryInMemory from '../../../src/infrastructure/CityRepositoryInMemory';
-import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
+import CitySample from '../../../src/domain/model/sample/CitySample';
 import { expect } from 'chai';
 
 describe('City repository in memory', () => {

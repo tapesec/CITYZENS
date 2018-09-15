@@ -1,4 +1,4 @@
-import ImageLocation from '../../cityLife/model/hotspot/ImageLocation';
+import ImageLocation from '../../model/ImageLocation';
 import CityzenId from './CityzenId';
 
 class Cityzen {

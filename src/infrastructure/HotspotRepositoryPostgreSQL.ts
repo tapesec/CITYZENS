@@ -1,9 +1,9 @@
-import CityId from '../domain/cityLife/model/city/CityId';
-import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import Hotspot from '../domain/cityLife/model/hotspot/Hotspot';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import IHotspotRepository from '../domain/cityLife/model/hotspot/IHotspotRepository';
-import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+import CityId from '../domain/model/CityId';
+import AlertHotspot from '../domain/model/AlertHotspot';
+import Hotspot from '../domain/model/Hotspot';
+import HotspotId from '../domain/model/HotspotId';
+import IHotspotRepository from '../domain/interface/IHotspotRepository';
+import MediaHotspot from '../domain/model/MediaHotspot';
 import HotspotFactory from './HotspotFactory';
 import OrmHotspot from './ormHotspot';
 

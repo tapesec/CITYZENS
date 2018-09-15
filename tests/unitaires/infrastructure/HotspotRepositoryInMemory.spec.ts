@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import * as TypeMoq from 'typemoq';
 import { v4 } from 'uuid';
-import CityId from '../../../src/domain/cityLife/model/city/CityId';
-import Hotspot from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
-import CitySample from '../../../src/domain/cityLife/model/sample/CitySample';
-import MediaHotspotSample from '../../../src/domain/cityLife/model/sample/MediaHotspotSample';
-import PositionSample from '../../../src/domain/cityLife/model/sample/PositionSample';
+import CityId from '../../../src/domain/model/CityId';
+import Hotspot from '../../../src/domain/model/Hotspot';
+import HotspotId from '../../../src/domain/model/HotspotId';
+import CitySample from '../../../src/domain/model/sample/CitySample';
+import MediaHotspotSample from '../../../src/domain/model/sample/MediaHotspotSample';
+import PositionSample from '../../../src/domain/model/sample/PositionSample';
 import {
     CITYZEN_ELODIE,
     CITYZEN_MARTIN,

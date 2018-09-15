@@ -1,4 +1,4 @@
-import ImageLocation from '../../cityLife/model/hotspot/ImageLocation';
+import ImageLocation from '../../model/ImageLocation';
 import config from './../../../api/config';
 import Cityzen from './Cityzen';
 import CityzenId from './CityzenId';

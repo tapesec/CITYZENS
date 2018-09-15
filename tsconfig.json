@@ -9,6 +9,6 @@
         "baseUrl": ".",
         "allowJs": true
     },
-    "exclude": ["./build", "./node_modules"],
+    "exclude": ["./build", "./node_modules", "./tests/**/*.ts"],
     "include": ["./src/api/server.ts", "./src/**/*.ts", "./src/**/*.js", "./src/**/*.json"]
 }

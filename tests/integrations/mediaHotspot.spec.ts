@@ -2,7 +2,7 @@ import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import { mediaHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
-import { HotspotScope } from '../../src/domain/cityLife/model/hotspot/Hotspot';
+import { HotspotScope } from '../../src/domain/model/Hotspot';
 import * as server from './../../src/api/server';
 import { MediaHotspotPostBody } from './sample/requests-responses';
 

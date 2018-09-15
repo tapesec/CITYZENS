@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import ImageLocation from '../domain/cityLife/model/hotspot/ImageLocation';
-import Message from '../domain/cityLife/model/messages/Message';
-import MessageId from '../domain/cityLife/model/messages/MessageId';
+import HotspotId from '../domain/model/HotspotId';
+import ImageLocation from '../domain/model/ImageLocation';
+import Message from '../domain/model/Message';
+import MessageId from '../domain/model/MessageId';
 import CityzenId from '../domain/cityzens/model/CityzenId';
-import Author from './../domain/cityLife/model/author/Author';
+import Author from '../domain/model/Author';
 
 class MessageFactory {
     public createMessage = (data: any): Message => {

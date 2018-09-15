@@ -1,9 +1,9 @@
 import * as Chai from 'chai';
-import Message from '../../../../src/domain/cityLife/model/messages/Message';
-import AlertHotspotSample from '../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import AuthorSample from '../../../../src/domain/cityLife/model/sample/AuthorSample';
-import MediaHotspotSample from '../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
-import MessageSample from '../../../../src/domain/cityLife/model/sample/MessageSample';
+import Message from '../../../../src/domain/model/Message';
+import AlertHotspotSample from '../../../../src/domain/model/sample/AlertHotspotSample';
+import AuthorSample from '../../../../src/domain/model/sample/AuthorSample';
+import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
+import MessageSample from '../../../../src/domain/model/sample/MessageSample';
 import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
 import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
 import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';

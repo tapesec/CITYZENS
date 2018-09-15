@@ -1,10 +1,10 @@
 import { hstoreConverter } from '../api/services/postgreSQL/hstoreConverter';
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
-import CityId from '../domain/cityLife/model/city/CityId';
-import AlertHotspot from '../domain/cityLife/model/hotspot/AlertHotspot';
-import Hotspot, { HotspotType } from '../domain/cityLife/model/hotspot/Hotspot';
-import HotspotId from '../domain/cityLife/model/hotspot/HotspotId';
-import MediaHotspot from '../domain/cityLife/model/hotspot/MediaHotspot';
+import CityId from '../domain/model/CityId';
+import AlertHotspot from '../domain/model/AlertHotspot';
+import Hotspot, { HotspotType } from '../domain/model/Hotspot';
+import HotspotId from '../domain/model/HotspotId';
+import MediaHotspot from '../domain/model/MediaHotspot';
 import MapToObject from '../helpers/MapToObject';
 const slug = require('slug');
 export default class OrmHotspot {

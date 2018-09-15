@@ -2,7 +2,7 @@ import * as ajv from 'ajv';
 import { expect } from 'chai';
 import * as request from 'supertest';
 import { alertHotspotSchema } from '../../src/api/requestValidation/responseHotspotsSchema';
-import AlertHotspotSample from '../../src/domain/cityLife/model/sample/AlertHotspotSample';
+import AlertHotspotSample from '../../src/domain/model/sample/AlertHotspotSample';
 import * as server from './../../src/api/server';
 import { AlertHotspotPostBody } from './sample/requests-responses';
 

@@ -1,6 +1,6 @@
-import Author from '../../../domain/cityLife/model/author/Author';
-import Hotspot, { HotspotScope } from '../../../domain/cityLife/model/hotspot/Hotspot';
-import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
+import Author from '../../../domain/model/Author';
+import Hotspot, { HotspotScope } from '../../../domain/model/Hotspot';
+import MediaHotspot from '../../../domain/model/MediaHotspot';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenId from '../../../domain/cityzens/model/CityzenId';
 

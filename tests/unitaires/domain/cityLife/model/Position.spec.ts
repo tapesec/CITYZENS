@@ -1,4 +1,4 @@
-import Position from '../../../../../src/domain/cityLife/model/hotspot/Position';
+import Position from '../../../../../src/domain/model/Position';
 import { expect } from 'chai';
 
 describe('Position value object', () => {

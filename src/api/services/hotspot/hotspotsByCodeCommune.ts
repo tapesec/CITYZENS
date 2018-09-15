@@ -1,4 +1,4 @@
-import CityId from '../../../domain/cityLife/model/city/CityId';
+import CityId from '../../../domain/model/CityId';
 import HotspotRepositoryInMemory from '../../../infrastructure/HotspotRepositoryPostgreSQL';
 
 const hotspotsByCodeCommune = (

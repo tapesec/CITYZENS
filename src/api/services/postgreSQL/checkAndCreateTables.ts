@@ -1,9 +1,9 @@
-import AlertHotspot from '../../../domain/cityLife/model/hotspot/AlertHotspot';
-import { HotspotType } from '../../../domain/cityLife/model/hotspot/Hotspot';
-import MediaHotspot from '../../../domain/cityLife/model/hotspot/MediaHotspot';
-import AlertHotspotSample from '../../../domain/cityLife/model/sample/AlertHotspotSample';
-import MediaHotspotsSample from '../../../domain/cityLife/model/sample/MediaHotspotSample';
-import MessageSample from '../../../domain/cityLife/model/sample/MessageSample';
+import AlertHotspot from '../../../domain/model/AlertHotspot';
+import { HotspotType } from '../../../domain/model/Hotspot';
+import MediaHotspot from '../../../domain/model/MediaHotspot';
+import AlertHotspotSample from '../../../domain/model/sample/AlertHotspotSample';
+import MediaHotspotsSample from '../../../domain/model/sample/MediaHotspotSample';
+import MessageSample from '../../../domain/model/sample/MessageSample';
 import Cityzen from '../../../domain/cityzens/model/Cityzen';
 import CityzenSample from '../../../domain/cityzens/model/CityzenSample';
 import MapToObject from '../../../helpers/MapToObject';

@@ -1,11 +1,11 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import CityId from '../../domain/cityLife/model/city/CityId';
-import AlertHotspot from '../../domain/cityLife/model/hotspot/AlertHotspot';
-import Hotspot from '../../domain/cityLife/model/hotspot/Hotspot';
-import HotspotId from '../../domain/cityLife/model/hotspot/HotspotId';
-import MediaHotspot from '../../domain/cityLife/model/hotspot/MediaHotspot';
+import CityId from '../../domain/model/CityId';
+import AlertHotspot from '../../domain/model/AlertHotspot';
+import Hotspot from '../../domain/model/Hotspot';
+import HotspotId from '../../domain/model/HotspotId';
+import MediaHotspot from '../../domain/model/MediaHotspot';
 import CityzenId from '../../domain/cityzens/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../infrastructure/HotspotFactory';

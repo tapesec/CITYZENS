@@ -1,6 +1,6 @@
-import Message from '../../../domain/cityLife/model/messages/Message';
-import Hotspot, { HotspotScope } from './../../../domain/cityLife/model/hotspot/Hotspot';
-import MediaHotspot from './../../../domain/cityLife/model/hotspot/MediaHotspot';
+import Message from '../../../domain/model/Message';
+import Hotspot, { HotspotScope } from '../../../domain/model/Hotspot';
+import MediaHotspot from '../../../domain/model/MediaHotspot';
 import Cityzen from './../../../domain/cityzens/model/Cityzen';
 
 const toSeeHotspot = (hotspot: Hotspot, member?: Cityzen) => {

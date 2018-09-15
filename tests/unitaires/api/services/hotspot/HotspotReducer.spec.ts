@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import AuthorSample from '../../../../../src/domain/cityLife/model/sample/AuthorSample';
+import AuthorSample from '../../../../../src/domain/model/sample/AuthorSample';
 import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
 import HotspotReducer from './../../../../../src/api/services/hotspot/HotspotReducer';
-import AlertHotspotSample from './../../../../../src/domain/cityLife/model/sample/AlertHotspotSample';
-import MediaHotspotSample from './../../../../../src/domain/cityLife/model/sample/MediaHotspotSample';
+import AlertHotspotSample from '../../../../../src/domain/model/sample/AlertHotspotSample';
+import MediaHotspotSample from '../../../../../src/domain/model/sample/MediaHotspotSample';
 
 describe('filterHotspotByOwnerShip', () => {
     it('should return all the public hotspot passed in parameter', () => {

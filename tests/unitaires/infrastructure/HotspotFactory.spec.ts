@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { HotspotScope, HotspotType } from '../../../src/domain/cityLife/model/hotspot/Hotspot';
-import HotspotId from '../../../src/domain/cityLife/model/hotspot/HotspotId';
-import ImageLocation from '../../../src/domain/cityLife/model/hotspot/ImageLocation';
-import MemberList from '../../../src/domain/cityLife/model/hotspot/MemberList';
-import SlideShow from '../../../src/domain/cityLife/model/hotspot/SlideShow';
+import { HotspotScope, HotspotType } from '../../../src/domain/model/Hotspot';
+import HotspotId from '../../../src/domain/model/HotspotId';
+import ImageLocation from '../../../src/domain/model/ImageLocation';
+import MemberList from '../../../src/domain/model/MemberList';
+import SlideShow from '../../../src/domain/model/SlideShow';
 import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
 import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
 import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
