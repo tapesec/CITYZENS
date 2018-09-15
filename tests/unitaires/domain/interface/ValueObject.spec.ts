@@ -10,7 +10,7 @@ import Author from '../../../../src/domain/model/Author';
 import ImageLocation from '../../../../src/domain/model/ImageLocation';
 
 import * as Chai from 'chai';
-import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import CityzenId from '../../../../src/domain/model/CityzenId';
 import SlideShow from '../../../../src/domain/model/SlideShow';
 
 describe('ValueObject', () => {

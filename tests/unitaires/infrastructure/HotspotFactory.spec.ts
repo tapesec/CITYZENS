@@ -4,9 +4,9 @@ import HotspotId from '../../../src/domain/model/HotspotId';
 import ImageLocation from '../../../src/domain/model/ImageLocation';
 import MemberList from '../../../src/domain/model/MemberList';
 import SlideShow from '../../../src/domain/model/SlideShow';
-import CityzenSample from '../../../src/domain/cityzens/model/CityzenSample';
+import CityzenSample from '../../../src/domain/model/sample/CityzenSample';
 import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
-import CityzenId from './../../../src/domain/cityzens/model/CityzenId';
+import CityzenId from '../../../src/domain/model/CityzenId';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {

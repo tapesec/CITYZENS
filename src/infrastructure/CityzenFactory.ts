@@ -1,6 +1,6 @@
 import ImageLocation from '../domain/model/ImageLocation';
-import Cityzen from '../domain/cityzens/model/Cityzen';
-import CityzenId from '../domain/cityzens/model/CityzenId';
+import Cityzen from '../domain/model/Cityzen';
+import CityzenId from '../domain/model/CityzenId';
 
 export default class CityzenFactory {
     constructor() {}

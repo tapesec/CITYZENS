@@ -1,4 +1,4 @@
-import CityzenId from '../cityzens/model/CityzenId';
+import CityzenId from './CityzenId';
 import HotspotBuilder from '../factories/HotspotBuilder';
 import AlertMessage from './AlertMessage';
 import Hotspot from './Hotspot';

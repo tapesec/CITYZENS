@@ -1,4 +1,4 @@
-import Cityzen from '../../../domain/cityzens/model/Cityzen';
+import Cityzen from '../../../domain/model/Cityzen';
 import ImageLocation from '../../../domain/model/ImageLocation';
 
 const updateCityzen = (cityzenToUpdate: Cityzen, requestPayload: any): Cityzen => {

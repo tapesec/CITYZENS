@@ -22,9 +22,9 @@ import AlertHotspotSample from '../../../../src/domain/model/sample/AlertHotspot
 import HotspotBuilderSample from '../../../../src/domain/model/sample/HotspotBuilderSample';
 import MediaBuilderSample from '../../../../src/domain/model/sample/MediaBuilderSample';
 import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
-import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
-import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
-import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import Cityzen from '../../../../src/domain/model/Cityzen';
+import CityzenId from '../../../../src/domain/model/CityzenId';
+import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
 import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../../../src/infrastructure/HotspotFactory';
 import HotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';

@@ -1,4 +1,4 @@
-import CityzenId from '../cityzens/model/CityzenId';
+import CityzenId from './CityzenId';
 import ImageLocation from './ImageLocation';
 
 class Author {

@@ -1,4 +1,4 @@
-import ImageLocation from '../../model/ImageLocation';
+import ImageLocation from './ImageLocation';
 import CityzenId from './CityzenId';
 
 class Cityzen {

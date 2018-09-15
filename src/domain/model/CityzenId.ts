@@ -1,5 +1,5 @@
 import * as lodash from 'lodash';
-import ValueObject from './../../interface/ValueObject';
+import ValueObject from '../interface/ValueObject';
 
 class CityzenId implements ValueObject {
     constructor(private _id: string) {}

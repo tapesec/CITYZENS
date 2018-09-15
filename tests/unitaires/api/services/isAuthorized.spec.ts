@@ -4,9 +4,9 @@ import AlertHotspotSample from '../../../../src/domain/model/sample/AlertHotspot
 import AuthorSample from '../../../../src/domain/model/sample/AuthorSample';
 import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
 import MessageSample from '../../../../src/domain/model/sample/MessageSample';
-import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
-import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
-import CityzenSample from '../../../../src/domain/cityzens/model/CityzenSample';
+import Cityzen from '../../../../src/domain/model/Cityzen';
+import CityzenId from '../../../../src/domain/model/CityzenId';
+import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
 import * as isAuthorized from './../../../../src/api/services/hotspot/isAuthorized';
 
 describe("isAuthorized's functions.", () => {

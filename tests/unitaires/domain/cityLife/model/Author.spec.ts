@@ -1,4 +1,4 @@
-import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenSample from '../../../../../src/domain/model/sample/CityzenSample';
 import Author from '../../../../../src/domain/model/Author';
 
 import { expect } from 'chai';

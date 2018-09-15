@@ -1,4 +1,4 @@
-import CityzenSample from './../../cityzens/model/CityzenSample';
+import CityzenSample from './CityzenSample';
 import Author from '../Author';
 
 class AuthorSample {

@@ -1,5 +1,5 @@
-import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
-import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
+import CityzenSample from '../../../../../src/domain/model/sample/CityzenSample';
+import CityzenId from '../../../../../src/domain/model/CityzenId';
 
 import { expect } from 'chai';
 

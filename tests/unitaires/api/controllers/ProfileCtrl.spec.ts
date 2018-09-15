@@ -9,8 +9,8 @@ import cityzenFromAuth0 from '../../../../src/api/services/cityzen/cityzenFromAu
 import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
 import Hotspot from '../../../../src/domain/model/Hotspot';
 import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
-import Cityzen from '../../../../src/domain/cityzens/model/Cityzen';
-import CityzenId from '../../../../src/domain/cityzens/model/CityzenId';
+import Cityzen from '../../../../src/domain/model/Cityzen';
+import CityzenId from '../../../../src/domain/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../../../src/infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import { FAKE_USER_INFO_AUTH0 } from '../services/samples';

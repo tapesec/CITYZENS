@@ -1,7 +1,7 @@
 // const slug = require('slug');
 import CitySample from '../domain/model/sample/CitySample';
 import MessageSample from '../domain/model/sample/MessageSample';
-import CityzenSample from '../domain/cityzens/model/CityzenSample';
+import CityzenSample from '../domain/model/sample/CityzenSample';
 import config from './../api/config';
 import AlertHotspotSample from '../domain/model/sample/AlertHotspotSample';
 import MediaHotspotSample from '../domain/model/sample/MediaHotspotSample';

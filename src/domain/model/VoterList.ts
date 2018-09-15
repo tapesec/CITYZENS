@@ -1,5 +1,5 @@
 import * as lodash from 'lodash';
-import CityzenId from '../cityzens/model/CityzenId';
+import CityzenId from './CityzenId';
 import ValueObject from '../interface/ValueObject';
 
 class VoterList implements ValueObject {

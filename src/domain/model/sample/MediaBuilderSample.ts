@@ -2,7 +2,7 @@ import MediaBuilder from '../../factories/MediaBuilder';
 import HotspotTitle from '../HotspotTitle';
 import { HotspotScope } from '../Hotspot';
 import HotspotSlug from '../HotspotSlug';
-import CityzenSample from '../../cityzens/model/CityzenSample';
+import CityzenSample from './CityzenSample';
 import MemberList from '../MemberList';
 import SlideShow from '../SlideShow';
 

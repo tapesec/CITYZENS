@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import AuthorSample from '../../../../../src/domain/model/sample/AuthorSample';
-import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenSample from '../../../../../src/domain/model/sample/CityzenSample';
 import HotspotReducer from './../../../../../src/api/services/hotspot/HotspotReducer';
 import AlertHotspotSample from '../../../../../src/domain/model/sample/AlertHotspotSample';
 import MediaHotspotSample from '../../../../../src/domain/model/sample/MediaHotspotSample';

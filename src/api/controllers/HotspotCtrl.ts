@@ -6,7 +6,7 @@ import AlertHotspot from '../../domain/model/AlertHotspot';
 import Hotspot from '../../domain/model/Hotspot';
 import HotspotId from '../../domain/model/HotspotId';
 import MediaHotspot from '../../domain/model/MediaHotspot';
-import CityzenId from '../../domain/cityzens/model/CityzenId';
+import CityzenId from '../../domain/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../infrastructure/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';

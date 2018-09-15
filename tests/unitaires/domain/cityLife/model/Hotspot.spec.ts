@@ -26,8 +26,8 @@ import AuthorSample from '../../../../../src/domain/model/sample/AuthorSample';
 import HotspotBuilderSample from '../../../../../src/domain/model/sample/HotspotBuilderSample';
 import MediaHotspotSample from '../../../../../src/domain/model/sample/MediaHotspotSample';
 import PositionSample from '../../../../../src/domain/model/sample/PositionSample';
-import CityzenId from '../../../../../src/domain/cityzens/model/CityzenId';
-import CityzenSample from '../../../../../src/domain/cityzens/model/CityzenSample';
+import CityzenId from '../../../../../src/domain/model/CityzenId';
+import CityzenSample from '../../../../../src/domain/model/sample/CityzenSample';
 import config from './../../../../../src/api/config';
 use(require('chai-shallow-deep-equal'));
 

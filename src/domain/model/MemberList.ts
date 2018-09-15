@@ -1,7 +1,7 @@
-import Cityzen from '../cityzens/model/Cityzen';
+import Cityzen from './Cityzen';
 import ValueObject from './../interface/ValueObject';
 import * as lodash from 'lodash';
-import CityzenId from '../cityzens/model/CityzenId';
+import CityzenId from './CityzenId';
 class MemberList implements ValueObject {
     private _memberSet: Set<CityzenId>;
 

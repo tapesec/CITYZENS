@@ -3,7 +3,7 @@ import HotspotId from '../domain/model/HotspotId';
 import ImageLocation from '../domain/model/ImageLocation';
 import Message from '../domain/model/Message';
 import MessageId from '../domain/model/MessageId';
-import CityzenId from '../domain/cityzens/model/CityzenId';
+import CityzenId from '../domain/model/CityzenId';
 import Author from '../domain/model/Author';
 
 class MessageFactory {
