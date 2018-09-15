@@ -23,7 +23,7 @@ import SlideshowService from '../services/widgets/SlideshowService';
 import OrmCityzen from './../../infrastructure/ormCityzen';
 import config from './../config';
 import AlgoliaApi from './../libs/AlgoliaAPI';
-import SlackWebhook from './../libs/SlackWebhook';
+import { getWebhook } from './../libs/SlackWebhook';
 import Algolia from './../services/algolia/Algolia';
 import ErrorHandler from './../services/errors/ErrorHandler';
 import AuthRouter from './AuthRouter';
@@ -34,7 +34,7 @@ import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
 import SwaggerRouter from './SwaggerRouter';
 
-// const jwt = require('jsonwebtoken');
+const webhookError = getWebhook({ url: config.slack.slackWebhookErrorUrl });
 const restifyErrors = require('restify-errors');
 const logs = require('./../../logs');
 const httpResponseDataLogger = logs.get('http-response-data');
@@ -48,11 +48,7 @@ const algoliaSearch = AlgoliaSearch(
 const algoliaApi = new AlgoliaApi(algoliaSearch);
 const algolia = new Algolia(algoliaApi);
 
-const errorHandler = new ErrorHandler(
-    new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request),
-    httpResponseDataLogger,
-    restifyErrors,
-);
+const errorHandler = new ErrorHandler(webhookError, httpResponseDataLogger, restifyErrors);
 
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 

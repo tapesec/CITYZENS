@@ -1,4 +1,4 @@
-import SlackWebhook from './../../libs/SlackWebhook';
+import { Webhook } from './../../libs/SlackWebhook';
 import config from './../../config';
 import { BAD_REQUEST, UNAUTHORIZED, getStatusText } from 'http-status-codes';
 
@@ -8,11 +8,11 @@ const logs = require('./../../../logs');
 const httpLogger = logs.get('http-response-data');
 
 class ErrorHandler {
-    private slackHook: SlackWebhook;
+    private slackHook: Webhook;
     private resitfyErrors: any;
     private httpLogger: any;
 
-    constructor(slackHook: SlackWebhook, httpLogger: any, restifyErrors: any) {
+    constructor(slackHook: Webhook, httpLogger: any, restifyErrors: any) {
         this.slackHook = slackHook;
         this.httpLogger = httpLogger;
         this.resitfyErrors = restifyErrors;

@@ -2,7 +2,7 @@ import { InvalidArgumentError } from 'restify-errors';
 import { format } from 'util';
 import { v4 } from 'uuid';
 import config from '../api/config/';
-import SlackWebhook from '../api/libs/SlackWebhook';
+import { getWebhook } from '../api/libs/SlackWebhook';
 import {
     requiredAlertHotspotProperties,
     requiredMediaHotspotProperties,
@@ -105,7 +105,7 @@ class HotspotFactory {
         try {
             this.assertType(data.type);
         } catch (error) {
-            const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+            const hook = getWebhook({ url: config.slack.slackWebhookErrorUrl });
             hook.alert(
                 `${error.message} in hotspot factory \n
             data provided: ${JSON.stringify(data)}`,
@@ -228,7 +228,7 @@ class HotspotFactory {
         const errorMessage = '%s must be provided to HotspotFactory';
         requiredProperties.forEach(prop => {
             if (!data || !data[prop]) {
-                const hook = new SlackWebhook({ url: config.slack.slackWebhookErrorUrl }, request);
+                const hook = getWebhook({ url: config.slack.slackWebhookErrorUrl });
                 hook.alert(
                     `Property ${prop} is undefined in hotspot factory \n
                     data provided: ${JSON.stringify(data)}`,
