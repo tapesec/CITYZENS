@@ -6,7 +6,7 @@ import Auth0Service from '../services/auth/Auth0Service';
 import ErrorHandler from '../services/errors/ErrorHandler';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
-import isAuthorized from '../../domain/cityzens/isAuthorized';
+import isAuthorized from '../../domain/services/CityzenAuthorization';
 import updateCityzen from '../services/cityzen/updateCityzen';
 
 class CityzenCtrl extends RootCtrl {
