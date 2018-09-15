@@ -5,10 +5,7 @@ import MediaBuilder from '../../../../../src/domain/factories/MediaBuilder';
 import CityId from '../../../../../src/domain/model/CityId';
 import AlertHotspot from '../../../../../src/domain/model/AlertHotspot';
 import AvatarIconUrl from '../../../../../src/domain/model/AvatarIconUrl';
-import {
-    HotspotScope,
-    HotspotType,
-} from '../../../../../src/domain/model/Hotspot';
+import { HotspotScope, HotspotType } from '../../../../../src/domain/model/Hotspot';
 import HotspotId from '../../../../../src/domain/model/HotspotId';
 import HotspotSlug from '../../../../../src/domain/model/HotspotSlug';
 import HotspotTitle from '../../../../../src/domain/model/HotspotTitle';
@@ -28,7 +25,7 @@ import MediaHotspotSample from '../../../../../src/domain/model/sample/MediaHots
 import PositionSample from '../../../../../src/domain/model/sample/PositionSample';
 import CityzenId from '../../../../../src/domain/model/CityzenId';
 import CityzenSample from '../../../../../src/domain/model/sample/CityzenSample';
-import config from './../../../../../src/api/config';
+import { DEFAULT_MEDIA_ICON } from '../../../../../src/domain/constants';
 use(require('chai-shallow-deep-equal'));
 
 const slug = require('slug');
@@ -206,7 +203,7 @@ describe('MediaHotspot entity', () => {
             members: MediaHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST.members
                 .toArray()
                 .map(x => x.toString()),
-            avatarIconUrl: config.avatarIcon.defaultMediaIcon,
+            avatarIconUrl: DEFAULT_MEDIA_ICON,
             slideShow: hotspot.slideShow.toJSON(),
         });
     });
