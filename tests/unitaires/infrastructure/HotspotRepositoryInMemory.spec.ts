@@ -4,9 +4,9 @@ import { v4 } from 'uuid';
 import CityId from '../../../src/domain/city/CityId';
 import Hotspot from '../../../src/domain/hotspot/Hotspot';
 import HotspotId from '../../../src/domain/hotspot/HotspotId';
-import CitySample from '../../../src/domain/model/sample/CitySample';
-import MediaHotspotSample from '../../../src/domain/model/sample/MediaHotspotSample';
-import PositionSample from '../../../src/domain/model/sample/PositionSample';
+import CitySample from '../../../src/domain/sample/CitySample';
+import MediaHotspotSample from '../../../src/domain/sample/MediaHotspotSample';
+import PositionSample from '../../../src/domain/sample/PositionSample';
 import {
     CITYZEN_ELODIE,
     CITYZEN_MARTIN,

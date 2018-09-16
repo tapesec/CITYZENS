@@ -2,7 +2,7 @@ import AlertHotspot from './AlertHotspot';
 import Hotspot from './Hotspot';
 import ImageLocation from './ImageLocation';
 import MediaHotspot from './MediaHotspot';
-import SlideShow from '../model/SlideShow';
+import SlideShow from '../SlideShow';
 import AvatarIconUrl from '../cityzen/AvatarIconUrl';
 
 export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot => {

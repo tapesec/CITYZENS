@@ -5,7 +5,7 @@ import Hotspot, { HotspotScope } from '../hotspot/Hotspot';
 import HotspotSlug from '../hotspot/HotspotSlug';
 import MemberList from './MemberList';
 import CityzenId from '../cityzen/CityzenId';
-import SlideShow from '../model/SlideShow';
+import SlideShow from '../SlideShow';
 const slug = require('slug');
 
 class MediaHotspot extends Hotspot {

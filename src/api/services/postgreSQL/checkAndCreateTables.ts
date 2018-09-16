@@ -1,11 +1,11 @@
 import AlertHotspot from '../../../domain/hotspot/AlertHotspot';
 import { HotspotType } from '../../../domain/hotspot/Hotspot';
 import MediaHotspot from '../../../domain/hotspot/MediaHotspot';
-import AlertHotspotSample from '../../../domain/model/sample/AlertHotspotSample';
-import MediaHotspotsSample from '../../../domain/model/sample/MediaHotspotSample';
-import MessageSample from '../../../domain/model/sample/MessageSample';
+import AlertHotspotSample from '../../../domain/sample/AlertHotspotSample';
+import MediaHotspotsSample from '../../../domain/sample/MediaHotspotSample';
+import MessageSample from '../../../domain/sample/MessageSample';
 import Cityzen from '../../../domain/cityzen/Cityzen';
-import CityzenSample from '../../../domain/model/sample/CityzenSample';
+import CityzenSample from '../../../domain/sample/CityzenSample';
 import MapToObject from '../../../helpers/MapToObject';
 import config from './../../../api/config';
 import { CITYZEN_TABLE_NAME, HOTSPOT_TABLE_NAME, MESSAGE_TABLE_NAME } from './constants';

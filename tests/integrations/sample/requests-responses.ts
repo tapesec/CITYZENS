@@ -1,6 +1,6 @@
 import { HotspotScope, HotspotType } from '../../../src/domain/hotspot/Hotspot';
 import HotspotId from '../../../src/domain/hotspot/HotspotId';
-import MessageSample from '../../../src/domain/model/sample/MessageSample';
+import MessageSample from '../../../src/domain/sample/MessageSample';
 import MessageFactory from '../../../src/domain/hotspot/MessageFactory';
 import cityzenFromAuth0 from './../../../src/api/services/cityzen/cityzenFromAuth0';
 import { FAKE_USER_INFO_AUTH0 } from './../../unitaires/api/services/samples';

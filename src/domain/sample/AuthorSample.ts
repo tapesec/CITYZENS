@@ -1,5 +1,5 @@
 import CityzenSample from './CityzenSample';
-import Author from '../../hotspot/Author';
+import Author from '../hotspot/Author';
 
 class AuthorSample {
     public static MARTIN: Author = new Author(

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import MessageId from '../../../../src/domain/hotspot/MessageId';
-import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
+import CityzenSample from '../../../../src/domain/sample/CityzenSample';
 import MessageFactory from '../../../../src/domain/hotspot/MessageFactory';
 
 describe('MessageFactory', () => {

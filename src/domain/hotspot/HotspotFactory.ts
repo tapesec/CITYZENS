@@ -24,7 +24,7 @@ import MediaHotspot from './MediaHotspot';
 import MemberList from './MemberList';
 import PertinenceScore from './PertinenceScore';
 import Position from './Position';
-import SlideShow from '../model/SlideShow';
+import SlideShow from '../SlideShow';
 import ViewsCount from './ViewsCount';
 import VoterList from './VoterList';
 import Cityzen from '../cityzen/Cityzen';

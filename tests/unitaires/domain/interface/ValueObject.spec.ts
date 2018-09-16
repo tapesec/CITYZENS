@@ -11,7 +11,7 @@ import ImageLocation from '../../../../src/domain/hotspot/ImageLocation';
 
 import * as Chai from 'chai';
 import CityzenId from '../../../../src/domain/cityzen/CityzenId';
-import SlideShow from '../../../../src/domain/model/SlideShow';
+import SlideShow from '../../../../src/domain/SlideShow';
 
 describe('ValueObject', () => {
     describe('Equalities checks', () => {

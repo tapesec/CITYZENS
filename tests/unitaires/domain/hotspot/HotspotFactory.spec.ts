@@ -3,8 +3,8 @@ import { HotspotScope, HotspotType } from '../../../../src/domain/hotspot/Hotspo
 import HotspotId from '../../../../src/domain/hotspot/HotspotId';
 import ImageLocation from '../../../../src/domain/hotspot/ImageLocation';
 import MemberList from '../../../../src/domain/hotspot/MemberList';
-import SlideShow from '../../../../src/domain/model/SlideShow';
-import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
+import SlideShow from '../../../../src/domain/SlideShow';
+import CityzenSample from '../../../../src/domain/sample/CityzenSample';
 import HotspotFactory from '../../../../src/domain/hotspot/HotspotFactory';
 import CityzenId from '../../../../src/domain/cityzen/CityzenId';
 

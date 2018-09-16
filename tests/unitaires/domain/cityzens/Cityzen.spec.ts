@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
+import MediaHotspotSample from '../../../../src/domain/sample/MediaHotspotSample';
 import Cityzen from '../../../../src/domain/cityzen/Cityzen';
 import CityzenId from '../../../../src/domain/cityzen/CityzenId';
-import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
+import CityzenSample from '../../../../src/domain/sample/CityzenSample';
 
 describe('Cityzens entity', () => {
     it('Should have correct properties set by constructor', () => {

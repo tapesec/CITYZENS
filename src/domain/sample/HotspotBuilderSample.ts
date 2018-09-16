@@ -1,12 +1,12 @@
-import HotspotBuilder from '../../hotspot/HotspotBuilder';
-import CityId from '../../city/CityId';
-import AvatarIconUrl from '../../cityzen/AvatarIconUrl';
-import { HotspotType } from '../../hotspot/Hotspot';
-import HotspotId from '../../hotspot/HotspotId';
-import ViewsCount from '../../hotspot/ViewsCount';
-import { DEFAULT_MEDIA_ICON } from '../../constants';
-import AddressSample from './AddressSample';
-import AuthorSample from './AuthorSample';
+import HotspotBuilder from '../hotspot/HotspotBuilder';
+import CityId from '../city/CityId';
+import AvatarIconUrl from '../cityzen/AvatarIconUrl';
+import { HotspotType } from '../hotspot/Hotspot';
+import HotspotId from '../hotspot/HotspotId';
+import ViewsCount from '../hotspot/ViewsCount';
+import { DEFAULT_MEDIA_ICON } from '../constants';
+import AddressSample from '../sample/AddressSample';
+import AuthorSample from '../sample/AuthorSample';
 import PositionSample from './PositionSample';
 
 class HotspotBuilderSample {

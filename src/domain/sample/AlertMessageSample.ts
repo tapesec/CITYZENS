@@ -1,4 +1,4 @@
-import AlertMessage from '../../hotspot/AlertMessage';
+import AlertMessage from '../hotspot/AlertMessage';
 
 class AlertMessageSample {
     public static ACCIDENT_MESSAGE = new AlertMessage(

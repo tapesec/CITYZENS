@@ -1,6 +1,6 @@
 import HotspotBuilderSample from './HotspotBuilderSample';
 import MediaBuilderSample from './MediaBuilderSample';
-import MediaHotspot from '../../hotspot/MediaHotspot';
+import MediaHotspot from '../hotspot/MediaHotspot';
 
 class MediaHotspotsSample {
     public static MATCH_EVENT = new MediaHotspot(

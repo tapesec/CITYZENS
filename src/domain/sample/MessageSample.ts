@@ -1,5 +1,5 @@
-import Message from '../../hotspot/Message';
-import MessageId from '../../hotspot/MessageId';
+import Message from '../hotspot/Message';
+import MessageId from '../hotspot/MessageId';
 import AuthorSample from './AuthorSample';
 import MediaHotspotsSample from './MediaHotspotSample';
 class MessageSample {

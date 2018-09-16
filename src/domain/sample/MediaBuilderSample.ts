@@ -1,9 +1,9 @@
-import MediaBuilder from '../../hotspot/MediaBuilder';
-import HotspotTitle from '../../hotspot/HotspotTitle';
-import { HotspotScope } from '../../hotspot/Hotspot';
-import HotspotSlug from '../../hotspot/HotspotSlug';
+import MediaBuilder from '../hotspot/MediaBuilder';
+import HotspotTitle from '../hotspot/HotspotTitle';
+import { HotspotScope } from '../hotspot/Hotspot';
+import HotspotSlug from '../hotspot/HotspotSlug';
 import CityzenSample from './CityzenSample';
-import MemberList from '../../hotspot/MemberList';
+import MemberList from '../hotspot/MemberList';
 import SlideShow from '../SlideShow';
 
 const slug = require('slug');

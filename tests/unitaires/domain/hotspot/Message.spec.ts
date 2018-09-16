@@ -3,8 +3,8 @@ import { v4 } from 'uuid';
 import HotspotId from '../../../../src/domain/hotspot/HotspotId';
 import Message from '../../../../src/domain/hotspot/Message';
 import MessageId from '../../../../src/domain/hotspot/MessageId';
-import AuthorSample from '../../../../src/domain/model/sample/AuthorSample';
-import MessageSample from '../../../../src/domain/model/sample/MessageSample';
+import AuthorSample from '../../../../src/domain/sample/AuthorSample';
+import MessageSample from '../../../../src/domain/sample/MessageSample';
 
 describe('Message entity', () => {
     it('should have correct properties', () => {

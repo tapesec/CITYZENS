@@ -1,4 +1,4 @@
-import CitySample from '../../../../src/domain/model/sample/CitySample';
+import CitySample from '../../../../src/domain/sample/CitySample';
 import Address from '../../../../src/domain/hotspot/Address';
 import { expect } from 'chai';
 

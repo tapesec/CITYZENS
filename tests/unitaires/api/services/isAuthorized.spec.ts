@@ -1,12 +1,12 @@
 import * as Chai from 'chai';
 import Message from '../../../../src/domain/hotspot/Message';
-import AlertHotspotSample from '../../../../src/domain/model/sample/AlertHotspotSample';
-import AuthorSample from '../../../../src/domain/model/sample/AuthorSample';
-import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
-import MessageSample from '../../../../src/domain/model/sample/MessageSample';
+import AlertHotspotSample from '../../../../src/domain/sample/AlertHotspotSample';
+import AuthorSample from '../../../../src/domain/sample/AuthorSample';
+import MediaHotspotSample from '../../../../src/domain/sample/MediaHotspotSample';
+import MessageSample from '../../../../src/domain/sample/MessageSample';
 import Cityzen from '../../../../src/domain/cityzen/Cityzen';
 import CityzenId from '../../../../src/domain/cityzen/CityzenId';
-import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
+import CityzenSample from '../../../../src/domain/sample/CityzenSample';
 import * as isAuthorized from '../../../../src/domain/hotspot/isAuthorized';
 
 describe("isAuthorized's functions.", () => {

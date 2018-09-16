@@ -1,8 +1,8 @@
 import City from '../../../../src/domain/city/City';
 import { expect } from 'chai';
 import Position from '../../../../src/domain/model/Position';
-import PositionSample from '../../../../src/domain/model/sample/PositionSample';
-import PolygonSample from '../../../../src/domain/model/sample/PolygonSample';
+import PositionSample from '../../../../src/domain/sample/PositionSample';
+import PolygonSample from '../../../../src/domain/sample/PolygonSample';
 
 describe('City entity', () => {
     it ('should have correct properties', () => {

@@ -1,4 +1,4 @@
-import Address from '../../hotspot/Address';
+import Address from '../hotspot/Address';
 import CitySample from './CitySample';
 
 class AddressSample {

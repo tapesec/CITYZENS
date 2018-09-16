@@ -1,5 +1,5 @@
-import ValueObject from '../ValueObject';
-import ImageLocation from '../hotspot/ImageLocation';
+import ValueObject from './ValueObject';
+import ImageLocation from './hotspot/ImageLocation';
 import * as lodash from 'lodash';
 
 class SlideShow implements ValueObject {

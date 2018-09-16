@@ -3,7 +3,7 @@ import { HotspotScope } from './Hotspot';
 import HotspotSlug from './HotspotSlug';
 import MemberList from './MemberList';
 import AvatarIconUrl from '../cityzen/AvatarIconUrl';
-import SlideShow from '../model/SlideShow';
+import SlideShow from '../SlideShow';
 
 class MediaBuilder {
     constructor(
