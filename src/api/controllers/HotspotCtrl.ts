@@ -14,7 +14,6 @@ import { isUuid, strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
-import ErrorHandler from '../services/errors/ErrorHandler';
 import actAsSpecified from '../services/hotspot/actAsSpecified';
 import hotspotsByArea from '../services/hotspot/hotspotsByArea';
 import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
@@ -38,7 +37,6 @@ class HotspotCtrl extends RootCtrl {
     public static PERTINENCE_DOUBLE_VOTE = "You can't vote twice on the same Alert Hotspot";
 
     constructor(
-        errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
@@ -46,7 +44,7 @@ class HotspotCtrl extends RootCtrl {
         algolia: Algolia,
         slideshowService: SlideshowService,
     ) {
-        super(errorHandler, auth0Service, cityzenRepository);
+        super(auth0Service, cityzenRepository);
         this.hotspotRepository = hotspotRepositoryInMemory;
         this.hotspotFactory = hotspotFactory;
         this.algolia = algolia;
@@ -61,15 +59,12 @@ class HotspotCtrl extends RootCtrl {
 
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `GET ${req.path()}`,
-                    HotspotCtrl.BAD_REQUEST_MESSAGE,
-                ),
+                this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
             );
         }
         try {
             const onError = (error: Error) => {
-                this.errorHandler.logSlack(`GET ${req.path()}`, error.message);
+                this.responseError.logSlack(`GET ${req.path()}`, error.message);
             };
 
             if (queryStrings.north) {
@@ -91,7 +86,7 @@ class HotspotCtrl extends RootCtrl {
             );
             res.json(OK, visibleHotspots);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -107,10 +102,7 @@ class HotspotCtrl extends RootCtrl {
 
         if (!isSet) {
             return next(
-                this.errorHandler.logAndCreateNotFound(
-                    `GET ${req.path()}`,
-                    HotspotCtrl.HOTSPOT_NOT_FOUND,
-                ),
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
 
@@ -122,14 +114,11 @@ class HotspotCtrl extends RootCtrl {
                 res.json(OK, hotspot);
             } else {
                 return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `GET ${req.path()}`,
-                        HotspotCtrl.HOTSPOT_PRIVATE,
-                    ),
+                    this.responseError.logAndCreateUnautorized(req, HotspotCtrl.HOTSPOT_PRIVATE),
                 );
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -137,10 +126,7 @@ class HotspotCtrl extends RootCtrl {
     public postHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
-                    this.schemaValidator.errorsText(),
-                ),
+                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
             );
         }
 
@@ -156,13 +142,13 @@ class HotspotCtrl extends RootCtrl {
                 })
                 .catch(error => {
                     this.hotspotRepository.cacheAlgolia(newHotspot.id, false);
-                    this.errorHandler.logSlack(
+                    this.responseError.logSlack(
                         `POST ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(error)}`,
                     );
                 });
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -171,10 +157,7 @@ class HotspotCtrl extends RootCtrl {
         const hotspotId = new HotspotId(req.params.hotspotId);
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
-                this.errorHandler.logAndCreateNotFound(
-                    `POST view ${req.path()}`,
-                    HotspotCtrl.HOTSPOT_NOT_FOUND,
-                ),
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
         try {
@@ -183,7 +166,7 @@ class HotspotCtrl extends RootCtrl {
             await this.hotspotRepository.update(visitedHotspot);
             res.json(OK);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST view ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -191,20 +174,14 @@ class HotspotCtrl extends RootCtrl {
     public addMember = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(postMemberSchema, req.body)) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST addMember ${req.path()}`,
-                    HotspotCtrl.BAD_REQUEST_MESSAGE,
-                ),
+                this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
             );
         }
 
         const hotspotId = new HotspotId(req.params.hotspotId);
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
-                this.errorHandler.logAndCreateNotFound(
-                    `POST addMember ${req.path()}`,
-                    HotspotCtrl.HOTSPOT_NOT_FOUND,
-                ),
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
         try {
@@ -213,27 +190,16 @@ class HotspotCtrl extends RootCtrl {
 
             if (hotspot instanceof AlertHotspot) {
                 return next(
-                    this.errorHandler.logAndCreateBadRequest(
-                        `POST addMember ${req.path()}`,
-                        HotspotCtrl.BAD_REQUEST_MESSAGE,
-                    ),
+                    this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
                 );
             }
             if (this.cityzenIfAuthenticated.id === memberId) {
-                return next(
-                    this.errorHandler.logAndCreateBadRequest(
-                        `POST addMember ${req.path()}`,
-                        HotspotCtrl.ADD_ITSELF,
-                    ),
-                );
+                return next(this.responseError.logAndCreateBadRequest(req, HotspotCtrl.ADD_ITSELF));
             }
 
             if (!isAuthorized.toAddMember(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `POST addMember ${req.path()}`,
-                        HotspotCtrl.NOT_AUTHOR,
-                    ),
+                    this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
 
@@ -241,9 +207,7 @@ class HotspotCtrl extends RootCtrl {
             await this.hotspotRepository.update(hotspot);
             res.json(OK, hotspot);
         } catch (err) {
-            return next(
-                this.errorHandler.logAndCreateInternal(`POST addMember ${req.path()}`, err),
-            );
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -251,10 +215,7 @@ class HotspotCtrl extends RootCtrl {
     public postPertinence = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(postPertinenceSchema, req.body)) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST postPertinence ${req.path()}`,
-                    HotspotCtrl.BAD_REQUEST_MESSAGE,
-                ),
+                this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
             );
         }
 
@@ -262,10 +223,7 @@ class HotspotCtrl extends RootCtrl {
 
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
-                this.errorHandler.logAndCreateNotFound(
-                    `POST ${req.path()}`,
-                    HotspotCtrl.HOTSPOT_NOT_FOUND,
-                ),
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
 
@@ -273,8 +231,8 @@ class HotspotCtrl extends RootCtrl {
             const hotspot = await this.hotspotRepository.findById(hotspotId);
             if (!(hotspot instanceof AlertHotspot)) {
                 return next(
-                    this.errorHandler.logAndCreateBadRequest(
-                        `POST ${req.path()}`,
+                    this.responseError.logAndCreateBadRequest(
+                        req,
                         HotspotCtrl.PERTINENCE_ON_NOT_ALERT,
                     ),
                 );
@@ -283,8 +241,8 @@ class HotspotCtrl extends RootCtrl {
             const cityzenId: CityzenId = this.cityzenIfAuthenticated.id;
             if (hotspot.voterList.has(cityzenId)) {
                 return next(
-                    this.errorHandler.logAndCreateBadRequest(
-                        `POST ${req.path()}`,
+                    this.responseError.logAndCreateBadRequest(
+                        req,
                         HotspotCtrl.PERTINENCE_DOUBLE_VOTE,
                     ),
                 );
@@ -295,7 +253,7 @@ class HotspotCtrl extends RootCtrl {
 
             res.json(OK, hotspot);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -303,10 +261,7 @@ class HotspotCtrl extends RootCtrl {
     public patchHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body)) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `PATCH ${req.path()}`,
-                    this.schemaValidator.errorsText(),
-                ),
+                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
             );
         }
 
@@ -314,10 +269,7 @@ class HotspotCtrl extends RootCtrl {
 
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
-                this.errorHandler.logAndCreateNotFound(
-                    `PATCH ${req.path()}`,
-                    HotspotCtrl.HOTSPOT_NOT_FOUND,
-                ),
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
         try {
@@ -325,10 +277,7 @@ class HotspotCtrl extends RootCtrl {
 
             if (!isAuthorized.toPatchHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `PATCH ${req.path()}`,
-                        HotspotCtrl.NOT_AUTHOR,
-                    ),
+                    this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
             if (req.body.slideShow) {
@@ -347,13 +296,13 @@ class HotspotCtrl extends RootCtrl {
                 })
                 .catch(error => {
                     this.hotspotRepository.cacheAlgolia(hotspotToUpdate.id, false);
-                    this.errorHandler.logSlack(
+                    this.responseError.logSlack(
                         `PATCH ${req.path()}`,
                         `Algolia fail. \n${JSON.stringify(error)}`,
                     );
                 });
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -362,23 +311,22 @@ class HotspotCtrl extends RootCtrl {
         const hotspotId = new HotspotId(req.params.hotspotId);
 
         if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(this.errorHandler.logAndCreateNotFound(HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
         try {
             const hotspot = await this.hotspotRepository.findById(hotspotId);
 
             if (!isAuthorized.toRemoveHotspot(hotspot, this.cityzenIfAuthenticated)) {
                 return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `DELETE ${req.path()}`,
-                        HotspotCtrl.NOT_AUTHOR,
-                    ),
+                    this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
 
             await this.hotspotRepository.remove(hotspotId);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`DELETE ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
         res.json(OK, getStatusText(OK));
     };

@@ -1,6 +1,6 @@
 import * as rest from 'restify';
+import { OK } from 'http-status-codes';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import ErrorHandler from 'src/api/services/errors/ErrorHandler';
 import City from '../../domain/model/City';
 import CitySample from '../../domain/model/sample/CitySample';
 import { CityRepositoryInMemory } from '../../infrastructure/CityRepositoryInMemory';
@@ -14,12 +14,11 @@ class CityCtrl extends RootCtrl {
     public static SLUG_NOT_FOUND = 'invalid slug name';
 
     constructor(
-        errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
         cityRepositoryInMemory: CityRepositoryInMemory,
     ) {
-        super(errorHandler, auth0Service, cityzenRepository);
+        super(auth0Service, cityzenRepository);
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }
@@ -29,17 +28,12 @@ class CityCtrl extends RootCtrl {
         try {
             const askedCity: City = this.cityRepository.findBySlug(req.params.slug);
             if (askedCity) {
-                res.json(200, askedCity);
+                res.json(OK, askedCity);
             } else {
-                return next(
-                    this.errorHandler.logAndCreateNotFound(
-                        `GET ${req.path()}`,
-                        CityCtrl.SLUG_NOT_FOUND,
-                    ),
-                );
+                return next(this.responseError.logAndCreateNotFound(req, CityCtrl.SLUG_NOT_FOUND));
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 }

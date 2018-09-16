@@ -5,26 +5,22 @@ import Cityzen from '../../domain/model/Cityzen';
 import CityzenId from '../../domain/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
-import ErrorHandler from '../services/errors/ErrorHandler';
+import ResponseError from '../services/errors/ResponseError';
 const logs = require('./../../logs');
 const httpLogger = logs.get('log-debug');
 
 class RootCtrl {
     protected cityzenRepository: CityzenRepositoryPostgreSQL;
     protected schemaValidator: ajv.Ajv;
-    protected errorHandler: ErrorHandler;
+    protected responseError: ResponseError;
     protected userInfo: UserInfoAuth0;
     protected cityzenIfAuthenticated: Cityzen;
     protected auth0Service: Auth0Service;
 
-    constructor(
-        errorHandler: ErrorHandler,
-        auth0Info: Auth0Service,
-        repository: CityzenRepositoryPostgreSQL,
-    ) {
+    constructor(auth0Info: Auth0Service, repository: CityzenRepositoryPostgreSQL) {
         this.cityzenRepository = repository;
         this.auth0Service = auth0Info;
-        this.errorHandler = errorHandler;
+        this.responseError = new ResponseError();
         this.schemaValidator = new ajv({ allErrors: true });
     }
 
@@ -35,9 +31,7 @@ class RootCtrl {
         const headerAuthorization = req.header('Authorization');
 
         if (!headerAuthorization) {
-            return next(
-                this.errorHandler.logAndCreateUnautorized(req.path(), 'Token must be provided'),
-            );
+            return next(this.responseError.logAndCreateUnautorized(req, 'Token must be provided'));
         }
 
         const access_token = headerAuthorization.slice(7);
@@ -48,7 +42,7 @@ class RootCtrl {
             );
             return next();
         } catch (err) {
-            return next(this.errorHandler.logAndCreateUnautorized(req.path(), err.message));
+            return next(this.responseError.logAndCreateUnautorized(req, err.message));
         }
     };
 

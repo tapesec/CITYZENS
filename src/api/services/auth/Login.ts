@@ -1,4 +1,4 @@
-import ErrorHandler from '../errors/ErrorHandler';
+import ErrorHandler from '../errors/ResponseError';
 import UserInfoAuth0 from './UserInfoAuth0';
 import * as now from './../time/now';
 

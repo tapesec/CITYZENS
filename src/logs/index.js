@@ -1,6 +1,6 @@
 import { format } from 'util';
-const winston = require('winston');
-const { combine, timestamp, label, printf, json } = winston.format;
+var winston = require('winston');
+const { combine, timestamp, printf, json } = winston.format;
 
 const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
@@ -27,5 +27,4 @@ container.add('log-debug', {
     ],
     format: formatCombined,
 });
-
 module.exports = container;

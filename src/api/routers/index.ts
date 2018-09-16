@@ -23,9 +23,8 @@ import SlideshowService from '../services/widgets/SlideshowService';
 import OrmCityzen from './../../infrastructure/ormCityzen';
 import config from './../config';
 import AlgoliaApi from './../libs/AlgoliaAPI';
-import { getWebhook } from './../libs/SlackWebhook';
 import Algolia from './../services/algolia/Algolia';
-import ErrorHandler from './../services/errors/ErrorHandler';
+import ErrorHandler from './../services/errors/ResponseError';
 import AuthRouter from './AuthRouter';
 import CityRouter from './CityRouter';
 import CityzenRouter from './CityzenRouter';
@@ -34,10 +33,9 @@ import MessageRouter from './MessageRouter';
 import ProfileRouter from './ProfileRouter';
 import SwaggerRouter from './SwaggerRouter';
 
-const webhookError = getWebhook({ url: config.slack.slackWebhookErrorUrl });
-const restifyErrors = require('restify-errors');
-const logs = require('./../../logs');
-const httpResponseDataLogger = logs.get('http-response-data');
+import { createWebhook } from '../libs/SlackWebhook';
+import { createlogger } from '../libs/MCDVLogger';
+
 const request = require('request');
 
 const algoliaSearch = AlgoliaSearch(
@@ -48,7 +46,10 @@ const algoliaSearch = AlgoliaSearch(
 const algoliaApi = new AlgoliaApi(algoliaSearch);
 const algolia = new Algolia(algoliaApi);
 
-const errorHandler = new ErrorHandler(webhookError, httpResponseDataLogger, restifyErrors);
+const slackWebhook = createWebhook({ url: config.slack.slackWebhookErrorUrl });
+const MCDVLogger = createlogger({ env: config.server.env });
+
+const errorHandler = new ErrorHandler();
 
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 
@@ -68,8 +69,6 @@ const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, me
 const filestackService = new FilestackService(request);
 const slideshowService = new SlideshowService(filestackService);
 
-// const jwtParser = new JwtParser(jwt, config.auth.auth0ClientSecret);
-
 export const initDB = async (server: restify.Server) => {
     console.log('Trying to connect');
     await CheckAndCreateTable.cityzens(postgreSql);
@@ -80,13 +79,10 @@ export const initDB = async (server: restify.Server) => {
 export const init = (server: restify.Server) => {
     const routers = [];
     routers.push(new SwaggerRouter());
-    routers.push(
-        new AuthRouter(new AuthCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
-    );
+    routers.push(new AuthRouter(new AuthCtrl(auth0Service, cityzenRepositoryPostgreSQL)));
     routers.push(
         new ProfileRouter(
             new ProfileCtrl(
-                errorHandler,
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
                 auth0Sdk,
@@ -96,18 +92,12 @@ export const init = (server: restify.Server) => {
     );
     routers.push(
         new CityRouter(
-            new CityCtrl(
-                errorHandler,
-                auth0Service,
-                cityzenRepositoryPostgreSQL,
-                cityRepositoryInMemory,
-            ),
+            new CityCtrl(auth0Service, cityzenRepositoryPostgreSQL, cityRepositoryInMemory),
         ),
     );
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
-                errorHandler,
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
@@ -120,7 +110,6 @@ export const init = (server: restify.Server) => {
     routers.push(
         new MessageRouter(
             new MessageCtrl(
-                errorHandler,
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
                 hotspotRepositoryInMemory,
@@ -129,9 +118,7 @@ export const init = (server: restify.Server) => {
             ),
         ),
     );
-    routers.push(
-        new CityzenRouter(new CityzenCtrl(errorHandler, auth0Service, cityzenRepositoryPostgreSQL)),
-    );
+    routers.push(new CityzenRouter(new CityzenCtrl(auth0Service, cityzenRepositoryPostgreSQL)));
 
     routers.forEach(r => r.bind(server));
 };

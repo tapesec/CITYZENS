@@ -5,7 +5,6 @@ import Cityzen from '../../domain/model/Cityzen';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
-import ErrorHandler from '../services/errors/ErrorHandler';
 import { Auth0 } from './../libs/Auth0';
 import RootCtrl from './RootCtrl';
 
@@ -18,13 +17,12 @@ class ProfileCtrl extends RootCtrl {
     public static HOTSPOT_NOT_FOUND = 'hotspot not found';
 
     constructor(
-        errorHandler: ErrorHandler,
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
         auth0Sdk: Auth0,
         hotspotRepositoryInMemory: HotspotRepositoryInMemory,
     ) {
-        super(errorHandler, auth0Service, cityzenRepository);
+        super(auth0Service, cityzenRepository);
         this.auth0Sdk = auth0Sdk;
         this.hotspotRepository = hotspotRepositoryInMemory;
     }
@@ -36,8 +34,8 @@ class ProfileCtrl extends RootCtrl {
 
         if (!refreshToken) {
             return next(
-                this.errorHandler.logAndCreateBadRequest(
-                    `POST ${req.path()}`,
+                this.responseError.logAndCreateBadRequest(
+                    req,
                     ProfileCtrl.REFRESH_TOKEN_REQUIRED_ERROR,
                 ),
             );
@@ -46,10 +44,7 @@ class ProfileCtrl extends RootCtrl {
             const hotspot = this.hotspotRepository.findById(favoritId);
             if (!hotspot) {
                 return next(
-                    this.errorHandler.logAndCreateNotFound(
-                        `POST ${req.path()}`,
-                        ProfileCtrl.HOTSPOT_NOT_FOUND,
-                    ),
+                    this.responseError.logAndCreateNotFound(req, ProfileCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
 
@@ -62,7 +57,7 @@ class ProfileCtrl extends RootCtrl {
             const renewedTokens = await this.auth0Sdk.getAuthenticationRefreshToken(refreshToken);
             res.json(OK, renewedTokens);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`POST ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 }

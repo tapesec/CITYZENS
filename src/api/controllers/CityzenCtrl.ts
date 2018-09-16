@@ -3,37 +3,34 @@ import { OK } from 'http-status-codes';
 import CityzenId from '../../domain/model/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import Auth0Service from '../services/auth/Auth0Service';
-import ErrorHandler from '../services/errors/ErrorHandler';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
 import isAuthorized from '../../domain/services/CityzenAuthorization';
 import updateCityzen from '../services/cityzen/updateCityzen';
 
 class CityzenCtrl extends RootCtrl {
-    constructor(
-        errorHandler: ErrorHandler,
-        auth0Service: Auth0Service,
-        cityzenRepo: CityzenRepositoryPostgreSQL,
-    ) {
-        super(errorHandler, auth0Service, cityzenRepo);
+    constructor(auth0Service: Auth0Service, cityzenRepo: CityzenRepositoryPostgreSQL) {
+        super(auth0Service, cityzenRepo);
     }
 
     // GET /cityzens/{cityzenId}
     public cityzen = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
             if (!req.query.provider) {
-                return next(this.errorHandler.logAndCreateBadRequest(`GET ${req.path()}`));
+                return next(
+                    this.responseError.logAndCreateBadRequest(req, 'provider query is required'),
+                );
             }
             const userId = `${req.query.provider}|${req.params.cityzenId}`;
             const cityzenId = new CityzenId(userId);
 
             const cityzen = await this.cityzenRepository.findById(cityzenId);
             if (cityzen === undefined) {
-                return next(this.errorHandler.logAndCreateNotFound(`GET ${req.path()}`));
+                return next(this.responseError.logAndCreateNotFound(req, 'Cityzen not foud'));
             }
             res.json(cityzen);
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`GET ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 
@@ -42,8 +39,8 @@ class CityzenCtrl extends RootCtrl {
         try {
             if (!this.schemaValidator.validate(patchCityzenSchema, req.body)) {
                 return next(
-                    this.errorHandler.logAndCreateBadRequest(
-                        `PATCH ${req.path()}`,
+                    this.responseError.logAndCreateBadRequest(
+                        req,
                         `Invalid message payload: ${this.schemaValidator.errorsText()}`,
                     ),
                 );
@@ -58,14 +55,14 @@ class CityzenCtrl extends RootCtrl {
                 res.json(cityzenUpdated);
             } else {
                 return next(
-                    this.errorHandler.logAndCreateUnautorized(
-                        `PATCH ${req.path()}`,
+                    this.responseError.logAndCreateUnautorized(
+                        req,
                         `You're not granted to update this cityzen`,
                     ),
                 );
             }
         } catch (err) {
-            return next(this.errorHandler.logAndCreateInternal(`PATCH ${req.path()}`, err));
+            return next(this.responseError.logAndCreateInternal(req, err));
         }
     };
 }

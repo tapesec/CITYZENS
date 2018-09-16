@@ -1,9 +1,5 @@
 import { OK, NOT_FOUND } from 'http-status-codes';
-import ErrorHandler from '../errors/ErrorHandler';
 import retryPromise from '../../services/errors/retryPromise';
-import auth0, { Auth0 } from '../../libs/Auth0';
-import CityzenId from '../../../domain/model/CityzenId';
-const request = require('request');
 import config from '../../config';
 
 class FilestackService {
