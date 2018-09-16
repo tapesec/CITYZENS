@@ -1,5 +1,5 @@
-import Cityzen from '../cityzen/Cityzen';
-import CityzenId from '../cityzen/CityzenId';
+import Cityzen from './Cityzen';
+import CityzenId from './CityzenId';
 
 export interface CityzenAuthorization {
     toUpdateCityzen(cityzen: Cityzen, cityzenId: CityzenId): boolean;

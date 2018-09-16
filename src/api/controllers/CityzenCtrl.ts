@@ -5,7 +5,7 @@ import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryP
 import Auth0Service from '../services/auth/Auth0Service';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
-import isAuthorized from '../../domain/services/CityzenAuthorization';
+import isAuthorized from '../../domain/cityzen/CityzenAuthorization';
 import updateCityzen from '../services/cityzen/updateCityzen';
 
 class CityzenCtrl extends RootCtrl {
