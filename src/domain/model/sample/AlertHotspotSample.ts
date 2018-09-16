@@ -1,8 +1,8 @@
-import ImageLocation from '../ImageLocation';
-import AlertHotspot from '../AlertHotspot';
+import ImageLocation from '../../hotspot/ImageLocation';
+import AlertHotspot from '../../hotspot/AlertHotspot';
 import AlertMessageSample from './AlertMessageSample';
-import PertinenceScore from '../PertinenceScore';
-import VoterList from '../VoterList';
+import PertinenceScore from '../../hotspot/PertinenceScore';
+import VoterList from '../../hotspot/VoterList';
 import HotspotBuilderSample from './HotspotBuilderSample';
 
 class AlertHotspotSample {

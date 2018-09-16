@@ -1,19 +1,19 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import HotspotId from '../../domain/model/HotspotId';
-import MessageId from '../../domain/model/MessageId';
+import HotspotId from '../../domain/hotspot/HotspotId';
+import MessageId from '../../domain/hotspot/MessageId';
+import Message from '../../domain/hotspot/Message';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
-import MessageFactory from '../../infrastructure/MessageFactory';
+import MessageFactory from '../../domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {
     createMessageSchema,
     getMessageSchemaQuery,
     patchMessageSchema,
 } from '../requestValidation/schema';
-import * as isAuthorized from '../services/hotspot/isAuthorized';
-import Message from '../../domain/model/Message';
+import * as isAuthorized from '../../domain/hotspot/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
 
@@ -147,12 +147,16 @@ class MessageCtrl extends RootCtrl {
             );
         }
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
 
         const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
-            return next(this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
 
         if (!isAuthorized.toPostMessages(hotspot, this.cityzenIfAuthenticated)) {
@@ -180,11 +184,15 @@ class MessageCtrl extends RootCtrl {
             );
         }
         if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
         const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
-            return next(this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
 
         if (!isAuthorized.toPostComments(hotspot, this.cityzenIfAuthenticated)) {
@@ -217,7 +225,9 @@ class MessageCtrl extends RootCtrl {
 
         const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
-            return next(this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
 
         try {
@@ -226,7 +236,9 @@ class MessageCtrl extends RootCtrl {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
         if (!message) {
-            return next(this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
+            );
         }
 
         if (!isAuthorized.toPatchMessage(message, this.cityzenIfAuthenticated)) {
@@ -257,12 +269,16 @@ class MessageCtrl extends RootCtrl {
     public removeMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         const messageId = new MessageId(req.params.messageId);
         if (!this.messageRepository.isSet(messageId)) {
-            return next(this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
+            );
         }
 
         const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
         if (!hotspot) {
-            return next(this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND));
+            return next(
+                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+            );
         }
 
         const message = await this.messageRepository.findById(messageId);

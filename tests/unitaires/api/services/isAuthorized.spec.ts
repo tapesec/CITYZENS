@@ -1,13 +1,13 @@
 import * as Chai from 'chai';
-import Message from '../../../../src/domain/model/Message';
+import Message from '../../../../src/domain/hotspot/Message';
 import AlertHotspotSample from '../../../../src/domain/model/sample/AlertHotspotSample';
 import AuthorSample from '../../../../src/domain/model/sample/AuthorSample';
 import MediaHotspotSample from '../../../../src/domain/model/sample/MediaHotspotSample';
 import MessageSample from '../../../../src/domain/model/sample/MessageSample';
-import Cityzen from '../../../../src/domain/model/Cityzen';
-import CityzenId from '../../../../src/domain/model/CityzenId';
+import Cityzen from '../../../../src/domain/cityzen/Cityzen';
+import CityzenId from '../../../../src/domain/cityzen/CityzenId';
 import CityzenSample from '../../../../src/domain/model/sample/CityzenSample';
-import * as isAuthorized from './../../../../src/api/services/hotspot/isAuthorized';
+import * as isAuthorized from '../../../../src/domain/hotspot/isAuthorized';
 
 describe("isAuthorized's functions.", () => {
     it('toSeeHotspots', () => {

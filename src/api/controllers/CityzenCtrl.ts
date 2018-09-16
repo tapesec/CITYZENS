@@ -1,6 +1,6 @@
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';
-import CityzenId from '../../domain/model/CityzenId';
+import CityzenId from '../../domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import Auth0Service from '../services/auth/Auth0Service';
 import RootCtrl from './RootCtrl';

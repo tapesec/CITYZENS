@@ -1,10 +1,10 @@
-import CityId from '../domain/model/CityId';
-import AlertHotspot from '../domain/model/AlertHotspot';
-import Hotspot from '../domain/model/Hotspot';
-import HotspotId from '../domain/model/HotspotId';
-import IHotspotRepository from '../domain/interface/IHotspotRepository';
-import MediaHotspot from '../domain/model/MediaHotspot';
-import HotspotFactory from './HotspotFactory';
+import CityId from '../domain/city/CityId';
+import AlertHotspot from '../domain/hotspot/AlertHotspot';
+import Hotspot from '../domain/hotspot/Hotspot';
+import HotspotId from '../domain/hotspot/HotspotId';
+import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import MediaHotspot from '../domain/hotspot/MediaHotspot';
+import HotspotFactory from '../domain/hotspot/HotspotFactory';
 import OrmHotspot from './ormHotspot';
 
 class HotspotRepositoryInMemory implements IHotspotRepository {

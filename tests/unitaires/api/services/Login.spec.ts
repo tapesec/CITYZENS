@@ -1,12 +1,11 @@
 import * as sinon from 'sinon';
 import { expect } from 'chai';
 import Login, { LoginOptions } from '../../../../src/api/services/auth/Login';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../../../../src/api/services/errors/ResponseError';
 describe('Login service', () => {
-
     it('Should call auth0 oauth/token endpoint to retrieve a jwt correct token', async () => {
         // Arrange
-        const loginOptions : LoginOptions = {
+        const loginOptions: LoginOptions = {
             url: 'fake.authO.url',
             clientId: 'fake-clientId',
             clientSecret: 'fake-client-secret',
@@ -17,8 +16,7 @@ describe('Login service', () => {
             method: 'POST',
             url: loginOptions.url + '/oauth/token',
             headers: { 'content-type': 'application/json' },
-            body:
-            {
+            body: {
                 username: fakeEmail,
                 password: fakePassword,
                 grant_type: 'password',
@@ -30,7 +28,14 @@ describe('Login service', () => {
             json: true,
         };
         const moqRequest = sinon.stub();
-        moqRequest.callsArgWith(1, undefined, { /* response */ }, { token: 'a-fake-valid-token' });
+        moqRequest.callsArgWith(
+            1,
+            undefined,
+            {
+                /* response */
+            },
+            { token: 'a-fake-valid-token' },
+        );
         // Act
         const loginService = new Login(loginOptions, moqRequest, {} as ErrorHandler);
         const token = await loginService.try(fakeEmail, fakePassword);

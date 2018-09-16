@@ -1,4 +1,4 @@
-import CityzenId from '../../../domain/model/CityzenId';
+import CityzenId from '../../../domain/cityzen/CityzenId';
 import { Auth0 } from '../../libs/Auth0';
 import MemoryCache from '../cache/MemoryCache';
 import ErrorHandler from '../errors/ResponseError';

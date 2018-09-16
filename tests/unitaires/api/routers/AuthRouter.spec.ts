@@ -5,7 +5,7 @@ import AuthCtrl from '../../../../src/api/controllers/AuthCtrl';
 import * as TypeMoq from 'typemoq';
 import * as restify from 'restify';
 import * as c from '../../../../src/api/routers/constants';
-import ErrorHandler from '../../../../src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../../../../src/api/services/errors/ResponseError';
 
 describe('Auth router', () => {
     it('should register routes related to authentification', () => {

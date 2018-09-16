@@ -1,4 +1,4 @@
-import City from '../../../src/domain/model/City';
+import City from '../../../src/domain/city/City';
 import cityRepositoryInMemory from '../../../src/infrastructure/CityRepositoryInMemory';
 import CitySample from '../../../src/domain/model/sample/CitySample';
 import { expect } from 'chai';

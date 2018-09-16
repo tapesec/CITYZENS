@@ -1,8 +1,8 @@
-import IMessageRepository from '../domain/interface/IMessageRepository';
-import HotspotId from '../domain/model/HotspotId';
-import Message from '../domain/model/Message';
-import MessageId from '../domain/model/MessageId';
-import MessageFactory from './MessageFactory';
+import IMessageRepository from '../domain/hotspot/IMessageRepository';
+import HotspotId from '../domain/hotspot/HotspotId';
+import Message from '../domain/hotspot/Message';
+import MessageId from '../domain/hotspot/MessageId';
+import MessageFactory from '../domain/hotspot/MessageFactory';
 import OrmMessage from './ormMessage';
 
 class MessageRepositoryPostgreSql implements IMessageRepository {

@@ -1,7 +1,7 @@
-import ImageLocation from '../ImageLocation';
+import ImageLocation from '../../hotspot/ImageLocation';
 import config from '../../../api/config';
-import Cityzen from '../Cityzen';
-import CityzenId from '../CityzenId';
+import Cityzen from '../../cityzen/Cityzen';
+import CityzenId from '../../cityzen/CityzenId';
 
 class CityzenSample {
     public static MARTIN: Cityzen = new Cityzen(

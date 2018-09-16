@@ -9,7 +9,7 @@ import getUpdateHotspotSchema, {
     patchMediaHotspotSchema,
 } from '../../../../src/api/requestValidation/patchHotspotsSchema';
 import { getHotspots, patchMessageSchema } from '../../../../src/api/requestValidation/schema';
-import { HotspotType } from '../../../../src/domain/model/Hotspot';
+import { HotspotType } from '../../../../src/domain/hotspot/Hotspot';
 
 describe('JschemaValidator', () => {
     let validator: ajv.Ajv;

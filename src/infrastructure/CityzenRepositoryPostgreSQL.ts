@@ -1,10 +1,10 @@
 import * as ajv from 'ajv';
 import { cityzensDbSchema } from '../api/requestValidation/schema';
-import CityzenId from '../domain/model/CityzenId';
-import ICityzenRepository from '../domain/interface/ICityzenRepository';
+import CityzenId from '../domain/cityzen/CityzenId';
+import ICityzenRepository from '../domain/cityzen/ICityzenRepository';
 import OrmCityzen from './../infrastructure/ormCityzen';
-import CityzenFactory from './CityzenFactory';
-import Cityzen from '../domain/model/Cityzen';
+import CityzenFactory from '../domain/cityzen/CityzenFactory';
+import Cityzen from '../domain/cityzen/Cityzen';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     private cityzenFactory: CityzenFactory;

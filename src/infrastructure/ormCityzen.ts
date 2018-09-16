@@ -1,6 +1,6 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
-import CityzenId from '../domain/model/CityzenId';
-import Cityzen from '../domain/model/Cityzen';
+import CityzenId from '../domain/cityzen/CityzenId';
+import Cityzen from '../domain/cityzen/Cityzen';
 
 class OrmCityzen {
     constructor(private postgre: PostgreSQL) {}

@@ -1,4 +1,4 @@
-import Position from '../Position';
+import Position from '../../hotspot/Position';
 
 class PositionSample {
     public static MARTIGNAS_NORTH_OUEST = new Position(44.84966239, -0.79135895);

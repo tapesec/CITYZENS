@@ -1,4 +1,4 @@
-import Position from '../Position';
+import Position from '../../hotspot/Position';
 
 class PolygonSample {
     public static MARTIGNAS_SUR_JALLE = [

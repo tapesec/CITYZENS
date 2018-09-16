@@ -1,26 +1,26 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import CityId from '../../domain/model/CityId';
-import AlertHotspot from '../../domain/model/AlertHotspot';
-import Hotspot from '../../domain/model/Hotspot';
-import HotspotId from '../../domain/model/HotspotId';
-import MediaHotspot from '../../domain/model/MediaHotspot';
-import CityzenId from '../../domain/model/CityzenId';
+import CityId from '../../domain/city/CityId';
+import AlertHotspot from '../../domain/hotspot/AlertHotspot';
+import Hotspot from '../../domain/hotspot/Hotspot';
+import HotspotId from '../../domain/hotspot/HotspotId';
+import MediaHotspot from '../../domain/hotspot/MediaHotspot';
+import CityzenId from '../../domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotFactory from '../../infrastructure/HotspotFactory';
+import HotspotFactory from '../../domain/hotspot/HotspotFactory';
 import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import { isUuid, strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
-import actAsSpecified from '../services/hotspot/actAsSpecified';
-import hotspotsByArea from '../services/hotspot/hotspotsByArea';
-import hotspotsByCodeCommune from '../services/hotspot/hotspotsByCodeCommune';
+import actAsSpecified from '../../domain/hotspot/actAsSpecified';
+import hotspotsByArea from '../../domain/hotspot/hotspotsByArea';
+import hotspotsByCodeCommune from '../../domain/hotspot/hotspotsByCodeCommune';
 import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
-import HotspotReducer from './../services/hotspot/HotspotReducer';
-import * as isAuthorized from './../services/hotspot/isAuthorized';
+import HotspotReducer from '../../domain/hotspot/HotspotReducer';
+import * as isAuthorized from '../../domain/hotspot/isAuthorized';
 import RootCtrl from './RootCtrl';
 
 class HotspotCtrl extends RootCtrl {

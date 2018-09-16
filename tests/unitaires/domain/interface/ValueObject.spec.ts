@@ -1,16 +1,16 @@
-import HotspotId from '../../../../src/domain/model/HotspotId';
-import HotspotSlug from '../../../../src/domain/model/HotspotSlug';
-import HotspotTitle from '../../../../src/domain/model/HotspotTitle';
-import MemberList from '../../../../src/domain/model/MemberList';
-import Position from '../../../../src/domain/model/Position';
-import ViewsCount from '../../../../src/domain/model/ViewsCount';
-import Address from '../../../../src/domain/model/Address';
-import CityId from '../../../../src/domain/model/CityId';
-import Author from '../../../../src/domain/model/Author';
-import ImageLocation from '../../../../src/domain/model/ImageLocation';
+import HotspotId from '../../../../src/domain/hotspot/HotspotId';
+import HotspotSlug from '../../../../src/domain/hotspot/HotspotSlug';
+import HotspotTitle from '../../../../src/domain/hotspot/HotspotTitle';
+import MemberList from '../../../../src/domain/hotspot/MemberList';
+import Position from '../../../../src/domain/hotspot/Position';
+import ViewsCount from '../../../../src/domain/hotspot/ViewsCount';
+import Address from '../../../../src/domain/hotspot/Address';
+import CityId from '../../../../src/domain/city/CityId';
+import Author from '../../../../src/domain/hotspot/Author';
+import ImageLocation from '../../../../src/domain/hotspot/ImageLocation';
 
 import * as Chai from 'chai';
-import CityzenId from '../../../../src/domain/model/CityzenId';
+import CityzenId from '../../../../src/domain/cityzen/CityzenId';
 import SlideShow from '../../../../src/domain/model/SlideShow';
 
 describe('ValueObject', () => {

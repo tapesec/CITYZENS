@@ -3,7 +3,7 @@ import { Auth0 } from '../../../../../src/api/libs/Auth0';
 import { FAKE_USER_INFO_AUTH0, FAKE_USER_INFO_BODY } from './../../services/samples';
 import UserInfoAuth0 from '../../../../../src/api/services/auth/UserInfoAuth0';
 import Auth0Service from '../../../../../src/api/services/auth/Auth0Service';
-import ErrorHandler from '../../../../../src/api/services/errors/ErrorHandler';
+import ErrorHandler from '../../../../../src/api/services/errors/ResponseError';
 
 describe('Auth0Service', () => {
     let errorHandlerMoq: TypeMoq.IMock<ErrorHandler>;

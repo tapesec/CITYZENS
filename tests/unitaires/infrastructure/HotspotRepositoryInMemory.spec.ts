@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import * as TypeMoq from 'typemoq';
 import { v4 } from 'uuid';
-import CityId from '../../../src/domain/model/CityId';
-import Hotspot from '../../../src/domain/model/Hotspot';
-import HotspotId from '../../../src/domain/model/HotspotId';
+import CityId from '../../../src/domain/city/CityId';
+import Hotspot from '../../../src/domain/hotspot/Hotspot';
+import HotspotId from '../../../src/domain/hotspot/HotspotId';
 import CitySample from '../../../src/domain/model/sample/CitySample';
 import MediaHotspotSample from '../../../src/domain/model/sample/MediaHotspotSample';
 import PositionSample from '../../../src/domain/model/sample/PositionSample';
@@ -14,7 +14,7 @@ import {
     HOTSPOT_MARTIGNAS_SCHOOL,
     HOTSPOT_MARTIGNAS_TOWNHALL,
 } from '../../../src/infrastructure/dbInMemory';
-import HotspotFactory from '../../../src/infrastructure/HotspotFactory';
+import HotspotFactory from '../../../src/domain/hotspot/HotspotFactory';
 import HotspotRepositoryPostgreSQL from '../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import OrmHotspot from '../../../src/infrastructure/ormHotspot';
 

@@ -1,7 +1,7 @@
 import PositionSample from './PositionSample';
 import PolygonSample from './PolygonSample';
-import City from '../City';
-import PostalCode from '../PostalCode';
+import City from '../../city/City';
+import PostalCode from '../../city/PostalCode';
 
 class CitySample {
     public static MARTIGNAS = new City(

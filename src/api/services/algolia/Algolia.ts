@@ -1,7 +1,7 @@
-import MediaHotspot from '../../../domain/model/MediaHotspot';
+import MediaHotspot from '../../../domain/hotspot/MediaHotspot';
 import AlgoliaAPI from './../../../api/libs/AlgoliaAPI';
-import AlertHotspot from '../../../domain/model/AlertHotspot';
-import Hotspot from '../../../domain/model/Hotspot';
+import AlertHotspot from '../../../domain/hotspot/AlertHotspot';
+import Hotspot from '../../../domain/hotspot/Hotspot';
 
 class Algolia {
     constructor(protected algolia: AlgoliaAPI) {}

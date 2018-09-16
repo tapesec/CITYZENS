@@ -1,9 +1,9 @@
-import HotspotBuilder from '../../factories/HotspotBuilder';
-import CityId from '../CityId';
-import AvatarIconUrl from '../AvatarIconUrl';
-import { HotspotType } from '../Hotspot';
-import HotspotId from '../HotspotId';
-import ViewsCount from '../ViewsCount';
+import HotspotBuilder from '../../hotspot/HotspotBuilder';
+import CityId from '../../city/CityId';
+import AvatarIconUrl from '../../cityzen/AvatarIconUrl';
+import { HotspotType } from '../../hotspot/Hotspot';
+import HotspotId from '../../hotspot/HotspotId';
+import ViewsCount from '../../hotspot/ViewsCount';
 import { DEFAULT_MEDIA_ICON } from '../../constants';
 import AddressSample from './AddressSample';
 import AuthorSample from './AuthorSample';

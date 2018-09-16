@@ -1,7 +1,7 @@
 import UserInfoAuth0 from 'src/api/services/auth/UserInfoAuth0';
-import ImageLocation from '../../../domain/model/ImageLocation';
-import Cityzen from '../../../domain/model/Cityzen';
-import CityzenId from '../../../domain/model/CityzenId';
+import ImageLocation from '../../../domain/hotspot/ImageLocation';
+import Cityzen from '../../../domain/cityzen/Cityzen';
+import CityzenId from '../../../domain/cityzen/CityzenId';
 
 export class InvalidPayloadError extends Error {
     constructor(message: string) {

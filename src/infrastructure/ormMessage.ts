@@ -1,7 +1,7 @@
 import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
-import HotspotId from '../domain/model/HotspotId';
-import Message from '../domain/model/Message';
-import MessageId from '../domain/model/MessageId';
+import HotspotId from '../domain/hotspot/HotspotId';
+import Message from '../domain/hotspot/Message';
+import MessageId from '../domain/hotspot/MessageId';
 
 export default class OrmMessage {
     constructor(private postgre: PostgreSQL) {}
