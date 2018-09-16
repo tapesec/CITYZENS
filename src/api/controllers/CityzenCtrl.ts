@@ -6,7 +6,7 @@ import Auth0Service from '../services/auth/Auth0Service';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
 import isAuthorized from '../../domain/cityzen/CityzenAuthorization';
-import updateCityzen from '../services/cityzen/updateCityzen';
+import updateCityzen from '../../domain/cityzen/updateCityzen';
 
 class CityzenCtrl extends RootCtrl {
     constructor(auth0Service: Auth0Service, cityzenRepo: CityzenRepositoryPostgreSQL) {
