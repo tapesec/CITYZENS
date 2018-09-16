@@ -7,20 +7,16 @@ import MediaHotspot from '../domain/hotspot/MediaHotspot';
 import HotspotFactory from '../domain/hotspot/HotspotFactory';
 import OrmHotspot from './ormHotspot';
 
-class HotspotRepositoryInMemory implements IHotspotRepository {
+class HotspotRepositoryPostgreSQL implements IHotspotRepository {
     constructor(protected orm: OrmHotspot, private factory: HotspotFactory) {}
 
-    public async findByCodeCommune(
-        insee: CityId,
-        onError: (exception: Error) => void,
-    ): Promise<(MediaHotspot | AlertHotspot)[]> {
+    public async findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]> {
         const data = await this.orm.findByCity(insee);
         return data
             .map(x => {
                 try {
                     return this.factory.build(x);
                 } catch (error) {
-                    onError(error);
                     return undefined;
                 }
             })
@@ -55,7 +51,6 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
         west: number,
         south: number,
         east: number,
-        onError: (error: Error) => void,
     ): Promise<(MediaHotspot | AlertHotspot)[]> {
         const data = await this.orm.findByArea(north, west, south, east);
 
@@ -63,7 +58,6 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
             try {
                 return this.factory.build(x);
             } catch (error) {
-                onError(error);
                 return undefined;
             }
         });
@@ -86,4 +80,4 @@ class HotspotRepositoryInMemory implements IHotspotRepository {
     }
 }
 
-export default HotspotRepositoryInMemory;
+export default HotspotRepositoryPostgreSQL;

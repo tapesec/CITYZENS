@@ -35,6 +35,11 @@ import SwaggerRouter from './SwaggerRouter';
 
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
+import HotspotParZone, { IHotspotParZone } from '../../domain/hotspot/usecases/HotspotParZone';
+import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import HotspotParCodeInsee, {
+    IHotspotParCodeInsee,
+} from '../../domain/hotspot/usecases/HotspotParCodeInsee';
 
 const request = require('request');
 
@@ -63,7 +68,10 @@ const messageFactory = new MessageFactory();
 const hotspotFactory = new HotspotFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepositoryInMemory = new HotspotRepositoryPostgreSQL(ormHotspot, hotspotFactory);
+const hotspotRepositoryPostgreSQL: IHotspotRepository = new HotspotRepositoryPostgreSQL(
+    ormHotspot,
+    hotspotFactory,
+);
 const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
@@ -86,7 +94,7 @@ export const init = (server: restify.Server) => {
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
                 auth0Sdk,
-                hotspotRepositoryInMemory,
+                hotspotRepositoryPostgreSQL,
             ),
         ),
     );
@@ -95,15 +103,17 @@ export const init = (server: restify.Server) => {
             new CityCtrl(auth0Service, cityzenRepositoryPostgreSQL, cityRepositoryInMemory),
         ),
     );
+
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
-                hotspotRepositoryInMemory,
-                new HotspotFactory(),
+                hotspotRepositoryPostgreSQL,
                 algolia,
                 slideshowService,
+                new HotspotParZone(hotspotRepositoryPostgreSQL),
+                new HotspotParCodeInsee(hotspotRepositoryPostgreSQL),
             ),
         ),
     );
@@ -112,7 +122,7 @@ export const init = (server: restify.Server) => {
             new MessageCtrl(
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
-                hotspotRepositoryInMemory,
+                hotspotRepositoryPostgreSQL,
                 messageRepositoryInMemory,
                 messageFactory,
             ),

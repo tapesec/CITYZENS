@@ -3,13 +3,14 @@ import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
 import Cityzen from '../../domain/cityzen/Cityzen';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
+import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import { Auth0 } from './../libs/Auth0';
 import RootCtrl from './RootCtrl';
+import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
 
 class ProfileCtrl extends RootCtrl {
-    protected hotspotRepository: HotspotRepositoryInMemory;
+    protected hotspotRepository: IHotspotRepository;
     protected auth0Sdk: Auth0;
     public static UPDATE_PROFILE_ERROR = 'Failed to update profile';
     public static FIND_HOTSPOT_ERROR = "Can't access hotspots data";
@@ -20,7 +21,7 @@ class ProfileCtrl extends RootCtrl {
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
         auth0Sdk: Auth0,
-        hotspotRepositoryInMemory: HotspotRepositoryInMemory,
+        hotspotRepositoryInMemory: IHotspotRepository,
     ) {
         super(auth0Service, cityzenRepository);
         this.auth0Sdk = auth0Sdk;

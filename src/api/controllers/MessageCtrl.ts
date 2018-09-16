@@ -5,7 +5,7 @@ import HotspotId from '../../domain/hotspot/HotspotId';
 import MessageId from '../../domain/hotspot/MessageId';
 import Message from '../../domain/hotspot/Message';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
+import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {
@@ -16,9 +16,9 @@ import {
 import * as isAuthorized from '../../domain/hotspot/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
+import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
 
 class MessageCtrl extends RootCtrl {
-    private hotspotRepository: HotspotRepositoryInMemory;
     private messageRepository: MessageRepositoryPostgreSql;
     private messageFactory: MessageFactory;
 
@@ -29,12 +29,11 @@ class MessageCtrl extends RootCtrl {
     constructor(
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
-        hotspotRepositoryInMemory: HotspotRepositoryInMemory,
+        private hotspotRepository: IHotspotRepository,
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
     ) {
         super(auth0Service, cityzenRepository);
-        this.hotspotRepository = hotspotRepositoryInMemory;
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
     }

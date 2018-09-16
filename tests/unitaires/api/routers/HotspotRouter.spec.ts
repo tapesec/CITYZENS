@@ -34,7 +34,6 @@ describe('hotspots router', () => {
             loginServiceMoq,
             hotspotRepositoryPostgreSQL,
             ormCityzenMoq,
-            hostpotFactoryMoq,
             algoliaMock.object,
         );
         const hotspotRouter = new HotspotRouter(hotspotCtrl.object);

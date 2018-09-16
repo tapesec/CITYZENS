@@ -6,25 +6,20 @@ import MediaHotspot from './MediaHotspot';
 
 interface IHotspotRepository {
     findById(id: HotspotId): Promise<MediaHotspot | AlertHotspot>;
-
     findInArea(
         north: number,
         west: number,
         south: number,
         east: number,
-        onError: (exception: Error) => void,
     ): Promise<(MediaHotspot | AlertHotspot)[]>;
-
-    findByCodeCommune(
-        insee: CityId,
-        onError: (exception: Error) => void,
-    ): Promise<(MediaHotspot | AlertHotspot)[]>;
-
+    findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]>;
     isSet(id: HotspotId): Promise<boolean>;
-
+    isSetBySlug(slug: String): Promise<boolean>;
     store(hotspot: Hotspot): void;
-
     remove(id: HotspotId): void;
+    findBySlug(slug: String): Promise<MediaHotspot | AlertHotspot>;
+    cacheAlgolia(id: HotspotId, v: boolean): Promise<any>;
+    update(hotspot: Hotspot): Promise<any>;
 }
 
 export default IHotspotRepository;

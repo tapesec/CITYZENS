@@ -9,24 +9,20 @@ import MediaHotspot from '../../domain/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../domain/hotspot/HotspotFactory';
-import HotspotRepositoryInMemory from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import { isUuid, strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
 import actAsSpecified from '../../domain/hotspot/actAsSpecified';
-import hotspotsByArea from '../../domain/hotspot/hotspotsByArea';
-import hotspotsByCodeCommune from '../../domain/hotspot/hotspotsByCodeCommune';
 import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
-import HotspotReducer from '../../domain/hotspot/HotspotReducer';
 import * as isAuthorized from '../../domain/hotspot/isAuthorized';
 import RootCtrl from './RootCtrl';
+import { IHotspotParZone } from '../../domain/hotspot/usecases/HotspotParZone';
+import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import { IHotspotParCodeInsee } from '../../domain/hotspot/usecases/HotspotParCodeInsee';
 
 class HotspotCtrl extends RootCtrl {
-    private hotspotRepository: HotspotRepositoryInMemory;
-    private algolia: Algolia;
-    private hotspotFactory: HotspotFactory;
     private slideshowService: SlideshowService;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
@@ -39,15 +35,13 @@ class HotspotCtrl extends RootCtrl {
     constructor(
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
-        hotspotRepositoryInMemory: HotspotRepositoryInMemory,
-        hotspotFactory: HotspotFactory,
-        algolia: Algolia,
+        private hotspotRepository: IHotspotRepository,
+        private algolia: Algolia,
         slideshowService: SlideshowService,
+        private hotspotParZone: IHotspotParZone,
+        private hotspotParCodeInsee: IHotspotParCodeInsee,
     ) {
         super(auth0Service, cityzenRepository);
-        this.hotspotRepository = hotspotRepositoryInMemory;
-        this.hotspotFactory = hotspotFactory;
-        this.algolia = algolia;
         this.algolia.initHotspots();
         this.slideshowService = slideshowService;
     }
@@ -56,35 +50,24 @@ class HotspotCtrl extends RootCtrl {
     public hotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         const queryStrings: any = strToNumQSProps(req.query, ['north', 'east', 'west', 'south']);
         let hotspotsResult: Hotspot[];
-
         if (!this.schemaValidator.validate(getHotspots, queryStrings)) {
             return next(
                 this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
             );
         }
         try {
-            const onError = (error: Error) => {
-                this.responseError.logSlack(`GET ${req.path()}`, error.message);
-            };
-
             if (queryStrings.north) {
-                hotspotsResult = await hotspotsByArea(
-                    queryStrings,
-                    this.hotspotRepository,
-                    onError,
-                );
+                hotspotsResult = await this.hotspotParZone.run({
+                    ...queryStrings,
+                    user: this.cityzenIfAuthenticated,
+                });
             } else if (queryStrings.insee) {
-                hotspotsResult = await hotspotsByCodeCommune(
-                    new CityId(queryStrings.insee),
-                    this.hotspotRepository,
-                    onError,
-                );
+                hotspotsResult = await this.hotspotParCodeInsee.run({
+                    cityId: new CityId(queryStrings.insee),
+                    user: this.cityzenIfAuthenticated,
+                });
             }
-            const hotspotReducer = new HotspotReducer(hotspotsResult);
-            const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(
-                this.cityzenIfAuthenticated,
-            );
-            res.json(OK, visibleHotspots);
+            res.json(OK, hotspotsResult);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
@@ -132,7 +115,7 @@ class HotspotCtrl extends RootCtrl {
 
         try {
             req.body.cityzen = this.cityzenIfAuthenticated;
-            const newHotspot: Hotspot = this.hotspotFactory.build(req.body);
+            const newHotspot: Hotspot = new HotspotFactory().build(req.body);
             await this.hotspotRepository.store(newHotspot);
             res.json(CREATED, newHotspot);
             this.algolia
