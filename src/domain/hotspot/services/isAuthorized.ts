@@ -1,7 +1,7 @@
-import Message from './Message';
-import Hotspot, { HotspotScope } from './Hotspot';
-import MediaHotspot from './MediaHotspot';
-import Cityzen from '../cityzen/Cityzen';
+import Message from '../Message';
+import Hotspot, { HotspotScope } from '../Hotspot';
+import MediaHotspot from '../MediaHotspot';
+import Cityzen from '../../cityzen/Cityzen';
 
 const toSeeHotspot = (hotspot: Hotspot, member?: Cityzen) => {
     if (!(hotspot instanceof MediaHotspot)) return true;

@@ -7,7 +7,7 @@ import MessageSample from '../../../../src/domain/sample/MessageSample';
 import Cityzen from '../../../../src/domain/cityzen/Cityzen';
 import CityzenId from '../../../../src/domain/cityzen/CityzenId';
 import CityzenSample from '../../../../src/domain/sample/CityzenSample';
-import * as isAuthorized from '../../../../src/domain/hotspot/isAuthorized';
+import * as isAuthorized from '../../../../src/domain/hotspot/services/isAuthorized';
 
 describe("isAuthorized's functions.", () => {
     it('toSeeHotspots', () => {

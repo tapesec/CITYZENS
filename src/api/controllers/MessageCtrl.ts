@@ -13,7 +13,7 @@ import {
     getMessageSchemaQuery,
     patchMessageSchema,
 } from '../requestValidation/schema';
-import * as isAuthorized from '../../domain/hotspot/isAuthorized';
+import * as isAuthorized from '../../domain/hotspot/services/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';

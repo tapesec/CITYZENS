@@ -16,7 +16,7 @@ import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestV
 import actAsSpecified from '../../domain/hotspot/actAsSpecified';
 import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
-import * as isAuthorized from '../../domain/hotspot/isAuthorized';
+import * as isAuthorized from '../../domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
 import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
