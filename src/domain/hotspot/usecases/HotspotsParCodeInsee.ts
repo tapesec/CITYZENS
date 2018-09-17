@@ -13,11 +13,11 @@ export interface ParametresHotspotParCodeInsee {
     user: Cityzen;
 }
 
-export interface IHotspotParCodeInsee {
+export interface IHotspotsParCodeInsee {
     run(params: ParametresHotspotParCodeInsee): Promise<Hotspot[]>;
 }
 
-export default class HotspotParCodeInsee implements IHotspotParCodeInsee {
+export default class HotspotsParCodeInsee implements IHotspotsParCodeInsee {
     constructor(private hotspotRepo: IHotspotRepository) {}
 
     async run(params: ParametresHotspotParCodeInsee): Promise<Hotspot[]> {

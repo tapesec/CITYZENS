@@ -5,7 +5,7 @@ import MediaHotspot from '../MediaHotspot';
 import AlertHotspot from '../AlertHotspot';
 import Cityzen from '../../cityzen/Cityzen';
 
-class HotspotParZone implements IHotspotParZone {
+class HotspotsParZone implements IHotspotsParZone {
     constructor(private hotspotRepo: IHotspotRepository) {}
 
     async run(params: ParametresHotspotParZone): Promise<Hotspot[]> {
@@ -21,7 +21,7 @@ class HotspotParZone implements IHotspotParZone {
     }
 }
 
-export default HotspotParZone;
+export default HotspotsParZone;
 
 export enum HotspotParZoneStatus {
     OK = 'OK',
@@ -40,6 +40,6 @@ export interface IHotspotParZoneResult {
     hotspots: Hotspot[];
 }
 
-export interface IHotspotParZone {
+export interface IHotspotsParZone {
     run(params: ParametresHotspotParZone): Promise<Hotspot[]>;
 }

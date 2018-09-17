@@ -18,9 +18,9 @@ import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
 import * as isAuthorized from '../../domain/hotspot/isAuthorized';
 import RootCtrl from './RootCtrl';
-import { IHotspotParZone } from '../../domain/hotspot/usecases/HotspotParZone';
+import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
-import { IHotspotParCodeInsee } from '../../domain/hotspot/usecases/HotspotParCodeInsee';
+import { IHotspotsParCodeInsee } from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
@@ -38,8 +38,8 @@ class HotspotCtrl extends RootCtrl {
         private hotspotRepository: IHotspotRepository,
         private algolia: Algolia,
         slideshowService: SlideshowService,
-        private hotspotParZone: IHotspotParZone,
-        private hotspotParCodeInsee: IHotspotParCodeInsee,
+        private hotspotsParZone: IHotspotsParZone,
+        private hotspotsParCodeInsee: IHotspotsParCodeInsee,
     ) {
         super(auth0Service, cityzenRepository);
         this.algolia.initHotspots();
@@ -57,12 +57,12 @@ class HotspotCtrl extends RootCtrl {
         }
         try {
             if (queryStrings.north) {
-                hotspotsResult = await this.hotspotParZone.run({
+                hotspotsResult = await this.hotspotsParZone.run({
                     ...queryStrings,
                     user: this.cityzenIfAuthenticated,
                 });
             } else if (queryStrings.insee) {
-                hotspotsResult = await this.hotspotParCodeInsee.run({
+                hotspotsResult = await this.hotspotsParCodeInsee.run({
                     cityId: new CityId(queryStrings.insee),
                     user: this.cityzenIfAuthenticated,
                 });

@@ -35,11 +35,11 @@ import SwaggerRouter from './SwaggerRouter';
 
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
-import HotspotParZone, { IHotspotParZone } from '../../domain/hotspot/usecases/HotspotParZone';
+import HotspotsParZone, { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
-import HotspotParCodeInsee, {
-    IHotspotParCodeInsee,
-} from '../../domain/hotspot/usecases/HotspotParCodeInsee';
+import HotspotsParCodeInsee, {
+    IHotspotsParCodeInsee,
+} from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
 
 const request = require('request');
 
@@ -112,8 +112,8 @@ export const init = (server: restify.Server) => {
                 hotspotRepositoryPostgreSQL,
                 algolia,
                 slideshowService,
-                new HotspotParZone(hotspotRepositoryPostgreSQL),
-                new HotspotParCodeInsee(hotspotRepositoryPostgreSQL),
+                new HotspotsParZone(hotspotRepositoryPostgreSQL),
+                new HotspotsParCodeInsee(hotspotRepositoryPostgreSQL),
             ),
         ),
     );
