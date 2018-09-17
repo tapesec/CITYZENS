@@ -9,7 +9,7 @@ import MediaHotspot from '../../domain/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotFactory from '../../domain/hotspot/HotspotFactory';
-import { isUuid, strToNumQSProps } from '../helpers/';
+import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
@@ -18,13 +18,11 @@ import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
 import * as isAuthorized from '../../domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
-import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
+import UseCaseStatus from '../../domain/hotspot/usecases/UseCaseStatus';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import { IHotspotParSlugOuId } from '../../domain/hotspot/usecases/HotspotParSlugOuId';
+import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import { IHotspotsParCodeInsee } from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
-import {
-    IHotspotParSlugOuId,
-    HotspotParSlugOuIdResultStatus,
-} from '../../domain/hotspot/usecases/HotspotParSlugOuId';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
@@ -86,16 +84,16 @@ class HotspotCtrl extends RootCtrl {
                 hotspotId: req.params.hotspotId as string,
             });
 
-            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.OK) {
+            if (useCaseResult.status === UseCaseStatus.OK) {
                 res.json(OK, useCaseResult.hotspot);
             }
 
-            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.NOT_FOUND) {
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.UNAUTHORIZED) {
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.HOTSPOT_PRIVATE),
                 );
