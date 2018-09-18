@@ -3,56 +3,48 @@ import IHotspotRepository from '../IHotspotRepository';
 import HotspotId from '../HotspotId';
 import Cityzen from '../../cityzen/Cityzen';
 import * as isAuthorized from '../services/isAuthorized';
+import UseCaseStatus from './UseCaseStatus';
 
 export interface IHotspotParSlugOuId {
-    run: {
-        (params: HotspotParIdParams): Promise<HotspotParSlugOuIdResult>;
-        (params: HotspotParSlugParams): Promise<HotspotParSlugOuIdResult>;
-    };
+    run(params: HotspotParSlugOuIdParams): Promise<HotspotParSlugOuIdResult>;
 }
 
-export interface HotspotParIdParams {
-    user: Cityzen;
-    hotspotId: HotspotId;
-}
-
-export interface HotspotParSlugParams {
-    user: Cityzen;
-    slug: string;
-}
-
-export enum HotspotParSlugOuIdResultStatus {
-    OK = 'OK',
-    NOT_FOUND = 'NOT_FOUND',
-    UNAUTHORIZED = 'UNAUTHORIZED',
+export interface HotspotParSlugOuIdParams {
+    user?: Cityzen;
+    hotspotId: HotspotId | string;
 }
 
 export interface HotspotParSlugOuIdResult {
-    status: HotspotParSlugOuIdResultStatus;
+    status: UseCaseStatus;
     hotspot?: Hotspot;
 }
 
 export default class HotspotParSlugOuId implements IHotspotParSlugOuId {
     constructor(private repository: IHotspotRepository) {}
 
-    async run(params: HotspotParIdParams): Promise<HotspotParSlugOuIdResult> {
-        // const isSet = await this.repository.isSet(hotspotId);
-        const hotspot = await this.repository.findById(params.hotspotId);
+    async run(params: HotspotParSlugOuIdParams): Promise<HotspotParSlugOuIdResult> {
+        const hotspotId =
+            typeof params.hotspotId === 'string'
+                ? new HotspotId(params.hotspotId)
+                : params.hotspotId;
+
+        const hotspot = await (hotspotId instanceof HotspotId
+            ? this.repository.findById(hotspotId)
+            : this.repository.findBySlug(hotspotId));
+
         if (!hotspot) {
             return {
-                status: HotspotParSlugOuIdResultStatus.NOT_FOUND,
+                status: UseCaseStatus.NOT_FOUND,
             };
         }
         if (!isAuthorized.toSeeHotspot(hotspot, params.user)) {
             return {
-                status: HotspotParSlugOuIdResultStatus.UNAUTHORIZED,
+                status: UseCaseStatus.UNAUTHORIZED,
             };
         }
         return {
             hotspot,
-            status: HotspotParSlugOuIdResultStatus.OK,
+            status: UseCaseStatus.OK,
         };
     }
-
-    // async run(params: HotspotParSlugParams) {}
 }

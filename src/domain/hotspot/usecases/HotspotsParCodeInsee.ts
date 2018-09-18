@@ -4,10 +4,6 @@ import IHotspotRepository from '../IHotspotRepository';
 import HotspotReducer from '../HotspotReducer';
 import Cityzen from '../../cityzen/Cityzen';
 
-export enum HotspotParCodeInseeStatus {
-    OK = 'OK',
-}
-
 export interface ParametresHotspotParCodeInsee {
     cityId: CityId;
     user: Cityzen;

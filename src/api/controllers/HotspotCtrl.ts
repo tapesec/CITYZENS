@@ -21,6 +21,10 @@ import RootCtrl from './RootCtrl';
 import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
 import { IHotspotsParCodeInsee } from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
+import {
+    IHotspotParSlugOuId,
+    HotspotParSlugOuIdResultStatus,
+} from '../../domain/hotspot/usecases/HotspotParSlugOuId';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
@@ -40,6 +44,7 @@ class HotspotCtrl extends RootCtrl {
         slideshowService: SlideshowService,
         private hotspotsParZone: IHotspotsParZone,
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,
+        private hotpotsParSlugOuId: IHotspotParSlugOuId,
     ) {
         super(auth0Service, cityzenRepository);
         this.algolia.initHotspots();
@@ -75,27 +80,22 @@ class HotspotCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId or id(slug)}
     public getHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        const hotspotId = isUuid(req.params.hotspotId)
-            ? new HotspotId(req.params.hotspotId)
-            : (req.params.hotspotId as String);
-
-        const isSet = await (hotspotId instanceof HotspotId
-            ? this.hotspotRepository.isSet(hotspotId)
-            : this.hotspotRepository.isSetBySlug(hotspotId));
-
-        if (!isSet) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-
         try {
-            const hotspot = await (hotspotId instanceof HotspotId
-                ? this.hotspotRepository.findById(hotspotId)
-                : this.hotspotRepository.findBySlug(hotspotId));
-            if (isAuthorized.toSeeHotspot(hotspot, this.cityzenIfAuthenticated)) {
-                res.json(OK, hotspot);
-            } else {
+            const useCaseResult = await this.hotpotsParSlugOuId.run({
+                user: this.cityzenIfAuthenticated,
+                hotspotId: req.params.hotspotId as string,
+            });
+
+            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.OK) {
+                res.json(OK, useCaseResult.hotspot);
+            }
+
+            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === HotspotParSlugOuIdResultStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.HOTSPOT_PRIVATE),
                 );

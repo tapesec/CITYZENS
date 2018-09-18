@@ -40,6 +40,9 @@ import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
 import HotspotsParCodeInsee, {
     IHotspotsParCodeInsee,
 } from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
+import HotspotParSlugOuId, {
+    IHotspotParSlugOuId,
+} from '../../domain/hotspot/usecases/HotspotParSlugOuId';
 
 const request = require('request');
 
@@ -104,6 +107,15 @@ export const init = (server: restify.Server) => {
         ),
     );
 
+    // use cases
+    const hotspotsParZone: IHotspotsParZone = new HotspotsParZone(hotspotRepositoryPostgreSQL);
+    const hotspotsParCodeInsee: IHotspotsParCodeInsee = new HotspotsParCodeInsee(
+        hotspotRepositoryPostgreSQL,
+    );
+    const hotpotsParSlugOuId: IHotspotParSlugOuId = new HotspotParSlugOuId(
+        hotspotRepositoryPostgreSQL,
+    );
+
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
@@ -112,8 +124,9 @@ export const init = (server: restify.Server) => {
                 hotspotRepositoryPostgreSQL,
                 algolia,
                 slideshowService,
-                new HotspotsParZone(hotspotRepositoryPostgreSQL),
-                new HotspotsParCodeInsee(hotspotRepositoryPostgreSQL),
+                hotspotsParZone,
+                hotspotsParCodeInsee,
+                hotpotsParSlugOuId,
             ),
         ),
     );
