@@ -1,4 +1,4 @@
-import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
+import { PostgreSQL } from './libs/postgreSQL/postgreSQL';
 import CityzenId from '../domain/cityzen/CityzenId';
 import Cityzen from '../domain/cityzen/Cityzen';
 

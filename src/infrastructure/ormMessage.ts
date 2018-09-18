@@ -1,4 +1,4 @@
-import PostgreSQL from '../api/services/postgreSQL/postgreSQL';
+import { PostgreSQL } from './libs/postgreSQL/postgreSQL';
 import HotspotId from '../domain/hotspot/HotspotId';
 import Message from '../domain/hotspot/Message';
 import MessageId from '../domain/hotspot/MessageId';

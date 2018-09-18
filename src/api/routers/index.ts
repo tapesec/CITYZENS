@@ -17,8 +17,7 @@ import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
 import FilestackService from '../services/filestack/FilestackService';
-import CheckAndCreateTable from '../services/postgreSQL/checkAndCreateTables';
-import PostgreSQL from '../services/postgreSQL/postgreSQL';
+import pg from '../../infrastructure/libs/postgreSQL/postgreSQL';
 import SlideshowService from '../services/widgets/SlideshowService';
 import OrmCityzen from './../../infrastructure/ormCityzen';
 import config from './../config';
@@ -61,11 +60,9 @@ const errorHandler = new ErrorHandler();
 
 const auth0Service = new Auth0Service(auth0Sdk, request, errorHandler);
 
-const postgreSql = new PostgreSQL(config.postgreSQL);
-
-const ormHotspot = new OrmHotspot(postgreSql);
-const ormCityzen = new OrmCityzen(postgreSql);
-const ormMessage = new OrmMessage(postgreSql);
+const ormHotspot = new OrmHotspot(pg);
+const ormCityzen = new OrmCityzen(pg);
+const ormMessage = new OrmMessage(pg);
 
 const messageFactory = new MessageFactory();
 const hotspotFactory = new HotspotFactory();
@@ -79,13 +76,6 @@ const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, me
 
 const filestackService = new FilestackService(request);
 const slideshowService = new SlideshowService(filestackService);
-
-export const initDB = async (server: restify.Server) => {
-    console.log('Trying to connect');
-    await CheckAndCreateTable.cityzens(postgreSql);
-    await CheckAndCreateTable.messages(postgreSql);
-    await CheckAndCreateTable.hotspots(postgreSql);
-};
 
 export const init = (server: restify.Server) => {
     const routers = [];

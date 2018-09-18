@@ -27,12 +27,6 @@ describe('Config check', () => {
         Chai.expect(config.default.filestack.apiUrl == null).to.be.false;
         Chai.expect(config.default.filestack.security == null).to.be.false;
 
-        Chai.expect(config.default.postgreSQL.database == null).to.be.false;
-        Chai.expect(config.default.postgreSQL.host == null).to.be.false;
-        Chai.expect(config.default.postgreSQL.password == null).to.be.false;
-        Chai.expect(config.default.postgreSQL.port == null).to.be.false;
-        Chai.expect(config.default.postgreSQL.user == null).to.be.false;
-
         Chai.expect(config.default.server.env == null).to.be.false;
         Chai.expect(config.default.server.httpPort == null).to.be.false;
 
