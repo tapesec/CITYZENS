@@ -19,7 +19,7 @@ import Algolia from './../services/algolia/Algolia';
 import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
 import UseCaseStatus from '../../application/usecases/UseCaseStatus';
-import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
+import Carte from '../../application/domain/hotspot/Carte';
 import { IHotspotParSlugOuId } from '../../application/usecases/HotspotParSlugOuId';
 import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
 import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
@@ -39,7 +39,7 @@ class HotspotCtrl extends RootCtrl {
     constructor(
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
-        private hotspotRepository: IHotspotRepository,
+        private hotspotRepository: Carte,
         private algolia: Algolia,
         slideshowService: SlideshowService,
         private hotspotsParZone: IHotspotsParZone,

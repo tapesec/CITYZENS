@@ -5,7 +5,6 @@ import HotspotId from '../../application/domain/hotspot/HotspotId';
 import MessageId from '../../application/domain/hotspot/MessageId';
 import Message from '../../application/domain/hotspot/Message';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../application/domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {
@@ -16,7 +15,7 @@ import {
 import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
-import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
+import Carte from '../../application/domain/hotspot/Carte';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;
@@ -29,7 +28,7 @@ class MessageCtrl extends RootCtrl {
     constructor(
         auth0Service: Auth0Service,
         cityzenRepository: CityzenRepositoryPostgreSQL,
-        private hotspotRepository: IHotspotRepository,
+        private hotspotRepository: Carte,
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
     ) {

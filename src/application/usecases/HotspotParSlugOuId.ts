@@ -1,6 +1,6 @@
 import { isUuid } from '../../helpers/isUuid';
 import Hotspot from '../domain/hotspot/Hotspot';
-import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import Carte from '../domain/hotspot/Carte';
 import HotspotId from '../domain/hotspot/HotspotId';
 import Cityzen from '../domain/cityzen/Cityzen';
 import * as isAuthorized from '../domain/hotspot/services/isAuthorized';
@@ -21,7 +21,7 @@ export interface HotspotParSlugOuIdResult {
 }
 
 export default class HotspotParSlugOuId implements IHotspotParSlugOuId {
-    constructor(private repository: IHotspotRepository) {}
+    constructor(private carte: Carte) {}
 
     async run(params: HotspotParSlugOuIdParams): Promise<HotspotParSlugOuIdResult> {
         const hotspotId = isUuid(params.hotspotId as string)
@@ -29,8 +29,8 @@ export default class HotspotParSlugOuId implements IHotspotParSlugOuId {
             : params.hotspotId;
 
         const hotspot = await (hotspotId instanceof HotspotId
-            ? this.repository.findById(hotspotId)
-            : this.repository.findBySlug(hotspotId));
+            ? this.carte.findById(hotspotId)
+            : this.carte.findBySlug(hotspotId));
 
         if (!hotspot) {
             return {

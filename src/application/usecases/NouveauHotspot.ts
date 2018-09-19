@@ -2,7 +2,7 @@ import Cityzen from '../domain/cityzen/Cityzen';
 import UseCaseStatus from './UseCaseStatus';
 import Hotspot from '../domain/hotspot/Hotspot';
 import HotspotFactory from '../domain/hotspot/HotspotFactory';
-import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import Carte from '../domain/hotspot/Carte';
 
 export interface INouveauHotspotParams {
     user: Cityzen;
@@ -19,12 +19,12 @@ export interface INouveauHotspot {
 }
 
 export default class NouveauHotspot implements INouveauHotspot {
-    constructor(private repository: IHotspotRepository) {}
+    constructor(private carte: Carte) {}
 
     async run(params: INouveauHotspotParams): Promise<INouveauHotspotResult> {
         params.payload.cityzen = params.user;
         const nouveauHotspot: Hotspot = new HotspotFactory().build(params.payload);
-        await this.repository.store(nouveauHotspot);
+        await this.carte.store(nouveauHotspot);
         return {
             nouveauHotspot,
             status: UseCaseStatus.OK,

@@ -1,6 +1,6 @@
 import CityId from '../domain/city/CityId';
 import Hotspot from '../domain/hotspot/Hotspot';
-import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import Carte from '../domain/hotspot/Carte';
 import HotspotReducer from '../domain/hotspot/HotspotReducer';
 import Cityzen from '../domain/cityzen/Cityzen';
 
@@ -14,10 +14,10 @@ export interface IHotspotsParCodeInsee {
 }
 
 export default class HotspotsParCodeInsee implements IHotspotsParCodeInsee {
-    constructor(private hotspotRepo: IHotspotRepository) {}
+    constructor(private carte: Carte) {}
 
     async run(params: ParametresHotspotParCodeInsee): Promise<Hotspot[]> {
-        const hotspots = await this.hotspotRepo.findByCodeCommune(params.cityId);
+        const hotspots = await this.carte.findByCodeCommune(params.cityId);
         const hotspotReducer = new HotspotReducer(hotspots);
         const visibleHotspots = hotspotReducer.renderVisibleHotspotsByVisitorStatus(params.user);
         return visibleHotspots;

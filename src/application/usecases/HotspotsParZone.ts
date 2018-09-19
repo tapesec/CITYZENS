@@ -1,15 +1,15 @@
 import Hotspot from '../domain/hotspot/Hotspot';
-import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import Carte from '../domain/hotspot/Carte';
 import HotspotReducer from '../domain/hotspot/HotspotReducer';
 import MediaHotspot from '../domain/hotspot/MediaHotspot';
 import AlertHotspot from '../domain/hotspot/AlertHotspot';
 import Cityzen from '../domain/cityzen/Cityzen';
 
 class HotspotsParZone implements IHotspotsParZone {
-    constructor(private hotspotRepo: IHotspotRepository) {}
+    constructor(private carte: Carte) {}
 
     async run(params: ParametresHotspotParZone): Promise<Hotspot[]> {
-        const hotspots: (MediaHotspot | AlertHotspot)[] = await this.hotspotRepo.findInArea(
+        const hotspots: (MediaHotspot | AlertHotspot)[] = await this.carte.findInArea(
             params.north,
             params.west,
             params.south,

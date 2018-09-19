@@ -34,7 +34,7 @@ import SwaggerRouter from './SwaggerRouter';
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
 import HotspotsParZone, { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
-import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
+import Carte from '../../application/domain/hotspot/Carte';
 import HotspotsParCodeInsee, {
     IHotspotsParCodeInsee,
 } from '../../application/usecases/HotspotsParCodeInsee';
@@ -67,7 +67,7 @@ const ormMessage = new OrmMessage(pg);
 const messageFactory = new MessageFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepo: IHotspotRepository = new HotspotRepositoryPostgreSQL(ormHotspot, algolia);
+const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia);
 const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
