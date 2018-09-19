@@ -42,6 +42,8 @@ import HotspotParSlugOuId, {
     IHotspotParSlugOuId,
 } from '../../application/usecases/HotspotParSlugOuId';
 import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
+import CompteUneVue, { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
+import Existence, { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence';
 
 const request = require('request');
 
@@ -93,6 +95,8 @@ export const init = (server: restify.Server) => {
     const hotspotsParCodeInsee: IHotspotsParCodeInsee = new HotspotsParCodeInsee(hotspotRepo);
     const hotpotsParSlugOuId: IHotspotParSlugOuId = new HotspotParSlugOuId(hotspotRepo);
     const nouveauHotspot: INouveauHotspot = new NouveauHotspot(hotspotRepo);
+    const nouvelleVue: ComptabiliseUneVue = new CompteUneVue(hotspotRepo);
+    const confirmeExistence: ConfirmeExistence = new Existence(hotspotRepo);
 
     routers.push(
         new HotspotRouter(
@@ -106,6 +110,8 @@ export const init = (server: restify.Server) => {
                 hotspotsParCodeInsee,
                 hotpotsParSlugOuId,
                 nouveauHotspot,
+                nouvelleVue,
+                confirmeExistence,
             ),
         ),
     );

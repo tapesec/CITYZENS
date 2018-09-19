@@ -1,6 +1,6 @@
 import * as restify from 'restify';
 import HotspotCtrl from '../controllers/HotspotCtrl';
-import { ALERT_PERTINENCE, HOTSPOT_ENDPOINT, MEMBER_ENDPOINT, VIEWS_ENDPOINT } from './constants';
+import { ALERT_PERTINENCE, HOTSPOT_ENDPOINT, VIEWS_ENDPOINT } from './constants';
 
 class HotspotRouter {
     private ctrl: HotspotCtrl;
@@ -24,12 +24,6 @@ class HotspotRouter {
             HOTSPOT_ENDPOINT + '/:hotspotId' + VIEWS_ENDPOINT,
             this.ctrl.optInAuthenticateUser,
             this.ctrl.countView,
-        );
-
-        server.post(
-            HOTSPOT_ENDPOINT + '/:hotspotId' + MEMBER_ENDPOINT,
-            this.ctrl.loadAuthenticatedUser,
-            this.ctrl.addMember,
         );
 
         server.post(

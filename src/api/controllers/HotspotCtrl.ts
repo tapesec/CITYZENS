@@ -24,6 +24,8 @@ import { IHotspotParSlugOuId } from '../../application/usecases/HotspotParSlugOu
 import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
 import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
 import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
+import { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
+import { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
@@ -46,6 +48,8 @@ class HotspotCtrl extends RootCtrl {
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,
         private hotpotsParSlugOuId: IHotspotParSlugOuId,
         private nouveauHotspot: INouveauHotspot,
+        private nouvelleVue: ComptabiliseUneVue,
+        private confirmeExistence: ConfirmeExistence,
     ) {
         super(auth0Service, cityzenRepository);
         this.algolia.initHotspots();
@@ -143,51 +147,14 @@ class HotspotCtrl extends RootCtrl {
             );
         }
         try {
-            const visitedHotspot = await this.hotspotRepository.findById(hotspotId);
-            visitedHotspot.countOneMoreView();
-            await this.hotspotRepository.update(visitedHotspot);
+            const useCaseResult = await this.nouvelleVue.run(hotspotId);
+            this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
+                userId: this.cityzenIfAuthenticated.id,
+                hotspotType: useCaseResult.hotspot.type,
+                hotspotId: useCaseResult.hotspot.id,
+                cityId: useCaseResult.hotspot.cityId,
+            });
             res.json(OK);
-        } catch (err) {
-            return next(this.responseError.logAndCreateInternal(req, err));
-        }
-    };
-
-    // method=POST url=/hotspots/{hotspotId}/members
-    public addMember = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.schemaValidator.validate(postMemberSchema, req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
-            );
-        }
-
-        const hotspotId = new HotspotId(req.params.hotspotId);
-        if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-        try {
-            const memberId = new CityzenId(req.body.memberId);
-            const hotspot = await this.hotspotRepository.findById(hotspotId);
-
-            if (hotspot instanceof AlertHotspot) {
-                return next(
-                    this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
-                );
-            }
-            if (this.cityzenIfAuthenticated.id === memberId) {
-                return next(this.responseError.logAndCreateBadRequest(req, HotspotCtrl.ADD_ITSELF));
-            }
-
-            if (!isAuthorized.toAddMember(hotspot, this.cityzenIfAuthenticated)) {
-                return next(
-                    this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
-                );
-            }
-
-            hotspot.addMember(memberId);
-            await this.hotspotRepository.update(hotspot);
-            res.json(OK, hotspot);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
