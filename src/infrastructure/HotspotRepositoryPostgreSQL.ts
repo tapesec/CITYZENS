@@ -6,9 +6,17 @@ import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
 import MediaHotspot from '../domain/hotspot/MediaHotspot';
 import HotspotFactory from '../domain/hotspot/HotspotFactory';
 import OrmHotspot from './ormHotspot';
+import Algolia from '../api/services/algolia/Algolia';
+import { MCDVLogger, getlogger, MCDVLoggerEvent } from '../api/libs/MCDVLogger';
 
 class HotspotRepositoryPostgreSQL implements IHotspotRepository {
-    constructor(protected orm: OrmHotspot, private factory: HotspotFactory) {}
+    private factory: HotspotFactory;
+    private logger: MCDVLogger;
+
+    constructor(protected orm: OrmHotspot, protected algolia: Algolia) {
+        this.factory = new HotspotFactory();
+        this.logger = getlogger();
+    }
 
     public async findByCodeCommune(insee: CityId): Promise<(MediaHotspot | AlertHotspot)[]> {
         const data = await this.orm.findByCity(insee);
@@ -65,6 +73,17 @@ class HotspotRepositoryPostgreSQL implements IHotspotRepository {
 
     public async store(hotspot: Hotspot) {
         await this.orm.save(hotspot);
+        try {
+            await this.algolia.addHotspot(hotspot);
+            await this.orm.cacheAlgolia(hotspot.id, true);
+            this.logger.debug(
+                MCDVLoggerEvent.ALGOLIA_SYNC_SUCCESS,
+                `Algolia index synchronized for hotspotId : ${hotspot.id}`,
+            );
+        } catch (error) {
+            await this.orm.cacheAlgolia(hotspot.id, false);
+            this.logger.error(MCDVLoggerEvent.ALGOLIA_SYNC_FAILED, error.message);
+        }
     }
 
     public async update(hotspot: Hotspot) {

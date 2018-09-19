@@ -18,7 +18,7 @@ export default (state: any) => {
         let avatarIconUrl;
         let slideShow;
 
-        it("Shoudl'nt create a MediaHotspot beacause of missing propertie.", async () => {
+        it("Shoudl'nt create a MediaHotspot beacause of missing properties.", async () => {
             const badMediaHotspotBody = { ...MediaHotspotPostBody };
             delete badMediaHotspotBody.cityId;
 

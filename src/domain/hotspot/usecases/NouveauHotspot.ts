@@ -1,8 +1,8 @@
 import Cityzen from '../../cityzen/Cityzen';
 import UseCaseStatus from './UseCaseStatus';
-import HotspotRepositoryPostgreSQL from '../../../infrastructure/HotspotRepositoryPostgreSQL';
 import Hotspot from '../Hotspot';
 import HotspotFactory from '../HotspotFactory';
+import IHotspotRepository from '../IHotspotRepository';
 
 export interface INouveauHotspotParams {
     user: Cityzen;
@@ -11,6 +11,7 @@ export interface INouveauHotspotParams {
 
 export interface INouveauHotspotResult {
     status: UseCaseStatus;
+    nouveauHotspot: Hotspot;
 }
 
 export interface INouveauHotspot {
@@ -18,14 +19,14 @@ export interface INouveauHotspot {
 }
 
 export default class NouveauHotspot implements INouveauHotspot {
-    constructor(private repository: HotspotRepositoryPostgreSQL) {}
+    constructor(private repository: IHotspotRepository) {}
 
     async run(params: INouveauHotspotParams): Promise<INouveauHotspotResult> {
         params.payload.cityzen = params.user;
-        const newHotspot: Hotspot = new HotspotFactory().build(params.payload);
-        await this.repository.store(newHotspot);
-        //
+        const nouveauHotspot: Hotspot = new HotspotFactory().build(params.payload);
+        await this.repository.store(nouveauHotspot);
         return {
+            nouveauHotspot,
             status: UseCaseStatus.OK,
         };
     }

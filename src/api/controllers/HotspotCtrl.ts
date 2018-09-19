@@ -1,6 +1,7 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
+import { getlogger, MCDVLogger, MCDVLoggerEvent } from '../libs/MCDVLogger';
 import CityId from '../../domain/city/CityId';
 import AlertHotspot from '../../domain/hotspot/AlertHotspot';
 import Hotspot from '../../domain/hotspot/Hotspot';
@@ -8,7 +9,6 @@ import HotspotId from '../../domain/hotspot/HotspotId';
 import MediaHotspot from '../../domain/hotspot/MediaHotspot';
 import CityzenId from '../../domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotFactory from '../../domain/hotspot/HotspotFactory';
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
@@ -23,9 +23,11 @@ import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
 import { IHotspotParSlugOuId } from '../../domain/hotspot/usecases/HotspotParSlugOuId';
 import { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
 import { IHotspotsParCodeInsee } from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
+import { INouveauHotspot } from '../../domain/hotspot/usecases/NouveauHotspot';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
+    private logger: MCDVLogger;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
@@ -43,10 +45,12 @@ class HotspotCtrl extends RootCtrl {
         private hotspotsParZone: IHotspotsParZone,
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,
         private hotpotsParSlugOuId: IHotspotParSlugOuId,
+        private nouveauHotspot: INouveauHotspot,
     ) {
         super(auth0Service, cityzenRepository);
         this.algolia.initHotspots();
         this.slideshowService = slideshowService;
+        this.logger = getlogger();
     }
 
     // method=GET url=/hotspots
@@ -64,6 +68,7 @@ class HotspotCtrl extends RootCtrl {
                     ...queryStrings,
                     user: this.cityzenIfAuthenticated,
                 });
+                this.logger.info(MCDVLoggerEvent.HOTSPOT_BY_AREA_RETRIEVED, `Hotspots retrieved`);
             } else if (queryStrings.insee) {
                 hotspotsResult = await this.hotspotsParCodeInsee.run({
                     cityId: new CityId(queryStrings.insee),
@@ -105,29 +110,25 @@ class HotspotCtrl extends RootCtrl {
 
     // method=POST url=/hotspots
     public postHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
-            );
-        }
-
         try {
-            req.body.cityzen = this.cityzenIfAuthenticated;
-            const newHotspot: Hotspot = new HotspotFactory().build(req.body);
-            await this.hotspotRepository.store(newHotspot);
-            res.json(CREATED, newHotspot);
-            this.algolia
-                .addHotspot(newHotspot)
-                .then(() => {
-                    this.hotspotRepository.cacheAlgolia(newHotspot.id, true);
-                })
-                .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(newHotspot.id, false);
-                    this.responseError.logSlack(
-                        `POST ${req.path()}`,
-                        `Algolia fail. \n${JSON.stringify(error)}`,
-                    );
-                });
+            if (!this.schemaValidator.validate(createHotspotsSchema(), req.body)) {
+                return next(
+                    this.responseError.logAndCreateBadRequest(
+                        req,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+            const useCaseResult = await this.nouveauHotspot.run({
+                user: this.cityzenIfAuthenticated,
+                payload: req.body,
+            });
+            this.logger.info(MCDVLoggerEvent.HOTSPOT_CREATED, 'nouveau hotspot crée', {
+                userId: this.cityzenIfAuthenticated.id,
+                hotspotType: useCaseResult.nouveauHotspot.type,
+                cityId: useCaseResult.nouveauHotspot.cityId,
+            });
+            res.json(CREATED, useCaseResult.nouveauHotspot);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }

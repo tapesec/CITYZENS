@@ -2,7 +2,6 @@ import * as AlgoliaSearch from 'algoliasearch';
 import * as restify from 'restify';
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import HotspotFactory from '../../domain/hotspot/HotspotFactory';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import MessageFactory from '../../domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
@@ -42,6 +41,7 @@ import HotspotsParCodeInsee, {
 import HotspotParSlugOuId, {
     IHotspotParSlugOuId,
 } from '../../domain/hotspot/usecases/HotspotParSlugOuId';
+import NouveauHotspot, { INouveauHotspot } from '../../domain/hotspot/usecases/NouveauHotspot';
 
 const request = require('request');
 
@@ -65,13 +65,9 @@ const ormCityzen = new OrmCityzen(pg);
 const ormMessage = new OrmMessage(pg);
 
 const messageFactory = new MessageFactory();
-const hotspotFactory = new HotspotFactory();
 
 const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepositoryPostgreSQL: IHotspotRepository = new HotspotRepositoryPostgreSQL(
-    ormHotspot,
-    hotspotFactory,
-);
+const hotspotRepo: IHotspotRepository = new HotspotRepositoryPostgreSQL(ormHotspot, algolia);
 const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 const filestackService = new FilestackService(request);
@@ -83,12 +79,7 @@ export const init = (server: restify.Server) => {
     routers.push(new AuthRouter(new AuthCtrl(auth0Service, cityzenRepositoryPostgreSQL)));
     routers.push(
         new ProfileRouter(
-            new ProfileCtrl(
-                auth0Service,
-                cityzenRepositoryPostgreSQL,
-                auth0Sdk,
-                hotspotRepositoryPostgreSQL,
-            ),
+            new ProfileCtrl(auth0Service, cityzenRepositoryPostgreSQL, auth0Sdk, hotspotRepo),
         ),
     );
     routers.push(
@@ -98,25 +89,23 @@ export const init = (server: restify.Server) => {
     );
 
     // use cases
-    const hotspotsParZone: IHotspotsParZone = new HotspotsParZone(hotspotRepositoryPostgreSQL);
-    const hotspotsParCodeInsee: IHotspotsParCodeInsee = new HotspotsParCodeInsee(
-        hotspotRepositoryPostgreSQL,
-    );
-    const hotpotsParSlugOuId: IHotspotParSlugOuId = new HotspotParSlugOuId(
-        hotspotRepositoryPostgreSQL,
-    );
+    const hotspotsParZone: IHotspotsParZone = new HotspotsParZone(hotspotRepo);
+    const hotspotsParCodeInsee: IHotspotsParCodeInsee = new HotspotsParCodeInsee(hotspotRepo);
+    const hotpotsParSlugOuId: IHotspotParSlugOuId = new HotspotParSlugOuId(hotspotRepo);
+    const nouveauHotspot: INouveauHotspot = new NouveauHotspot(hotspotRepo);
 
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
-                hotspotRepositoryPostgreSQL,
+                hotspotRepo,
                 algolia,
                 slideshowService,
                 hotspotsParZone,
                 hotspotsParCodeInsee,
                 hotpotsParSlugOuId,
+                nouveauHotspot,
             ),
         ),
     );
@@ -125,7 +114,7 @@ export const init = (server: restify.Server) => {
             new MessageCtrl(
                 auth0Service,
                 cityzenRepositoryPostgreSQL,
-                hotspotRepositoryPostgreSQL,
+                hotspotRepo,
                 messageRepositoryInMemory,
                 messageFactory,
             ),
