@@ -225,6 +225,15 @@ const hotspotsEndpointsTests = (state: any) => {
             });
         });
 
+        describe('GET /hotspot/{hotspotId}', async () => {
+            it('Should return 200 with corresponding hotspot', async () => {
+                const id = MediaHotspotSample.CHURCH.id.toString();
+                const response = await request(server)
+                    .get(`/hotspots/${id}`)
+                    .expect(200);
+            });
+        });
+
         describe('DELETE /hotspots/{hotspotId}.', () => {
             let newHotspotId;
 

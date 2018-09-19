@@ -1,3 +1,4 @@
+import { isUuid } from '../../../helpers/isUuid';
 import Hotspot from '../Hotspot';
 import IHotspotRepository from '../IHotspotRepository';
 import HotspotId from '../HotspotId';
@@ -23,10 +24,9 @@ export default class HotspotParSlugOuId implements IHotspotParSlugOuId {
     constructor(private repository: IHotspotRepository) {}
 
     async run(params: HotspotParSlugOuIdParams): Promise<HotspotParSlugOuIdResult> {
-        const hotspotId =
-            typeof params.hotspotId === 'string'
-                ? new HotspotId(params.hotspotId)
-                : params.hotspotId;
+        const hotspotId = isUuid(params.hotspotId as string)
+            ? new HotspotId(params.hotspotId as string)
+            : params.hotspotId;
 
         const hotspot = await (hotspotId instanceof HotspotId
             ? this.repository.findById(hotspotId)
