@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import * as TypeMoq from 'typemoq';
-import HotspotId from '../../../src/domain/hotspot/HotspotId';
-import MessageId from '../../../src/domain/hotspot/MessageId';
-import MessageSample from '../../../src/domain/sample/MessageSample';
-import MessageFactory from '../../../src/domain/hotspot/MessageFactory';
+import HotspotId from '../../../src/application/domain/hotspot/HotspotId';
+import MessageId from '../../../src/application/domain/hotspot/MessageId';
+import MessageSample from '../../../src/application/domain/sample/MessageSample';
+import MessageFactory from '../../../src/application/domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSQL from '../../../src/infrastructure/MessageRepositoryPostgreSQL';
 import OrmMessage from '../../../src/infrastructure/ormMessage';
 

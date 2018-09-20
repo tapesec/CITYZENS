@@ -1,4 +1,4 @@
-import { HotspotType } from '../../domain/hotspot/Hotspot';
+import { HotspotType } from '../../application/domain/hotspot/Hotspot';
 import * as validation from './constant';
 // tslint:disable:object-literal-key-quotes
 // tslint:disable:quotemark

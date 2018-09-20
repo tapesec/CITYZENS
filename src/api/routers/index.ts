@@ -3,7 +3,7 @@ import * as restify from 'restify';
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
-import MessageFactory from '../../domain/hotspot/MessageFactory';
+import MessageFactory from '../../application/domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import { default as OrmHotspot } from '../../infrastructure/ormHotspot';
 import OrmMessage from '../../infrastructure/ormMessage';
@@ -33,15 +33,15 @@ import SwaggerRouter from './SwaggerRouter';
 
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
-import HotspotsParZone, { IHotspotsParZone } from '../../domain/hotspot/usecases/HotspotsParZone';
-import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import HotspotsParZone, { IHotspotsParZone } from '../../application/domain/hotspot/usecases/HotspotsParZone';
+import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
 import HotspotsParCodeInsee, {
     IHotspotsParCodeInsee,
-} from '../../domain/hotspot/usecases/HotspotsParCodeInsee';
+} from '../../application/domain/hotspot/usecases/HotspotsParCodeInsee';
 import HotspotParSlugOuId, {
     IHotspotParSlugOuId,
-} from '../../domain/hotspot/usecases/HotspotParSlugOuId';
-import NouveauHotspot, { INouveauHotspot } from '../../domain/hotspot/usecases/NouveauHotspot';
+} from '../../application/domain/hotspot/usecases/HotspotParSlugOuId';
+import NouveauHotspot, { INouveauHotspot } from '../../application/domain/hotspot/usecases/NouveauHotspot';
 
 const request = require('request');
 

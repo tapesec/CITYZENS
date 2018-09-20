@@ -1,7 +1,7 @@
 import * as server from '../../src/api/server';
 import { expect } from 'chai';
 import * as request from 'supertest';
-import CitySample from '../../src/domain/sample/CitySample';
+import CitySample from '../../src/application/domain/sample/CitySample';
 
 const slugIt = require('slug');
 

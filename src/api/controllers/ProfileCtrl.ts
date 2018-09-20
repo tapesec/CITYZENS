@@ -1,13 +1,13 @@
 import { OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import Cityzen from '../../domain/cityzen/Cityzen';
+import Cityzen from '../../application/domain/cityzen/Cityzen';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import cityzenFromAuth0 from '../services/cityzen/cityzenFromAuth0';
 import { Auth0 } from './../libs/Auth0';
 import RootCtrl from './RootCtrl';
-import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
 
 class ProfileCtrl extends RootCtrl {
     protected hotspotRepository: IHotspotRepository;

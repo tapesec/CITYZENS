@@ -1,8 +1,8 @@
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import City from '../../domain/city/City';
-import CitySample from '../../domain/sample/CitySample';
+import City from '../../application/domain/city/City';
+import CitySample from '../../application/domain/sample/CitySample';
 import { CityRepositoryInMemory } from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import RootCtrl from './RootCtrl';

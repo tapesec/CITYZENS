@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { v4 } from 'uuid';
-import HotspotId from '../../../../src/domain/hotspot/HotspotId';
-import Message from '../../../../src/domain/hotspot/Message';
-import MessageId from '../../../../src/domain/hotspot/MessageId';
-import AuthorSample from '../../../../src/domain/sample/AuthorSample';
-import MessageSample from '../../../../src/domain/sample/MessageSample';
+import HotspotId from '../../../../src/application/domain/hotspot/HotspotId';
+import Message from '../../../../src/application/domain/hotspot/Message';
+import MessageId from '../../../../src/application/domain/hotspot/MessageId';
+import AuthorSample from '../../../../src/application/domain/sample/AuthorSample';
+import MessageSample from '../../../../src/application/domain/sample/MessageSample';
 
 describe('Message entity', () => {
     it('should have correct properties', () => {

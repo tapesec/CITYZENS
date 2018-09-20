@@ -1,22 +1,22 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import HotspotId from '../../domain/hotspot/HotspotId';
-import MessageId from '../../domain/hotspot/MessageId';
-import Message from '../../domain/hotspot/Message';
+import HotspotId from '../../application/domain/hotspot/HotspotId';
+import MessageId from '../../application/domain/hotspot/MessageId';
+import Message from '../../application/domain/hotspot/Message';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
-import MessageFactory from '../../domain/hotspot/MessageFactory';
+import MessageFactory from '../../application/domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {
     createMessageSchema,
     getMessageSchemaQuery,
     patchMessageSchema,
 } from '../requestValidation/schema';
-import * as isAuthorized from '../../domain/hotspot/services/isAuthorized';
+import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
-import IHotspotRepository from '../../domain/hotspot/IHotspotRepository';
+import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;

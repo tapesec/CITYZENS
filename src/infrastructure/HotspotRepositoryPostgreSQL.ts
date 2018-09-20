@@ -1,10 +1,10 @@
-import CityId from '../domain/city/CityId';
-import AlertHotspot from '../domain/hotspot/AlertHotspot';
-import Hotspot from '../domain/hotspot/Hotspot';
-import HotspotId from '../domain/hotspot/HotspotId';
-import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
-import MediaHotspot from '../domain/hotspot/MediaHotspot';
-import HotspotFactory from '../domain/hotspot/HotspotFactory';
+import CityId from '../application/domain/city/CityId';
+import AlertHotspot from '../application/domain/hotspot/AlertHotspot';
+import Hotspot from '../application/domain/hotspot/Hotspot';
+import HotspotId from '../application/domain/hotspot/HotspotId';
+import IHotspotRepository from '../application/domain/hotspot/IHotspotRepository';
+import MediaHotspot from '../application/domain/hotspot/MediaHotspot';
+import HotspotFactory from '../application/domain/hotspot/HotspotFactory';
 import OrmHotspot from './ormHotspot';
 import Algolia from '../api/services/algolia/Algolia';
 import { MCDVLogger, getlogger, MCDVLoggerEvent } from '../api/libs/MCDVLogger';

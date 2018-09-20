@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { HotspotScope, HotspotType } from '../../../../src/domain/hotspot/Hotspot';
-import HotspotId from '../../../../src/domain/hotspot/HotspotId';
-import ImageLocation from '../../../../src/domain/hotspot/ImageLocation';
-import MemberList from '../../../../src/domain/hotspot/MemberList';
-import SlideShow from '../../../../src/domain/SlideShow';
-import CityzenSample from '../../../../src/domain/sample/CityzenSample';
-import HotspotFactory from '../../../../src/domain/hotspot/HotspotFactory';
-import CityzenId from '../../../../src/domain/cityzen/CityzenId';
+import { HotspotScope, HotspotType } from '../../../../src/application/domain/hotspot/Hotspot';
+import HotspotId from '../../../../src/application/domain/hotspot/HotspotId';
+import ImageLocation from '../../../../src/application/domain/hotspot/ImageLocation';
+import MemberList from '../../../../src/application/domain/hotspot/MemberList';
+import SlideShow from '../../../../src/application/domain/SlideShow';
+import CityzenSample from '../../../../src/application/domain/sample/CityzenSample';
+import HotspotFactory from '../../../../src/application/domain/hotspot/HotspotFactory';
+import CityzenId from '../../../../src/application/domain/cityzen/CityzenId';
 
 describe('HotspotFactory', () => {
     it('should build a WallHotspot with data provided from POST request', () => {

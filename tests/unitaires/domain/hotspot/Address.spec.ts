@@ -1,5 +1,5 @@
-import CitySample from '../../../../src/domain/sample/CitySample';
-import Address from '../../../../src/domain/hotspot/Address';
+import CitySample from '../../../../src/application/domain/sample/CitySample';
+import Address from '../../../../src/application/domain/hotspot/Address';
 import { expect } from 'chai';
 
 describe('Address value object', () => {

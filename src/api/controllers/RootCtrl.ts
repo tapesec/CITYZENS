@@ -1,8 +1,8 @@
 import * as ajv from 'ajv';
 import * as r from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import Cityzen from '../../domain/cityzen/Cityzen';
-import CityzenId from '../../domain/cityzen/CityzenId';
+import Cityzen from '../../application/domain/cityzen/Cityzen';
+import CityzenId from '../../application/domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import UserInfoAuth0 from '../services/auth/UserInfoAuth0';
 import ResponseError from '../services/errors/ResponseError';

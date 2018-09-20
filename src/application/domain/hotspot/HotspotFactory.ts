@@ -2,12 +2,12 @@ import { InvalidArgumentError } from 'restify-errors';
 import { format } from 'util';
 import { v4 } from 'uuid';
 const slug = require('slug');
-import config from '../../api/config';
-import { getWebhook } from '../../api/libs/SlackWebhook';
+import config from '../../../api/config';
+import { getWebhook } from '../../../api/libs/SlackWebhook';
 import {
     requiredAlertHotspotProperties,
     requiredMediaHotspotProperties,
-} from '../../api/requestValidation/createHotspotsSchema';
+} from '../../../api/requestValidation/createHotspotsSchema';
 import { HOTSPOT_INITIAL_VIEWS } from '../constants';
 import HotspotBuilder from './HotspotBuilder';
 import MediaBuilder from './MediaBuilder';

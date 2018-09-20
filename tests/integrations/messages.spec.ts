@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as request from 'supertest';
-import MessageSample from '../../src/domain/sample/MessageSample';
+import MessageSample from '../../src/application/domain/sample/MessageSample';
 import * as server from './../../src/api/server';
 import { username } from './sample/granted-cityzen';
 import {

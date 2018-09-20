@@ -1,4 +1,4 @@
-import Cityzen from '../../../../src/domain/cityzen/Cityzen';
+import Cityzen from '../../../../src/application/domain/cityzen/Cityzen';
 import DecodedJwtPayload from '../../../../src/api/services/auth/DecodedJwtPayload';
 import { expect } from 'chai';
 describe('AuthorizedCityzen service', () => {

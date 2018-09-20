@@ -1,4 +1,4 @@
-import Position from '../../../../src/domain/hotspot/Position';
+import Position from '../../../../src/application/domain/hotspot/Position';
 import { expect } from 'chai';
 
 describe('Position value object', () => {

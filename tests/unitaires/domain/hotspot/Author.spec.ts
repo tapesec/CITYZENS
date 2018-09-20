@@ -1,8 +1,8 @@
-import CityzenSample from '../../../../src/domain/sample/CityzenSample';
-import Author from '../../../../src/domain/hotspot/Author';
+import CityzenSample from '../../../../src/application/domain/sample/CityzenSample';
+import Author from '../../../../src/application/domain/hotspot/Author';
 
 import { expect } from 'chai';
-import ImageLocation from '../../../../src/domain/hotspot/ImageLocation';
+import ImageLocation from '../../../../src/application/domain/hotspot/ImageLocation';
 
 describe('Author entity', () => {
     it('Should have correct properties set by constructor', () => {

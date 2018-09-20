@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import MessageId from '../../../../src/domain/hotspot/MessageId';
-import CityzenSample from '../../../../src/domain/sample/CityzenSample';
-import MessageFactory from '../../../../src/domain/hotspot/MessageFactory';
+import MessageId from '../../../../src/application/domain/hotspot/MessageId';
+import CityzenSample from '../../../../src/application/domain/sample/CityzenSample';
+import MessageFactory from '../../../../src/application/domain/hotspot/MessageFactory';
 
 describe('MessageFactory', () => {
     it('createMessage called with data from request body should return a new message', () => {

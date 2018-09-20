@@ -1,9 +1,9 @@
 import { hstoreConverter } from './libs/postgreSQL/hstoreConverter';
-import CityId from '../domain/city/CityId';
-import AlertHotspot from '../domain/hotspot/AlertHotspot';
-import Hotspot, { HotspotType } from '../domain/hotspot/Hotspot';
-import HotspotId from '../domain/hotspot/HotspotId';
-import MediaHotspot from '../domain/hotspot/MediaHotspot';
+import CityId from '../application/domain/city/CityId';
+import AlertHotspot from '../application/domain/hotspot/AlertHotspot';
+import Hotspot, { HotspotType } from '../application/domain/hotspot/Hotspot';
+import HotspotId from '../application/domain/hotspot/HotspotId';
+import MediaHotspot from '../application/domain/hotspot/MediaHotspot';
 import MapToObject from '../helpers/MapToObject';
 import { PostgreSQL } from './libs/postgreSQL/postgreSQL';
 const slug = require('slug');

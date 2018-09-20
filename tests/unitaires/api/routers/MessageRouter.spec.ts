@@ -5,7 +5,7 @@ import * as c from '../../../../src/api/routers/constants';
 import MessageRouter from '../../../../src/api/routers/MessageRouter';
 import JwtParser from '../../../../src/api/services/auth/JwtParser';
 import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
-import MessageFactory from '../../../../src/domain/hotspot/MessageFactory';
+import MessageFactory from '../../../../src/application/domain/hotspot/MessageFactory';
 import messageRepositoryInMemory from '../../../../src/infrastructure/MessageRepositoryPostgreSQL';
 
 describe('messages router', () => {

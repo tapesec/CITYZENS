@@ -1,7 +1,7 @@
 import { ApiManagementCredentials, Auth0 } from '../../../../src/api/libs/Auth0';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
-import CityzenId from '../../../../src/domain/cityzen/CityzenId';
+import CityzenId from '../../../../src/application/domain/cityzen/CityzenId';
 
 describe('Auth0Sdk', () => {
     let credentials: ApiManagementCredentials;

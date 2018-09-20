@@ -1,5 +1,5 @@
-import City from '../domain/city/City';
-import ICityRepository from '../domain/city/ICityRepository';
+import City from '../application/domain/city/City';
+import ICityRepository from '../application/domain/city/ICityRepository';
 const slugIt = require('slug');
 
 class CityRepositoryInMemory implements ICityRepository {

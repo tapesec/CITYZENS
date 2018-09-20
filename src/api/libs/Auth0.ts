@@ -1,7 +1,7 @@
 import config from '../config';
 import { OK } from 'http-status-codes';
 import retryPromise from '../services/errors/retryPromise';
-import CityzenId from '../../domain/cityzen/CityzenId';
+import CityzenId from '../../application/domain/cityzen/CityzenId';
 const request = require('request');
 
 export interface ApiManagementCredentials {

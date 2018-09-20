@@ -1,4 +1,4 @@
-import { isUuid } from '../../../helpers/isUuid';
+import { isUuid } from '../../../../helpers/isUuid';
 import Hotspot from '../Hotspot';
 import IHotspotRepository from '../IHotspotRepository';
 import HotspotId from '../HotspotId';

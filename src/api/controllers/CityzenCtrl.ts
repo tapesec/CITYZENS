@@ -1,12 +1,12 @@
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';
-import CityzenId from '../../domain/cityzen/CityzenId';
+import CityzenId from '../../application/domain/cityzen/CityzenId';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import Auth0Service from '../services/auth/Auth0Service';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
-import isAuthorized from '../../domain/cityzen/CityzenAuthorization';
-import updateCityzen from '../../domain/cityzen/updateCityzen';
+import isAuthorized from '../../application/domain/cityzen/CityzenAuthorization';
+import updateCityzen from '../../application/domain/cityzen/updateCityzen';
 
 class CityzenCtrl extends RootCtrl {
     constructor(auth0Service: Auth0Service, cityzenRepo: CityzenRepositoryPostgreSQL) {

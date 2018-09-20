@@ -3,14 +3,14 @@ import { hstoreConverter } from './libs/postgreSQL/hstoreConverter';
 import MapToObject from '../helpers/MapToObject';
 import config from '../api/config';
 
-import Cityzen from '../domain/cityzen/Cityzen';
-import MediaHotspot from '../domain/hotspot/MediaHotspot';
-import AlertHotspot from '../domain/hotspot/AlertHotspot';
-import CityzenSample from '../domain/sample/CityzenSample';
-import MessageSample from '../domain/sample/MessageSample';
-import MediaHotspotsSample from '../domain/sample/MediaHotspotSample';
-import AlertHotspotSample from '../domain/sample/AlertHotspotSample';
-import { HotspotType } from '../domain/hotspot/Hotspot';
+import Cityzen from '../application/domain/cityzen/Cityzen';
+import MediaHotspot from '../application/domain/hotspot/MediaHotspot';
+import AlertHotspot from '../application/domain/hotspot/AlertHotspot';
+import CityzenSample from '../application/domain/sample/CityzenSample';
+import MessageSample from '../application/domain/sample/MessageSample';
+import MediaHotspotsSample from '../application/domain/sample/MediaHotspotSample';
+import AlertHotspotSample from '../application/domain/sample/AlertHotspotSample';
+import { HotspotType } from '../application/domain/hotspot/Hotspot';
 
 export const CITYZEN_TABLE_NAME = 'cityzens';
 export const MESSAGE_TABLE_NAME = 'messages';

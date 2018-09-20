@@ -7,7 +7,7 @@ import * as c from '../../../../src/api/routers/constants';
 import HotspotRouter from '../../../../src/api/routers/HotspotRouter';
 import Algolia from '../../../../src/api/services/algolia/Algolia';
 import Login from '../../../../src/api/services/auth/Login';
-import HotspotFactory from '../../../../src/domain/hotspot/HotspotFactory';
+import HotspotFactory from '../../../../src/application/domain/hotspot/HotspotFactory';
 import hotspotRepositoryPostgreSQL from '../../../../src/infrastructure/HotspotRepositoryPostgreSQL';
 import OrmCityzen from '../../../../src/infrastructure/ormCityzen';
 

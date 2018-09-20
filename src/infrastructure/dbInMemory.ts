@@ -1,10 +1,10 @@
 // const slug = require('slug');
-import CitySample from '../domain/sample/CitySample';
-import MessageSample from '../domain/sample/MessageSample';
-import CityzenSample from '../domain/sample/CityzenSample';
+import CitySample from '../application/domain/sample/CitySample';
+import MessageSample from '../application/domain/sample/MessageSample';
+import CityzenSample from '../application/domain/sample/CityzenSample';
 import config from './../api/config';
-import AlertHotspotSample from '../domain/sample/AlertHotspotSample';
-import MediaHotspotSample from '../domain/sample/MediaHotspotSample';
+import AlertHotspotSample from '../application/domain/sample/AlertHotspotSample';
+import MediaHotspotSample from '../application/domain/sample/MediaHotspotSample';
 const loki = require('lokijs');
 
 let hotspotCollection: any;
