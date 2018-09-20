@@ -1,9 +1,9 @@
-import { isUuid } from '../../../../helpers/isUuid';
-import Hotspot from '../Hotspot';
-import IHotspotRepository from '../IHotspotRepository';
-import HotspotId from '../HotspotId';
-import Cityzen from '../../cityzen/Cityzen';
-import * as isAuthorized from '../services/isAuthorized';
+import { isUuid } from '../../helpers/isUuid';
+import Hotspot from '../domain/hotspot/Hotspot';
+import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import HotspotId from '../domain/hotspot/HotspotId';
+import Cityzen from '../domain/cityzen/Cityzen';
+import * as isAuthorized from '../domain/hotspot/services/isAuthorized';
 import UseCaseStatus from './UseCaseStatus';
 
 export interface IHotspotParSlugOuId {

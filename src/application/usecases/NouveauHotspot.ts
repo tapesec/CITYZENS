@@ -1,8 +1,8 @@
-import Cityzen from '../../cityzen/Cityzen';
+import Cityzen from '../domain/cityzen/Cityzen';
 import UseCaseStatus from './UseCaseStatus';
-import Hotspot from '../Hotspot';
-import HotspotFactory from '../HotspotFactory';
-import IHotspotRepository from '../IHotspotRepository';
+import Hotspot from '../domain/hotspot/Hotspot';
+import HotspotFactory from '../domain/hotspot/HotspotFactory';
+import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
 
 export interface INouveauHotspotParams {
     user: Cityzen;

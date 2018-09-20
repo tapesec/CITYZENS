@@ -18,12 +18,12 @@ import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
 import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
-import UseCaseStatus from '../../application/domain/hotspot/usecases/UseCaseStatus';
+import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
-import { IHotspotParSlugOuId } from '../../application/domain/hotspot/usecases/HotspotParSlugOuId';
-import { IHotspotsParZone } from '../../application/domain/hotspot/usecases/HotspotsParZone';
-import { IHotspotsParCodeInsee } from '../../application/domain/hotspot/usecases/HotspotsParCodeInsee';
-import { INouveauHotspot } from '../../application/domain/hotspot/usecases/NouveauHotspot';
+import { IHotspotParSlugOuId } from '../../application/usecases/HotspotParSlugOuId';
+import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
+import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
+import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;

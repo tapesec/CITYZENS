@@ -33,15 +33,15 @@ import SwaggerRouter from './SwaggerRouter';
 
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
-import HotspotsParZone, { IHotspotsParZone } from '../../application/domain/hotspot/usecases/HotspotsParZone';
+import HotspotsParZone, { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
 import IHotspotRepository from '../../application/domain/hotspot/IHotspotRepository';
 import HotspotsParCodeInsee, {
     IHotspotsParCodeInsee,
-} from '../../application/domain/hotspot/usecases/HotspotsParCodeInsee';
+} from '../../application/usecases/HotspotsParCodeInsee';
 import HotspotParSlugOuId, {
     IHotspotParSlugOuId,
-} from '../../application/domain/hotspot/usecases/HotspotParSlugOuId';
-import NouveauHotspot, { INouveauHotspot } from '../../application/domain/hotspot/usecases/NouveauHotspot';
+} from '../../application/usecases/HotspotParSlugOuId';
+import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 
 const request = require('request');
 

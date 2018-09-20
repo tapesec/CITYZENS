@@ -1,9 +1,9 @@
-import Hotspot from '../Hotspot';
-import IHotspotRepository from '../IHotspotRepository';
-import HotspotReducer from '../HotspotReducer';
-import MediaHotspot from '../MediaHotspot';
-import AlertHotspot from '../AlertHotspot';
-import Cityzen from '../../cityzen/Cityzen';
+import Hotspot from '../domain/hotspot/Hotspot';
+import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import HotspotReducer from '../domain/hotspot/HotspotReducer';
+import MediaHotspot from '../domain/hotspot/MediaHotspot';
+import AlertHotspot from '../domain/hotspot/AlertHotspot';
+import Cityzen from '../domain/cityzen/Cityzen';
 
 class HotspotsParZone implements IHotspotsParZone {
     constructor(private hotspotRepo: IHotspotRepository) {}

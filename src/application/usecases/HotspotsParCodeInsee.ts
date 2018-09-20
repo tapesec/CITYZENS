@@ -1,8 +1,8 @@
-import CityId from '../../city/CityId';
-import Hotspot from '../Hotspot';
-import IHotspotRepository from '../IHotspotRepository';
-import HotspotReducer from '../HotspotReducer';
-import Cityzen from '../../cityzen/Cityzen';
+import CityId from '../domain/city/CityId';
+import Hotspot from '../domain/hotspot/Hotspot';
+import IHotspotRepository from '../domain/hotspot/IHotspotRepository';
+import HotspotReducer from '../domain/hotspot/HotspotReducer';
+import Cityzen from '../domain/cityzen/Cityzen';
 
 export interface ParametresHotspotParCodeInsee {
     cityId: CityId;
