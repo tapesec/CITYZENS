@@ -4,19 +4,25 @@ import Carte from '../domain/hotspot/Carte';
 import Hotspot from '../domain/hotspot/Hotspot';
 
 export interface ComptabiliseUneVue {
-    run(hotspotId: HotspotId): Promise<ComptabiliseUneVueResult>;
+    run(hotspotId: string): Promise<ComptabiliseUneVueResult>;
 }
 
 export interface ComptabiliseUneVueResult {
     status: UseCaseStatus;
-    hotspot: Hotspot;
+    hotspot?: Hotspot;
 }
 
 export default class CompteUneVue implements ComptabiliseUneVue {
     constructor(protected carte: Carte) {}
 
-    async run(hotspotId: HotspotId): Promise<ComptabiliseUneVueResult> {
-        const visitedHotspot = await this.carte.findById(hotspotId);
+    async run(hotspotId: string): Promise<ComptabiliseUneVueResult> {
+        const id = new HotspotId(hotspotId);
+        const visitedHotspot = await this.carte.findById(id);
+        if (!visitedHotspot) {
+            return {
+                status: UseCaseStatus.NOT_FOUND,
+            };
+        }
         visitedHotspot.countOneMoreView();
         await this.carte.update(visitedHotspot);
         return {

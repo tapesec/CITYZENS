@@ -145,14 +145,13 @@ class HotspotCtrl extends RootCtrl {
             'debugging cityzenIfAuthenticated',
             this.cityzenIfAuthenticated,
         );
-        const hotspotId = new HotspotId(req.params.hotspotId);
-        if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
         try {
-            const useCaseResult = await this.nouvelleVue.run(hotspotId);
+            const useCaseResult = await this.nouvelleVue.run(req.params.hotspotId);
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
                 userId: this.cityzenIfAuthenticated.id.toString(),
                 hotspotType: useCaseResult.hotspot.type,
