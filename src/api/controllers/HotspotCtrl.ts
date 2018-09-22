@@ -130,7 +130,7 @@ class HotspotCtrl extends RootCtrl {
             this.logger.info(MCDVLoggerEvent.HOTSPOT_CREATED, 'nouveau hotspot crée', {
                 userId: this.cityzenIfAuthenticated.id,
                 hotspotType: useCaseResult.nouveauHotspot.type,
-                cityId: useCaseResult.nouveauHotspot.cityId,
+                cityId: useCaseResult.nouveauHotspot.cityId.toString(),
             });
             res.json(CREATED, useCaseResult.nouveauHotspot);
         } catch (err) {
@@ -140,6 +140,11 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        this.logger.debug(
+            MCDVLoggerEvent.DEBUG,
+            'debugging cityzenIfAuthenticated',
+            this.cityzenIfAuthenticated,
+        );
         const hotspotId = new HotspotId(req.params.hotspotId);
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
@@ -149,9 +154,9 @@ class HotspotCtrl extends RootCtrl {
         try {
             const useCaseResult = await this.nouvelleVue.run(hotspotId);
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
-                userId: this.cityzenIfAuthenticated.id,
+                userId: this.cityzenIfAuthenticated.id.toString(),
                 hotspotType: useCaseResult.hotspot.type,
-                hotspotId: useCaseResult.hotspot.id,
+                hotspotId: useCaseResult.hotspot.id.toString(),
                 cityId: useCaseResult.hotspot.cityId,
             });
             res.json(OK);

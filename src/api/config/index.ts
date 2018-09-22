@@ -83,4 +83,7 @@ export default {
     cityzen: {
         defaultAvatar: defaultCityzenAvatar,
     },
+    logs: {
+        visibilityLevel: process.env.LOG_VISIBILITY_LEVEL,
+    },
 };

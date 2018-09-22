@@ -1,8 +1,5 @@
 import { createLogger, transports, Logger } from 'winston';
-
-const logger = createLogger({
-    transports: [new transports.Console()],
-});
+import config from '../config';
 
 export enum MCDVLoggerEvent {
     BAD_REQUEST = 'BAD_REQUEST',
@@ -15,6 +12,7 @@ export enum MCDVLoggerEvent {
     ALGOLIA_SYNC_SUCCESS = 'ALGOLIA_SYNC_SUCCESS',
     HOTSPOT_BY_AREA_RETRIEVED = 'HOTSPOT_BY_AREA_RETRIEVED',
     NEW_VIEW = 'NEW_VIEW',
+    DEBUG = 'DEBUG',
 }
 
 export interface MCDVLogger {
@@ -49,6 +47,7 @@ class WinstonLogger implements MCDVLogger {
     private logger: Logger;
     constructor(private opts: MCDVLoggerOpts) {
         this.logger = createLogger({
+            level: config.logs.visibilityLevel || 'info',
             transports: [new transports.Console()],
         });
     }
