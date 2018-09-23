@@ -12,7 +12,6 @@ import CityCtrl from '../controllers/CityCtrl';
 import CityzenCtrl from '../controllers/CityzenCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import MessageCtrl from '../controllers/MessageCtrl';
-import ProfileCtrl from '../controllers/ProfileCtrl';
 import auth0Sdk from '../libs/Auth0';
 import Auth0Service from '../services/auth/Auth0Service';
 import FilestackService from '../services/filestack/FilestackService';
@@ -28,7 +27,6 @@ import CityRouter from './CityRouter';
 import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
-import ProfileRouter from './ProfileRouter';
 import SwaggerRouter from './SwaggerRouter';
 
 import { createWebhook } from '../libs/SlackWebhook';
@@ -44,6 +42,8 @@ import HotspotParSlugOuId, {
 import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 import CompteUneVue, { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
 import Existence, { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence';
+import UserLoader from '../middlewares/UserLoader';
+import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
 
 const request = require('request');
 
@@ -68,7 +68,7 @@ const ormMessage = new OrmMessage(pg);
 
 const messageFactory = new MessageFactory();
 
-const cityzenRepositoryPostgreSQL = new CityzenRepositoryPostgreSQL(ormCityzen);
+const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia);
 const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
@@ -77,18 +77,10 @@ const slideshowService = new SlideshowService(filestackService);
 
 export const init = (server: restify.Server) => {
     const routers = [];
+    const userLoader = new UserLoader(auth0Service, cityzenRepositoryPostgreSQL);
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(auth0Service, cityzenRepositoryPostgreSQL)));
-    routers.push(
-        new ProfileRouter(
-            new ProfileCtrl(auth0Service, cityzenRepositoryPostgreSQL, auth0Sdk, hotspotRepo),
-        ),
-    );
-    routers.push(
-        new CityRouter(
-            new CityCtrl(auth0Service, cityzenRepositoryPostgreSQL, cityRepositoryInMemory),
-        ),
-    );
+    routers.push(new AuthRouter(new AuthCtrl(auth0Service), userLoader));
+    routers.push(new CityRouter(new CityCtrl(cityRepositoryInMemory)));
 
     // use cases
     const hotspotsParZone: IHotspotsParZone = new HotspotsParZone(hotspotRepo);
@@ -101,8 +93,6 @@ export const init = (server: restify.Server) => {
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
-                auth0Service,
-                cityzenRepositoryPostgreSQL,
                 hotspotRepo,
                 algolia,
                 slideshowService,
@@ -113,20 +103,16 @@ export const init = (server: restify.Server) => {
                 nouvelleVue,
                 confirmeExistence,
             ),
+            userLoader,
         ),
     );
     routers.push(
         new MessageRouter(
-            new MessageCtrl(
-                auth0Service,
-                cityzenRepositoryPostgreSQL,
-                hotspotRepo,
-                messageRepositoryInMemory,
-                messageFactory,
-            ),
+            new MessageCtrl(hotspotRepo, messageRepositoryInMemory, messageFactory),
+            userLoader,
         ),
     );
-    routers.push(new CityzenRouter(new CityzenCtrl(auth0Service, cityzenRepositoryPostgreSQL)));
+    routers.push(new CityzenRouter(new CityzenCtrl(cityzenRepositoryPostgreSQL), userLoader));
 
     routers.forEach(r => r.bind(server));
 };

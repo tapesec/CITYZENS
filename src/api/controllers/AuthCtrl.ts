@@ -1,11 +1,10 @@
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import RootCtrl from './RootCtrl';
 
 class AuthCtrl extends RootCtrl {
-    constructor(auth0Service: Auth0Service, cityzenRepository: CityzenRepositoryPostgreSQL) {
-        super(auth0Service, cityzenRepository);
+    constructor(private auth0Service: Auth0Service) {
+        super();
     }
 
     public login = async (req: rest.Request, res: rest.Response, next: rest.Next) => {

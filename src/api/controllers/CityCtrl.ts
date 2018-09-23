@@ -1,10 +1,8 @@
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';
-import Auth0Service from 'src/api/services/auth/Auth0Service';
 import City from '../../application/domain/city/City';
 import CitySample from '../../application/domain/sample/CitySample';
 import { CityRepositoryInMemory } from '../../infrastructure/CityRepositoryInMemory';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import RootCtrl from './RootCtrl';
 
 class CityCtrl extends RootCtrl {
@@ -13,12 +11,8 @@ class CityCtrl extends RootCtrl {
     public static INSEE_NOT_FOUND = 'invalid insee code';
     public static SLUG_NOT_FOUND = 'invalid slug name';
 
-    constructor(
-        auth0Service: Auth0Service,
-        cityzenRepository: CityzenRepositoryPostgreSQL,
-        cityRepositoryInMemory: CityRepositoryInMemory,
-    ) {
-        super(auth0Service, cityzenRepository);
+    constructor(cityRepositoryInMemory: CityRepositoryInMemory) {
+        super();
         this.cityRepository = cityRepositoryInMemory;
         this.cityRepository.store(CitySample.MARTIGNAS);
     }

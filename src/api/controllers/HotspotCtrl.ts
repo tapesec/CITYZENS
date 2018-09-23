@@ -1,6 +1,5 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
-import Auth0Service from 'src/api/services/auth/Auth0Service';
 import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import CityId from '../../application/domain/city/CityId';
 import AlertHotspot from '../../application/domain/hotspot/AlertHotspot';
@@ -8,7 +7,6 @@ import Hotspot from '../../application/domain/hotspot/Hotspot';
 import HotspotId from '../../application/domain/hotspot/HotspotId';
 import MediaHotspot from '../../application/domain/hotspot/MediaHotspot';
 import CityzenId from '../../application/domain/cityzen/CityzenId';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
@@ -38,8 +36,6 @@ class HotspotCtrl extends RootCtrl {
     public static PERTINENCE_DOUBLE_VOTE = "You can't vote twice on the same Alert Hotspot";
 
     constructor(
-        auth0Service: Auth0Service,
-        cityzenRepository: CityzenRepositoryPostgreSQL,
         private hotspotRepository: Carte,
         private algolia: Algolia,
         slideshowService: SlideshowService,
@@ -50,7 +46,7 @@ class HotspotCtrl extends RootCtrl {
         private nouvelleVue: ComptabiliseUneVue,
         private confirmeExistence: ConfirmeExistence,
     ) {
-        super(auth0Service, cityzenRepository);
+        super();
         this.algolia.initHotspots();
         this.slideshowService = slideshowService;
     }
@@ -68,13 +64,13 @@ class HotspotCtrl extends RootCtrl {
             if (queryStrings.north) {
                 hotspotsResult = await this.hotspotsParZone.run({
                     ...queryStrings,
-                    user: this.cityzenIfAuthenticated,
+                    user: req.cityzenIfAuthenticated,
                 });
                 this.logger.info(MCDVLoggerEvent.HOTSPOT_BY_AREA_RETRIEVED, `Hotspots retrieved`);
             } else if (queryStrings.insee) {
                 hotspotsResult = await this.hotspotsParCodeInsee.run({
                     cityId: new CityId(queryStrings.insee),
-                    user: this.cityzenIfAuthenticated,
+                    user: req.cityzenIfAuthenticated,
                 });
             }
             res.json(OK, hotspotsResult);
@@ -87,7 +83,7 @@ class HotspotCtrl extends RootCtrl {
     public getHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
             const useCaseResult = await this.hotpotsParSlugOuId.run({
-                user: this.cityzenIfAuthenticated,
+                user: req.cityzenIfAuthenticated,
                 hotspotId: req.params.hotspotId as string,
             });
 
@@ -122,11 +118,11 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
             const useCaseResult = await this.nouveauHotspot.run({
-                user: this.cityzenIfAuthenticated,
+                user: req.cityzenIfAuthenticated,
                 payload: req.body,
             });
             this.logger.info(MCDVLoggerEvent.HOTSPOT_CREATED, 'nouveau hotspot crée', {
-                userId: this.cityzenIfAuthenticated.id,
+                userId: req.cityzenIfAuthenticated.id,
                 hotspotType: useCaseResult.nouveauHotspot.type,
                 cityId: useCaseResult.nouveauHotspot.cityId.toString(),
             });
@@ -139,20 +135,20 @@ class HotspotCtrl extends RootCtrl {
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         this.logger.debug(MCDVLoggerEvent.DEBUG, '141', {
-            userId: this.cityzenIfAuthenticated.id.toString(),
+            userId: req.cityzenIfAuthenticated.id.toString(),
         });
         this.logger.debug(
             MCDVLoggerEvent.DEBUG,
             'debugging cityzenIfAuthenticated',
-            this.cityzenIfAuthenticated,
+            req.cityzenIfAuthenticated,
         );
         this.logger.debug(MCDVLoggerEvent.DEBUG, '149', {
-            userId: this.cityzenIfAuthenticated.id.toString(),
+            userId: req.cityzenIfAuthenticated.id.toString(),
         });
         try {
             const useCaseResult = await this.nouvelleVue.run(req.params.hotspotId);
             this.logger.debug(MCDVLoggerEvent.DEBUG, '154', {
-                userId: this.cityzenIfAuthenticated.id.toString(),
+                userId: req.cityzenIfAuthenticated.id.toString(),
             });
             if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
@@ -160,10 +156,10 @@ class HotspotCtrl extends RootCtrl {
                 );
             }
             this.logger.debug(MCDVLoggerEvent.DEBUG, '162', {
-                userId: this.cityzenIfAuthenticated.id.toString(),
+                userId: req.cityzenIfAuthenticated.id.toString(),
             });
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
-                userId: this.cityzenIfAuthenticated.id.toString(),
+                userId: req.cityzenIfAuthenticated.id.toString(),
                 hotspotType: useCaseResult.hotspot.type,
                 hotspotId: useCaseResult.hotspot.id.toString(),
                 cityId: useCaseResult.hotspot.cityId,
@@ -181,15 +177,12 @@ class HotspotCtrl extends RootCtrl {
                 this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
             );
         }
-
         const hotspotId = new HotspotId(req.params.hotspotId);
-
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
             );
         }
-
         try {
             const hotspot = await this.hotspotRepository.findById(hotspotId);
             if (!(hotspot instanceof AlertHotspot)) {
@@ -200,8 +193,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-
-            const cityzenId: CityzenId = this.cityzenIfAuthenticated.id;
+            const cityzenId: CityzenId = req.cityzenIfAuthenticated.id;
             if (hotspot.voterList.has(cityzenId)) {
                 return next(
                     this.responseError.logAndCreateBadRequest(
@@ -238,7 +230,7 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = await this.hotspotRepository.findById(hotspotId);
 
-            if (!isAuthorized.toPatchHotspot(hotspot, this.cityzenIfAuthenticated)) {
+            if (!isAuthorized.toPatchHotspot(hotspot, req.cityzenIfAuthenticated)) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
@@ -272,7 +264,6 @@ class HotspotCtrl extends RootCtrl {
     // method=DELETE url=/hotspots/{hotspotId}
     public removeHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         const hotspotId = new HotspotId(req.params.hotspotId);
-
         if (!await this.hotspotRepository.isSet(hotspotId)) {
             return next(
                 this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
@@ -281,12 +272,11 @@ class HotspotCtrl extends RootCtrl {
         try {
             const hotspot = await this.hotspotRepository.findById(hotspotId);
 
-            if (!isAuthorized.toRemoveHotspot(hotspot, this.cityzenIfAuthenticated)) {
+            if (!isAuthorized.toRemoveHotspot(hotspot, req.cityzenIfAuthenticated)) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
-
             await this.hotspotRepository.remove(hotspotId);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
@@ -294,5 +284,4 @@ class HotspotCtrl extends RootCtrl {
         res.json(OK, getStatusText(OK));
     };
 }
-
 export default HotspotCtrl;

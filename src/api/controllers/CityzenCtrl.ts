@@ -1,16 +1,15 @@
 import * as rest from 'restify';
 import { OK } from 'http-status-codes';
 import CityzenId from '../../application/domain/cityzen/CityzenId';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-import Auth0Service from '../services/auth/Auth0Service';
 import RootCtrl from './RootCtrl';
 import { patchCityzenSchema } from '../requestValidation/schema';
 import isAuthorized from '../../application/domain/cityzen/CityzenAuthorization';
 import updateCityzen from '../../application/domain/cityzen/updateCityzen';
+import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
 
 class CityzenCtrl extends RootCtrl {
-    constructor(auth0Service: Auth0Service, cityzenRepo: CityzenRepositoryPostgreSQL) {
-        super(auth0Service, cityzenRepo);
+    constructor(private cityzenRepo: ICityzenRepository) {
+        super();
     }
 
     // GET /cityzens/{cityzenId}
@@ -24,7 +23,7 @@ class CityzenCtrl extends RootCtrl {
             const userId = `${req.query.provider}|${req.params.cityzenId}`;
             const cityzenId = new CityzenId(userId);
 
-            const cityzen = await this.cityzenRepository.findById(cityzenId);
+            const cityzen = await this.cityzenRepo.findById(cityzenId);
             if (cityzen === undefined) {
                 return next(this.responseError.logAndCreateNotFound(req, 'Cityzen not foud'));
             }
@@ -47,10 +46,10 @@ class CityzenCtrl extends RootCtrl {
             }
             const userId = `${req.query.provider}|${req.params.cityzenId}`;
             const cityzenId = new CityzenId(userId);
-            if (isAuthorized.toUpdateCityzen(this.cityzenIfAuthenticated, cityzenId)) {
-                const cityzenToUpdate = await this.cityzenRepository.findById(cityzenId);
+            if (isAuthorized.toUpdateCityzen(req.cityzenIfAuthenticated, cityzenId)) {
+                const cityzenToUpdate = await this.cityzenRepo.findById(cityzenId);
                 const cityzenUpdated = updateCityzen(cityzenToUpdate, req.body);
-                await this.cityzenRepository.updateCityzen(cityzenUpdated);
+                await this.cityzenRepo.updateCityzen(cityzenUpdated);
                 res.status(OK);
                 res.json(cityzenUpdated);
             } else {

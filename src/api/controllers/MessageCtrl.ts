@@ -1,10 +1,8 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
-import Auth0Service from 'src/api/services/auth/Auth0Service';
 import HotspotId from '../../application/domain/hotspot/HotspotId';
 import MessageId from '../../application/domain/hotspot/MessageId';
 import Message from '../../application/domain/hotspot/Message';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import MessageFactory from '../../application/domain/hotspot/MessageFactory';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
 import {
@@ -26,13 +24,11 @@ class MessageCtrl extends RootCtrl {
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
 
     constructor(
-        auth0Service: Auth0Service,
-        cityzenRepository: CityzenRepositoryPostgreSQL,
         private hotspotRepository: Carte,
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
     ) {
-        super(auth0Service, cityzenRepository);
+        super();
         this.messageRepository = messageRepositoryInMemory;
         this.messageFactory = messageFactory;
     }
@@ -68,7 +64,7 @@ class MessageCtrl extends RootCtrl {
                 );
             }
 
-            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
@@ -93,7 +89,7 @@ class MessageCtrl extends RootCtrl {
                 );
             }
 
-            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
@@ -124,7 +120,7 @@ class MessageCtrl extends RootCtrl {
                 );
             }
 
-            if (!isAuthorized.toSeeMessages(hotspot, this.cityzenIfAuthenticated)) {
+            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
@@ -157,7 +153,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        if (!isAuthorized.toPostMessages(hotspot, this.cityzenIfAuthenticated)) {
+        if (!isAuthorized.toPostMessages(hotspot, req.cityzenIfAuthenticated)) {
             return next(
                 this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
             );
@@ -165,7 +161,7 @@ class MessageCtrl extends RootCtrl {
 
         try {
             req.body.hotspotId = req.params.hotspotId;
-            req.body.cityzen = this.cityzenIfAuthenticated;
+            req.body.cityzen = req.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
             await this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
@@ -193,7 +189,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        if (!isAuthorized.toPostComments(hotspot, this.cityzenIfAuthenticated)) {
+        if (!isAuthorized.toPostComments(hotspot, req.cityzenIfAuthenticated)) {
             return next(
                 this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
             );
@@ -202,7 +198,7 @@ class MessageCtrl extends RootCtrl {
         try {
             req.body.hotspotId = req.params.hotspotId;
             req.body.parentId = req.params.messageId;
-            req.body.cityzen = this.cityzenIfAuthenticated;
+            req.body.cityzen = req.cityzenIfAuthenticated;
             const newMessage = this.messageFactory.createMessage(req.body);
             await this.messageRepository.store(newMessage);
             res.json(CREATED, newMessage);
@@ -239,7 +235,7 @@ class MessageCtrl extends RootCtrl {
             );
         }
 
-        if (!isAuthorized.toPatchMessage(message, this.cityzenIfAuthenticated)) {
+        if (!isAuthorized.toPatchMessage(message, req.cityzenIfAuthenticated)) {
             return next(
                 this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
             );
@@ -280,7 +276,7 @@ class MessageCtrl extends RootCtrl {
         }
 
         const message = await this.messageRepository.findById(messageId);
-        if (!isAuthorized.toRemoveMessages(message, this.cityzenIfAuthenticated)) {
+        if (!isAuthorized.toRemoveMessages(message, req.cityzenIfAuthenticated)) {
             return next(
                 this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
             );
