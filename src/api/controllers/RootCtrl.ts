@@ -53,8 +53,8 @@ class RootCtrl {
     };
 
     public optInAuthenticateUser = async (req: r.Request, res: r.Response, next: r.Next) => {
-        this.userInfo = undefined;
-        this.cityzenIfAuthenticated = undefined;
+        // this.userInfo = undefined;
+        // this.cityzenIfAuthenticated = undefined;
 
         const headerAuthorization = req.header('Authorization');
         if (!headerAuthorization) return next();
