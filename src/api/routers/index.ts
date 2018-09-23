@@ -44,6 +44,7 @@ import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
 import UserLoader from '../middlewares/UserLoader';
 import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
 import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
+import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 
 const request = require('request');
 
@@ -89,6 +90,7 @@ export const init = (server: restify.Server) => {
     const nouvelleVue: ComptabiliseUneVue = new CompteUneVue(hotspotRepo);
     const confirmeExistence: ConfirmeExistence = new ConfirmeExistence(hotspotRepo);
     const modifierUnHotspot: ModifierUnHotspot = new ModifierUnHotspot(hotspotRepo);
+    const supprimerUnHotspot: SupprimerUnHotspot = new SupprimerUnHotspot(hotspotRepo);
 
     routers.push(
         new HotspotRouter(
@@ -102,6 +104,7 @@ export const init = (server: restify.Server) => {
                 nouvelleVue,
                 confirmeExistence,
                 modifierUnHotspot,
+                supprimerUnHotspot,
             ),
             userLoader,
         ),

@@ -9,7 +9,6 @@ import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postPertinenceSchema } from '../requestValidation/schema';
 import Algolia from './../services/algolia/Algolia';
-import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
 import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import Carte from '../../application/domain/hotspot/Carte';
@@ -20,6 +19,7 @@ import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 import { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
 import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
 import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
+import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 
 class HotspotCtrl extends RootCtrl {
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
@@ -40,6 +40,7 @@ class HotspotCtrl extends RootCtrl {
         private nouvelleVue: ComptabiliseUneVue,
         private confirmeExistence: ConfirmeExistence,
         private modifierUnHotspot: ModifierUnHotspot,
+        private supprimerUnHotspot: SupprimerUnHotspot,
     ) {
         super();
         this.algolia.initHotspots();
@@ -227,25 +228,26 @@ class HotspotCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}
     public removeHotspot = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        const hotspotId = new HotspotId(req.params.hotspotId);
-        if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
         try {
-            const hotspot = await this.hotspotRepository.findById(hotspotId);
-
-            if (!isAuthorized.toRemoveHotspot(hotspot, req.cityzenIfAuthenticated)) {
+            const hotspotId = new HotspotId(req.params.hotspotId);
+            const useCaseStatus = await this.supprimerUnHotspot.run({
+                hotspotId,
+                user: req.cityzenIfAuthenticated,
+            });
+            if (useCaseStatus === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseStatus === UseCaseStatus.NOT_OWNER_NOR_GRANTED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
-            await this.hotspotRepository.remove(hotspotId);
+            res.json(OK, getStatusText(OK));
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
-        res.json(OK, getStatusText(OK));
     };
 }
 export default HotspotCtrl;
