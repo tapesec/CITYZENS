@@ -2,11 +2,9 @@ import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import CityId from '../../application/domain/city/CityId';
-import AlertHotspot from '../../application/domain/hotspot/AlertHotspot';
 import Hotspot from '../../application/domain/hotspot/Hotspot';
 import HotspotId from '../../application/domain/hotspot/HotspotId';
 import MediaHotspot from '../../application/domain/hotspot/MediaHotspot';
-import CityzenId from '../../application/domain/cityzen/CityzenId';
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
@@ -122,7 +120,9 @@ class HotspotCtrl extends RootCtrl {
                 payload: req.body,
             });
             this.logger.info(MCDVLoggerEvent.HOTSPOT_CREATED, 'nouveau hotspot crée', {
-                userId: req.cityzenIfAuthenticated.id,
+                userId: req.cityzenIfAuthenticated
+                    ? req.cityzenIfAuthenticated.id.toString()
+                    : 'unknow',
                 hotspotType: useCaseResult.nouveauHotspot.type,
                 cityId: useCaseResult.nouveauHotspot.cityId.toString(),
             });
@@ -134,32 +134,17 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        this.logger.debug(MCDVLoggerEvent.DEBUG, '141', {
-            userId: req.cityzenIfAuthenticated.id.toString(),
-        });
-        this.logger.debug(
-            MCDVLoggerEvent.DEBUG,
-            'debugging cityzenIfAuthenticated',
-            req.cityzenIfAuthenticated,
-        );
-        this.logger.debug(MCDVLoggerEvent.DEBUG, '149', {
-            userId: req.cityzenIfAuthenticated.id.toString(),
-        });
         try {
             const useCaseResult = await this.nouvelleVue.run(req.params.hotspotId);
-            this.logger.debug(MCDVLoggerEvent.DEBUG, '154', {
-                userId: req.cityzenIfAuthenticated.id.toString(),
-            });
             if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-            this.logger.debug(MCDVLoggerEvent.DEBUG, '162', {
-                userId: req.cityzenIfAuthenticated.id.toString(),
-            });
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
-                userId: req.cityzenIfAuthenticated.id.toString(),
+                userId: req.cityzenIfAuthenticated
+                    ? req.cityzenIfAuthenticated.id.toString()
+                    : 'unknow',
                 hotspotType: useCaseResult.hotspot.type,
                 hotspotId: useCaseResult.hotspot.id.toString(),
                 cityId: useCaseResult.hotspot.cityId,
@@ -172,20 +157,24 @@ class HotspotCtrl extends RootCtrl {
 
     // method=POST url=/hotspots/{hotspotId}/pertinence
     public postPertinence = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.schemaValidator.validate(postPertinenceSchema, req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
-            );
-        }
-        const hotspotId = new HotspotId(req.params.hotspotId);
-        if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
         try {
-            const hotspot = await this.hotspotRepository.findById(hotspotId);
-            if (!(hotspot instanceof AlertHotspot)) {
+            if (!this.schemaValidator.validate(postPertinenceSchema, req.body)) {
+                return next(
+                    this.responseError.logAndCreateBadRequest(req, HotspotCtrl.BAD_REQUEST_MESSAGE),
+                );
+            }
+            const hotspotId = new HotspotId(req.params.hotspotId);
+            const useCaseResult = await this.confirmeExistence.run({
+                hotspotId,
+                user: req.cityzenIfAuthenticated,
+                confirme: req.body.agree as boolean,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateBadRequest(
                         req,
@@ -193,8 +182,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-            const cityzenId: CityzenId = req.cityzenIfAuthenticated.id;
-            if (hotspot.voterList.has(cityzenId)) {
+            if (useCaseResult.status === UseCaseStatus.ALREADY_VOTED) {
                 return next(
                     this.responseError.logAndCreateBadRequest(
                         req,
@@ -202,11 +190,7 @@ class HotspotCtrl extends RootCtrl {
                     ),
                 );
             }
-
-            hotspot.addVoter(cityzenId, req.body.agree as boolean);
-            await this.hotspotRepository.update(hotspot);
-
-            res.json(OK, hotspot);
+            res.json(OK, useCaseResult.hotspot);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }

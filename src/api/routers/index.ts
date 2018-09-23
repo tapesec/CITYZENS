@@ -28,7 +28,6 @@ import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import SwaggerRouter from './SwaggerRouter';
-
 import { createWebhook } from '../libs/SlackWebhook';
 import { createlogger } from '../libs/MCDVLogger';
 import HotspotsParZone, { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';

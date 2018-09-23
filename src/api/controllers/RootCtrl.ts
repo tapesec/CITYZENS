@@ -1,7 +1,4 @@
-import Auth0Service from 'src/api/services/auth/Auth0Service';
 import * as ajv from 'ajv';
-import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
-
 import ResponseError from '../services/errors/ResponseError';
 import { getlogger, MCDVLogger } from '../libs/MCDVLogger';
 
