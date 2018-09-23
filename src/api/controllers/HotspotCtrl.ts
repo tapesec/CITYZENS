@@ -4,13 +4,10 @@ import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import CityId from '../../application/domain/city/CityId';
 import Hotspot from '../../application/domain/hotspot/Hotspot';
 import HotspotId from '../../application/domain/hotspot/HotspotId';
-import MediaHotspot from '../../application/domain/hotspot/MediaHotspot';
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postPertinenceSchema } from '../requestValidation/schema';
-import actAsSpecified from '../../application/domain/hotspot/actAsSpecified';
-import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
 import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import RootCtrl from './RootCtrl';
@@ -21,10 +18,10 @@ import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
 import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
 import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 import { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
-import { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence';
+import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
+import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
 
 class HotspotCtrl extends RootCtrl {
-    private slideshowService: SlideshowService;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
@@ -36,17 +33,16 @@ class HotspotCtrl extends RootCtrl {
     constructor(
         private hotspotRepository: Carte,
         private algolia: Algolia,
-        slideshowService: SlideshowService,
         private hotspotsParZone: IHotspotsParZone,
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,
         private hotpotsParSlugOuId: IHotspotParSlugOuId,
         private nouveauHotspot: INouveauHotspot,
         private nouvelleVue: ComptabiliseUneVue,
         private confirmeExistence: ConfirmeExistence,
+        private modifierUnHotspot: ModifierUnHotspot,
     ) {
         super();
         this.algolia.initHotspots();
-        this.slideshowService = slideshowService;
     }
 
     // method=GET url=/hotspots
@@ -198,48 +194,32 @@ class HotspotCtrl extends RootCtrl {
 
     // method=PATCH url=/hotspots/{hotspotId}
     public patchHotspots = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
-            );
-        }
-
-        const hotspotId = new HotspotId(req.params.hotspotId);
-
-        if (!await this.hotspotRepository.isSet(hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
         try {
-            const hotspot = await this.hotspotRepository.findById(hotspotId);
-
-            if (!isAuthorized.toPatchHotspot(hotspot, req.cityzenIfAuthenticated)) {
+            if (!this.schemaValidator.validate(patchHotspotsSchema(), req.body)) {
+                return next(
+                    this.responseError.logAndCreateBadRequest(
+                        req,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+            const hotspotId = new HotspotId(req.params.hotspotId);
+            const useCaseResult = await this.modifierUnHotspot.run({
+                hotspotId,
+                user: req.cityzenIfAuthenticated,
+                payload: req.body,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.NOT_OWNER_NOR_GRANTED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, HotspotCtrl.NOT_AUTHOR),
                 );
             }
-            if (req.body.slideShow) {
-                await this.slideshowService.removeImage(
-                    (<MediaHotspot>hotspot).slideShow.toJSON(),
-                    req.body.slideShow,
-                );
-            }
-            const hotspotToUpdate: Hotspot = actAsSpecified(hotspot, req.body);
-            await this.hotspotRepository.update(hotspotToUpdate);
-            res.json(OK, hotspotToUpdate);
-            this.algolia
-                .addHotspot(hotspotToUpdate)
-                .then(() => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate.id, true);
-                })
-                .catch(error => {
-                    this.hotspotRepository.cacheAlgolia(hotspotToUpdate.id, false);
-                    this.responseError.logSlack(
-                        `PATCH ${req.path()}`,
-                        `Algolia fail. \n${JSON.stringify(error)}`,
-                    );
-                });
+            res.json(OK, useCaseResult.hotspot);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }

@@ -40,9 +40,10 @@ import HotspotParSlugOuId, {
 } from '../../application/usecases/HotspotParSlugOuId';
 import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
 import CompteUneVue, { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
-import Existence, { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence';
+import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
 import UserLoader from '../middlewares/UserLoader';
 import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
+import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
 
 const request = require('request');
 
@@ -66,13 +67,12 @@ const ormCityzen = new OrmCityzen(pg);
 const ormMessage = new OrmMessage(pg);
 
 const messageFactory = new MessageFactory();
-
-const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia);
-const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
-
 const filestackService = new FilestackService(request);
 const slideshowService = new SlideshowService(filestackService);
+
+const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
+const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, slideshowService);
+const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 export const init = (server: restify.Server) => {
     const routers = [];
@@ -87,20 +87,21 @@ export const init = (server: restify.Server) => {
     const hotpotsParSlugOuId: IHotspotParSlugOuId = new HotspotParSlugOuId(hotspotRepo);
     const nouveauHotspot: INouveauHotspot = new NouveauHotspot(hotspotRepo);
     const nouvelleVue: ComptabiliseUneVue = new CompteUneVue(hotspotRepo);
-    const confirmeExistence: ConfirmeExistence = new Existence(hotspotRepo);
+    const confirmeExistence: ConfirmeExistence = new ConfirmeExistence(hotspotRepo);
+    const modifierUnHotspot: ModifierUnHotspot = new ModifierUnHotspot(hotspotRepo);
 
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
                 hotspotRepo,
                 algolia,
-                slideshowService,
                 hotspotsParZone,
                 hotspotsParCodeInsee,
                 hotpotsParSlugOuId,
                 nouveauHotspot,
                 nouvelleVue,
                 confirmeExistence,
+                modifierUnHotspot,
             ),
             userLoader,
         ),

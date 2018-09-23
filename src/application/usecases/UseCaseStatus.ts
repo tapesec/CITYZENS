@@ -4,6 +4,7 @@ enum UseCaseStatus {
     UNAUTHORIZED = 'UNAUTHORIZED',
     ALREADY_VOTED = 'ALREADY_VOTED',
     VOTED = 'VOTED',
+    NOT_OWNER_NOR_GRANTED = 'NOT_OWNER_NOR_GRANTED',
 }
 
 export default UseCaseStatus;

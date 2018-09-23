@@ -20,6 +20,7 @@ interface Carte {
     findBySlug(slug: String): Promise<MediaHotspot | AlertHotspot>;
     cacheAlgolia(id: HotspotId, v: boolean): Promise<any>;
     update(hotspot: Hotspot): Promise<any>;
+    removeSlideshowImagesFromHotspot(hotspot: Hotspot, slideShow: string[]): Promise<any>;
 }
 
 export default Carte;

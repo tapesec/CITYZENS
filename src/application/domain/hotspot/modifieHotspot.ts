@@ -9,7 +9,7 @@ export default (hotspot: MediaHotspot | AlertHotspot, requestBody: any): Hotspot
     if (requestBody.title !== undefined) {
         (<MediaHotspot>hotspot).changeTitle(requestBody.title);
     }
-    if (requestBody.scope) {
+    if (requestBody.scope !== undefined) {
         (<MediaHotspot>hotspot).changeScope(requestBody.scope);
     }
     if (requestBody.avatarIconUrl) {

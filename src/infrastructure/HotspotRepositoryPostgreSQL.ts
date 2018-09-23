@@ -9,12 +9,17 @@ import Carte from '../application/domain/hotspot/Carte';
 import OrmHotspot from './ormHotspot';
 import Algolia from '../api/services/algolia/Algolia';
 import { MCDVLogger, getlogger, MCDVLoggerEvent } from '../api/libs/MCDVLogger';
+import SlideshowService from '../api/services/widgets/SlideshowService';
 
 class HotspotRepositoryPostgreSQL implements Carte {
     private factory: HotspotFactory;
     private logger: MCDVLogger;
 
-    constructor(protected orm: OrmHotspot, protected algolia: Algolia) {
+    constructor(
+        protected orm: OrmHotspot,
+        protected algolia: Algolia,
+        protected slideshow: SlideshowService,
+    ) {
         this.factory = new HotspotFactory();
         this.logger = getlogger();
     }
@@ -89,6 +94,15 @@ class HotspotRepositoryPostgreSQL implements Carte {
 
     public async update(hotspot: Hotspot) {
         await this.orm.update(hotspot);
+        try {
+            await this.algolia.addHotspot(hotspot);
+            this.orm.cacheAlgolia(hotspot.id, true);
+        } catch (error) {
+            this.orm.cacheAlgolia(hotspot.id, false);
+            this.logger.error(MCDVLoggerEvent.ALGOLIA_SYNC_FAILED, error.message, {
+                hotspot,
+            });
+        }
     }
 
     public async remove(hotspotId: HotspotId) {
@@ -97,6 +111,10 @@ class HotspotRepositoryPostgreSQL implements Carte {
 
     public async cacheAlgolia(id: HotspotId, v: boolean) {
         await this.orm.cacheAlgolia(id, v);
+    }
+
+    public async removeSlideshowImagesFromHotspot(hotspot: Hotspot, slideshow: string[]) {
+        await this.slideshow.removeImage((<MediaHotspot>hotspot).slideShow.toJSON(), slideshow);
     }
 }
 

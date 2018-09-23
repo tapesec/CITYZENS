@@ -15,11 +15,8 @@ export interface ConfirmeExistenceResultat {
     status: UseCaseStatus;
     hotspot?: Hotspot;
 }
-export interface ConfirmeExistence {
-    run(params: ConfirmeExistenceParametres): Promise<ConfirmeExistenceResultat>;
-}
 
-export default class Existence {
+export default class ConfirmeExistence {
     constructor(private carte: Carte) {}
 
     async run(params: ConfirmeExistenceParametres) {
