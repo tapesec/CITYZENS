@@ -38,6 +38,7 @@ class RootCtrl {
         const access_token = headerAuthorization.slice(7);
         try {
             this.userInfo = await this.auth0Service.getUserInfo(access_token);
+            this.logger.debug(MCDVLoggerEvent.DEBUG, 'userInfo', { userInfo: this.userInfo });
             this.cityzenIfAuthenticated = await this.cityzenRepository.findById(
                 new CityzenId(this.userInfo.sub),
             );
