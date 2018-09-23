@@ -1,7 +1,7 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
 import Auth0Service from 'src/api/services/auth/Auth0Service';
-import { getlogger, MCDVLogger, MCDVLoggerEvent } from '../libs/MCDVLogger';
+import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import CityId from '../../application/domain/city/CityId';
 import AlertHotspot from '../../application/domain/hotspot/AlertHotspot';
 import Hotspot from '../../application/domain/hotspot/Hotspot';
@@ -12,7 +12,7 @@ import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryP
 import { strToNumQSProps } from '../helpers/';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
-import { getHotspots, postMemberSchema, postPertinenceSchema } from '../requestValidation/schema';
+import { getHotspots, postPertinenceSchema } from '../requestValidation/schema';
 import actAsSpecified from '../../application/domain/hotspot/actAsSpecified';
 import SlideshowService from '../services/widgets/SlideshowService';
 import Algolia from './../services/algolia/Algolia';
@@ -29,7 +29,6 @@ import { ConfirmeExistence } from '../../application/usecases/ConfirmeExistence'
 
 class HotspotCtrl extends RootCtrl {
     private slideshowService: SlideshowService;
-    private logger: MCDVLogger;
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
     public static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     public static HOTSPOT_PRIVATE = 'Private hotspot access';
@@ -54,7 +53,6 @@ class HotspotCtrl extends RootCtrl {
         super(auth0Service, cityzenRepository);
         this.algolia.initHotspots();
         this.slideshowService = slideshowService;
-        this.logger = getlogger();
     }
 
     // method=GET url=/hotspots
@@ -140,11 +138,13 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
+        this.logger.debug(MCDVLoggerEvent.DEBUG, this.cityzenIfAuthenticated.id.toString(), '141');
         this.logger.debug(
             MCDVLoggerEvent.DEBUG,
             'debugging cityzenIfAuthenticated',
             this.cityzenIfAuthenticated,
         );
+        this.logger.debug(MCDVLoggerEvent.DEBUG, this.cityzenIfAuthenticated.id.toString(), '147');
         try {
             const useCaseResult = await this.nouvelleVue.run(req.params.hotspotId);
             if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
@@ -152,6 +152,11 @@ class HotspotCtrl extends RootCtrl {
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
+            this.logger.debug(
+                MCDVLoggerEvent.DEBUG,
+                this.cityzenIfAuthenticated.id.toString(),
+                '156',
+            );
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
                 userId: this.cityzenIfAuthenticated.id.toString(),
                 hotspotType: useCaseResult.hotspot.type,
