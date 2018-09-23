@@ -138,25 +138,30 @@ class HotspotCtrl extends RootCtrl {
 
     // method= POST url=/hotspots/{hotspotId}/view
     public countView = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        this.logger.debug(MCDVLoggerEvent.DEBUG, this.cityzenIfAuthenticated.id.toString(), '141');
+        this.logger.debug(MCDVLoggerEvent.DEBUG, '141', {
+            userId: this.cityzenIfAuthenticated.id.toString(),
+        });
         this.logger.debug(
             MCDVLoggerEvent.DEBUG,
             'debugging cityzenIfAuthenticated',
             this.cityzenIfAuthenticated,
         );
-        this.logger.debug(MCDVLoggerEvent.DEBUG, this.cityzenIfAuthenticated.id.toString(), '147');
+        this.logger.debug(MCDVLoggerEvent.DEBUG, '149', {
+            userId: this.cityzenIfAuthenticated.id.toString(),
+        });
         try {
             const useCaseResult = await this.nouvelleVue.run(req.params.hotspotId);
+            this.logger.debug(MCDVLoggerEvent.DEBUG, '154', {
+                userId: this.cityzenIfAuthenticated.id.toString(),
+            });
             if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-            this.logger.debug(
-                MCDVLoggerEvent.DEBUG,
-                this.cityzenIfAuthenticated.id.toString(),
-                '156',
-            );
+            this.logger.debug(MCDVLoggerEvent.DEBUG, '162', {
+                userId: this.cityzenIfAuthenticated.id.toString(),
+            });
             this.logger.info(MCDVLoggerEvent.NEW_VIEW, 'nouvelle vue', {
                 userId: this.cityzenIfAuthenticated.id.toString(),
                 hotspotType: useCaseResult.hotspot.type,
