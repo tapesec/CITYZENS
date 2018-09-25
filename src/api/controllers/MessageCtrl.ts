@@ -16,6 +16,7 @@ import RootCtrl from './RootCtrl';
 import Carte from '../../application/domain/hotspot/Carte';
 import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
 import UseCaseStatus from '../../application/usecases/UseCaseStatus';
+import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;
@@ -30,6 +31,7 @@ class MessageCtrl extends RootCtrl {
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
         protected actualiteHotspot: ActualiteHotspot,
+        protected obtenirCommentaires: ObtenirCommentaires,
     ) {
         super();
         this.messageRepository = messageRepositoryInMemory;
@@ -102,28 +104,25 @@ class MessageCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId}/messages/
     public getComments = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        const hotspotId = req.params.hotspotId;
-        const messageId = req.params.messageId;
-
-        if (!this.hotspotRepository.isSet(hotspotId)) {
-            return next(this.responseError.logAndCreateNotFound(req));
-        }
         try {
-            const hotspot = await this.hotspotRepository.findById(hotspotId);
-            if (!hotspot) {
+            const hotspotId = new HotspotId(req.params.hotspotId);
+            const messageId = new MessageId(req.params.messageId);
+            const useCaseResult = await this.obtenirCommentaires.run({
+                hotspotId,
+                messageId,
+                user: req.cityzenIfAuthenticated,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-
-            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
             }
-
-            const comments = await this.messageRepository.findComments(new MessageId(messageId));
-            res.json(OK, comments);
+            res.json(OK, useCaseResult.comments);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }

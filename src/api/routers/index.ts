@@ -1,5 +1,7 @@
 import * as AlgoliaSearch from 'algoliasearch';
 import * as restify from 'restify';
+const request = require('request');
+
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
@@ -46,8 +48,7 @@ import ICityzenRepository from '../../application/domain/cityzen/ICityzenReposit
 import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
 import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
-
-const request = require('request');
+import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
 
 const algoliaSearch = AlgoliaSearch(
     config.algolia.algoliaAppId,
@@ -112,9 +113,16 @@ export const init = (server: restify.Server) => {
     );
     // use cases
     const actualiteHotspot = new ActualiteHotspot(hotspotRepo, messageRepo);
+    const obtenirCommentaires = new ObtenirCommentaires(hotspotRepo, messageRepo);
     routers.push(
         new MessageRouter(
-            new MessageCtrl(hotspotRepo, messageRepo, messageFactory, actualiteHotspot),
+            new MessageCtrl(
+                hotspotRepo,
+                messageRepo,
+                messageFactory,
+                actualiteHotspot,
+                obtenirCommentaires,
+            ),
             userLoader,
         ),
     );
