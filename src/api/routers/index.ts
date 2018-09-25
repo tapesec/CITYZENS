@@ -50,6 +50,7 @@ import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
 import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
 import PublierUnMessage from '../../application/usecases/PublierUnMessage';
+import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
 
 const algoliaSearch = AlgoliaSearch(
     config.algolia.algoliaAppId,
@@ -116,6 +117,7 @@ export const init = (server: restify.Server) => {
     const actualiteHotspot = new ActualiteHotspot(hotspotRepo, messageRepo);
     const obtenirCommentaires = new ObtenirCommentaires(hotspotRepo, messageRepo);
     const publierUnMessage = new PublierUnMessage(hotspotRepo, messageRepo);
+    const repondreAUnMessage = new RepondreAUnMessage(hotspotRepo, messageRepo);
     routers.push(
         new MessageRouter(
             new MessageCtrl(
@@ -125,6 +127,7 @@ export const init = (server: restify.Server) => {
                 actualiteHotspot,
                 obtenirCommentaires,
                 publierUnMessage,
+                repondreAUnMessage,
             ),
             userLoader,
         ),

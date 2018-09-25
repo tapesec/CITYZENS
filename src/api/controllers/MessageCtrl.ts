@@ -18,6 +18,7 @@ import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
 import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
 import PublierUnMessage from '../../application/usecases/PublierUnMessage';
+import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;
@@ -26,6 +27,7 @@ class MessageCtrl extends RootCtrl {
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
+    private static MESSAGE_REPLY_UNAUTHORIZED = 'Cant reply to this message';
 
     constructor(
         private hotspotRepository: Carte,
@@ -34,6 +36,7 @@ class MessageCtrl extends RootCtrl {
         protected actualiteHotspot: ActualiteHotspot,
         protected obtenirCommentaires: ObtenirCommentaires,
         protected publierUnMessage: PublierUnMessage,
+        protected repondreAUnMessage: RepondreAUnMessage,
     ) {
         super();
         this.messageRepository = messageRepositoryInMemory;
@@ -164,36 +167,40 @@ class MessageCtrl extends RootCtrl {
 
     // method=POST url=/hotspots/{hotspotId}/messages/{messageId}/comment
     public postComment = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.schemaValidator.validate(createMessageSchema, req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
-            );
-        }
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
-        if (!hotspot) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-
-        if (!isAuthorized.toPostComments(hotspot, req.cityzenIfAuthenticated)) {
-            return next(
-                this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
-            );
-        }
-
         try {
-            req.body.hotspotId = req.params.hotspotId;
-            req.body.parentId = req.params.messageId;
-            req.body.cityzen = req.cityzenIfAuthenticated;
-            const newMessage = this.messageFactory.createMessage(req.body);
-            await this.messageRepository.store(newMessage);
-            res.json(CREATED, newMessage);
+            if (!this.schemaValidator.validate(createMessageSchema, req.body)) {
+                return next(
+                    this.responseError.logAndCreateBadRequest(
+                        req,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+            const useCaseResult = await this.repondreAUnMessage.run({
+                user: req.cityzenIfAuthenticated,
+                messageId: new MessageId(req.params.messageId),
+                hotspotId: new HotspotId(req.params.hotspotId),
+                payload: req.body,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.MESSAGE_NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
+                return next(
+                    this.responseError.logAndCreateUnautorized(
+                        req,
+                        MessageCtrl.MESSAGE_REPLY_UNAUTHORIZED,
+                    ),
+                );
+            }
+            res.json(CREATED, useCaseResult.newResponse);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
