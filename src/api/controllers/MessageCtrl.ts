@@ -14,6 +14,8 @@ import * as isAuthorized from '../../application/domain/hotspot/services/isAutho
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
 import Carte from '../../application/domain/hotspot/Carte';
+import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
+import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;
@@ -27,6 +29,7 @@ class MessageCtrl extends RootCtrl {
         private hotspotRepository: Carte,
         messageRepositoryInMemory: MessageRepositoryPostgreSql,
         messageFactory: MessageFactory,
+        protected actualiteHotspot: ActualiteHotspot,
     ) {
         super();
         this.messageRepository = messageRepositoryInMemory;
@@ -36,9 +39,10 @@ class MessageCtrl extends RootCtrl {
     // method=GET url=/hotspots/{hotspotId}/messages
     public getMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         if (req.query.count !== undefined) {
-            return this.listCommentsCount(req, res, next);
+            await this.listCommentsCount(req, res, next);
+            return;
         }
-        return this.listMessages(req, res, next);
+        await this.listMessages(req, res, next);
     };
 
     private listCommentsCount = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
@@ -51,26 +55,23 @@ class MessageCtrl extends RootCtrl {
                     ),
                 );
             }
-
-            if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-                return next(this.responseError.logAndCreateNotFound(req));
-            }
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
-
-            const messages = (req.query.messages as string).split(',').map(x => new MessageId(x));
-            if (!hotspot) {
+            const messagesId = (req.query.messages as string).split(',').map(x => new MessageId(x));
+            const useCaseResult = await this.actualiteHotspot.compteNombreCommentairesParMessage({
+                messagesId,
+                user: req.cityzenIfAuthenticated,
+                hotspotId: new HotspotId(req.params.hotspotId),
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-
-            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
             }
-            const commentCountJson = await this.messageRepository.getCommentsCount(messages);
-            res.json(OK, commentCountJson);
+            res.json(OK, useCaseResult.countCommentsPerMessages);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
@@ -78,27 +79,22 @@ class MessageCtrl extends RootCtrl {
 
     // method=GET url=/hotspots/{hotspotId}/messages
     private listMessages = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        if (!this.hotspotRepository.isSet(req.params.hotspotId)) {
-            return next(this.responseError.logAndCreateNotFound(req));
-        }
         try {
-            const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
-            if (!hotspot) {
+            const useCaseResult = await this.actualiteHotspot.listeMessages({
+                user: req.cityzenIfAuthenticated,
+                hotspotId: new HotspotId(req.params.hotspotId),
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(
                     this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
                 );
             }
-
-            if (!isAuthorized.toSeeMessages(hotspot, req.cityzenIfAuthenticated)) {
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
                 return next(
                     this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
                 );
             }
-
-            const hotspotContent: Message[] = await this.messageRepository.findByHotspotId(
-                new HotspotId(req.params.hotspotId),
-            );
-            res.json(OK, hotspotContent);
+            res.json(OK, useCaseResult.messages);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }

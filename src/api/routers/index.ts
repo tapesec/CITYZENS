@@ -45,6 +45,7 @@ import UserLoader from '../middlewares/UserLoader';
 import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
 import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
 import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
+import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
 
 const request = require('request');
 
@@ -73,7 +74,7 @@ const slideshowService = new SlideshowService(filestackService);
 
 const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, slideshowService);
-const messageRepositoryInMemory = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
+const messageRepo = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 
 export const init = (server: restify.Server) => {
     const routers = [];
@@ -109,9 +110,11 @@ export const init = (server: restify.Server) => {
             userLoader,
         ),
     );
+    // use cases
+    const actualiteHotspot = new ActualiteHotspot(hotspotRepo, messageRepo);
     routers.push(
         new MessageRouter(
-            new MessageCtrl(hotspotRepo, messageRepositoryInMemory, messageFactory),
+            new MessageCtrl(hotspotRepo, messageRepo, messageFactory, actualiteHotspot),
             userLoader,
         ),
     );
