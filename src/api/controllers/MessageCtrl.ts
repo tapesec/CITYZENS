@@ -19,6 +19,7 @@ import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
 import PublierUnMessage from '../../application/usecases/PublierUnMessage';
 import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
+import EditerUnMessage from '../../application/usecases/EditerUnMessage';
 
 class MessageCtrl extends RootCtrl {
     private messageRepository: MessageRepositoryPostgreSql;
@@ -37,6 +38,7 @@ class MessageCtrl extends RootCtrl {
         protected obtenirCommentaires: ObtenirCommentaires,
         protected publierUnMessage: PublierUnMessage,
         protected repondreAUnMessage: RepondreAUnMessage,
+        protected editerUnMessage: EditerUnMessage,
     ) {
         super();
         this.messageRepository = messageRepositoryInMemory;
@@ -208,54 +210,40 @@ class MessageCtrl extends RootCtrl {
 
     // method=PATCH url=/hotspots/{hotspotId}/messages/{messageId}
     public patchMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        let message: Message;
-
-        if (!this.schemaValidator.validate(patchMessageSchema, req.body)) {
-            return next(
-                this.responseError.logAndCreateBadRequest(req, this.schemaValidator.errorsText()),
-            );
-        }
-
-        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
-        if (!hotspot) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-
         try {
-            message = await this.messageRepository.findById(new MessageId(req.params.messageId));
+            if (!this.schemaValidator.validate(patchMessageSchema, req.body)) {
+                return next(
+                    this.responseError.logAndCreateBadRequest(
+                        req,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
+            const useCaseResult = await this.editerUnMessage.run({
+                user: req.cityzenIfAuthenticated,
+                hotspotId: new HotspotId(req.params.hotspotId),
+                messageId: new MessageId(req.params.messageId),
+                payload: req.body,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.MESSAGE_NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
+                );
+            }
+            if (useCaseResult.status === UseCaseStatus.UNAUTHORIZED) {
+                return next(
+                    this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
+                );
+            }
+            res.json(OK, useCaseResult.editedMessage);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
-        if (!message) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
-            );
-        }
-
-        if (!isAuthorized.toPatchMessage(message, req.cityzenIfAuthenticated)) {
-            return next(
-                this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
-            );
-        }
-
-        // TODO encapsuler la logique suivante
-        try {
-            if (req.body.title !== undefined) {
-                message.changeTitle(req.body.title);
-            }
-            if (req.body.body !== undefined) {
-                message.editBody(req.body.body);
-            }
-            if (req.body.pinned !== undefined) {
-                if (message.pinned !== req.body.pinned) message.togglePinMode();
-            }
-            await this.messageRepository.update(message);
-        } catch (err) {
-            return next(this.responseError.logAndCreateInternal(req, err));
-        }
-        res.json(OK, message);
     };
 
     // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
