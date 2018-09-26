@@ -1,25 +1,25 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
-import { MCDVLoggerEvent } from '../libs/MCDVLogger';
+
 import CityId from '../../application/domain/city/CityId';
 import Hotspot from '../../application/domain/hotspot/Hotspot';
 import HotspotId from '../../application/domain/hotspot/HotspotId';
+import { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
+import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
+import { IHotspotParSlugOuId } from '../../application/usecases/HotspotParSlugOuId';
+import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
+import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
+import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
+import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
+import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
+import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import { strToNumQSProps } from '../helpers/';
+import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postPertinenceSchema } from '../requestValidation/schema';
-import Algolia from './../services/algolia/Algolia';
+import Algolia from '../services/algolia/Algolia';
 import RootCtrl from './RootCtrl';
-import UseCaseStatus from '../../application/usecases/UseCaseStatus';
-import Carte from '../../application/domain/hotspot/Carte';
-import { IHotspotParSlugOuId } from '../../application/usecases/HotspotParSlugOuId';
-import { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
-import { IHotspotsParCodeInsee } from '../../application/usecases/HotspotsParCodeInsee';
-import { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
-import { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
-import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
-import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
-import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 
 class HotspotCtrl extends RootCtrl {
     static BAD_REQUEST_MESSAGE = 'Invalid query strings';
@@ -31,7 +31,6 @@ class HotspotCtrl extends RootCtrl {
     public static PERTINENCE_DOUBLE_VOTE = "You can't vote twice on the same Alert Hotspot";
 
     constructor(
-        private hotspotRepository: Carte,
         private algolia: Algolia,
         private hotspotsParZone: IHotspotsParZone,
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,

@@ -1,57 +1,59 @@
 import * as AlgoliaSearch from 'algoliasearch';
 import * as restify from 'restify';
-const request = require('request');
 
+import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
+import Carte from '../../application/domain/hotspot/Carte';
+import MessageFactory from '../../application/domain/hotspot/MessageFactory';
+import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
+import CompteUneVue, { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
+import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
+import EditerUnMessage from '../../application/usecases/EditerUnMessage';
+import HotspotParSlugOuId, {
+    IHotspotParSlugOuId,
+} from '../../application/usecases/HotspotParSlugOuId';
+import HotspotsParCodeInsee, {
+    IHotspotsParCodeInsee,
+} from '../../application/usecases/HotspotsParCodeInsee';
+import HotspotsParZone, { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
+import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
+import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
+import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
+import PublierUnMessage from '../../application/usecases/PublierUnMessage';
+import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
+import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
+import SupprimerUnMessage from '../../application/usecases/SupprimerUnMessage';
 import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
-import MessageFactory from '../../application/domain/hotspot/MessageFactory';
+import pg from '../../infrastructure/libs/postgreSQL/postgreSQL';
 import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
+import OrmCityzen from '../../infrastructure/ormCityzen';
 import { default as OrmHotspot } from '../../infrastructure/ormHotspot';
 import OrmMessage from '../../infrastructure/ormMessage';
+import config from '../config';
 import AuthCtrl from '../controllers/AuthCtrl';
 import CityCtrl from '../controllers/CityCtrl';
 import CityzenCtrl from '../controllers/CityzenCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import MessageCtrl from '../controllers/MessageCtrl';
+import AlgoliaApi from '../libs/AlgoliaAPI';
 import auth0Sdk from '../libs/Auth0';
+import { createlogger } from '../libs/MCDVLogger';
+import { createWebhook } from '../libs/SlackWebhook';
+import UserLoader from '../middlewares/UserLoader';
+import Algolia from '../services/algolia/Algolia';
 import Auth0Service from '../services/auth/Auth0Service';
+import ErrorHandler from '../services/errors/ResponseError';
 import FilestackService from '../services/filestack/FilestackService';
-import pg from '../../infrastructure/libs/postgreSQL/postgreSQL';
 import SlideshowService from '../services/widgets/SlideshowService';
-import OrmCityzen from './../../infrastructure/ormCityzen';
-import config from './../config';
-import AlgoliaApi from './../libs/AlgoliaAPI';
-import Algolia from './../services/algolia/Algolia';
-import ErrorHandler from './../services/errors/ResponseError';
 import AuthRouter from './AuthRouter';
 import CityRouter from './CityRouter';
 import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import SwaggerRouter from './SwaggerRouter';
-import { createWebhook } from '../libs/SlackWebhook';
-import { createlogger } from '../libs/MCDVLogger';
-import HotspotsParZone, { IHotspotsParZone } from '../../application/usecases/HotspotsParZone';
-import Carte from '../../application/domain/hotspot/Carte';
-import HotspotsParCodeInsee, {
-    IHotspotsParCodeInsee,
-} from '../../application/usecases/HotspotsParCodeInsee';
-import HotspotParSlugOuId, {
-    IHotspotParSlugOuId,
-} from '../../application/usecases/HotspotParSlugOuId';
-import NouveauHotspot, { INouveauHotspot } from '../../application/usecases/NouveauHotspot';
-import CompteUneVue, { ComptabiliseUneVue } from '../../application/usecases/ComptabiliseUneVue';
-import ConfirmeExistence from '../../application/usecases/ConfirmeExistence';
-import UserLoader from '../middlewares/UserLoader';
-import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
-import ModifierUnHotspot from '../../application/usecases/ModifierUnHotspot';
-import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
-import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
-import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
-import PublierUnMessage from '../../application/usecases/PublierUnMessage';
-import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
-import EditerUnMessage from '../../application/usecases/EditerUnMessage';
+
+const request = require('request');
 
 const algoliaSearch = AlgoliaSearch(
     config.algolia.algoliaAppId,
@@ -100,7 +102,6 @@ export const init = (server: restify.Server) => {
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
-                hotspotRepo,
                 algolia,
                 hotspotsParZone,
                 hotspotsParCodeInsee,
@@ -120,17 +121,16 @@ export const init = (server: restify.Server) => {
     const publierUnMessage = new PublierUnMessage(hotspotRepo, messageRepo);
     const repondreAUnMessage = new RepondreAUnMessage(hotspotRepo, messageRepo);
     const editerUnMessage = new EditerUnMessage(hotspotRepo, messageRepo);
+    const supprimerUnMessage = new SupprimerUnMessage(hotspotRepo, messageRepo);
     routers.push(
         new MessageRouter(
             new MessageCtrl(
-                hotspotRepo,
-                messageRepo,
-                messageFactory,
                 actualiteHotspot,
                 obtenirCommentaires,
                 publierUnMessage,
                 repondreAUnMessage,
                 editerUnMessage,
+                supprimerUnMessage,
             ),
             userLoader,
         ),

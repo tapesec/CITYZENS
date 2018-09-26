@@ -1,48 +1,38 @@
 import { CREATED, getStatusText, OK } from 'http-status-codes';
 import * as rest from 'restify';
+
 import HotspotId from '../../application/domain/hotspot/HotspotId';
 import MessageId from '../../application/domain/hotspot/MessageId';
-import Message from '../../application/domain/hotspot/Message';
-import MessageFactory from '../../application/domain/hotspot/MessageFactory';
-import MessageRepositoryPostgreSql from '../../infrastructure/MessageRepositoryPostgreSQL';
+import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
+import EditerUnMessage from '../../application/usecases/EditerUnMessage';
+import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
+import PublierUnMessage from '../../application/usecases/PublierUnMessage';
+import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
+import SupprimerUnMessage from '../../application/usecases/SupprimerUnMessage';
+import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import {
     createMessageSchema,
     getMessageSchemaQuery,
     patchMessageSchema,
 } from '../requestValidation/schema';
-import * as isAuthorized from '../../application/domain/hotspot/services/isAuthorized';
 import HotspotCtrl from './HotspotCtrl';
 import RootCtrl from './RootCtrl';
-import Carte from '../../application/domain/hotspot/Carte';
-import ActualiteHotspot from '../../application/usecases/ActualiteHotspot';
-import UseCaseStatus from '../../application/usecases/UseCaseStatus';
-import ObtenirCommentaires from '../../application/usecases/ObtenirCommentaires';
-import PublierUnMessage from '../../application/usecases/PublierUnMessage';
-import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
-import EditerUnMessage from '../../application/usecases/EditerUnMessage';
 
 class MessageCtrl extends RootCtrl {
-    private messageRepository: MessageRepositoryPostgreSql;
-    private messageFactory: MessageFactory;
-
     private static HOTSPOT_NOT_FOUND = 'Hotspot not found';
     private static MESSAGE_NOT_FOUND = 'Message not found';
     private static MESSAGE_PRIVATE = 'Message belong to a unaccesible hotspot';
     private static MESSAGE_REPLY_UNAUTHORIZED = 'Cant reply to this message';
 
     constructor(
-        private hotspotRepository: Carte,
-        messageRepositoryInMemory: MessageRepositoryPostgreSql,
-        messageFactory: MessageFactory,
         protected actualiteHotspot: ActualiteHotspot,
         protected obtenirCommentaires: ObtenirCommentaires,
         protected publierUnMessage: PublierUnMessage,
         protected repondreAUnMessage: RepondreAUnMessage,
         protected editerUnMessage: EditerUnMessage,
+        protected supprimerUnMessage: SupprimerUnMessage,
     ) {
         super();
-        this.messageRepository = messageRepositoryInMemory;
-        this.messageFactory = messageFactory;
     }
 
     // method=GET url=/hotspots/{hotspotId}/messages
@@ -248,33 +238,31 @@ class MessageCtrl extends RootCtrl {
 
     // method=DELETE url=/hotspots/{hotspotId}/messages/{messageId}
     public removeMessage = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
-        const messageId = new MessageId(req.params.messageId);
-        if (!this.messageRepository.isSet(messageId)) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
-            );
-        }
-
-        const hotspot = await this.hotspotRepository.findById(req.params.hotspotId);
-        if (!hotspot) {
-            return next(
-                this.responseError.logAndCreateNotFound(req, HotspotCtrl.HOTSPOT_NOT_FOUND),
-            );
-        }
-
-        const message = await this.messageRepository.findById(messageId);
-        if (!isAuthorized.toRemoveMessages(message, req.cityzenIfAuthenticated)) {
-            return next(
-                this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
-            );
-        }
-
         try {
-            await this.messageRepository.delete(new MessageId(req.params.messageId));
+            const useCaseStatus = await this.supprimerUnMessage.run({
+                user: req.cityzenIfAuthenticated,
+                hotspotId: new HotspotId(req.params.hotspotId),
+                messageId: new MessageId(req.params.messageId),
+            });
+            if (useCaseStatus === UseCaseStatus.NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.HOTSPOT_NOT_FOUND),
+                );
+            }
+            if (useCaseStatus === UseCaseStatus.MESSAGE_NOT_FOUND) {
+                return next(
+                    this.responseError.logAndCreateNotFound(req, MessageCtrl.MESSAGE_NOT_FOUND),
+                );
+            }
+            if (useCaseStatus === UseCaseStatus.UNAUTHORIZED) {
+                return next(
+                    this.responseError.logAndCreateUnautorized(req, MessageCtrl.MESSAGE_PRIVATE),
+                );
+            }
+            res.json(OK, getStatusText(OK));
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
-        res.json(OK, getStatusText(OK));
     };
 }
 export default MessageCtrl;
