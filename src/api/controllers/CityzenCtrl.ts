@@ -1,17 +1,20 @@
-import * as rest from 'restify';
 import { OK } from 'http-status-codes';
+import * as rest from 'restify';
+
 import CityzenId from '../../application/domain/cityzen/CityzenId';
-import RootCtrl from './RootCtrl';
+import ProfileCityzen from '../../application/usecases/ProfileCityzen';
+import MettreAJourProfileCityzen from '../../application/usecases/MettreAJourProfileCityzen';
+import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import { patchCityzenSchema } from '../requestValidation/schema';
-import isAuthorized from '../../application/domain/cityzen/CityzenAuthorization';
-import updateCityzen from '../../application/domain/cityzen/updateCityzen';
-import ICityzenRepository from '../../application/domain/cityzen/ICityzenRepository';
+import RootCtrl from './RootCtrl';
 
 class CityzenCtrl extends RootCtrl {
-    constructor(private cityzenRepo: ICityzenRepository) {
+    constructor(
+        protected profileCityzen: ProfileCityzen,
+        protected mettreAJourProfileCityzen: MettreAJourProfileCityzen,
+    ) {
         super();
     }
-
     // GET /cityzens/{cityzenId}
     public cityzen = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
@@ -22,12 +25,13 @@ class CityzenCtrl extends RootCtrl {
             }
             const userId = `${req.query.provider}|${req.params.cityzenId}`;
             const cityzenId = new CityzenId(userId);
-
-            const cityzen = await this.cityzenRepo.findById(cityzenId);
-            if (cityzen === undefined) {
+            const useCaseResult = await this.profileCityzen.run({
+                cityzenId,
+            });
+            if (useCaseResult.status === UseCaseStatus.NOT_FOUND) {
                 return next(this.responseError.logAndCreateNotFound(req, 'Cityzen not foud'));
             }
-            res.json(cityzen);
+            res.json(OK, useCaseResult.cityzen);
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));
         }
@@ -46,19 +50,23 @@ class CityzenCtrl extends RootCtrl {
             }
             const userId = `${req.query.provider}|${req.params.cityzenId}`;
             const cityzenId = new CityzenId(userId);
-            if (isAuthorized.toUpdateCityzen(req.cityzenIfAuthenticated, cityzenId)) {
-                const cityzenToUpdate = await this.cityzenRepo.findById(cityzenId);
-                const cityzenUpdated = updateCityzen(cityzenToUpdate, req.body);
-                await this.cityzenRepo.updateCityzen(cityzenUpdated);
-                res.status(OK);
-                res.json(cityzenUpdated);
-            } else {
-                return next(
-                    this.responseError.logAndCreateUnautorized(
-                        req,
-                        `You're not granted to update this cityzen`,
-                    ),
-                );
+            const useCaseResult = await this.mettreAJourProfileCityzen.run({
+                cityzenId,
+                user: req.cityzenIfAuthenticated,
+                payload: req.body,
+            });
+            switch (useCaseResult.status) {
+                case UseCaseStatus.NOT_FOUND:
+                    return next(this.responseError.logAndCreateNotFound(req, 'Cityzen not foud'));
+                case UseCaseStatus.UNAUTHORIZED:
+                    return next(
+                        this.responseError.logAndCreateUnautorized(
+                            req,
+                            `You're not granted to update this cityzen`,
+                        ),
+                    );
+                default:
+                    res.json(OK, useCaseResult.cityzenUpdated);
             }
         } catch (err) {
             return next(this.responseError.logAndCreateInternal(req, err));

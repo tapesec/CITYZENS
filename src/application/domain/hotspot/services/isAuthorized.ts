@@ -2,6 +2,7 @@ import Message from '../Message';
 import Hotspot, { HotspotScope } from '../Hotspot';
 import MediaHotspot from '../MediaHotspot';
 import Cityzen from '../../cityzen/Cityzen';
+import CityzenId from '../../cityzen/CityzenId';
 
 const toSeeHotspot = (hotspot: Hotspot, member?: Cityzen) => {
     if (!(hotspot instanceof MediaHotspot)) return true;
@@ -70,6 +71,11 @@ const toPostComments = (hotspot: Hotspot, cityzen: Cityzen) => {
     return toSeeHotspot(hotspot, cityzen);
 };
 
+const toUpdateCityzen = (cityzen: Cityzen, cityzenId: CityzenId) => {
+    if (cityzen.id === cityzenId) return true;
+    return cityzen.isAdmin;
+};
+
 export {
     toSeeHotspot,
     toAddMember,
@@ -81,4 +87,5 @@ export {
     toRemoveMessages,
     toPostMessages,
     toPostComments,
+    toUpdateCityzen,
 };

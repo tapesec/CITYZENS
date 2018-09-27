@@ -1,5 +1,5 @@
-import Cityzen from './Cityzen';
-import ImageLocation from '../hotspot/ImageLocation';
+import Cityzen from '../Cityzen';
+import ImageLocation from '../../hotspot/ImageLocation';
 
 const updateCityzen = (cityzenToUpdate: Cityzen, requestPayload: any): Cityzen => {
     if (requestPayload.description !== undefined) {

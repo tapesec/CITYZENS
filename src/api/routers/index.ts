@@ -52,6 +52,8 @@ import CityzenRouter from './CityzenRouter';
 import HotspotRouter from './HotspotRouter';
 import MessageRouter from './MessageRouter';
 import SwaggerRouter from './SwaggerRouter';
+import ProfileCityzen from '../../application/usecases/ProfileCityzen';
+import MettreAJourProfileCityzen from '../../application/usecases/MettreAJourProfileCityzen';
 
 const request = require('request');
 
@@ -135,7 +137,12 @@ export const init = (server: restify.Server) => {
             userLoader,
         ),
     );
-    routers.push(new CityzenRouter(new CityzenCtrl(cityzenRepositoryPostgreSQL), userLoader));
+    // use cases
+    const profileCityzen = new ProfileCityzen(cityzenRepositoryPostgreSQL);
+    const mettreAJourProfileCityzen = new MettreAJourProfileCityzen(cityzenRepositoryPostgreSQL);
+    routers.push(
+        new CityzenRouter(new CityzenCtrl(profileCityzen, mettreAJourProfileCityzen), userLoader),
+    );
 
     routers.forEach(r => r.bind(server));
 };

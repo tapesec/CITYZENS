@@ -20,7 +20,9 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     }
     public async findById(id: CityzenId) {
         const data = await this.orm.findById(id);
-        // console.log(data, 'data cityzen');
+        if (!data) {
+            return undefined;
+        }
         return this.cityzenFactory.build(data);
     }
 

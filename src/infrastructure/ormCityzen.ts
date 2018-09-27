@@ -11,7 +11,7 @@ class OrmCityzen {
         ]);
 
         if (results.rowCount === 0) {
-            return [];
+            return undefined;
         }
 
         const data = results.rows[0];
