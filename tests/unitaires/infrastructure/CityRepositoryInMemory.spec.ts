@@ -1,5 +1,5 @@
 import City from '../../../src/application/domain/city/City';
-import cityRepositoryInMemory from '../../../src/infrastructure/CityRepositoryInMemory';
+import cityRepositoryInMemory from '../../../src/infrastructure/CityRepositoryPostgreSQL';
 import CitySample from '../../../src/application/domain/sample/CitySample';
 import { expect } from 'chai';
 

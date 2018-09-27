@@ -22,7 +22,7 @@ import PublierUnMessage from '../../application/usecases/PublierUnMessage';
 import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
 import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 import SupprimerUnMessage from '../../application/usecases/SupprimerUnMessage';
-import cityRepositoryInMemory from '../../infrastructure/CityRepositoryInMemory';
+import cityRepositoryInMemory from '../../infrastructure/CityRepositoryPostgreSQL';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import pg from '../../infrastructure/libs/postgreSQL/postgreSQL';

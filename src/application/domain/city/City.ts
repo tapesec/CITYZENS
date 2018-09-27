@@ -15,6 +15,9 @@ class City {
         postalCode: PostalCode,
         position2D: Position,
         polygon: Position[],
+        public slug: string,
+        public createdAt: Date,
+        public updatedAt: Date,
     ) {
         this._name = name;
         this._INSEE = insee;
@@ -51,6 +54,8 @@ class City {
             polygon: this._polygon,
             position2D: this._position2D,
             slug: slug(this._name),
+            createdAt: this.createdAt.toJSON(),
+            updatedAt: this.createdAt.toJSON(),
         };
     }
 }

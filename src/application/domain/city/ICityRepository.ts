@@ -1,9 +1,8 @@
 import City from './City';
 
-export default interface ICityRepository {
-    findByInsee(insee: string): City;
-
-    store(city: City): void;
-
-    remove(insee: string): void;
+export default interface Territoire {
+    trouverUneVilleParCodeInsee(insee: string): City;
+    conquerirUneVille(city: City): void;
+    detruireUneVille(insee: string): void;
+    trouverUneVilleParSlug(slug: string): City;
 };

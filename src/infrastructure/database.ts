@@ -1,27 +1,29 @@
-import pg from './libs/postgreSQL/postgreSQL';
-import { hstoreConverter } from './libs/postgreSQL/hstoreConverter';
-import MapToObject from '../helpers/MapToObject';
 import config from '../api/config';
-
 import Cityzen from '../application/domain/cityzen/Cityzen';
-import MediaHotspot from '../application/domain/hotspot/MediaHotspot';
 import AlertHotspot from '../application/domain/hotspot/AlertHotspot';
-import CityzenSample from '../application/domain/sample/CityzenSample';
-import MessageSample from '../application/domain/sample/MessageSample';
-import MediaHotspotsSample from '../application/domain/sample/MediaHotspotSample';
-import AlertHotspotSample from '../application/domain/sample/AlertHotspotSample';
 import { HotspotType } from '../application/domain/hotspot/Hotspot';
+import MediaHotspot from '../application/domain/hotspot/MediaHotspot';
+import AlertHotspotSample from '../application/domain/sample/AlertHotspotSample';
+import CityzenSample from '../application/domain/sample/CityzenSample';
+import MediaHotspotsSample from '../application/domain/sample/MediaHotspotSample';
+import MessageSample from '../application/domain/sample/MessageSample';
+import MapToObject from '../helpers/MapToObject';
+import { hstoreConverter } from './libs/postgreSQL/hstoreConverter';
+import pg from './libs/postgreSQL/postgreSQL';
+import CitySample from '../application/domain/sample/CitySample';
+import City from '../application/domain/city/City';
 
 export const CITYZEN_TABLE_NAME = 'cityzens';
 export const MESSAGE_TABLE_NAME = 'messages';
 export const HOTSPOT_TABLE_NAME = 'hotspots';
+export const CITY_TABLE_NAME = 'citys';
 
 export const initDB = async () => {
     console.log('Initializing database ...');
     try {
         await pg.query(`CREATE TABLE IF NOT EXISTS cityzens (
         user_id text NOT NULL UNIQUE PRIMARY KEY,
-        password text, 
+        password text,
         email text NOT NULL UNIQUE,
         email_verified boolean DEFAULT FALSE,
         pseudo text,
@@ -227,6 +229,43 @@ export const initDB = async () => {
             await new Promise(resolve => {
                 setTimeout(resolve, 500);
             });
+
+            await pg.query(`CREATE TABLE IF NOT EXISTS citys (
+              insee text NOT NULL UNIQUE PRIMARY KEY,
+              name text,
+              postalCode text NOT NULL,
+              slug text,
+              polygon json,
+              position_lat numeric NOT NULL,
+              position_lon numeric NOT NULL,
+              updated_at timestamp NOT NULL DEFAULT current_timestamp,
+              created_at timestamp NOT NULL DEFAULT current_timestamp)`);
+
+            const citys: City[] = [CitySample.MARTIGNAS];
+
+            for (const city of citys) {
+                const query = `INSERT INTO ${CITY_TABLE_NAME}
+                          (insee, name, postalCode, slug, polygon, position_lat, position_lon, updated_at, created_at)
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                  ON CONFLICT (insee)
+                  DO NOTHING;`;
+
+                await pg.query(query, [
+                    city.insee,
+                    city.name,
+                    city.postalCode.toString(),
+                    city.slug,
+                    JSON.stringify(city.polygon),
+                    city.position.latitude,
+                    city.position.longitude,
+                    city.createdAt.toUTCString(),
+                    city.updatedAt.toUTCString(),
+                ]);
+
+                await new Promise(resolve => {
+                    setTimeout(resolve, 500);
+                });
+            }
         }
     } catch (error) {
         console.log(error.message);

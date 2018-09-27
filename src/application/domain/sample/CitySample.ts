@@ -10,6 +10,9 @@ class CitySample {
         new PostalCode('33127'),
         PositionSample.CHURCH,
         PolygonSample.MARTIGNAS_SUR_JALLE,
+        'Martignas-sur-Jalle-a12b',
+        new Date(),
+        new Date(),
     );
     public static SIMCITY = new City(
         'Simcity',
@@ -17,6 +20,9 @@ class CitySample {
         new PostalCode('33127'),
         PositionSample.TOEDIT,
         PolygonSample.SIMCITY,
+        'Simcity-a12b',
+        new Date(),
+        new Date(),
     );
     public static MERIGNAC = new City(
         'Merignac',
@@ -24,6 +30,9 @@ class CitySample {
         new PostalCode('33127'),
         PositionSample.MERIGNAC,
         PolygonSample.MERIGNAC,
+        'Merignac-a12b',
+        new Date(),
+        new Date(),
     );
 }
 
