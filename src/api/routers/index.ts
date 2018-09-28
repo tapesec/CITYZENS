@@ -22,7 +22,7 @@ import PublierUnMessage from '../../application/usecases/PublierUnMessage';
 import RepondreAUnMessage from '../../application/usecases/RepondreAUnMessage';
 import SupprimerUnHotspot from '../../application/usecases/SupprimerUnHotspot';
 import SupprimerUnMessage from '../../application/usecases/SupprimerUnMessage';
-import cityRepositoryInMemory from '../../infrastructure/CityRepositoryPostgreSQL';
+import CityRepositoryPostgreSQL from '../../infrastructure/CityRepositoryPostgreSQL';
 import CityzenRepositoryPostgreSQL from '../../infrastructure/CityzenRepositoryPostgreSQL';
 import HotspotRepositoryPostgreSQL from '../../infrastructure/HotspotRepositoryPostgreSQL';
 import pg from '../../infrastructure/libs/postgreSQL/postgreSQL';
@@ -54,6 +54,7 @@ import MessageRouter from './MessageRouter';
 import SwaggerRouter from './SwaggerRouter';
 import ProfileCityzen from '../../application/usecases/ProfileCityzen';
 import MettreAJourProfileCityzen from '../../application/usecases/MettreAJourProfileCityzen';
+import VilleParSlug from '../../application/usecases/VilleParSlug';
 
 const request = require('request');
 
@@ -83,13 +84,16 @@ const slideshowService = new SlideshowService(filestackService);
 const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
 const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, slideshowService);
 const messageRepo = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
+const cityRepositoryPostgreSQL = new CityRepositoryPostgreSQL(pg);
 
 export const init = (server: restify.Server) => {
     const routers = [];
     const userLoader = new UserLoader(auth0Service, cityzenRepositoryPostgreSQL);
     routers.push(new SwaggerRouter());
     routers.push(new AuthRouter(new AuthCtrl(auth0Service), userLoader));
-    routers.push(new CityRouter(new CityCtrl(cityRepositoryInMemory)));
+    // use cases
+    const villeParSlug = new VilleParSlug(cityRepositoryPostgreSQL);
+    routers.push(new CityRouter(new CityCtrl(villeParSlug)));
 
     // use cases
     const hotspotsParZone: IHotspotsParZone = new HotspotsParZone(hotspotRepo);

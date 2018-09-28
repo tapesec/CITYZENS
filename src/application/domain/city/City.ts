@@ -1,6 +1,5 @@
 import Position from '../hotspot/Position';
 import PostalCode from './PostalCode';
-const slug = require('slug');
 
 class City {
     protected _name: string;
@@ -53,7 +52,7 @@ class City {
             postalCode: this._postalCode.toString(),
             polygon: this._polygon,
             position2D: this._position2D,
-            slug: slug(this._name),
+            slug: this.slug,
             createdAt: this.createdAt.toJSON(),
             updatedAt: this.createdAt.toJSON(),
         };
