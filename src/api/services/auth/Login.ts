@@ -1,6 +1,6 @@
 import ErrorHandler from '../errors/ResponseError';
 import UserInfoAuth0 from './UserInfoAuth0';
-import * as now from './../time/now';
+// import * as now from './../time/now';
 
 export interface LoginOptions {
     url: string;
@@ -36,11 +36,11 @@ class Login {
         if (this.userInfoCache.has(accessToken)) {
             const cache = this.userInfoCache.get(accessToken);
 
-            if (now.seconds() - cache.time < UserInfoCache.VALID_TIME) {
+            /* if (now.seconds() - cache.time < UserInfoCache.VALID_TIME) {
                 return Promise.resolve<UserInfoAuth0>(cache.userInfo);
             }
 
-            this.userInfoCache.delete(accessToken);
+            this.userInfoCache.delete(accessToken); */
         }
 
         return new Promise<UserInfoAuth0>((resolve, reject) => {
@@ -59,10 +59,10 @@ class Login {
                     });
                 } else {
                     const userInfoAuth0 = new UserInfoAuth0(body, accessToken);
-                    this.userInfoCache.set(
+                    /*       this.userInfoCache.set(
                         accessToken,
                         new UserInfoCache(now.seconds(), userInfoAuth0),
-                    );
+                    ); */
 
                     resolve(userInfoAuth0);
                 }

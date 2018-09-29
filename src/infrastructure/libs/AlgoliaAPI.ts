@@ -1,6 +1,6 @@
-import config from './../config';
+import config from '../../api/config';
 import { AlgoliaIndex, AlgoliaClient } from 'algoliasearch';
-import retryPromise from '../services/errors/retryPromise';
+import retryPromise from './retryPromise';
 
 class AlgoliaAPI {
     protected indexes: Map<string, AlgoliaIndex>;

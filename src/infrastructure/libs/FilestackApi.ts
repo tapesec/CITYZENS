@@ -1,8 +1,8 @@
 import { OK, NOT_FOUND } from 'http-status-codes';
-import retryPromise from '../../services/errors/retryPromise';
-import config from '../../config';
+import retryPromise from './retryPromise';
+import config from '../../api/config';
 
-class FilestackService {
+class FilestackApi {
     constructor(protected request: any) {}
 
     public async remove(fileId: string) {
@@ -38,4 +38,4 @@ class FilestackService {
     };
 }
 
-export default FilestackService;
+export default FilestackApi;

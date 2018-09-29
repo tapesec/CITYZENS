@@ -1,14 +1,23 @@
-import * as now from './../time/now';
+const nanos = () => {
+    const hrTime = process.hrtime();
+    return hrTime[0] * 1000000000 + hrTime[1];
+};
+const seconds = () => {
+    return nanos() / 1000000000;
+};
+/* const millis = (time: number) => {
+    return nanos() / 1000000;
+}; */
 
 class CacheUnit {
     public createdTime: number;
 
     constructor(public timeout: number, public cache: any) {
-        this.createdTime = now.seconds();
+        this.createdTime = seconds();
     }
 
     public get isValid() {
-        return now.seconds() - this.createdTime < this.timeout;
+        return seconds() - this.createdTime < this.timeout;
     }
 }
 

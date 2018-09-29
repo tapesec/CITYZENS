@@ -36,16 +36,16 @@ import CityCtrl from '../controllers/CityCtrl';
 import CityzenCtrl from '../controllers/CityzenCtrl';
 import HotspotCtrl from '../controllers/HotspotCtrl';
 import MessageCtrl from '../controllers/MessageCtrl';
-import AlgoliaApi from '../libs/AlgoliaAPI';
+import AlgoliaApi from '../../infrastructure/libs/AlgoliaAPI';
 import auth0Sdk from '../libs/Auth0';
 import { createlogger } from '../libs/MCDVLogger';
 import { createWebhook } from '../libs/SlackWebhook';
 import UserLoader from '../middlewares/UserLoader';
-import Algolia from '../services/algolia/Algolia';
+import Algolia from '../../infrastructure/services/Algolia';
 import Auth0Service from '../services/auth/Auth0Service';
 import ErrorHandler from '../services/errors/ResponseError';
-import FilestackService from '../services/filestack/FilestackService';
-import SlideshowService from '../services/widgets/SlideshowService';
+import FilestackApi from '../../infrastructure/libs/FilestackApi';
+import FilestackService from '../../infrastructure/services/FilestackService';
 import AuthRouter from './AuthRouter';
 import CityRouter from './CityRouter';
 import CityzenRouter from './CityzenRouter';
@@ -78,11 +78,11 @@ const ormCityzen = new OrmCityzen(pg);
 const ormMessage = new OrmMessage(pg);
 
 const messageFactory = new MessageFactory();
-const filestackService = new FilestackService(request);
-const slideshowService = new SlideshowService(filestackService);
+const filestackApi = new FilestackApi(request);
+const filestackService = new FilestackService(filestackApi);
 
 const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
-const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, slideshowService);
+const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, filestackService);
 const messageRepo = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 const cityRepositoryPostgreSQL = new CityRepositoryPostgreSQL(pg);
 
@@ -108,7 +108,6 @@ export const init = (server: restify.Server) => {
     routers.push(
         new HotspotRouter(
             new HotspotCtrl(
-                algolia,
                 hotspotsParZone,
                 hotspotsParCodeInsee,
                 hotpotsParSlugOuId,

@@ -1,6 +1,6 @@
 import CityzenId from '../../../application/domain/cityzen/CityzenId';
 import { Auth0 } from '../../libs/Auth0';
-import MemoryCache from '../cache/MemoryCache';
+import MemoryCache from '../../../infrastructure/libs/MemoryCache';
 import ErrorHandler from '../errors/ResponseError';
 import UserInfoAuth0 from './UserInfoAuth0';
 

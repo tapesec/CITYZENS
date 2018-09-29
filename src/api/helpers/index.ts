@@ -1,5 +1,3 @@
-import { isNumber } from 'util';
-
 export const strToNumQSProps = (queryStrings: any, props: string[]) => {
     props.forEach(prop => {
         if (queryStrings[prop]) {
@@ -8,4 +6,3 @@ export const strToNumQSProps = (queryStrings: any, props: string[]) => {
     });
     return queryStrings;
 };
-

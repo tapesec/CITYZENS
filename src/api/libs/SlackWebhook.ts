@@ -1,5 +1,5 @@
 import { OK } from 'http-status-codes';
-import retryPromise from '../services/errors/retryPromise';
+import retryPromise from '../../infrastructure/libs/retryPromise';
 const request = require('request');
 export interface SlackWebhookOptions {
     url: string;

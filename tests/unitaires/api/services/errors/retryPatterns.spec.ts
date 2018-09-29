@@ -1,7 +1,7 @@
 import * as TypeMoq from 'typemoq';
 import * as Sinon from 'sinon';
 import * as Chai from 'chai';
-import retryPromise from '../../../../../src/api/services/errors/retryPromise';
+import retryPromise from '../../../../../src/infrastructure/libs/retryPromise';
 
 describe('RetryPatterns', () => {
 

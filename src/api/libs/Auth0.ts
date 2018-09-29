@@ -1,6 +1,6 @@
 import config from '../config';
 import { OK } from 'http-status-codes';
-import retryPromise from '../services/errors/retryPromise';
+import retryPromise from '../../infrastructure/libs/retryPromise';
 import CityzenId from '../../application/domain/cityzen/CityzenId';
 const request = require('request');
 

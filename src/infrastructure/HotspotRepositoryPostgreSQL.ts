@@ -7,9 +7,9 @@ import HotspotFactory from '../application/domain/hotspot/HotspotFactory';
 import Carte from '../application/domain/hotspot/Carte';
 
 import OrmHotspot from './ormHotspot';
-import Algolia from '../api/services/algolia/Algolia';
+import Algolia from './services/Algolia';
 import { MCDVLogger, getlogger, MCDVLoggerEvent } from '../api/libs/MCDVLogger';
-import SlideshowService from '../api/services/widgets/SlideshowService';
+import FilestackService from './services/FilestackService';
 
 class HotspotRepositoryPostgreSQL implements Carte {
     private factory: HotspotFactory;
@@ -18,7 +18,7 @@ class HotspotRepositoryPostgreSQL implements Carte {
     constructor(
         protected orm: OrmHotspot,
         protected algolia: Algolia,
-        protected slideshow: SlideshowService,
+        protected slideshow: FilestackService,
     ) {
         this.factory = new HotspotFactory();
         this.logger = getlogger();
@@ -80,6 +80,7 @@ class HotspotRepositoryPostgreSQL implements Carte {
     public async store(hotspot: Hotspot) {
         await this.orm.save(hotspot);
         try {
+            await this.algolia.initHotspots();
             await this.algolia.addHotspot(hotspot);
             await this.orm.cacheAlgolia(hotspot.id, true);
             this.logger.debug(
@@ -95,6 +96,7 @@ class HotspotRepositoryPostgreSQL implements Carte {
     public async update(hotspot: Hotspot) {
         await this.orm.update(hotspot);
         try {
+            await this.algolia.initHotspots();
             await this.algolia.addHotspot(hotspot);
             this.orm.cacheAlgolia(hotspot.id, true);
         } catch (error) {
@@ -114,7 +116,10 @@ class HotspotRepositoryPostgreSQL implements Carte {
     }
 
     public async removeSlideshowImagesFromHotspot(hotspot: Hotspot, slideshow: string[]) {
-        await this.slideshow.removeImage((<MediaHotspot>hotspot).slideShow.toJSON(), slideshow);
+        const idsToRemoveFromFilestack = (<MediaHotspot>hotspot).slideShow
+            .toJSON()
+            .filter(x => !slideshow.includes(x));
+        await this.slideshow.removeImages(idsToRemoveFromFilestack);
     }
 }
 

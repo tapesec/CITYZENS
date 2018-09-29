@@ -1,4 +1,4 @@
-import MemoryCache from './../../../../../src/api/services/cache/MemoryCache';
+import MemoryCache from '../../../../../src/infrastructure/libs/MemoryCache';
 import * as Chai from 'chai';
 
 describe('MemoryCache', () => {

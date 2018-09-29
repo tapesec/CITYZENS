@@ -18,7 +18,6 @@ import { MCDVLoggerEvent } from '../libs/MCDVLogger';
 import createHotspotsSchema from '../requestValidation/createHotspotsSchema';
 import patchHotspotsSchema from '../requestValidation/patchHotspotsSchema';
 import { getHotspots, postPertinenceSchema } from '../requestValidation/schema';
-import Algolia from '../services/algolia/Algolia';
 import RootCtrl from './RootCtrl';
 
 class HotspotCtrl extends RootCtrl {
@@ -31,7 +30,6 @@ class HotspotCtrl extends RootCtrl {
     public static PERTINENCE_DOUBLE_VOTE = "You can't vote twice on the same Alert Hotspot";
 
     constructor(
-        private algolia: Algolia,
         private hotspotsParZone: IHotspotsParZone,
         private hotspotsParCodeInsee: IHotspotsParCodeInsee,
         private hotpotsParSlugOuId: IHotspotParSlugOuId,
@@ -42,7 +40,6 @@ class HotspotCtrl extends RootCtrl {
         private supprimerUnHotspot: SupprimerUnHotspot,
     ) {
         super();
-        this.algolia.initHotspots();
     }
 
     // method=GET url=/hotspots
