@@ -189,7 +189,7 @@ describe('MediaHotspot entity', () => {
         const hotspot = MediaHotspotSample.TO_READ_EVENT_HOTSPOT_FOR_TEST;
         const jsonHotspot = JSON.parse(JSON.stringify(hotspot));
         expect(jsonHotspot).to.shallowDeepEqual({
-            id: '19eab732-1a3f-4bfb-abb0-1d0dde8a3669',
+            id: '19eab232-1b3f-4bfb-abb0-1d0dde7a3669',
             position: { latitude: 44.84181, longitude: -0.64759 },
             author: { pseudo: CityzenSample.ELODIE.pseudo, id: CityzenSample.ELODIE.id.toString() },
             cityId: '33281',

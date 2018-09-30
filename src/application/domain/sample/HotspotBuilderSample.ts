@@ -58,6 +58,18 @@ class HotspotBuilderSample {
         new AvatarIconUrl(DEFAULT_MEDIA_ICON),
     );
 
+    public static TO_READ_EVENT_HOTSPOT_FOR_TEST_BUILDER: HotspotBuilder = new HotspotBuilder(
+        new HotspotId('19eab232-1b3f-4bfb-abb0-1d0dde7a3669'),
+        PositionSample.MERIGNAC,
+        AuthorSample.ELODIE,
+        new CityId('33281'),
+        AddressSample.RANDOM_MERIGNAC_ADDRESS,
+        new ViewsCount(1),
+        HotspotType.Media,
+        new Date(),
+        new AvatarIconUrl(DEFAULT_MEDIA_ICON),
+    );
+
     public static TOEDIT_HOTSPOT_BUILDER: HotspotBuilder = new HotspotBuilder(
         new HotspotId('3cd7c870-5173-40bc-a7a1-335c6b2f23c6'),
         PositionSample.TOEDIT,

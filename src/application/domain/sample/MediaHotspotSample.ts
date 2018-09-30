@@ -9,7 +9,7 @@ class MediaHotspotsSample {
     );
 
     public static TO_READ_EVENT_HOTSPOT_FOR_TEST = new MediaHotspot(
-        HotspotBuilderSample.MERIGNAC_HOTSPOT_BUILDER,
+        HotspotBuilderSample.TO_READ_EVENT_HOTSPOT_FOR_TEST_BUILDER,
         MediaBuilderSample.DOCTOR_MEDIA_BUILDER,
     );
 
