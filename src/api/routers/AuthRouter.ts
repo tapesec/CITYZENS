@@ -11,7 +11,7 @@ class AuthRouter {
     }
 
     bind(server: restify.Server) {
-        server.get(AUTH_LOGIN, this.ctrl.login);
+        server.post(AUTH_LOGIN, this.ctrl.login);
     }
 }
 

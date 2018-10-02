@@ -1,17 +1,16 @@
 import * as ajv from 'ajv';
-import { cityzensDbSchema } from '../api/requestValidation/schema';
 import CityzenId from '../application/domain/cityzen/CityzenId';
 import ICityzenRepository from '../application/domain/cityzen/ICityzenRepository';
 import OrmCityzen from './../infrastructure/ormCityzen';
 import CityzenFactory from '../application/domain/cityzen/CityzenFactory';
 import Cityzen from '../application/domain/cityzen/Cityzen';
 import { QueryResult } from 'pg';
+import { PostgreSQL } from './libs/postgreSQL/postgreSQL';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     private cityzenFactory: CityzenFactory;
-    private validator: ajv.Ajv = new ajv();
 
-    constructor(protected orm: OrmCityzen) {
+    constructor(protected orm: OrmCityzen, protected pg: PostgreSQL) {
         this.cityzenFactory = new CityzenFactory();
     }
 
@@ -28,5 +27,17 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
 
     public updateCityzen(cityzen: Cityzen): Promise<QueryResult> {
         return this.orm.update(cityzen);
+    }
+
+    public async habitantInscris(email: string, password: string): Promise<Cityzen | undefined> {
+        const result = await this.pg.query(
+            'SELECT id FROM ciyzens WHERE email = $1 AND password = $2',
+            [email, password],
+        );
+        if (result.rowCount === 0) {
+            return undefined;
+        }
+        const data = result.rows[0];
+        return this.cityzenFactory.build(data);
     }
 }
