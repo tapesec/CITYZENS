@@ -6,6 +6,7 @@ enum UseCaseStatus {
     ALREADY_VOTED = 'ALREADY_VOTED',
     VOTED = 'VOTED',
     NOT_OWNER_NOR_GRANTED = 'NOT_OWNER_NOR_GRANTED',
+    ALREADY_SIGN_UP = 'ALREADY_SIGN_UP',
 }
 
 export default UseCaseStatus;

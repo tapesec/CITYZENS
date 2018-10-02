@@ -55,6 +55,7 @@ import SwaggerRouter from './SwaggerRouter';
 import ProfileCityzen from '../../application/usecases/ProfileCityzen';
 import MettreAJourProfileCityzen from '../../application/usecases/MettreAJourProfileCityzen';
 import VilleParSlug from '../../application/usecases/VilleParSlug';
+import CityzenAConnecter from '../../application/usecases/CityzenAConnecter';
 
 const request = require('request');
 
@@ -81,7 +82,10 @@ const messageFactory = new MessageFactory();
 const filestackApi = new FilestackApi(request);
 const filestackService = new FilestackService(filestackApi);
 
-const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(ormCityzen);
+const cityzenRepositoryPostgreSQL: ICityzenRepository = new CityzenRepositoryPostgreSQL(
+    ormCityzen,
+    pg,
+);
 const hotspotRepo: Carte = new HotspotRepositoryPostgreSQL(ormHotspot, algolia, filestackService);
 const messageRepo = new MessageRepositoryPostgreSql(ormMessage, messageFactory);
 const cityRepositoryPostgreSQL = new CityRepositoryPostgreSQL(pg);
@@ -90,7 +94,9 @@ export const init = (server: restify.Server) => {
     const routers = [];
     const userLoader = new UserLoader(auth0Service, cityzenRepositoryPostgreSQL);
     routers.push(new SwaggerRouter());
-    routers.push(new AuthRouter(new AuthCtrl(auth0Service), userLoader));
+    // use cases
+    const cityzenAConnecter = new CityzenAConnecter(cityzenRepositoryPostgreSQL);
+    routers.push(new AuthRouter(new AuthCtrl(cityzenAConnecter), userLoader));
     // use cases
     const villeParSlug = new VilleParSlug(cityRepositoryPostgreSQL);
     routers.push(new CityRouter(new CityCtrl(villeParSlug)));

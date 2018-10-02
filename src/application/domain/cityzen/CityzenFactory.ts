@@ -11,12 +11,12 @@ export default class CityzenFactory {
             new CityzenId(data.user_id),
             data.email,
             data.pseudo,
-            data.is_admin,
+            data.is_admin || false,
             new Set<string>(data.favorites_hotspots),
             data.description,
             new ImageLocation(data.picture_extern),
             new ImageLocation(data.picture_cityzen),
-            data.created_at,
+            data.created_at || new Date(),
         );
     }
 }

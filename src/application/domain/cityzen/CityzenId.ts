@@ -1,25 +1,20 @@
 import * as lodash from 'lodash';
 import ValueObject from '../ValueObject';
+import * as uuid from 'uuid/v4';
 
 class CityzenId implements ValueObject {
-    constructor(private _id: string) {}
-
-    public get id() {
-        return this._id;
+    constructor(public id?: string) {
+        if (!id) {
+            this.id = uuid();
+        }
     }
 
     public toString() {
-        return this._id;
+        return this.id;
     }
 
     public toJSON() {
-        return this._id;
-    }
-
-    public toInt() {
-        const last = this._id.lastIndexOf('|');
-        const intPart = this._id.substr(last + 1);
-        return parseInt(intPart, 10);
+        return this.id;
     }
 
     public isEqual(other: CityzenId) {

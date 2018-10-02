@@ -16,32 +16,32 @@ describe('/auth endpoint', function() {
     const state: any = { admin: {}, standard: {} };
 
     describe('GET /auth/token', () => {
-        it('should return jwt token after received credentials', async () => {
+        it.only('should return jwt token after received credentials', async () => {
             const loginBody = {
-                username: LoginSample.adminSample.username,
+                email: LoginSample.adminSample.username,
                 password: LoginSample.adminSample.password,
             };
 
             // Act
             const responseAdmin = await request(server)
-                .get('/auth/token')
-                .query(loginBody)
+                .post('/auth/token')
+                .send(loginBody)
                 .set('Accept', 'application/json')
                 .expect(200);
+            expect(responseAdmin.body).to.have.property('accessToken');
 
-            loginBody.username = LoginSample.standardSample.username;
+            console.log(responseAdmin.body, '----->');
+
+            loginBody.email = LoginSample.standardSample.username;
             loginBody.password = LoginSample.standardSample.password;
 
             const responseStandard = await request(server)
-                .get('/auth/token')
-                .query(loginBody)
+                .post('/auth/token')
+                .send(loginBody)
                 .set('Accept', 'application/json')
                 .expect(200);
+            expect(responseAdmin.body).to.have.property('accessToken');
             // Assert
-            expect(responseAdmin.body).to.have.property('access_token');
-            expect(responseAdmin.body).to.have.property('id_token');
-            expect(responseAdmin.body).to.have.property('refresh_token');
-            // Finaly
 
             state.admin.access_token = responseAdmin.body.access_token;
             state.standard.access_token = responseStandard.body.access_token;

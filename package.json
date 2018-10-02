@@ -8,10 +8,14 @@
         "build": "tsc",
         "test": "tsc && set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
         "test:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/**/*.spec.ts\"",
-        "test:unit": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
-        "test:unit:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
-        "test:integration": "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
-        "test:integration:nyc": "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
+        "test:unit":
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
+        "test:unit:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/unitaires/**/*.spec.ts\"",
+        "test:integration":
+            "set NODE_ENV=test && mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
+        "test:integration:nyc":
+            "set NODE_ENV=test && nyc mocha --opts tests/mocha.opts \"tests/integrations/**/*.spec.ts\"",
         "tslint": "tslint -p ./tsconfig.json -c ./tslint.json src/**/*.ts",
         "tslint-check": "tslint-config-prettier-check ./tslint.json"
     },
@@ -19,6 +23,7 @@
     "license": "ISC",
     "dependencies": {
         "@types/algoliasearch": "^3.24.9",
+        "@types/bcryptjs": "^2.4.2",
         "@types/jsonwebtoken": "^7.2.8",
         "@types/lodash.isequal": "^4.5.2",
         "@types/lokijs": "^1.5.2",
@@ -31,11 +36,11 @@
         "ajv": "^6.2.0",
         "algoliasearch": "^3.24.12",
         "auth0": "^2.9.1",
+        "bcryptjs": "^2.4.3",
         "dotenv": "^5.0.0",
         "http-status-codes": "^1.3.0",
         "jsonwebtoken": "^8.3.0",
         "lodash.isequal": "^4.5.0",
-        "lokijs": "^1.5.3",
         "npm": "^5.10.0",
         "pg": "^7.4.1",
         "request-ip": "^2.1.1",
@@ -74,19 +79,9 @@
         "node": ">=8.9.3"
     },
     "nyc": {
-        "extension": [
-            ".ts",
-            ".tsx"
-        ],
-        "exclude": [
-            "**/*.d.ts",
-            "**/*.spec.ts",
-            "**/*.js",
-            "tests/*"
-        ],
-        "reporter": [
-            "text"
-        ],
+        "extension": [".ts", ".tsx"],
+        "exclude": ["**/*.d.ts", "**/*.spec.ts", "**/*.js", "tests/*"],
+        "reporter": ["text"],
         "all": true
     }
 }

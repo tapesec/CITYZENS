@@ -1,11 +1,14 @@
 import * as ajv from 'ajv';
 import CityzenId from '../application/domain/cityzen/CityzenId';
-import ICityzenRepository from '../application/domain/cityzen/ICityzenRepository';
+import ICityzenRepository, {
+    statusInscription,
+} from '../application/domain/cityzen/ICityzenRepository';
 import OrmCityzen from './../infrastructure/ormCityzen';
 import CityzenFactory from '../application/domain/cityzen/CityzenFactory';
 import Cityzen from '../application/domain/cityzen/Cityzen';
 import { QueryResult } from 'pg';
 import { PostgreSQL } from './libs/postgreSQL/postgreSQL';
+import { genSaltSync, hashSync } from 'bcryptjs';
 
 export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
     private cityzenFactory: CityzenFactory;
@@ -31,7 +34,7 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
 
     public async habitantInscris(email: string, password: string): Promise<Cityzen | undefined> {
         const result = await this.pg.query(
-            'SELECT id FROM ciyzens WHERE email = $1 AND password = $2',
+            'SELECT user_id FROM cityzens WHERE email = $1 AND password = $2',
             [email, password],
         );
         if (result.rowCount === 0) {
@@ -39,5 +42,22 @@ export default class CityzenRepositoryPostgreSQL implements ICityzenRepository {
         }
         const data = result.rows[0];
         return this.cityzenFactory.build(data);
+    }
+
+    public async inscrisHabitant(cityzen: Cityzen, password: string): Promise<statusInscription> {
+        let result = await this.pg.query('SELECT email FROM cityzens WHERE email = $1', [
+            cityzen.email,
+        ]);
+        if (result.rowCount > 0) {
+            return statusInscription.EXISTE_DEJA;
+        }
+        const salt = genSaltSync(10);
+        result = await this.pg.query(
+            `INSERT INTO cityzens
+            (user_id, password, email, pseudo) VALUES (
+                $1, $2, $3, $4
+              );`,
+            [cityzen.id.toString(), hashSync(password, salt), cityzen.email, cityzen.pseudo],
+        );
     }
 }
