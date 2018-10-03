@@ -5,8 +5,10 @@ import UseCaseStatus from '../../application/usecases/UseCaseStatus';
 import { sign } from 'jsonwebtoken';
 import { OK, CREATED } from 'http-status-codes';
 import Inscription from '../../application/usecases/Inscription';
+import { signinSchema, signupSchema } from '../requestValidation/auth';
 class AuthCtrl extends RootCtrl {
     private static ALREADY_SIGNIN_MESSAGE = 'User already signed in';
+    private static SIGNIN_BAD_FORMAT = 'Email and password must be provided';
 
     constructor(
         protected cityzenAConnecter: CityzenAConnecter,
@@ -17,6 +19,14 @@ class AuthCtrl extends RootCtrl {
 
     public login = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
+            if (!this.schemaValidator.validate(signinSchema, req.body)) {
+                return next(
+                    this.responseError.logAndCreateInvalidCredentials(
+                        req,
+                        AuthCtrl.SIGNIN_BAD_FORMAT,
+                    ),
+                );
+            }
             const useCaseResult = await this.cityzenAConnecter.run(
                 req.body.email,
                 req.body.password,
@@ -40,7 +50,14 @@ class AuthCtrl extends RootCtrl {
 
     public signup = async (req: rest.Request, res: rest.Response, next: rest.Next) => {
         try {
-            // TODO json schema validation
+            if (!this.schemaValidator.validate(signupSchema, req.body)) {
+                return next(
+                    this.responseError.logAndCreateInvalidCredentials(
+                        req,
+                        this.schemaValidator.errorsText(),
+                    ),
+                );
+            }
             const useCaseResult = await this.inscription.run({
                 email: req.body.email,
                 password: req.body.password,

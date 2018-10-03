@@ -1,4 +1,3 @@
-import * as ajv from 'ajv';
 import CityzenId from '../application/domain/cityzen/CityzenId';
 import ICityzenRepository, {
     statusInscription,

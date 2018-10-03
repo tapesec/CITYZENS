@@ -1,6 +1,5 @@
 import CityzenFactory from '../domain/cityzen/CityzenFactory';
-import ICityzenRepository from '../domain/cityzen/ICityzenRepository';
-import { inscrisHabitantStatus } from '../../infrastructure/CityzenRepositoryPostgreSQL';
+import ICityzenRepository, { statusInscription } from '../domain/cityzen/ICityzenRepository';
 import UseCaseStatus from './UseCaseStatus';
 import Cityzen from '../domain/cityzen/Cityzen';
 
@@ -17,9 +16,14 @@ export interface InscriptionResultat {
 class Inscription {
     constructor(protected population: ICityzenRepository) {}
     public async run(params: InscriptionParametre) {
-        const cityzen = new CityzenFactory().build(params);
+        const data = {
+            pseudo: params.username,
+            email: params.email,
+            password: params.password,
+        };
+        const cityzen = new CityzenFactory().build(data);
         const status = await this.population.inscrisHabitant(cityzen, params.password);
-        if (status === inscrisHabitantStatus.EXISTE_DEJA) {
+        if (status === statusInscription.EXISTE_DEJA) {
             return {
                 status: UseCaseStatus.ALREADY_SIGN_UP,
             };

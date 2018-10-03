@@ -56,6 +56,7 @@ import ProfileCityzen from '../../application/usecases/ProfileCityzen';
 import MettreAJourProfileCityzen from '../../application/usecases/MettreAJourProfileCityzen';
 import VilleParSlug from '../../application/usecases/VilleParSlug';
 import CityzenAConnecter from '../../application/usecases/CityzenAConnecter';
+import Inscription from '../../application/usecases/Inscription';
 
 const request = require('request');
 
@@ -96,7 +97,8 @@ export const init = (server: restify.Server) => {
     routers.push(new SwaggerRouter());
     // use cases
     const cityzenAConnecter = new CityzenAConnecter(cityzenRepositoryPostgreSQL);
-    routers.push(new AuthRouter(new AuthCtrl(cityzenAConnecter), userLoader));
+    const inscription = new Inscription(cityzenRepositoryPostgreSQL);
+    routers.push(new AuthRouter(new AuthCtrl(cityzenAConnecter, inscription), userLoader));
     // use cases
     const villeParSlug = new VilleParSlug(cityRepositoryPostgreSQL);
     routers.push(new CityRouter(new CityCtrl(villeParSlug)));
