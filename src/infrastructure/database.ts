@@ -143,6 +143,15 @@ export const initDB = async () => {
     }
 };
 
+export const trashTables = async () => {
+    console.log('Deleting tables …');
+    await pg.query('DROP TABLE IF EXISTS cityzens');
+    await pg.query('DROP TABLE IF EXISTS hotspots');
+    await pg.query('DROP TABLE IF EXISTS messages');
+    await pg.query('DROP TABLE IF EXISTS citys');
+    console.log('Tables deleted');
+};
+
 const insertCityzens = async () => {
     const cityzens: [Cityzen, string][] = [
         [CityzenSample.ELODIE, '$2a$10$soIZ/r/5MU1IUqTwM2aGfuNu6RSEifpd4PVuwWRoeV3h/ocscwXI6'],

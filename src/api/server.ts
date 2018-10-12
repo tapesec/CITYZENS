@@ -33,7 +33,7 @@ server.use(restify.plugins.bodyParser());
 routers.init(server);
 
 if (module.parent) {
-    module.exports = { server, initDB };
+    module.exports = server;
 } else {
     initDB()
         .then(() =>

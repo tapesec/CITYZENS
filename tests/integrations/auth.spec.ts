@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import * as request from 'supertest';
 import config from './../../src/api/config';
-import { server, initDB } from './../../src/api/server';
+import * as server from './../../src/api/server';
+import { initDB, trashTables } from '../../src/infrastructure/database';
 import alertHotspotsTests from './alertHotspot.spec';
 import citiesEndpointTests from './cities.spec';
 import cityzenTest from './cityzen.spec';
@@ -12,7 +13,8 @@ import * as LoginSample from './sample/LoginSample';
 import { votingPath } from './Voting.spec';
 
 before('initDB', async () => {
-    await initDB();
+    await trashTables();
+    await await initDB();
     console.log('Data ready for test processing ...');
 });
 
